@@ -1,0 +1,90 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-26T00:19:00Z
+
+This PR contains a lot of implementation details that probably will not be checked if anything changes in the symfony/intl cod (in particular all things related to data inheritance in the CLDR files)
+
+It may be safer to just link to : https://symfony.com/doc/current/components/intl.html .. wdyt ?
+
+---------------------------------------------------------------------------
+
+by FlorianChenot at 2024-01-26T09:41:13Z
+
+The problem is that there is no direct link to these CLDR files or any explicit listing in the Intl Component documentation hence the Github links.
+
+If I were to directly link the Intl Component document, it would provide additional examples on its usage, which could be a good thing.
+However, it would not provide information on the appropriate 'country' or 'locale' for this specific filter/function, necessitating that you search the documentation, follow a few links and independently locate the CLDR files within the code by yourself.
+This approach would not be very user-friendly in my opinion.
+
+Maybe I should link both, or just the Intl/Resource/data ?
+But it could also change, which doesn't answer this problem.
+
+Should I link the Intl Component doc as you said but add a link to CLDR files in the Intl Component doc directly ?
+
+@smnandre Wdyt ?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-26T14:17:29Z
+
+The list of available country code actually comes from the CLDR data, which uses the ISO country codes. Saying that we want the `ISO 3166-1 alpha-2` country code is much better than linking to an internal resource of the intl component (which is an implementation detail and is not guaranteed to stay there if Symfony changes the internal implementation of the component).
+The same is true for locales. This uses ISO 4217 locale codes. Thus, due to the way those locales work, linking to the Symfony files for the CLDR data does not even give you a list of all valid locales.
+
+---------------------------------------------------------------------------
+
+by FlorianChenot at 2024-01-26T15:25:51Z
+
+I agree that mentioning ISO codes is far cleaner, it works well for the countries, currency and timezones, so I will change them.
+
+But it doesn't work with all available locales, like 'sr_Cyrl_ME' or 'en_AU'.
+
+It's the same with languages which could be referred by the standard ISO 639-1 (2-letter codes) or ISO 639-2 (3-letter codes) for most, but some available codes like 'sog' for 'Sogdian' don't correspond to these standards.
+
+Should these specific codes be considered an exception to the ISO standard ?
+In that case, I could consider the ISO as a rule and only put an example of some of these specific cases, that would solve the problem with the links to internal resources.
+
+Wdyt ?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-26T15:46:29Z
+
+Locale codes are actually not defined by ISO but by the IETF. See https://www.rfc-editor.org/info/bcp47 for the spec and https://www.php.net/manual/en/class.locale.php which documents it (the PHP documentation still mentions RFC 4646 even though it has been obsoleted by RFC 5646)
+
+---------------------------------------------------------------------------
+
+by FlorianChenot at 2024-01-30T09:20:02Z
+
+It would seem that way, by following the RFCs you mentioned and as explained in PHP Locale, it corresponds to all locales in CLDR files on the condition to sluggify them ( '-' to '_' precisely ).
+Knowing that the locales are stored in the names of PHP files, it probably comes from the common naming convention for files (I couldn't find a standard about this though) where underscores are favored.
+
+Do you think I should link PHP Locale doc which is more user-friendly than RFCs and precise the underscore part ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T13:42:38Z
+
+You could link to any IETF, Unicode/CLDR, ISO or RFCs to give people specifications & references (as long as you do not link any internal PHP files :) -- above all any symfony .php files inside a Resource/data directory)
+
+But as you see localization is a real complex subject, evolving frequently (look at the changelog of every CLDR release), mixing multiple standards, and i do think this discussion should then be in the symfony/symfony repository, because the twig/intl-extra is (almost) a "bridge" to this symfony/intl, and duplicating any documentation is something that often ends with problems of synchronisation.
+
+On this repository, one thing i _personnaly_ would find usefull is just ... more examples of code usage.
+
+PS: you should avoid the word "dialect" as it may have a strong negative meaning (especially in some regions). CLDR consider both fr and fr-FR as "language identifiers" (sometime referencing the second part as "sub-language" or "sub-code")
+
+---------------------------------------------------------------------------
+
+by stof at 2024-01-31T15:18:25Z
+
+twig/intl-extra is a bridge to 2 things:
+
+- `symfony/intl` for the functions listing countries, languages, etc...
+- `ext-intl` for all the `format_*` filters (for which `symfony/polyfill-intl-icu` provides a partial polyfill supporting only the `en` locale when you don't have the intl extension installed in your PHP setup).
+
+Note that the documentation of `symfony/intl` does not list country codes on its own either. It explicitly document them as being codes defined in the ISO standard.
+
+---------------------------------------------------------------------------
+
+by FlorianChenot at 2024-02-06T13:25:22Z
+
+I made the modifications wdyt ?
