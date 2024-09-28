@@ -1,5 +1,5 @@
 --TEST--
-Call to undefined method Twig\\TemplateWrapper::yieldBlock()
+Call to undefined method Twig\TemplateWrapper::yieldBlock()
 --TEMPLATE--
 {% extends 'parent' %}
 {%- block content -%}

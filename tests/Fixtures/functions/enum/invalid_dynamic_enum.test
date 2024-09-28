@@ -3,7 +3,7 @@
 --CONDITION--
 \PHP_VERSION_ID >= 80100
 --TEMPLATE--
-{% set from_variable = 'Twig\\Tests\\NonExistentEnum' %}
+{% set from_variable = 'Twig\Tests\NonExistentEnum' %}
 {% for c in enum(from_variable).cases() %}
     {{~ c.name }}
 {% endfor %}

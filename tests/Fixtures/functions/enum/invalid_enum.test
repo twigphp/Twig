@@ -1,7 +1,7 @@
 --TEST--
 "enum" function with invalid enum class
 --TEMPLATE--
-{% for c in enum('Twig\\Tests\\NonExistentEnum').cases() %}
+{% for c in enum('Twig\Tests\NonExistentEnum').cases() %}
     {{~ c.name }}
 {% endfor %}
 --EXCEPTION--

@@ -1,9 +1,6 @@
 --TEST--
 "enum_cases" function
 --TEMPLATE--
-{% for c in enum_cases('Twig\\Tests\\DummyBackedEnum') %}
-    {{~ c.name }}: {{ c.value }}
-{% endfor %}
 {% for c in enum_cases('Twig\Tests\DummyBackedEnum') %}
     {{~ c.name }}: {{ c.value }}
 {% endfor %}
@@ -17,8 +14,6 @@
 --DATA--
 return []
 --EXPECT--
-FOO: foo
-BAR: bar
 FOO: foo
 BAR: bar
 BAR

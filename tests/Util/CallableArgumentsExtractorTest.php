@@ -129,7 +129,7 @@ class CallableArgumentsExtractorTest extends TestCase
     public function testResolveArgumentsWithMissingParameterForArbitraryArguments()
     {
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('The last parameter of "Twig\\Tests\\Util\\CallableArgumentsExtractorTest::customFunctionWithArbitraryArguments" for function "foo" must be an array with default value, eg. "array $arg = []".');
+        $this->expectExceptionMessage('The last parameter of "Twig\Tests\Util\CallableArgumentsExtractorTest::customFunctionWithArbitraryArguments" for function "foo" must be an array with default value, eg. "array $arg = []".');
 
         $this->getArguments('foo', [$this, 'customFunctionWithArbitraryArguments'], [], true);
     }
