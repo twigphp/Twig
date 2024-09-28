@@ -1,8 +1,8 @@
 ``language_name``
 =================
 
-The ``language_name`` filter returns the language name given its two-letter
-code:
+The ``language_name`` filter returns the language name based on its two-letter code (ISO 639-1),
+three-letter code (ISO 639-2) or other specific localized code:
 
 .. code-block:: twig
 
@@ -44,4 +44,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
+
+.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
+.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php

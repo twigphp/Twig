@@ -1,8 +1,7 @@
 ``locale_name``
 ===============
 
-The ``locale_name`` filter returns the locale name given its two-letter
-code:
+The ``locale_name`` filter returns the locale name given its code:
 
 .. code-block:: twig
 
@@ -44,4 +43,7 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
+
+.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
+.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php
