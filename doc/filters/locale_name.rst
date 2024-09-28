@@ -43,7 +43,6 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
+* ``locale``: The locale code as defined in `RFC 5646`_
 
-.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
-.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646

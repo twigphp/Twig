@@ -1,8 +1,7 @@
 ``currency_name``
 =================
 
-The ``currency_name`` filter returns the currency name given its ISO 4217 three-letter
-code:
+The ``currency_name`` filter returns the currency name given its ISO 4217 code:
 
 .. code-block:: twig
 
@@ -44,7 +43,6 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``locale``: The locale code as defined in `RFC 5646`_. They are also documented in the `PHP Locale class`_.
+* ``locale``: The locale code as defined in `RFC 5646`_
 
-.. _`RFC 5646`: https://www.rfc-editor.org/info/rfc5646
-.. _`PHP Locale class`: https://www.php.net/manual/en/class.locale.php
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646
