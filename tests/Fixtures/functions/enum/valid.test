@@ -1,7 +1,5 @@
 --TEST--
 "enum" function
---CONDITION--
-\PHP_VERSION_ID >= 80100
 --TEMPLATE--
 {{ enum('Twig\\Tests\\DummyBackedEnum').FOO.value }}
 {% for c in enum('Twig\\Tests\\DummyBackedEnum').cases() %}

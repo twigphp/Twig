@@ -1,7 +1,5 @@
 --TEST--
 "enum" function with invalid literal type
---CONDITION--
-\PHP_VERSION_ID >= 80100
 --TEMPLATE--
 {% for c in enum(13).cases() %}
     {{~ c.name }}

@@ -1,7 +1,5 @@
 --TEST--
 "enum" function with missing \ escaping
---CONDITION--
-\PHP_VERSION_ID >= 80100
 --TEMPLATE--
 {% for c in enum('Twig\Tests\DummyBackedEnum').cases() %}
     {{~ c.name }}
