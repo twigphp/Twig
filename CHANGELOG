@@ -1,5 +1,6 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Fix `power` expressions with a negative number in parenthesis (`(-1) ** 2`)
  * Deprecate instantiating `Node` directly. Use `EmptyNode` or `Nodes` instead.
  * Add support for inline comments
  * Add support for accessing class constants with the dot operator
