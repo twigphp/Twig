@@ -122,9 +122,9 @@ You can assign values to variables inside code blocks. Assignments use the
 Filters
 -------
 
-Variables can be modified by **filters**. Filters are separated from the
-variable by a pipe symbol (``|``). Multiple filters can be chained. The output
-of one filter is applied to the next.
+Variables and expressions can be modified by **filters**. Filters are separated
+from the variable by a pipe symbol (``|``). Multiple filters can be chained.
+The output of one filter is applied to the next.
 
 The following example removes all HTML tags from the ``name`` and title-cases
 it:
@@ -151,6 +151,37 @@ To apply a filter on a section of code, wrap it with the
 
 Go to the :doc:`filters<filters/index>` page to learn more about built-in
 filters.
+
+.. warning::
+
+    As the ``filter`` operator has the highest :ref:`precedence
+    <twig-expressions>`, use parentheses when filtering more "complex"
+    expressions:
+
+    .. code-block:: twig
+
+        {{ (1..5)|join(', ') }}
+
+        {{ ('HELLO' ~ 'FABIEN')|lower }}
+
+    A common mistake is to forget using parentheses for filters on negative
+    numbers as a negative number in Twig is represented by the ``-`` operator
+    followed by a positive number. As the ``-`` operator has a lower precedence
+    than the filter operator, it leads to confusion:
+
+    .. code-block:: twig
+
+        {{ -1|abs }} {# returns -1 #}
+
+        {# as it is equivalent to #}
+
+        {{ -(1|abs) }}
+
+    For such cases, use parentheses to force the precedence:
+
+    .. code-block:: twig
+
+        {{ (-1)|abs }} {# returns 1 as expected #}
 
 Functions
 ---------
@@ -795,7 +826,7 @@ The following operators don't fit into any of the other categories:
 
   .. code-block:: twig
 
-      (1..5)|join(', ')
+      {{ (1..5)|join(', ') }}
 
 * ``~``: Converts all operands into strings and concatenates them. ``{{ "Hello
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
