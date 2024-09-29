@@ -435,7 +435,7 @@ final class CoreExtension extends AbstractExtension
         $values = self::toArray($values);
 
         if (0 === \count($values)) {
-            throw new RuntimeError('The random function cannot pick from an empty sequence/mapping.');
+            throw new RuntimeError('The "random" function cannot pick from an empty sequence/mapping.');
         }
 
         return $values[array_rand($values, 1)];
@@ -594,7 +594,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ('ceil' !== $method && 'floor' !== $method) {
-            throw new RuntimeError('The round filter only supports the "common", "ceil", and "floor" methods.');
+            throw new RuntimeError('The "round" filter only supports the "common", "ceil", and "floor" methods.');
         }
 
         return $method($value * 10 ** $precision) / 10 ** $precision;
@@ -665,7 +665,7 @@ final class CoreExtension extends AbstractExtension
 
         foreach ($arrays as $argNumber => $array) {
             if (!is_iterable($array)) {
-                throw new RuntimeError(\sprintf('The merge filter only works with sequences/mappings or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
+                throw new RuntimeError(\sprintf('The "merge" filter only works with sequences/mappings or "Traversable", got "%s" for argument %d.', get_debug_type($array), $argNumber + 1));
             }
 
             $result = [...$result, ...$array];
@@ -968,7 +968,7 @@ final class CoreExtension extends AbstractExtension
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
         } elseif (!\is_array($array)) {
-            throw new RuntimeError(\sprintf('The sort filter only works with sequences/mappings or "Traversable", got "%s".', \gettype($array)));
+            throw new RuntimeError(\sprintf('The "sort" filter only works with sequences/mappings or "Traversable", got "%s".', get_debug_type($array)));
         }
 
         if (null !== $arrow) {
@@ -1515,7 +1515,7 @@ final class CoreExtension extends AbstractExtension
             }
 
             if ('::class' === strtolower(substr($constant, -7))) {
-                throw new RuntimeError(\sprintf('You cannot use the Twig function "constant()" to access "%s". You could provide an object and call constant("class", $object) or use the class name directly as a string.', $constant));
+                throw new RuntimeError(\sprintf('You cannot use the Twig function "constant" to access "%s". You could provide an object and call constant("class", $object) or use the class name directly as a string.', $constant));
             }
 
             throw new RuntimeError(\sprintf('Constant "%s" is undefined.', $constant));
@@ -1611,12 +1611,12 @@ final class CoreExtension extends AbstractExtension
                     if (null === $object) {
                         $message = \sprintf('Impossible to access a key ("%s") on a null variable.', $item);
                     } else {
-                        $message = \sprintf('Impossible to access a key ("%s") on a %s variable ("%s").', $item, \gettype($object), $object);
+                        $message = \sprintf('Impossible to access a key ("%s") on a %s variable ("%s").', $item, get_debug_type($object), $object);
                     }
                 } elseif (null === $object) {
                     $message = \sprintf('Impossible to access an attribute ("%s") on a null variable.', $item);
                 } else {
-                    $message = \sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s").', $item, \gettype($object), $object);
+                    $message = \sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s").', $item, get_debug_type($object), $object);
                 }
 
                 throw new RuntimeError($message, $lineno, $source);
@@ -1637,7 +1637,7 @@ final class CoreExtension extends AbstractExtension
             } elseif (\is_array($object)) {
                 $message = \sprintf('Impossible to invoke a method ("%s") on a sequence/mapping.', $item);
             } else {
-                $message = \sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, \gettype($object), $object);
+                $message = \sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, get_debug_type($object), $object);
             }
 
             throw new RuntimeError($message, $lineno, $source);
@@ -1782,10 +1782,12 @@ final class CoreExtension extends AbstractExtension
      */
     public static function column($array, $name, $index = null): array
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "column" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+        }
+
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
-        } elseif (!\is_array($array)) {
-            throw new RuntimeError(\sprintf('The column filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', \gettype($array)));
         }
 
         return array_column($array, $name, $index);
@@ -1815,6 +1817,10 @@ final class CoreExtension extends AbstractExtension
      */
     public static function find(Environment $env, $array, $arrow)
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "find" filter expects a sequence/mapping or "Traversable", got "%s".', get_debug_type($array)));
+        }
+
         self::checkArrowInSandbox($env, $arrow, 'find', 'filter');
 
         foreach ($array as $k => $v) {
@@ -1850,11 +1856,11 @@ final class CoreExtension extends AbstractExtension
      */
     public static function reduce(Environment $env, $array, $arrow, $initial = null)
     {
-        self::checkArrowInSandbox($env, $arrow, 'reduce', 'filter');
-
-        if (!\is_array($array) && !$array instanceof \Traversable) {
-            throw new RuntimeError(\sprintf('The "reduce" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', \gettype($array)));
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "reduce" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
         }
+
+        self::checkArrowInSandbox($env, $arrow, 'reduce', 'filter');
 
         $accumulator = $initial;
         foreach ($array as $key => $value) {
@@ -1869,6 +1875,10 @@ final class CoreExtension extends AbstractExtension
      */
     public static function arraySome(Environment $env, $array, $arrow)
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "has some" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+        }
+
         self::checkArrowInSandbox($env, $arrow, 'has some', 'operator');
 
         foreach ($array as $k => $v) {
@@ -1885,6 +1895,10 @@ final class CoreExtension extends AbstractExtension
      */
     public static function arrayEvery(Environment $env, $array, $arrow)
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "has every" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+        }
+
         self::checkArrowInSandbox($env, $arrow, 'has every', 'operator');
 
         foreach ($array as $k => $v) {

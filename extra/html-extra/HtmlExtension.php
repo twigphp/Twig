@@ -97,7 +97,7 @@ final class HtmlExtension extends AbstractExtension
             } elseif (\is_array($arg)) {
                 foreach ($arg as $class => $condition) {
                     if (!\is_string($class)) {
-                        throw new RuntimeError(\sprintf('The html_classes function argument %d (key %d) should be a string, got "%s".', $i, $class, \gettype($class)));
+                        throw new RuntimeError(\sprintf('The html_classes function argument %d (key %d) should be a string, got "%s".', $i, $class, get_debug_type($class)));
                     }
                     if (!$condition) {
                         continue;
@@ -105,7 +105,7 @@ final class HtmlExtension extends AbstractExtension
                     $classes[] = $class;
                 }
             } else {
-                throw new RuntimeError(\sprintf('The html_classes function argument %d should be either a string or an array, got "%s".', $i, \gettype($arg)));
+                throw new RuntimeError(\sprintf('The html_classes function argument %d should be either a string or an array, got "%s".', $i, get_debug_type($arg)));
             }
         }
 

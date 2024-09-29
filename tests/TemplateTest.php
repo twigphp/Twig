@@ -363,7 +363,7 @@ class TemplateTest extends TestCase
 
         // tests when input is not an array or object
         $tests = array_merge($tests, [
-            [false, null, 42, 'a', [], $anyType, 'Impossible to access an attribute ("a") on a integer variable ("42") in "index.twig".'],
+            [false, null, 42, 'a', [], $anyType, 'Impossible to access an attribute ("a") on a int variable ("42") in "index.twig".'],
             [false, null, 'string', 'a', [], $anyType, 'Impossible to access an attribute ("a") on a string variable ("string") in "index.twig".'],
             [false, null, [], 'a', [], $anyType, 'Key "a" does not exist as the sequence/mapping is empty in "index.twig".'],
         ]);
