@@ -1823,10 +1823,12 @@ final class CoreExtension extends AbstractExtension
      */
     public static function column($array, $name, $index = null): array
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "column" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+        }
+
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
-        } elseif (!\is_array($array)) {
-            throw new RuntimeError(\sprintf('The "column" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
         }
 
         return array_column($array, $name, $index);
@@ -1856,6 +1858,10 @@ final class CoreExtension extends AbstractExtension
      */
     public static function find(Environment $env, $array, $arrow)
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "find" filter expects a sequence/mapping or "Traversable", got "%s".', get_debug_type($array)));
+        }
+
         self::checkArrowInSandbox($env, $arrow, 'find', 'filter');
 
         foreach ($array as $k => $v) {
@@ -1891,11 +1897,11 @@ final class CoreExtension extends AbstractExtension
      */
     public static function reduce(Environment $env, $array, $arrow, $initial = null)
     {
-        self::checkArrowInSandbox($env, $arrow, 'reduce', 'filter');
-
-        if (!\is_array($array) && !$array instanceof \Traversable) {
+        if (!is_iterable($array)) {
             throw new RuntimeError(\sprintf('The "reduce" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
         }
+
+        self::checkArrowInSandbox($env, $arrow, 'reduce', 'filter');
 
         $accumulator = $initial;
         foreach ($array as $key => $value) {
@@ -1910,6 +1916,10 @@ final class CoreExtension extends AbstractExtension
      */
     public static function arraySome(Environment $env, $array, $arrow)
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "has some" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+        }
+
         self::checkArrowInSandbox($env, $arrow, 'has some', 'operator');
 
         foreach ($array as $k => $v) {
@@ -1926,6 +1936,10 @@ final class CoreExtension extends AbstractExtension
      */
     public static function arrayEvery(Environment $env, $array, $arrow)
     {
+        if (!is_iterable($array)) {
+            throw new RuntimeError(\sprintf('The "has every" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+        }
+
         self::checkArrowInSandbox($env, $arrow, 'has every', 'operator');
 
         foreach ($array as $k => $v) {
