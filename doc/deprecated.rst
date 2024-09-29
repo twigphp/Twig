@@ -310,3 +310,24 @@ Node
   * ``DefaultFilter``
   * ``InlinePrint``
   * ``NullCoalesceExpression``
+
+Operators
+---------
+
+* Using ``~`` with ``+`` or ``-`` in an expression without using parentheses to
+  clarify precedence is deprecated as of Twig 3.15 (in Twig 4.0, parentheses
+  won't be needed anymore as ``+`` / ``-`` will have a higher precedence than
+  ``~``).
+
+  For example, the following expression will trigger a deprecation in Twig 3.15::
+
+    {{ '42' ~ 1 + 41 }}
+
+  To avoid the deprecation, wrap the concatenation in parentheses to clarify
+  the precedence::
+
+    {{ ('42' ~ 1) + 41 }} {# this is equivalent to what Twig 3.x does without the parentheses #}
+
+    {# or #}
+
+    {{ '42' ~ (1 + 41) }} {# this is equivalent to what Twig 4.x will do without the parentheses #}
