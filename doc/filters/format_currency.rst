@@ -74,4 +74,6 @@ Arguments
 
 * ``currency``: The currency
 * ``attrs``: A map of attributes
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_
+
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646

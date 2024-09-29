@@ -1,8 +1,8 @@
 ``language_name``
 =================
 
-The ``language_name`` filter returns the language name given its two-letter
-code:
+The ``language_name`` filter returns the language name based on its ISO 639-1
+code, ISO 639-2 code, or other specific localized code:
 
 .. code-block:: twig
 
@@ -44,4 +44,6 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_
+
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646

@@ -112,6 +112,8 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_
 * ``attrs``: A map of attributes
 * ``style``: The style of the number output
+
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646

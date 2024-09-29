@@ -29,8 +29,10 @@ the :doc:`format_datetime<format_datetime>` filter, but without the date.
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
 * ``timezone``: The date timezone
 * ``calendar``: The calendar ("gregorian" by default)
+
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646

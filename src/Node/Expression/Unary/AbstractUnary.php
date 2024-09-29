@@ -20,14 +20,26 @@ abstract class AbstractUnary extends AbstractExpression
 {
     public function __construct(Node $node, int $lineno)
     {
-        parent::__construct(['node' => $node], [], $lineno);
+        parent::__construct(['node' => $node], ['with_parentheses' => false], $lineno);
+    }
+
+    public function wrapInParentheses(): void
+    {
+        $this->setAttribute('with_parentheses', true);
     }
 
     public function compile(Compiler $compiler): void
     {
-        $compiler->raw(' ');
+        if ($this->getAttribute('with_parentheses')) {
+            $compiler->raw('(');
+        } else {
+            $compiler->raw(' ');
+        }
         $this->operator($compiler);
         $compiler->subcompile($this->getNode('node'));
+        if ($this->getAttribute('with_parentheses')) {
+            $compiler->raw(')');
+        }
     }
 
     abstract public function operator(Compiler $compiler): Compiler;

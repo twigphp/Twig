@@ -1,8 +1,7 @@
 ``currency_name``
 =================
 
-The ``currency_name`` filter returns the currency name given its three-letter
-code:
+The ``currency_name`` filter returns the currency name given its ISO 4217 code:
 
 .. code-block:: twig
 
@@ -44,4 +43,6 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_
+
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646

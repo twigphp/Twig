@@ -56,4 +56,6 @@ Arguments
 ---------
 
 * ``separator``: The separator that is used to join words (defaults to ``-``)
-* ``locale``: The locale of the original string (if none is specified, it will be automatically detected)
+* ``locale``: The locale code of the original string as defined in `RFC 5646`_
+
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646

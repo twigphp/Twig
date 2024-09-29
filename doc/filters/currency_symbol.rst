@@ -1,7 +1,7 @@
 ``currency_symbol``
 ===================
 
-The ``currency_symbol`` filter returns the currency symbol given its three-letter
+The ``currency_symbol`` filter returns the currency symbol given its ISO 4217
 code:
 
 .. code-block:: twig
@@ -44,4 +44,6 @@ By default, the filter uses the current locale. You can pass it explicitly:
 Arguments
 ---------
 
-* ``locale``: The locale
+* ``locale``: The locale code as defined in `RFC 5646`_
+
+.. _RFC 5646: https://www.rfc-editor.org/info/rfc5646
