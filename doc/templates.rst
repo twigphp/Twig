@@ -167,21 +167,24 @@ filters.
     A common mistake is to forget using parentheses for filters on negative
     numbers as a negative number in Twig is represented by the ``-`` operator
     followed by a positive number. As the ``-`` operator has a lower precedence
-    than the filter operator, it leads to confusion:
+    than the filter operator, it can lead to confusion:
 
     .. code-block:: twig
 
         {{ -1|abs }} {# returns -1 #}
+        {{ -1**0 }} {% returns -1 %}
 
         {# as it is equivalent to #}
 
         {{ -(1|abs) }}
+        {{ -(1**0) }}
 
     For such cases, use parentheses to force the precedence:
 
     .. code-block:: twig
 
         {{ (-1)|abs }} {# returns 1 as expected #}
+        {{ (-1)**0 }} {% returns 1 %}
 
 Functions
 ---------
