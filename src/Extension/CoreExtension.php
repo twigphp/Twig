@@ -436,7 +436,7 @@ final class CoreExtension extends AbstractExtension
         $values = self::toArray($values);
 
         if (0 === \count($values)) {
-            throw new RuntimeError('The random function cannot pick from an empty sequence/mapping.');
+            throw new RuntimeError('The "random" function cannot pick from an empty sequence/mapping.');
         }
 
         return $values[array_rand($values, 1)];
@@ -599,7 +599,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ('ceil' !== $method && 'floor' !== $method) {
-            throw new RuntimeError('The round filter only supports the "common", "ceil", and "floor" methods.');
+            throw new RuntimeError('The "round" filter only supports the "common", "ceil", and "floor" methods.');
         }
 
         return $method($value * 10 ** $precision) / 10 ** $precision;
@@ -670,7 +670,7 @@ final class CoreExtension extends AbstractExtension
 
         foreach ($arrays as $argNumber => $array) {
             if (!is_iterable($array)) {
-                throw new RuntimeError(\sprintf('The merge filter only works with sequences/mappings or "Traversable", got "%s" for argument %d.', get_debug_type($array), $argNumber + 1));
+                throw new RuntimeError(\sprintf('The "merge" filter only works with sequences/mappings or "Traversable", got "%s" for argument %d.', get_debug_type($array), $argNumber + 1));
             }
 
             $result = array_merge($result, self::toArray($array));
@@ -977,7 +977,7 @@ final class CoreExtension extends AbstractExtension
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
         } elseif (!\is_array($array)) {
-            throw new RuntimeError(\sprintf('The sort filter only works with sequences/mappings or "Traversable", got "%s".', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "sort" filter only works with sequences/mappings or "Traversable", got "%s".', get_debug_type($array)));
         }
 
         if (null !== $arrow) {
@@ -1556,7 +1556,7 @@ final class CoreExtension extends AbstractExtension
             }
 
             if ('::class' === strtolower(substr($constant, -7))) {
-                throw new RuntimeError(\sprintf('You cannot use the Twig function "constant()" to access "%s". You could provide an object and call constant("class", $object) or use the class name directly as a string.', $constant));
+                throw new RuntimeError(\sprintf('You cannot use the Twig function "constant" to access "%s". You could provide an object and call constant("class", $object) or use the class name directly as a string.', $constant));
             }
 
             throw new RuntimeError(\sprintf('Constant "%s" is undefined.', $constant));
@@ -1826,7 +1826,7 @@ final class CoreExtension extends AbstractExtension
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
         } elseif (!\is_array($array)) {
-            throw new RuntimeError(\sprintf('The column filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "column" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
         }
 
         return array_column($array, $name, $index);
