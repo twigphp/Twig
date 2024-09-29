@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-08-29T14:12:29Z
+
+> I would suggest using the concept of "iterable" in those error messages
+
+I've just started to add some docs about Twig types. @drjayvee @ruudk
