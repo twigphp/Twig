@@ -30,14 +30,14 @@ abstract class AbstractUnary extends AbstractExpression
 
     public function compile(Compiler $compiler): void
     {
-        if ($this->getAttribute('with_parentheses')) {
+        if ($this->hasExplicitParentheses()) {
             $compiler->raw('(');
         } else {
             $compiler->raw(' ');
         }
         $this->operator($compiler);
         $compiler->subcompile($this->getNode('node'));
-        if ($this->getAttribute('with_parentheses')) {
+        if ($this->hasExplicitParentheses()) {
             $compiler->raw(')');
         }
     }
