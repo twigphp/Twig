@@ -93,9 +93,19 @@ class ExpressionParser
             $token = $this->parser->getCurrentToken();
         }
 
-        if (
-            ($expr instanceof AddBinary || $expr instanceof SubBinary)
-        ) {
+        $this->triggerPrecedenceDeprecations($expr, $token);
+
+        if (0 === $precedence) {
+            return $this->parseConditionalExpression($expr);
+        }
+
+        return $expr;
+    }
+
+    private function triggerPrecedenceDeprecations(AbstractExpression $expr, Token $token): void
+    {
+        // Precedence of the ~ operator will be lower than + and - in Twig 4.0
+        if ($expr instanceof AddBinary || $expr instanceof SubBinary) {
             /** @var AbstractExpression $left */
             $left = $expr->getNode('left');
             /** @var AbstractExpression $right */
@@ -108,12 +118,6 @@ class ExpressionParser
                 trigger_deprecation('twig/twig', '3.15', \sprintf('As "+" / "-" will have a higher precedence than "~" in Twig 4.0, please add parentheses to keep the current behavior in "%s" at line %d.', $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
             }
         }
-
-        if (0 === $precedence) {
-            return $this->parseConditionalExpression($expr);
-        }
-
-        return $expr;
     }
 
     /**
