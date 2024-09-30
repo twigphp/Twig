@@ -198,6 +198,14 @@ final class HtmlExtension extends AbstractExtension
         $runtime = $env->getRuntime(EscaperRuntime::class);
 
         foreach ($attr as $name => $value) {
+            if ($value === false) {
+                continue;
+            }
+
+            if ($value === true) {
+                $value = $name;
+            }
+
             $result .= $runtime->escape($name, 'html_attr').'="'.$runtime->escape($value).'" ';
         }
 
