@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-29T16:43:52Z
+
+I think this one is ready, comments are welcomed.
+Note that this is about documenting "native" Twig types and not all types supported by the `@types` tag.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-30T09:29:14Z
+
+@drjayvee @ruudk I'd love to have your thoughts here.
+
+---------------------------------------------------------------------------
+
+by drjayvee at 2024-09-30T09:36:38Z
+
+Thanks for the heads up, Fabian. I'll have a look at this tomorrow or Wednesday and will provide feedback.
