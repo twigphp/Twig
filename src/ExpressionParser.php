@@ -169,15 +169,10 @@ class ExpressionParser
             return $this->parsePostfixExpression(new $class($expr, $token->getLine()));
         } elseif ($token->test(Token::PUNCTUATION_TYPE, '(')) {
             $this->parser->getStream()->next();
-            $expr = $this->parseExpression();
+            $expr = $this->parseExpression()->setExplicitParentheses();
             $this->parser->getStream()->expect(Token::PUNCTUATION_TYPE, ')', 'An opened parenthesis is not properly closed');
 
-            $expr = $this->parsePostfixExpression($expr);
-            if ($expr instanceof NegUnary) {
-                $expr->wrapInParentheses();
-            }
-
-            return $expr;
+            return $this->parsePostfixExpression($expr);
         }
 
         return $this->parsePrimaryExpression();
