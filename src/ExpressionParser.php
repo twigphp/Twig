@@ -19,7 +19,9 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ArrowFunctionExpression;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\Binary\AbstractBinary;
+use Twig\Node\Expression\Binary\AddBinary;
 use Twig\Node\Expression\Binary\ConcatBinary;
+use Twig\Node\Expression\Binary\SubBinary;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
@@ -89,11 +91,31 @@ class ExpressionParser
             $token = $this->parser->getCurrentToken();
         }
 
+        $this->triggerPrecedenceDeprecations($expr, $token);
+
         if (0 === $precedence) {
             return $this->parseConditionalExpression($expr);
         }
 
         return $expr;
+    }
+
+    private function triggerPrecedenceDeprecations(AbstractExpression $expr, Token $token): void
+    {
+        // Precedence of the ~ operator will be lower than + and - in Twig 4.0
+        if ($expr instanceof AddBinary || $expr instanceof SubBinary) {
+            /** @var AbstractExpression $left */
+            $left = $expr->getNode('left');
+            /** @var AbstractExpression $right */
+            $right = $expr->getNode('right');
+            if (
+                ($left instanceof ConcatBinary && !$left->hasExplicitParentheses())
+                ||
+                ($right instanceof ConcatBinary && !$right->hasExplicitParentheses())
+            ) {
+                trigger_deprecation('twig/twig', '3.15', \sprintf('As "+" / "-" will have a higher precedence than "~" in Twig 4.0, please add parentheses to keep the current behavior in "%s" at line %d.', $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
+            }
+        }
     }
 
     private function parseArrow(): ?ArrowFunctionExpression
@@ -164,15 +186,10 @@ class ExpressionParser
             return $this->parsePostfixExpression(new $class($expr, $token->getLine()));
         } elseif ($token->test(Token::PUNCTUATION_TYPE, '(')) {
             $this->parser->getStream()->next();
-            $expr = $this->parseExpression();
+            $expr = $this->parseExpression()->setExplicitParentheses();
             $this->parser->getStream()->expect(Token::PUNCTUATION_TYPE, ')', 'An opened parenthesis is not properly closed');
 
-            $expr = $this->parsePostfixExpression($expr);
-            if ($expr instanceof NegUnary) {
-                $expr->wrapInParentheses();
-            }
-
-            return $expr;
+            return $this->parsePostfixExpression($expr);
         }
 
         return $this->parsePrimaryExpression();

@@ -19,7 +19,7 @@ use Twig\TwigTest;
 class TestExpression extends CallExpression
 {
     #[FirstClassTwigCallableReady]
-    public function __construct(Node $node, TwigTest $test, ?Node $arguments, int $lineno)
+    public function __construct(AbstractExpression $node, TwigTest $test, ?Node $arguments, int $lineno)
     {
         parent::__construct(['node' => $node, 'arguments' => $arguments ?: new EmptyNode()], ['name' => $test->getName(), 'type' => 'test', 'twig_callable' => $test], $lineno);
     }

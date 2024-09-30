@@ -5,4 +5,4 @@ Exception for invalid argument type in replace call
 --DATA--
 return ['stdClass' => new \stdClass()]
 --EXCEPTION--
-Twig\Error\RuntimeError: The "replace" filter expects a sequence/mapping or "Traversable" as replace values, got "stdClass" in "index.twig" at line 2.
+Twig\Error\RuntimeError: The "replace" filter expects a sequence or a mapping, got "stdClass" in "index.twig" at line 2.

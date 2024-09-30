@@ -327,6 +327,7 @@ final class CoreExtension extends AbstractExtension
                 '..' => ['precedence' => 25, 'class' => RangeBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '+' => ['precedence' => 30, 'class' => AddBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '-' => ['precedence' => 30, 'class' => SubBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
+                // Precedence of the ~ operator will change to 27 in Twig 4.0
                 '~' => ['precedence' => 40, 'class' => ConcatBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '*' => ['precedence' => 60, 'class' => MulBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '/' => ['precedence' => 60, 'class' => DivBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
@@ -365,7 +366,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if (!$count = \count($values)) {
-            throw new RuntimeError('The "cycle" function does not work on empty sequences.');
+            throw new RuntimeError('The "cycle" function expects a non-empty sequence.');
         }
 
         return $values[$position % $count];
@@ -435,7 +436,7 @@ final class CoreExtension extends AbstractExtension
         $values = self::toArray($values);
 
         if (0 === \count($values)) {
-            throw new RuntimeError('The "random" function cannot pick from an empty sequence/mapping.');
+            throw new RuntimeError('The "random" function cannot pick from an empty sequence or mapping.');
         }
 
         return $values[array_rand($values, 1)];
@@ -568,7 +569,7 @@ final class CoreExtension extends AbstractExtension
     public static function replace($str, $from): string
     {
         if (!is_iterable($from)) {
-            throw new RuntimeError(\sprintf('The "replace" filter expects a sequence/mapping or "Traversable" as replace values, got "%s".', get_debug_type($from)));
+            throw new RuntimeError(\sprintf('The "replace" filter expects a sequence or a mapping, got "%s".', get_debug_type($from)));
         }
 
         return strtr($str ?? '', self::toArray($from));
@@ -665,7 +666,7 @@ final class CoreExtension extends AbstractExtension
 
         foreach ($arrays as $argNumber => $array) {
             if (!is_iterable($array)) {
-                throw new RuntimeError(\sprintf('The "merge" filter only works with sequences/mappings or "Traversable", got "%s" for argument %d.', get_debug_type($array), $argNumber + 1));
+                throw new RuntimeError(\sprintf('The "merge" filter expects a sequence or a mapping, got "%s" for argument %d.', get_debug_type($array), $argNumber + 1));
             }
 
             $result = [...$result, ...$array];
@@ -968,7 +969,7 @@ final class CoreExtension extends AbstractExtension
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
         } elseif (!\is_array($array)) {
-            throw new RuntimeError(\sprintf('The "sort" filter only works with sequences/mappings or "Traversable", got "%s".', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "sort" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
         if (null !== $arrow) {
@@ -1536,7 +1537,7 @@ final class CoreExtension extends AbstractExtension
     public static function batch($items, $size, $fill = null, $preserveKeys = true): array
     {
         if (!is_iterable($items)) {
-            throw new RuntimeError(\sprintf('The "batch" filter expects a sequence/mapping or "Traversable", got "%s".', get_debug_type($items)));
+            throw new RuntimeError(\sprintf('The "batch" filter expects a sequence or a mapping, got "%s".', get_debug_type($items)));
         }
 
         $size = (int) ceil($size);
@@ -1783,7 +1784,7 @@ final class CoreExtension extends AbstractExtension
     public static function column($array, $name, $index = null): array
     {
         if (!is_iterable($array)) {
-            throw new RuntimeError(\sprintf('The "column" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "column" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
         if ($array instanceof \Traversable) {
@@ -1818,7 +1819,7 @@ final class CoreExtension extends AbstractExtension
     public static function find(Environment $env, $array, $arrow)
     {
         if (!is_iterable($array)) {
-            throw new RuntimeError(\sprintf('The "find" filter expects a sequence/mapping or "Traversable", got "%s".', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "find" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
         self::checkArrowInSandbox($env, $arrow, 'find', 'filter');
@@ -1838,7 +1839,7 @@ final class CoreExtension extends AbstractExtension
     public static function map(Environment $env, $array, $arrow)
     {
         if (!is_iterable($array)) {
-            throw new RuntimeError(\sprintf('The "map" filter expects a sequence/mapping or "Traversable", got "%s".', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "map" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
         self::checkArrowInSandbox($env, $arrow, 'map', 'filter');
@@ -1857,7 +1858,7 @@ final class CoreExtension extends AbstractExtension
     public static function reduce(Environment $env, $array, $arrow, $initial = null)
     {
         if (!is_iterable($array)) {
-            throw new RuntimeError(\sprintf('The "reduce" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "reduce" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
         self::checkArrowInSandbox($env, $arrow, 'reduce', 'filter');
@@ -1876,7 +1877,7 @@ final class CoreExtension extends AbstractExtension
     public static function arraySome(Environment $env, $array, $arrow)
     {
         if (!is_iterable($array)) {
-            throw new RuntimeError(\sprintf('The "has some" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "has some" test expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
         self::checkArrowInSandbox($env, $arrow, 'has some', 'operator');
@@ -1896,7 +1897,7 @@ final class CoreExtension extends AbstractExtension
     public static function arrayEvery(Environment $env, $array, $arrow)
     {
         if (!is_iterable($array)) {
-            throw new RuntimeError(\sprintf('The "has every" filter only works with sequences/mappings or "Traversable", got "%s" as first argument.', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "has every" test expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
         self::checkArrowInSandbox($env, $arrow, 'has every', 'operator');
