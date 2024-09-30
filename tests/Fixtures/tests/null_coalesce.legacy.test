@@ -1,0 +1,16 @@
+--TEST--
+Twig supports the ?? operator
+--DEPRECATION--
+Since twig/twig 3.15: Add explicit parentheses around the "??" operator to avoid behavior change in Twig 4.0 as its precedence will change in "index.twig" at line 4.
+Since twig/twig 3.15: Add explicit parentheses around the "??" operator to avoid behavior change in Twig 4.0 as its precedence will change in "index.twig" at line 5.
+--TEMPLATE--
+{{ nope ?? nada ?? 'OK' -}} {# no deprecation as the operators have the same precedence #}
+
+{{ 1 + nope ?? nada ?? 2 }}
+{{ 1 + nope ?? 3 + nada ?? 2 }}
+--DATA--
+return []
+--EXPECT--
+OK
+3
+6

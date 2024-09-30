@@ -315,9 +315,9 @@ Operators
 ---------
 
 * Using ``~`` with ``+`` or ``-`` in an expression without using parentheses to
-  clarify precedence is deprecated as of Twig 3.15 (in Twig 4.0, parentheses
-  won't be needed anymore as ``+`` / ``-`` will have a higher precedence than
-  ``~``).
+  clarify precedence triggers a deprecation as of Twig 3.15 (in Twig 4.0,
+  parentheses won't be needed anymore as ``+`` / ``-`` will have a higher
+  precedence than ``~``).
 
   For example, the following expression will trigger a deprecation in Twig 3.15::
 
@@ -331,3 +331,20 @@ Operators
     {# or #}
 
     {{ '42' ~ (1 + 41) }} {# this is equivalent to what Twig 4.x will do without the parentheses #}
+
+* Using ``??`` without explicit parentheses to clarify precedence triggers a
+  deprecation as of Twig 3.15 (in Twig 4.0, parentheses won't be needed anymore
+  as ``??`` will have the lowest precedence).
+
+  For example, the following expression will trigger a deprecation in Twig 3.15::
+
+    {{ 'notnull' ?? 'foo' ~ '_bar' }}
+
+  To avoid the deprecation, wrap the ``??`` expressionin parentheses to clarify
+  the precedence::
+
+    {{ ('notnull' ?? 'foo') ~ '_bar' }} {# this is equivalent to what Twig 3.x does without the parentheses #}
+
+    {# or #}
+
+    {{ 'notnull' ?? ('foo' ~ '_bar') }} {# this is equivalent to what Twig 4.x will do without the parentheses #}

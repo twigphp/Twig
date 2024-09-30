@@ -1,5 +1,6 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Deprecate using `??` without explicit parentheses
  * Deprecate using `~` with `+` or `-` in an expression without using parentheses to clarify precedence
  * Deprecate not passing `AbstractExpression` args to most constructor arguments for classes extending `AbstractExpression`
  * Fix `power` expressions with a negative number in parenthesis (`(-1) ** 2`)

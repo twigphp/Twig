@@ -20,9 +20,7 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ArrowFunctionExpression;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\Binary\AbstractBinary;
-use Twig\Node\Expression\Binary\AddBinary;
 use Twig\Node\Expression\Binary\ConcatBinary;
-use Twig\Node\Expression\Binary\SubBinary;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
@@ -57,6 +55,7 @@ class ExpressionParser
     /** @var array<string, array{precedence: int, class: class-string<AbstractBinary>, associativity: self::OPERATOR_*}> */
     private $binaryOperators;
     private $readyNodes = [];
+    private array $precedenceChanges = [];
 
     public function __construct(
         private Parser $parser,
@@ -64,6 +63,20 @@ class ExpressionParser
     ) {
         $this->unaryOperators = $env->getUnaryOperators();
         $this->binaryOperators = $env->getBinaryOperators();
+
+        foreach ($this->binaryOperators as $name => $config) {
+            if (!isset($config['future_precedence'])) {
+                continue;
+            }
+
+            $min = min($config['future_precedence'], $config['precedence']);
+            $max = max($config['future_precedence'], $config['precedence']);
+            foreach ($this->binaryOperators as $n => $c) {
+                if ($c['precedence'] > $min && $c['precedence'] < $max) {
+                    $this->precedenceChanges[$n][] = $name;
+                }
+            }
+        }
     }
 
     public function parseExpression($precedence = 0, $allowArrow = false)
@@ -90,34 +103,28 @@ class ExpressionParser
                 $expr = new $class($expr, $expr1, $token->getLine());
             }
 
+            $expr->setAttribute('operator', $token->getValue());
+
             $token = $this->parser->getCurrentToken();
         }
 
-        $this->triggerPrecedenceDeprecations($expr, $token);
+        // Check that the all nodes that are between the 2 precedences have explicit parentheses
+        if ($expr->hasAttribute('operator') && isset($this->precedenceChanges[$expr->getAttribute('operator')])) {
+            foreach ($this->precedenceChanges[$expr->getAttribute('operator')] as $operatorName) {
+                foreach ($expr as $node) {
+                    /** @var AbstractExpression $node */
+                    if ($node->hasAttribute('operator') && $operatorName === $node->getAttribute('operator') && !$node->hasExplicitParentheses()) {
+                        trigger_deprecation('twig/twig', '3.15', \sprintf('Add explicit parentheses around the "%s" operator to avoid behavior change in Twig 4.0 as its precedence will change in "%s" at line %d.', $operatorName, $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
+                    }
+                }
+            }
+        }
 
         if (0 === $precedence) {
             return $this->parseConditionalExpression($expr);
         }
 
         return $expr;
-    }
-
-    private function triggerPrecedenceDeprecations(AbstractExpression $expr, Token $token): void
-    {
-        // Precedence of the ~ operator will be lower than + and - in Twig 4.0
-        if ($expr instanceof AddBinary || $expr instanceof SubBinary) {
-            /** @var AbstractExpression $left */
-            $left = $expr->getNode('left');
-            /** @var AbstractExpression $right */
-            $right = $expr->getNode('right');
-            if (
-                ($left instanceof ConcatBinary && !$left->hasExplicitParentheses())
-                ||
-                ($right instanceof ConcatBinary && !$right->hasExplicitParentheses())
-            ) {
-                trigger_deprecation('twig/twig', '3.15', \sprintf('As "+" / "-" will have a higher precedence than "~" in Twig 4.0, please add parentheses to keep the current behavior in "%s" at line %d.', $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
-            }
-        }
     }
 
     /**

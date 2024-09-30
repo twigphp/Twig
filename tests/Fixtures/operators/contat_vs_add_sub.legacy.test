@@ -1,8 +1,8 @@
 --TEST--
 +/- will have a higher precedence over ~ in Twig 4.0
 --DEPRECATION--
-Since twig/twig 3.15: As "+" / "-" will have a higher precedence than "~" in Twig 4.0, please add parentheses to keep the current behavior in "index.twig" at line 2.
-Since twig/twig 3.15: As "+" / "-" will have a higher precedence than "~" in Twig 4.0, please add parentheses to keep the current behavior in "index.twig" at line 3.
+Since twig/twig 3.15: Add explicit parentheses around the "~" operator to avoid behavior change in Twig 4.0 as its precedence will change in "index.twig" at line 2.
+Since twig/twig 3.15: Add explicit parentheses around the "~" operator to avoid behavior change in Twig 4.0 as its precedence will change in "index.twig" at line 3.
 --TEMPLATE--
 {{ '42' ~ 1 + 41 }}
 {{ '42' ~ 43 - 1 }}

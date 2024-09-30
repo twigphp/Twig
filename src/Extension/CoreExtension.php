@@ -323,8 +323,7 @@ final class CoreExtension extends AbstractExtension
                 '..' => ['precedence' => 25, 'class' => RangeBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '+' => ['precedence' => 30, 'class' => AddBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '-' => ['precedence' => 30, 'class' => SubBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
-                // Precedence of the ~ operator will change to 27 in Twig 4.0
-                '~' => ['precedence' => 40, 'class' => ConcatBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
+                '~' => ['precedence' => 40, 'future_precedence' => 27, 'class' => ConcatBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '*' => ['precedence' => 60, 'class' => MulBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '/' => ['precedence' => 60, 'class' => DivBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '//' => ['precedence' => 60, 'class' => FloorDivBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
@@ -332,7 +331,7 @@ final class CoreExtension extends AbstractExtension
                 'is' => ['precedence' => 100, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 'is not' => ['precedence' => 100, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '**' => ['precedence' => 200, 'class' => PowerBinary::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
-                '??' => ['precedence' => 300, 'class' => NullCoalesceExpression::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
+                '??' => ['precedence' => 300, 'future_precedence' => 5, 'class' => NullCoalesceExpression::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
             ],
         ];
     }

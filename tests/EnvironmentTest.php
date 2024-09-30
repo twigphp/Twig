@@ -598,7 +598,7 @@ class EnvironmentTest_Extension extends AbstractExtension implements GlobalsInte
     {
         return [
             ['foo_unary' => []],
-            ['foo_binary' => []],
+            ['foo_binary' => ['precedence' => 0]],
         ];
     }
 
