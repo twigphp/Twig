@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-30T07:02:16Z
+
+Can we also have tests using parenthesis on the other branch to check that we trigger deprecation only for the ambiguous case ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-30T07:18:41Z
+
+> Can we also have tests using parenthesis on the other branch to check that we trigger deprecation only for the ambiguous case ?
+
+Done :)
