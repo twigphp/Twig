@@ -12,22 +12,14 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
-use Twig\Node\Node;
 
 /**
  * @internal
  */
 final class InlinePrint extends AbstractExpression
 {
-    /**
-     * @param AbstractExpression $node
-     */
-    public function __construct(Node $node, int $lineno)
+    public function __construct(AbstractExpression $node, int $lineno)
     {
-        if (!$node instanceof AbstractExpression) {
-            trigger_deprecation('twig/twig', '3.15', 'Not passing a "%s" instance to the "node" argument of "%s" is deprecated ("%s" given).', AbstractExpression::class, static::class, get_class($node));
-        }
-
         parent::__construct(['node' => $node], [], $lineno);
     }
 

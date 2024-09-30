@@ -1,11 +1,13 @@
 --TEST--
-+/- will have a higher precedence over ~ in Twig 4.0
+Expressions with ~ and + or -
 --TEMPLATE--
 {{ 1 + 41 }}
 {{ '42==' ~ '42' }}
 {{ '42==' ~ (1 + 41) }}
 {{ '42==' ~ (43 - 1) }}
 {{ ('42' ~ 43) - 1 }}
+{{ '42==' ~ 1 + 41 }}
+{{ '42==' ~ 43 - 1 }}
 --DATA--
 return []
 --EXPECT--
@@ -14,3 +16,5 @@ return []
 42==42
 42==42
 4242
+42==42
+42==42

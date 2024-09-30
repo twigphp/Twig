@@ -22,15 +22,8 @@ use Twig\Node\Node;
  */
 class BlockReferenceExpression extends AbstractExpression
 {
-    /**
-     * @param AbstractExpression $name
-     */
-    public function __construct(Node $name, ?Node $template, int $lineno)
+    public function __construct(AbstractExpression $name, ?Node $template, int $lineno)
     {
-        if (!$name instanceof AbstractExpression) {
-            trigger_deprecation('twig/twig', '3.15', 'Not passing a "%s" instance to the "node" argument of "%s" is deprecated ("%s" given).', AbstractExpression::class, static::class, get_class($node));
-        }
-
         $nodes = ['name' => $name];
         if (null !== $template) {
             $nodes['template'] = $template;
