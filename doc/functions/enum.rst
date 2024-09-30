@@ -1,5 +1,5 @@
-``enum_cases``
-==============
+``enum``
+========
 
 .. versionadded:: 3.15
 
