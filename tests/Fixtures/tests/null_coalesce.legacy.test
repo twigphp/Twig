@@ -1,8 +1,8 @@
 --TEST--
 Twig supports the ?? operator
 --DEPRECATION--
-Since twig/twig 3.15: Add explicit parentheses around the "??" operator to avoid behavior change in Twig 4.0 as its precedence will change in "index.twig" at line 4.
-Since twig/twig 3.15: Add explicit parentheses around the "??" operator to avoid behavior change in Twig 4.0 as its precedence will change in "index.twig" at line 5.
+Since twig/twig 3.15: Add explicit parentheses around the "??" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 4.
+Since twig/twig 3.15: Add explicit parentheses around the "??" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 5.
 --TEMPLATE--
 {{ nope ?? nada ?? 'OK' -}} {# no deprecation as the operators have the same precedence #}
 

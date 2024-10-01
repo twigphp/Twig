@@ -597,7 +597,7 @@ class EnvironmentTest_Extension extends AbstractExtension implements GlobalsInte
     public function getOperators(): array
     {
         return [
-            ['foo_unary' => []],
+            ['foo_unary' => ['precedence' => 0]],
             ['foo_binary' => ['precedence' => 0]],
         ];
     }

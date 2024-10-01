@@ -64,29 +64,36 @@ class ExpressionParser
         $this->unaryOperators = $env->getUnaryOperators();
         $this->binaryOperators = $env->getBinaryOperators();
 
-        foreach ($this->binaryOperators as $name => $config) {
-            if (!isset($config['future_precedence'])) {
+        $ops = [];
+        foreach ($this->unaryOperators as $n => $c) {
+            $ops[] = $c + ['name' => $n, 'type' => 'unary'];
+        }
+        foreach ($this->binaryOperators as $n => $c) {
+            $ops[] = $c + ['name' => $n, 'type' => 'binary'];
+        }
+        foreach ($ops as $config) {
+            if (!isset($config['precedence_change'])) {
                 continue;
             }
-
-            $min = min($config['future_precedence'], $config['precedence']);
-            $max = max($config['future_precedence'], $config['precedence']);
-            foreach ($this->binaryOperators as $n => $c) {
+            $name = $config['type'].'_'.$config['name'];
+            $min = min($config['precedence_change']->getNewPrecedence(), $config['precedence']);
+            $max = max($config['precedence_change']->getNewPrecedence(), $config['precedence']);
+            foreach ($ops as $c) {
                 if ($c['precedence'] > $min && $c['precedence'] < $max) {
-                    $this->precedenceChanges[$n][] = $name;
+                    $this->precedenceChanges[$c['type'].'_'.$c['name']][] = $name;
                 }
             }
         }
     }
 
-    public function parseExpression($precedence = 0, $allowArrow = false)
+    public function parseExpression($precedence = 0, $allowArrow = false, bool $deprecationCheck = true)
     {
         if ($allowArrow && $arrow = $this->parseArrow()) {
             return $arrow;
         }
 
         $expr = $this->getPrimary();
-        $token = $this->parser->getCurrentToken();
+        $previousToken = $token = $this->parser->getCurrentToken();
         while ($this->isBinary($token) && $this->binaryOperators[$token->getValue()]['precedence'] >= $precedence) {
             $op = $this->binaryOperators[$token->getValue()];
             $this->parser->getStream()->next();
@@ -103,21 +110,14 @@ class ExpressionParser
                 $expr = new $class($expr, $expr1, $token->getLine());
             }
 
-            $expr->setAttribute('operator', $token->getValue());
+            $expr->setAttribute('operator', 'binary_'.$token->getValue());
 
+            $previousToken = $token;
             $token = $this->parser->getCurrentToken();
         }
 
-        // Check that the all nodes that are between the 2 precedences have explicit parentheses
-        if ($expr->hasAttribute('operator') && isset($this->precedenceChanges[$expr->getAttribute('operator')])) {
-            foreach ($this->precedenceChanges[$expr->getAttribute('operator')] as $operatorName) {
-                foreach ($expr as $node) {
-                    /** @var AbstractExpression $node */
-                    if ($node->hasAttribute('operator') && $operatorName === $node->getAttribute('operator') && !$node->hasExplicitParentheses()) {
-                        trigger_deprecation('twig/twig', '3.15', \sprintf('Add explicit parentheses around the "%s" operator to avoid behavior change in Twig 4.0 as its precedence will change in "%s" at line %d.', $operatorName, $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
-                    }
-                }
-            }
+        if ($deprecationCheck) {
+            $this->triggerPrecedenceDeprecations($expr, $previousToken);
         }
 
         if (0 === $precedence) {
@@ -125,6 +125,43 @@ class ExpressionParser
         }
 
         return $expr;
+    }
+
+    private function triggerPrecedenceDeprecations(AbstractExpression $expr, Token $token): void
+    {
+        // Check that the all nodes that are between the 2 precedences have explicit parentheses
+        if (!$expr->hasAttribute('operator') || !isset($this->precedenceChanges[$expr->getAttribute('operator')])) {
+            return;
+        }
+
+        if (str_starts_with($unaryOp = $expr->getAttribute('operator'), 'unary')) {
+            if ($expr->hasExplicitParentheses()) {
+                return;
+            }
+            $target = explode('_', $unaryOp)[1];
+            $change = $this->unaryOperators[$target]['precedence_change'];
+            /** @var AbstractExpression $node */
+            $node = $expr->getNode('node');
+            foreach ($this->precedenceChanges as $operatorName => $changes) {
+                if (!in_array($unaryOp, $changes)) {
+                    continue;
+                }
+                if ($node->hasAttribute('operator') && $operatorName === $node->getAttribute('operator')) {
+                    trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('Add explicit parentheses around the "%s" unary operator to avoid behavior change in the next major version as its precedence will change in "%s" at line %d.', $target, $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
+                }
+            }
+        } else {
+            foreach ($this->precedenceChanges[$expr->getAttribute('operator')] as $operatorName) {
+                foreach ($expr as $node) {
+                    /** @var AbstractExpression $node */
+                    if ($node->hasAttribute('operator') && $operatorName === $node->getAttribute('operator') && !$node->hasExplicitParentheses()) {
+                        $op = explode('_', $operatorName)[1];
+                        $change = $this->binaryOperators[$op]['precedence_change'];
+                        trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('Add explicit parentheses around the "%s" binary operator to avoid behavior change in the next major version as its precedence will change in "%s" at line %d.', $op, $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -195,10 +232,13 @@ class ExpressionParser
             $expr = $this->parseExpression($operator['precedence']);
             $class = $operator['class'];
 
-            return $this->parsePostfixExpression(new $class($expr, $token->getLine()));
+            $expr = new $class($expr, $token->getLine());
+            $expr->setAttribute('operator', 'unary_'.$token->getValue());
+
+            return $this->parsePostfixExpression($expr);
         } elseif ($token->test(Token::PUNCTUATION_TYPE, '(')) {
             $this->parser->getStream()->next();
-            $expr = $this->parseExpression()->setExplicitParentheses();
+            $expr = $this->parseExpression(deprecationCheck: false)->setExplicitParentheses();
             $this->parser->getStream()->expect(Token::PUNCTUATION_TYPE, ')', 'An opened parenthesis is not properly closed');
 
             return $this->parsePostfixExpression($expr);

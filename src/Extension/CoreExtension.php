@@ -66,6 +66,7 @@ use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Node;
 use Twig\NodeVisitor\MacroAutoImportNodeVisitor;
+use Twig\OperatorPrecedenceChange;
 use Twig\Parser;
 use Twig\Source;
 use Twig\Template;
@@ -296,7 +297,7 @@ final class CoreExtension extends AbstractExtension
     {
         return [
             [
-                'not' => ['precedence' => 50, 'class' => NotUnary::class],
+                'not' => ['precedence' => 50, 'precedence_change' => new OperatorPrecedenceChange('twig/twig', '3.15', 70), 'class' => NotUnary::class],
                 '-' => ['precedence' => 500, 'class' => NegUnary::class],
                 '+' => ['precedence' => 500, 'class' => PosUnary::class],
             ],
@@ -323,7 +324,7 @@ final class CoreExtension extends AbstractExtension
                 '..' => ['precedence' => 25, 'class' => RangeBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '+' => ['precedence' => 30, 'class' => AddBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '-' => ['precedence' => 30, 'class' => SubBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
-                '~' => ['precedence' => 40, 'future_precedence' => 27, 'class' => ConcatBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
+                '~' => ['precedence' => 40, 'precedence_change' => new OperatorPrecedenceChange('twig/twig', '3.15', 27), 'class' => ConcatBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '*' => ['precedence' => 60, 'class' => MulBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '/' => ['precedence' => 60, 'class' => DivBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '//' => ['precedence' => 60, 'class' => FloorDivBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
@@ -331,7 +332,7 @@ final class CoreExtension extends AbstractExtension
                 'is' => ['precedence' => 100, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 'is not' => ['precedence' => 100, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '**' => ['precedence' => 200, 'class' => PowerBinary::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
-                '??' => ['precedence' => 300, 'future_precedence' => 5, 'class' => NullCoalesceExpression::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
+                '??' => ['precedence' => 300, 'precedence_change' => new OperatorPrecedenceChange('twig/twig', '3.15', 5), 'class' => NullCoalesceExpression::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
             ],
         ];
     }
