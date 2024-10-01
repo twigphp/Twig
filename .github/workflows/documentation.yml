@@ -3,9 +3,6 @@ name: "Documentation"
 on:
     pull_request:
     push:
-        branches:
-            - '2.x'
-            - '3.x'
 
 permissions:
   contents: read
