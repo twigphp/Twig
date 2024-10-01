@@ -77,11 +77,11 @@ class NameExpression extends AbstractExpression
                 $compiler
                     ->raw(' $context[')
                     ->string($name)
-                    ->raw('] : (function () { throw new RuntimeError(\'Variable ')
+                    ->raw('] : throw new RuntimeError(\'Variable ')
                     ->string($name)
                     ->raw(' does not exist.\', ')
                     ->repr($this->lineno)
-                    ->raw(', $this->source); })()')
+                    ->raw(', $this->source)')
                     ->raw(')')
                 ;
             }
