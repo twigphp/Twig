@@ -708,6 +708,8 @@ You can combine multiple expressions with the following operators:
 
 * ``and``: Returns true if the left and the right operands are both true.
 
+* ``xor``: Returns true if **either** the left or the right operand is true, but not both.
+
 * ``or``: Returns true if the left or the right operand is true.
 
 * ``not``: Negates a statement.
@@ -958,6 +960,7 @@ Operator                       Score of precedence                 Description
 =============================  =================================== =====================================================
 ``?:``                         0                                   Ternary operator, conditional statement
 ``or``                         10                                  Logical OR operation between two boolean expressions
+``xor``                        12                                  Logical XOR operation between two boolean expressions
 ``and``                        15                                  Logical AND operation between two boolean expressions
 ``b-or``                       16                                  Bitwise OR operation on integers
 ``b-xor``                      17                                  Bitwise XOR operation on integers
