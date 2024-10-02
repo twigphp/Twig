@@ -945,6 +945,7 @@ operators listed first:
 Operator                       Score of precedence                 Description
 =============================  =================================== =====================================================
 ``?:``                         0                                   Ternary operator, conditional statement
+``??``                         5                                   Default value when a variable is null
 ``or``                         10                                  Logical OR operation between two boolean expressions
 ``xor``                        12                                  Logical XOR operation between two boolean expressions
 ``and``                        15                                  Logical AND operation between two boolean expressions
@@ -958,13 +959,12 @@ Operator                       Score of precedence                 Description
 ``ends with``, ``has some``,
 ``has every``
 ``..``                         25                                  Range of values
+``~``                          27                                  String concatenation
 ``+``, ``-``                   30                                  Addition and subtraction on numbers
-``~``                          40                                  String concatenation
-``not``                        50                                  Negates a statement
 ``*``, ``/``, ``//``, ``%``    60                                  Arithmetic operations on numbers
+``not``                        70                                  Negates a statement
 ``is``, ``is not``             100                                 Tests
 ``**``                         200                                 Raises a number to the power of another
-``??``                         300                                 Default value when a variable is null
 ``+``, ``-``                   500                                 Unary operations on numbers
 ``|``,``[]``,``.``             -                                   Filters, sequence, mapping, and attribute access
 =============================  =================================== =====================================================
