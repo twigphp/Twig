@@ -302,11 +302,12 @@ final class CoreExtension extends AbstractExtension
     {
         return [
             [
-                'not' => ['precedence' => 50, 'precedence_change' => new OperatorPrecedenceChange('twig/twig', '3.15', 70), 'class' => NotUnary::class],
+                'not' => ['precedence' => 70, 'class' => NotUnary::class],
                 '-' => ['precedence' => 500, 'class' => NegUnary::class],
                 '+' => ['precedence' => 500, 'class' => PosUnary::class],
             ],
             [
+                '??' => ['precedence' => 5, 'class' => NullCoalesceExpression::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
                 'or' => ['precedence' => 10, 'class' => OrBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 'xor' => ['precedence' => 12, 'class' => XorBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 'and' => ['precedence' => 15, 'class' => AndBinary::class, 'associativity' => ExpressionParser::OPERATOR_LEFT],
@@ -338,7 +339,6 @@ final class CoreExtension extends AbstractExtension
                 'is' => ['precedence' => 100, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 'is not' => ['precedence' => 100, 'associativity' => ExpressionParser::OPERATOR_LEFT],
                 '**' => ['precedence' => 200, 'class' => PowerBinary::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
-                '??' => ['precedence' => 300, 'precedence_change' => new OperatorPrecedenceChange('twig/twig', '3.15', 5), 'class' => NullCoalesceExpression::class, 'associativity' => ExpressionParser::OPERATOR_RIGHT],
             ],
         ];
     }

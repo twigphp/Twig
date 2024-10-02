@@ -1,9 +1,0 @@
---TEST--
-*, /, //, and % will have a higher precedence over not in Twig 4.0
---DEPRECATION--
-Since twig/twig 3.15: Add explicit parentheses around the "not" unary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 2.
---TEMPLATE--
-{{ not 1 * 2 }}
---DATA--
-return []
---EXPECT--

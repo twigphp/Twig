@@ -13,6 +13,7 @@ Twig supports the ?? operator
 {{ nope ?? (nada ?? 'OK') }}
 {{ 1 + (nope ?? (nada ?? 2)) }}
 {{ 1 + (nope ?? 3) + (nada ?? 2) }}
+{{ nope ?? nada ?? 2 }}
 --DATA--
 return ['bar' => 'OK', 'foo' => ['bar' => 'OK']]
 --EXPECT--
@@ -28,3 +29,4 @@ OK
 OK
 3
 6
+2
