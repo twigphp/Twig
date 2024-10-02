@@ -10,9 +10,9 @@ Twig supports the ?? operator
 {{ foo.bar.baz.missing ?? 'OK' }}
 {{ foo['bar'] ?? 'KO' }}
 {{ foo['missing'] ?? 'OK' }}
-{{ nope ?? nada ?? 'OK' }}
-{{ 1 + nope ?? nada ?? 2 }}
-{{ 1 + nope ?? 3 + nada ?? 2 }}
+{{ nope ?? (nada ?? 'OK') }}
+{{ 1 + (nope ?? (nada ?? 2)) }}
+{{ 1 + (nope ?? 3) + (nada ?? 2) }}
 --DATA--
 return ['bar' => 'OK', 'foo' => ['bar' => 'OK']]
 --EXPECT--

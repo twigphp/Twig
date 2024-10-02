@@ -76,8 +76,24 @@ Twig templates have access to variables provided by the PHP application and
 variables created in templates via the :doc:`set <tags/set>` tag. These
 variables can be manipulated and displayed in the template.
 
-Use a dot (``.``) to access attributes of a variable (methods, properties
-or constants of a PHP object, or items of a PHP array):
+Twig tries to abstract PHP types as much as possible and works with a few basic
+types, supported by ``filters``, ``functions``, and ``tests`` among others:
+
+===================  ===============================
+Twig Type            PHP Type
+===================  ===============================
+string               A string or a Stringable object
+number               An integer or a float
+boolean              ``true`` or ``false``
+null                 ``null``
+iterable (mapping)   An array
+iterable (sequence)  An array
+iterable (object)    An iterable object
+object               An object
+===================  ===============================
+
+The ``iterable`` and ``object`` types expose attributes you can access via the
+dot (``.``) operator:
 
 .. code-block:: twig
 
@@ -683,6 +699,8 @@ You can combine multiple expressions with the following operators:
 
 * ``and``: Returns true if the left and the right operands are both true.
 
+* ``xor``: Returns true if **either** the left or the right operand is true, but not both.
+
 * ``or``: Returns true if the left or the right operand is true.
 
 * ``not``: Negates a statement.
@@ -928,6 +946,7 @@ Operator                       Score of precedence                 Description
 =============================  =================================== =====================================================
 ``?:``                         0                                   Ternary operator, conditional statement
 ``or``                         10                                  Logical OR operation between two boolean expressions
+``xor``                        12                                  Logical XOR operation between two boolean expressions
 ``and``                        15                                  Logical AND operation between two boolean expressions
 ``b-or``                       16                                  Bitwise OR operation on integers
 ``b-xor``                      17                                  Bitwise XOR operation on integers

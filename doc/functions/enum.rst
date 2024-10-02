@@ -1,5 +1,5 @@
-``enum_cases``
-==============
+``enum``
+========
 
 ``enum`` gives access to enums:
 

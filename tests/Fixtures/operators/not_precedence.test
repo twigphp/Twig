@@ -1,0 +1,9 @@
+--TEST--
+*, /, //, and % will have a higher precedence over not in Twig 4.0
+--TEMPLATE--
+{{ (not 1) * 2 }}
+{{ (not 1 * 2) }}
+--DATA--
+return []
+--EXPECT--
+0
