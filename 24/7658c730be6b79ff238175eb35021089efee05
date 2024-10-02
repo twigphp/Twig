@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-10-01T13:05:01Z
+
+@stof I've rewritten how this all works. It's now all automated in the sense that it's done in a generic way where I just need the current and future precedence. It's a quick prototype I've done in a few minutes, so I might have forgotten something. Can you have a look?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-10-02T10:01:10Z
+
+The implementation is now much better. I'm done for this PR.
