@@ -19,43 +19,37 @@ You can pass attributes to tweak the output:
 
 The list of supported options:
 
-* ``grouping_used``: Specifies whether to use grouping separator for thousands.
-    .. code-block:: twig
+* ``grouping_used``: Specifies whether to use grouping separator for thousands::
 
         {# 1,234,567.89 #}
         {{ 1234567.89|format_number({grouping_used:true}, locale='en') }}
 
-* ``decimal_always_shown``: Specifies whether to always show the decimal part, even if it's zero.
-    .. code-block:: twig
+* ``decimal_always_shown``: Specifies whether to always show the decimal part, even if it's zero::
 
         {# 123. #}
         {{ 123|format_number({decimal_always_shown:true}, locale='en') }}
 
 * ``max_integer_digit``:
 * ``min_integer_digit``:
-* ``integer_digit``: Define constraints on the integer part.
-    .. code-block:: twig
+* ``integer_digit``: Define constraints on the integer part::
 
         {# 345.679 #}
         {{ 12345.6789|format_number({max_integer_digit:3, min_integer_digit:2}, locale='en') }}
 
 * ``max_fraction_digit``:
 * ``min_fraction_digit``:
-* ``fraction_digit``: Define constraints on the fraction part.
-    .. code-block:: twig
+* ``fraction_digit``: Define constraints on the fraction part::
 
         {# 123.46 #}
         {{ 123.456789|format_number({max_fraction_digit:2, min_fraction_digit:1}, locale='en') }}
 
-* ``multiplier``: Multiplies the value before formatting.
-    .. code-block:: twig
+* ``multiplier``: Multiplies the value before formatting::
 
         {# 123,000 #}
         {{ 123|format_number({multiplier:1000}, locale='en') }}
 
 * ``grouping_size``:
-* ``secondary_grouping_size``: Set the size of the primary and secondary grouping separators.
-    .. code-block:: twig
+* ``secondary_grouping_size``: Set the size of the primary and secondary grouping separators::
 
         {# 1,23,45,678 #}
         {{ 12345678|format_number({grouping_size:3, secondary_grouping_size:2}, locale='en') }}
@@ -89,21 +83,17 @@ The list of supported options:
 
 * ``significant_digits_used``:
 * ``min_significant_digits_used``:
-* ``max_significant_digits_used``: Control significant digits in formatting.
-    .. code-block:: twig
+* ``max_significant_digits_used``: Control significant digits in formatting::
 
         {# 123.4568 #}
         {{ 123.456789|format_number({significant_digits_used:true, min_significant_digits_used:4, max_significant_digits_used:7}, locale='en') }}
 
-* ``lenient_parse``: If true, allows lenient parsing of the input.
-    .. code-block:: twig
+* ``lenient_parse``: If true, allows lenient parsing of the input::
 
         {# 123 #}
         {{ 123|format_number({lenient_parse:true}, locale='en') }}
 
-Besides plain numbers, the filter can also format numbers in various styles:
-
-.. code-block:: twig
+Besides plain numbers, the filter can also format numbers in various styles::
 
     {# 1,234% #}
     {{ '12.345'|format_number(style: 'percent') }}
@@ -116,52 +106,43 @@ Besides plain numbers, the filter can also format numbers in various styles:
 
 The list of supported styles:
 
-* ``decimal``:
-    .. code-block:: twig
+* ``decimal``::
 
         {# 1,234.568 #}
         {{ 1234.56789 | format_number(style='decimal', locale='en') }}
 
-* ``currency``:
-    .. code-block:: twig
+* ``currency``::
 
         {# $1,234.56 #}
         {{ 1234.56 | format_number(style='currency', locale='en') }}
 
-* ``percent``:
-    .. code-block:: twig
+* ``percent``::
 
         {# 12% #}
         {{ 0.1234 | format_number(style='percent', locale='en') }}
 
-* ``scientific``:
-    .. code-block:: twig
+* ``scientific``::
 
         {# 1.23456789e+3 #}
         {{ 1234.56789 | format_number(style='scientific', locale='en') }}
 
-* ``spellout``:
-    .. code-block:: twig
+* ``spellout``::
 
         {# one thousand two hundred thirty-four point five six seven eight nine #}
         {{ 1234.56789 | format_number(style='spellout', locale='en') }}
 
-* ``ordinal``:
-    .. code-block:: twig
+* ``ordinal``::
 
         {# 1st #}
         {{ 1 | format_number(style='ordinal', locale='en') }}
 
-* ``duration``:
-    .. code-block:: twig
+* ``duration``::
 
         {# 2:30:00 #}
         {{ 9000 | format_number(style='duration', locale='en') }}
 
 As a shortcut, you can use the ``format_*_number`` filters by replacing ``*``
-with a style:
-
-.. code-block:: twig
+with a style::
 
     {# 1,234% #}
     {{ '12.345'|format_percent_number }}
@@ -169,16 +150,12 @@ with a style:
     {# twelve point three four five #}
     {{ '12.345'|format_spellout_number }}
 
-You can pass attributes to tweak the output:
-
-.. code-block:: twig
+You can pass attributes to tweak the output::
 
     {# 12.3% #}
     {{ '0.12345'|format_percent_number({rounding_mode: 'floor', fraction_digit: 1}) }}
 
-By default, the filter uses the current locale. You can pass it explicitly:
-
-.. code-block:: twig
+By default, the filter uses the current locale. You can pass it explicitly::
 
     {# 12,345 #}
     {{ '12.345'|format_number(locale: 'fr') }}
@@ -188,13 +165,13 @@ By default, the filter uses the current locale. You can pass it explicitly:
     The ``format_number`` filter is part of the ``IntlExtension`` which is not
     installed by default. Install it first:
 
-    .. code-block:: bash
+    .. code-block:: sh
 
         $ composer require twig/intl-extra
 
     Then, on Symfony projects, install the ``twig/extra-bundle``:
 
-    .. code-block:: bash
+    .. code-block:: sh
 
         $ composer require twig/extra-bundle
 
