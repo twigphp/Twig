@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by FlorianChenot at 2024-01-26T14:39:20Z
+
+I added the format_number filter in this PR because it is really close to format_currency
