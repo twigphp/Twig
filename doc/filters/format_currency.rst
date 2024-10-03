@@ -58,13 +58,13 @@ The list of supported options:
 * ``rounding_mode``:
 * ``rounding_increment``: Control rounding behavior, here is a list of all rounding_mode available:
 
-    * ``ceil``: Ceiling rounding.
-    * ``floor``: Floor rounding.
-    * ``down``: Rounding towards zero.
-    * ``up``: Rounding away from zero.
-    * ``half_even``: Round halves to the nearest even integer.
-    * ``half_up``: Round halves up.
-    * ``half_down``: Round halves down.
+    * ``ceil``: Ceiling rounding
+    * ``floor``: Floor rounding
+    * ``down``: Rounding towards zero
+    * ``up``: Rounding away from zero
+    * ``half_even``: Round halves to the nearest even integer
+    * ``half_up``: Round halves up
+    * ``half_down``: Round halves down
 
     .. code-block:: twig
 
@@ -74,10 +74,10 @@ The list of supported options:
 * ``format_width``:
 * ``padding_position``: Set width and padding for the formatted number, here is a list of all padding_position available:
 
-    * ``before_prefix``: Pad before the currency symbol.
-    * ``after_prefix``: Pad after the currency symbol.
-    * ``before_suffix``: Pad before the suffix (currency symbol).
-    * ``after_suffix``: Pad after the suffix (currency symbol).
+    * ``before_prefix``: Pad before the currency symbol
+    * ``after_prefix``: Pad after the currency symbol
+    * ``before_suffix``: Pad before the suffix (currency symbol)
+    * ``after_suffix``: Pad after the suffix (currency symbol)
 
     .. code-block:: twig
 
