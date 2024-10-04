@@ -141,7 +141,7 @@ If no variants match, you can define a default set of classes to apply:
                 lg: 'rounded-lg',
             }
         },
-        defaultVariants={
+        defaultVariant={
             rounded: 'md',
         }
     ) %}

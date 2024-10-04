@@ -51,7 +51,7 @@ documents:
 * ``url``: escapes a string for the **URI or parameter** contexts. This should
   not be used to escape an entire URI; only a subcomponent being inserted.
 
-* ``html_attr``: escapes a string for the **HTML attribute** context, 
+* ``html_attr``: escapes a string for the **HTML attribute** context,
   **without quotes** around HTML attribute values.
 
 Note that doing contextual escaping in HTML documents is hard and choosing the

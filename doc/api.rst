@@ -461,46 +461,8 @@ The escaping rules are implemented as follows:
 Sandbox Extension
 ~~~~~~~~~~~~~~~~~
 
-The ``sandbox`` extension can be used to evaluate untrusted code. Access to
-unsafe attributes and methods is prohibited. The sandbox security is managed
-by a policy instance. By default, Twig comes with one policy class:
-``\Twig\Sandbox\SecurityPolicy``. This class allows you to white-list some
-tags, filters, functions, properties, and methods::
-
-    $tags = ['if'];
-    $filters = ['upper'];
-    $methods = [
-        'Article' => ['getTitle', 'getBody'],
-    ];
-    $properties = [
-        'Article' => ['title', 'body'],
-    ];
-    $functions = ['range'];
-    $policy = new \Twig\Sandbox\SecurityPolicy($tags, $filters, $methods, $properties, $functions);
-
-With the previous configuration, the security policy will only allow usage of
-the ``if`` tag, and the ``upper`` filter. Moreover, the templates will only be
-able to call the ``getTitle()`` and ``getBody()`` methods on ``Article``
-objects, and the ``title`` and ``body`` public properties. Everything else
-won't be allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
-
-The policy object is the first argument of the sandbox constructor::
-
-    $sandbox = new \Twig\Extension\SandboxExtension($policy);
-    $twig->addExtension($sandbox);
-
-By default, the sandbox mode is disabled and should be enabled when including
-untrusted template code by using the ``sandboxed`` option of the ``include``
-function:
-
-.. code-block:: twig
-
-    {{ include('user.html', sandboxed: true) }}
-
-You can sandbox all templates by passing ``true`` as the second argument of
-the extension constructor::
-
-    $sandbox = new \Twig\Extension\SandboxExtension($policy, true);
+The ``sandbox`` extension can be used to evaluate untrusted code. Read more
+about it in the :doc:`sandbox` chapter.
 
 Profiler Extension
 ~~~~~~~~~~~~~~~~~~

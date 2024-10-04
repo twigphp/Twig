@@ -718,35 +718,26 @@ You can combine multiple expressions with the following operators:
 Comparisons
 ~~~~~~~~~~~
 
-The following comparison operators are supported in any expression: ``==``,
-``!=``, ``<``, ``>``, ``>=``, and ``<=``.
+The following mathematical comparison operators are supported in any
+expression: ``==``, ``!=``, ``<``, ``>``, ``>=``, and ``<=``.
 
-Check if a string ``starts with`` or ``ends with`` another string:
+Spaceship Operator
+~~~~~~~~~~~~~~~~~~
 
-.. code-block:: twig
-
-    {% if 'Fabien' starts with 'F' %}
-    {% endif %}
-
-    {% if 'Fabien' ends with 'n' %}
-    {% endif %}
-
-Check that a string contains another string via the containment operator (see
-next section).
+The spaceship operator (``<=>``) is used for comparing two expressions. It
+returns ``-1``, ``0`` or ``1`` when the first operand is respectively less
+than, equal to, or greater than the second operand.
 
 .. note::
 
-    For complex string comparisons, the ``matches`` operator allows you to use
-    `regular expressions`_:
+    Read more about in the `PHP spaceship operator documentation`_.
 
-    .. code-block:: twig
+Iterable Operators
+~~~~~~~~~~~~~~~~~~
 
-        {% if phone matches '/^[\\d\\.]+$/' %}
-        {% endif %}
-
-Check that a sequence or a mapping ``has every`` or ``has some`` of its
-elements return ``true`` using an arrow function. The arrow function receives
-the value of the sequence or mapping:
+Check that an iterable ``has every`` or ``has some`` of its elements return
+``true`` using an arrow function. The arrow function receives the value of the
+iterable as its argument:
 
 .. code-block:: twig
 
@@ -758,8 +749,11 @@ the value of the sequence or mapping:
     {% set hasOver38 = sizes has some v => v > 38 %}
     {# hasOver38 is true #}
 
-Containment Operator
-~~~~~~~~~~~~~~~~~~~~
+For an empty iterable, ``has every`` returns ``true`` and ``has some`` returns
+``false``.
+
+Containment Operators
+~~~~~~~~~~~~~~~~~~~~~
 
 The ``in`` operator performs containment test. It returns ``true`` if the left
 operand is contained in the right:
@@ -774,7 +768,7 @@ operand is contained in the right:
 
 .. tip::
 
-    You can use this filter to perform a containment test on strings,
+    You can use this operator to perform a containment test on strings,
     sequences, mappings, or objects implementing the ``Traversable`` interface.
 
 To perform a negative test, use the ``not in`` operator:
@@ -785,6 +779,27 @@ To perform a negative test, use the ``not in`` operator:
 
     {# is equivalent to #}
     {% if not (1 in [1, 2, 3]) %}
+
+The ``starts with`` and ``ends with`` operators are used to check if a string
+starts or ends with a given substring:
+
+.. code-block:: twig
+
+    {% if 'Fabien' starts with 'F' %}
+    {% endif %}
+
+    {% if 'Fabien' ends with 'n' %}
+    {% endif %}
+
+.. note::
+
+    For complex string comparisons, the ``matches`` operator allows you to use
+    `regular expressions`_:
+
+    .. code-block:: twig
+
+        {% if phone matches '/^[\\d\\.]+$/' %}
+        {% endif %}
 
 Test Operator
 ~~~~~~~~~~~~~
@@ -1043,18 +1058,19 @@ Extensions
 Twig can be extended. If you want to create your own extensions, read the
 :ref:`Creating an Extension <creating_extensions>` chapter.
 
-.. _`Twig bundle`:                https://github.com/uhnomoli/PHP-Twig.tmbundle
-.. _`vim-twig plugin`:            https://github.com/lumiliet/vim-twig
-.. _`Twig plugin`:                https://github.com/pulse00/Twig-Eclipse-Plugin
-.. _`Twig language definition`:   https://github.com/gabrielcorpse/gedit-twig-template-language
-.. _`Twig syntax mode`:           https://github.com/bobthecow/Twig-HTML.mode
-.. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
-.. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
-.. _`web-mode.el`:                https://web-mode.org/
-.. _`regular expressions`:        https://www.php.net/manual/en/pcre.pattern.php
-.. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
-.. _`TwigFiddle`:                 https://twigfiddle.com/
-.. _`Twig pack`:                  https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
-.. _`Modern Twig`:                https://marketplace.visualstudio.com/items?itemName=Stanislav.vscode-twig
-.. _`Twig Language Server`:       https://github.com/kaermorchen/twig-language-server/tree/master/packages/language-server
-.. _`Twiggy`:                     https://marketplace.visualstudio.com/items?itemName=moetelo.twiggy
+.. _`Twig bundle`:                          https://github.com/uhnomoli/PHP-Twig.tmbundle
+.. _`vim-twig plugin`:                      https://github.com/lumiliet/vim-twig
+.. _`Twig plugin`:                          https://github.com/pulse00/Twig-Eclipse-Plugin
+.. _`Twig language definition`:             https://github.com/gabrielcorpse/gedit-twig-template-language
+.. _`Twig syntax mode`:                     https://github.com/bobthecow/Twig-HTML.mode
+.. _`other Twig syntax mode`:               https://github.com/muxx/Twig-HTML.mode
+.. _`Notepad++ Twig Highlighter`:           https://github.com/Banane9/notepadplusplus-twig
+.. _`web-mode.el`:                          https://web-mode.org/
+.. _`regular expressions`:                  https://www.php.net/manual/en/pcre.pattern.php
+.. _`PHP-twig for atom`:                    https://github.com/reesef/php-twig
+.. _`TwigFiddle`:                           https://twigfiddle.com/
+.. _`Twig pack`:                            https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
+.. _`Modern Twig`:                          https://marketplace.visualstudio.com/items?itemName=Stanislav.vscode-twig
+.. _`Twig Language Server`:                 https://github.com/kaermorchen/twig-language-server/tree/master/packages/language-server
+.. _`Twiggy`:                               https://marketplace.visualstudio.com/items?itemName=moetelo.twiggy
+.. _`PHP spaceship operator documentation`: https://www.php.net/manual/en/language.operators.comparison.php
