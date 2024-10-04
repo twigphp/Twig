@@ -42,7 +42,7 @@ class LexerTest extends TestCase
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
 
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $this->assertSame('§', $stream->expect(Token::NAME_TYPE)->getValue());
     }
 
@@ -99,7 +99,7 @@ class LexerTest extends TestCase
         // \n (after {% line %})
         $this->assertSame(10, $stream->expect(Token::TEXT_TYPE)->getLine());
         // {{
-        $this->assertSame(11, $stream->expect(Token::VAR_START_TYPE)->getLine());
+        $this->assertSame(11, $stream->expect(Token::PRINT_START_TYPE)->getLine());
         // baz
         $this->assertSame(12, $stream->expect(Token::NAME_TYPE)->getLine());
     }
@@ -117,7 +117,7 @@ class LexerTest extends TestCase
         // foo\nbar
         $this->assertSame(1, $stream->expect(Token::TEXT_TYPE)->getLine());
         // {{
-        $this->assertSame(10, $stream->expect(Token::VAR_START_TYPE)->getLine());
+        $this->assertSame(10, $stream->expect(Token::PRINT_START_TYPE)->getLine());
         // baz
         $this->assertSame(11, $stream->expect(Token::NAME_TYPE)->getLine());
     }
@@ -188,7 +188,7 @@ class LexerTest extends TestCase
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $token = $stream->expect(Token::STRING_TYPE);
         $this->assertSame($expected, $token->getValue());
     }
@@ -266,7 +266,7 @@ class LexerTest extends TestCase
 
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, $expected);
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
@@ -308,14 +308,14 @@ class LexerTest extends TestCase
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
         $stream->expect(Token::TEXT_TYPE, 'foo ');
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, 'bar ');
         $stream->expect(Token::INTERPOLATION_START_TYPE);
         $stream->expect(Token::NAME_TYPE, 'baz');
         $stream->expect(Token::OPERATOR_TYPE, '+');
         $stream->expect(Token::NUMBER_TYPE, '1');
         $stream->expect(Token::INTERPOLATION_END_TYPE);
-        $stream->expect(Token::VAR_END_TYPE);
+        $stream->expect(Token::PRINT_END_TYPE);
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
         // can be executed without throwing any exceptions
@@ -328,9 +328,9 @@ class LexerTest extends TestCase
 
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, 'bar #{baz+1}');
-        $stream->expect(Token::VAR_END_TYPE);
+        $stream->expect(Token::PRINT_END_TYPE);
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
         // can be executed without throwing any exceptions
@@ -343,9 +343,9 @@ class LexerTest extends TestCase
 
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, 'bar # baz');
-        $stream->expect(Token::VAR_END_TYPE);
+        $stream->expect(Token::PRINT_END_TYPE);
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
         // can be executed without throwing any exceptions
@@ -369,7 +369,7 @@ class LexerTest extends TestCase
 
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, 'bar ');
         $stream->expect(Token::INTERPOLATION_START_TYPE);
         $stream->expect(Token::STRING_TYPE, 'foo');
@@ -377,7 +377,7 @@ class LexerTest extends TestCase
         $stream->expect(Token::NAME_TYPE, 'bar');
         $stream->expect(Token::INTERPOLATION_END_TYPE);
         $stream->expect(Token::INTERPOLATION_END_TYPE);
-        $stream->expect(Token::VAR_END_TYPE);
+        $stream->expect(Token::PRINT_END_TYPE);
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
         // can be executed without throwing any exceptions
@@ -412,7 +412,7 @@ class LexerTest extends TestCase
 
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::NUMBER_TYPE, 1);
         $stream->expect(Token::OPERATOR_TYPE, 'and');
 
@@ -464,12 +464,12 @@ bar
         $lexer = new Lexer(new Environment(new ArrayLoader()), [
             'tag_comment' => ['[#', '#]'],
             'tag_block' => ['/#', '#/'],
-            'tag_variable' => ['{#', '#}'],
+            'tag_print' => ['{#', '#}'],
         ]);
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::NAME_TYPE, 'variable');
-        $stream->expect(Token::VAR_END_TYPE);
+        $stream->expect(Token::PRINT_END_TYPE);
         $stream->expect(Token::BLOCK_START_TYPE);
         $stream->expect(Token::NAME_TYPE, 'if');
         $stream->expect(Token::NAME_TYPE, 'true');
@@ -515,13 +515,13 @@ bar
         $template = '{{ "'.$expected.'" }}';
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, $expected);
 
         $template = "{{ '".$expected."' }}";
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, $expected);
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
@@ -539,9 +539,9 @@ bar
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source('{{ "me # this is NOT an inline comment" }}', 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, 'me # this is NOT an inline comment');
-        $stream->expect(Token::VAR_END_TYPE);
+        $stream->expect(Token::PRINT_END_TYPE);
         $this->assertTrue($stream->isEOF());
     }
 
@@ -552,9 +552,9 @@ bar
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
         $stream = $lexer->tokenize(new Source($template, 'index'));
-        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::PRINT_START_TYPE);
         $stream->expect(Token::STRING_TYPE, 'me');
-        $stream->expect(Token::VAR_END_TYPE);
+        $stream->expect(Token::PRINT_END_TYPE);
         $this->assertTrue($stream->isEOF());
     }
 

@@ -32,8 +32,8 @@ The lexer tokenizes a template source code into a token stream (each token is
 an instance of ``\Twig\Token``, and the stream is an instance of
 ``\Twig\TokenStream``). The default lexer recognizes 15 different token types:
 
-* ``\Twig\Token::BLOCK_START_TYPE``, ``\Twig\Token::BLOCK_END_TYPE``: Delimiters for blocks (``{% %}``)
-* ``\Twig\Token::VAR_START_TYPE``, ``\Twig\Token::VAR_END_TYPE``: Delimiters for variables (``{{ }}``)
+* ``\Twig\Token::BLOCK_START_TYPE``, ``\Twig\Token::BLOCK_END_TYPE``: Delimiters for blocks statements (``{% %}``)
+* ``\Twig\Token::PRINT_START_TYPE``, ``\Twig\Token::PRINT_END_TYPE``: Delimiters for print statements (``{{ }}``)
 * ``\Twig\Token::TEXT_TYPE``: A text outside an expression;
 * ``\Twig\Token::NAME_TYPE``: A name in an expression;
 * ``\Twig\Token::NUMBER_TYPE``: A number in an expression;
@@ -60,9 +60,9 @@ Here is the output for the ``Hello {{ name }}`` template:
 .. code-block:: text
 
     TEXT_TYPE(Hello )
-    VAR_START_TYPE()
+    PRINT_START_TYPE()
     NAME_TYPE(name)
-    VAR_END_TYPE()
+    PRINT_END_TYPE()
     EOF_TYPE()
 
 .. note::

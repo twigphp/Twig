@@ -20,9 +20,9 @@ final class Token
     public const EOF_TYPE = -1;
     public const TEXT_TYPE = 0;
     public const BLOCK_START_TYPE = 1;
-    public const VAR_START_TYPE = 2;
+    public const PRINT_START_TYPE = 2;
     public const BLOCK_END_TYPE = 3;
-    public const VAR_END_TYPE = 4;
+    public const PRINT_END_TYPE = 4;
     public const NAME_TYPE = 5;
     public const NUMBER_TYPE = 6;
     public const STRING_TYPE = 7;
@@ -32,6 +32,16 @@ final class Token
     public const INTERPOLATION_END_TYPE = 11;
     public const ARROW_TYPE = 12;
     public const SPREAD_TYPE = 13;
+
+    /**
+     * @deprecated since Twig 3.XX, use PRINT_START_TYPE instead. The VAR_START_TYPE constant will be removed in Twig 4.0.
+     */
+    public const VAR_START_TYPE = self::PRINT_START_TYPE;
+
+    /**
+     * @deprecated since Twig 3.XX, use PRINT_END_TYPE instead. The VAR_END_TYPE constant will be removed in Twig 4.0.
+     */
+    public const VAR_END_TYPE = self::PRINT_END_TYPE;
 
     public function __construct(
         private int $type,
@@ -100,11 +110,17 @@ final class Token
             case self::VAR_START_TYPE:
                 $name = 'VAR_START_TYPE';
                 break;
+            case self::PRINT_START_TYPE:
+                $name = 'PRINT_START_TYPE';
+                break;
             case self::BLOCK_END_TYPE:
                 $name = 'BLOCK_END_TYPE';
                 break;
             case self::VAR_END_TYPE:
                 $name = 'VAR_END_TYPE';
+                break;
+            case self::PRINT_END_TYPE:
+                $name = 'PRINT_END_TYPE';
                 break;
             case self::NAME_TYPE:
                 $name = 'NAME_TYPE';

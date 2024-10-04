@@ -39,9 +39,14 @@ class Lexer
 
     public const STATE_DATA = 0;
     public const STATE_BLOCK = 1;
-    public const STATE_VAR = 2;
+    public const STATE_PRINT = 2;
     public const STATE_STRING = 3;
     public const STATE_INTERPOLATION = 4;
+
+    /**
+     * @deprecated since Twig 3.XX, use STATE_PRINT instead. The STATE_VAR constant will be removed in Twig 4.0.
+     */
+    public const STATE_VAR = self::STATE_PRINT;
 
     public const REGEX_NAME = '/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/A';
     public const REGEX_NUMBER = '/[0-9]+(?:\.[0-9]+)?([Ee][\+\-][0-9]+)?/A';
@@ -63,10 +68,15 @@ class Lexer
     {
         $this->env = $env;
 
+        if (isset($options['tag_variable'])) {
+            trigger_deprecation('twig/twig', '3.XX', 'The "tag_variable" option is deprecated, use "tag_print" instead.');
+            $options['tag_print'] ??= $options['tag_variable'];
+        }
+
         $this->options = array_merge([
             'tag_comment' => ['{#', '#}'],
             'tag_block' => ['{%', '%}'],
-            'tag_variable' => ['{{', '}}'],
+            'tag_print' => ['{{', '}}'],
             'whitespace_trim' => '-',
             'whitespace_line_trim' => '~',
             'whitespace_line_chars' => ' \t\0\x0B',
@@ -83,14 +93,14 @@ class Lexer
         // when PHP 7.3 is the min version, we will be able to remove the '#' part in preg_quote as it's part of the default
         $this->regexes = [
             // }}
-            'lex_var' => '{
+            'lex_print' => '{
                 \s*
                 (?:'.
-                    preg_quote($this->options['whitespace_trim'].$this->options['tag_variable'][1], '#').'\s*'. // -}}\s*
+                    preg_quote($this->options['whitespace_trim'].$this->options['tag_print'][1], '#').'\s*'. // -}}\s*
                     '|'.
-                    preg_quote($this->options['whitespace_line_trim'].$this->options['tag_variable'][1], '#').'['.$this->options['whitespace_line_chars'].']*'. // ~}}[ \t\0\x0B]*
+                    preg_quote($this->options['whitespace_line_trim'].$this->options['tag_print'][1], '#').'['.$this->options['whitespace_line_chars'].']*'. // ~}}[ \t\0\x0B]*
                     '|'.
-                    preg_quote($this->options['tag_variable'][1], '#'). // }}
+                    preg_quote($this->options['tag_print'][1], '#'). // }}
                 ')
             }Ax',
 
@@ -153,7 +163,7 @@ class Lexer
             // {{ or {% or {#
             'lex_tokens_start' => '{
                 ('.
-                    preg_quote($this->options['tag_variable'][0], '#'). // {{
+                    preg_quote($this->options['tag_print'][0], '#'). // {{
                     '|'.
                     preg_quote($this->options['tag_block'][0], '#'). // {%
                     '|'.
@@ -202,8 +212,8 @@ class Lexer
                     $this->lexBlock();
                     break;
 
-                case self::STATE_VAR:
-                    $this->lexVar();
+                case self::STATE_PRINT:
+                    $this->lexPrint();
                     break;
 
                 case self::STATE_STRING:
@@ -283,9 +293,9 @@ class Lexer
                 }
                 break;
 
-            case $this->options['tag_variable'][0]:
-                $this->pushToken(Token::VAR_START_TYPE);
-                $this->pushState(self::STATE_VAR);
+            case $this->options['tag_print'][0]:
+                $this->pushToken(Token::PRINT_START_TYPE);
+                $this->pushState(self::STATE_PRINT);
                 $this->currentVarBlockLine = $this->lineno;
                 break;
         }
@@ -302,10 +312,10 @@ class Lexer
         }
     }
 
-    private function lexVar(): void
+    private function lexPrint(): void
     {
-        if (!$this->brackets && preg_match($this->regexes['lex_var'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::VAR_END_TYPE);
+        if (!$this->brackets && preg_match($this->regexes['lex_print'], $this->code, $match, 0, $this->cursor)) {
+            $this->pushToken(Token::PRINT_END_TYPE);
             $this->moveCursor($match[0]);
             $this->popState();
         } else {
