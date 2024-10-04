@@ -9,6 +9,7 @@ Twig
     templates
     api
     advanced
+    sandbox
     internals
     deprecated
     recipes

@@ -61,11 +61,11 @@ If ``ignore_missing`` is set, it will fall back to rendering nothing if none
 of the templates exist, otherwise it will throw an exception.
 
 When including a template created by an end user, you should consider
-sandboxing it:
+:doc:`sandboxing<../sandbox>` it:
 
 .. code-block:: twig
 
-    {{ include('page.html', sandboxed = true) }}
+    {{ include('page.html', sandboxed: true) }}
 
 Arguments
 ---------
