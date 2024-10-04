@@ -537,5 +537,5 @@ function twig_check_arrow_in_sandbox(Environment $env, $arrow, $thing, $type)
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::checkArrowInSandbox($env, $arrow, $thing, $type);
+    CoreExtension::checkArrow($env, $arrow, $thing, $type);
 }

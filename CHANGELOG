@@ -1,5 +1,6 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Deprecate passing a string or an array to Twig callable arguments accepting arrow functions (pass a `\Closure`)
  * Add support for triggering deprecations for future operator precedence changes
  * Deprecate using the `not` unary operator in an expression with ``*``, ``/``, ``//``, or ``%`` without using explicit parentheses to clarify precedence
  * Deprecate using the `??` binary operator without explicit parentheses

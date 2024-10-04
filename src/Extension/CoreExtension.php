@@ -972,6 +972,7 @@ final class CoreExtension extends AbstractExtension
      * Sorts an array.
      *
      * @param array|\Traversable $array
+     * @param ?\Closure          $arrow
      *
      * @internal
      */
@@ -984,7 +985,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if (null !== $arrow) {
-            self::checkArrowInSandbox($env, $arrow, 'sort', 'filter');
+            self::checkArrow($env, $arrow, 'sort', 'filter');
 
             uasort($array, $arrow);
         } else {
@@ -1838,6 +1839,8 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @param \Closure $arrow
+     *
      * @internal
      */
     public static function filter(Environment $env, $array, $arrow)
@@ -1846,7 +1849,7 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('The "filter" filter expects a sequence/mapping or "Traversable", got "%s".', get_debug_type($array)));
         }
 
-        self::checkArrowInSandbox($env, $arrow, 'filter', 'filter');
+        self::checkArrow($env, $arrow, 'filter', 'filter');
 
         if (\is_array($array)) {
             return array_filter($array, $arrow, \ARRAY_FILTER_USE_BOTH);
@@ -1857,6 +1860,8 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @param \Closure $arrow
+     *
      * @internal
      */
     public static function find(Environment $env, $array, $arrow)
@@ -1865,7 +1870,7 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('The "find" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
-        self::checkArrowInSandbox($env, $arrow, 'find', 'filter');
+        self::checkArrow($env, $arrow, 'find', 'filter');
 
         foreach ($array as $k => $v) {
             if ($arrow($v, $k)) {
@@ -1877,6 +1882,8 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @param \Closure $arrow
+     *
      * @internal
      */
     public static function map(Environment $env, $array, $arrow)
@@ -1885,7 +1892,7 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('The "map" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
-        self::checkArrowInSandbox($env, $arrow, 'map', 'filter');
+        self::checkArrow($env, $arrow, 'map', 'filter');
 
         $r = [];
         foreach ($array as $k => $v) {
@@ -1896,6 +1903,8 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @param \Closure $arrow
+     *
      * @internal
      */
     public static function reduce(Environment $env, $array, $arrow, $initial = null)
@@ -1904,7 +1913,7 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('The "reduce" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
-        self::checkArrowInSandbox($env, $arrow, 'reduce', 'filter');
+        self::checkArrow($env, $arrow, 'reduce', 'filter');
 
         $accumulator = $initial;
         foreach ($array as $key => $value) {
@@ -1915,6 +1924,8 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @param \Closure $arrow
+     *
      * @internal
      */
     public static function arraySome(Environment $env, $array, $arrow)
@@ -1923,7 +1934,7 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('The "has some" test expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
-        self::checkArrowInSandbox($env, $arrow, 'has some', 'operator');
+        self::checkArrow($env, $arrow, 'has some', 'operator');
 
         foreach ($array as $k => $v) {
             if ($arrow($v, $k)) {
@@ -1935,6 +1946,8 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @param \Closure $arrow
+     *
      * @internal
      */
     public static function arrayEvery(Environment $env, $array, $arrow)
@@ -1943,7 +1956,7 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('The "has every" test expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
-        self::checkArrowInSandbox($env, $arrow, 'has every', 'operator');
+        self::checkArrow($env, $arrow, 'has every', 'operator');
 
         foreach ($array as $k => $v) {
             if (!$arrow($v, $k)) {
@@ -1957,11 +1970,17 @@ final class CoreExtension extends AbstractExtension
     /**
      * @internal
      */
-    public static function checkArrowInSandbox(Environment $env, $arrow, $thing, $type)
+    public static function checkArrow(Environment $env, $arrow, $thing, $type)
     {
-        if (!$arrow instanceof \Closure && $env->hasExtension(SandboxExtension::class) && $env->getExtension(SandboxExtension::class)->isSandboxed()) {
+        if ($arrow instanceof \Closure) {
+            return;
+        }
+
+        if ($env->hasExtension(SandboxExtension::class) && $env->getExtension(SandboxExtension::class)->isSandboxed()) {
             throw new RuntimeError(\sprintf('The callable passed to the "%s" %s must be a Closure in sandbox mode.', $thing, $type));
         }
+
+        trigger_deprecation('twig/twig', '3.15', 'Passing a callable that is not a PHP \Closure as an argument to the "%s" %s is deprecated.', $thing, $type);
     }
 
     /**
