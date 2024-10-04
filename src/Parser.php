@@ -127,10 +127,10 @@ class Parser
                     $rv[] = new TextNode($token->getValue(), $token->getLine());
                     break;
 
-                case Token::VAR_START_TYPE:
+                case Token::PRINT_START_TYPE:
                     $token = $this->stream->next();
                     $expr = $this->expressionParser->parseExpression();
-                    $this->stream->expect(Token::VAR_END_TYPE);
+                    $this->stream->expect(Token::PRINT_END_TYPE);
                     $rv[] = new PrintNode($expr, $token->getLine());
                     break;
 

@@ -107,17 +107,11 @@ final class Token
             case self::BLOCK_START_TYPE:
                 $name = 'BLOCK_START_TYPE';
                 break;
-            case self::VAR_START_TYPE:
-                $name = 'VAR_START_TYPE';
-                break;
             case self::PRINT_START_TYPE:
                 $name = 'PRINT_START_TYPE';
                 break;
             case self::BLOCK_END_TYPE:
                 $name = 'BLOCK_END_TYPE';
-                break;
-            case self::VAR_END_TYPE:
-                $name = 'VAR_END_TYPE';
                 break;
             case self::PRINT_END_TYPE:
                 $name = 'PRINT_END_TYPE';
@@ -165,11 +159,11 @@ final class Token
                 return 'text';
             case self::BLOCK_START_TYPE:
                 return 'begin of statement block';
-            case self::VAR_START_TYPE:
+            case self::PRINT_START_TYPE:
                 return 'begin of print statement';
             case self::BLOCK_END_TYPE:
                 return 'end of statement block';
-            case self::VAR_END_TYPE:
+            case self::PRINT_END_TYPE:
                 return 'end of print statement';
             case self::NAME_TYPE:
                 return 'name';

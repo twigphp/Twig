@@ -149,9 +149,9 @@ class ParserTest extends TestCase
             new Token(Token::BLOCK_START_TYPE, '', 1),
             new Token(Token::NAME_TYPE, 'test', 1),
             new Token(Token::BLOCK_END_TYPE, '', 1),
-            new Token(Token::VAR_START_TYPE, '', 1),
+            new Token(Token::PRINT_START_TYPE, '', 1),
             new Token(Token::NAME_TYPE, 'foo', 1),
-            new Token(Token::VAR_END_TYPE, '', 1),
+            new Token(Token::PRINT_END_TYPE, '', 1),
             new Token(Token::EOF_TYPE, '', 1),
         ]));
 
