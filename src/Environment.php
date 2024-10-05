@@ -233,7 +233,7 @@ class Environment
         if ($this->cache instanceof RemovableCacheInterface) {
             $this->cache->remove($name, $cls);
         } else {
-            throw new \LogicException(\sprintf('The "%s" cache class does not support removing template cache as it does not implement the "RemovableCacheInterface" interface.', \get_class($this->cache)));
+            throw new \LogicException(\sprintf('The "%s" cache class does not support removing template cache as it does not implement the "RemovableCacheInterface" interface.', $this->cache::class));
         }
     }
 
