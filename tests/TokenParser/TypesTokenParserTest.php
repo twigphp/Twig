@@ -18,7 +18,7 @@ class TypesTokenParserTest extends TestCase
         $stream = $env->tokenize(new Source($template, ''));
         $parser = new Parser($env);
 
-        $typesNode = $parser->parse($stream)->getNode('body')->getNode('0');
+        $typesNode = $parser->parse($stream)->getNode('body')->getNode(0);
 
         self::assertEquals($expected, $typesNode->getAttribute('mapping'));
     }

@@ -14,8 +14,8 @@ class EnumFunction extends FunctionExpression
         $arguments = $this->getNode('arguments');
         if ($arguments->hasNode('enum')) {
             $firstArgument = $arguments->getNode('enum');
-        } elseif ($arguments->hasNode('0')) {
-            $firstArgument = $arguments->getNode('0');
+        } elseif ($arguments->hasNode(0)) {
+            $firstArgument = $arguments->getNode(0);
         } else {
             $firstArgument = null;
         }
