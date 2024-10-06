@@ -56,6 +56,7 @@ class ExpressionParser
     private $binaryOperators;
     private $readyNodes = [];
     private array $precedenceChanges = [];
+    private bool $deprecationCheck = true;
 
     public function __construct(
         private Parser $parser,
@@ -86,14 +87,14 @@ class ExpressionParser
         }
     }
 
-    public function parseExpression($precedence = 0, $allowArrow = false, bool $deprecationCheck = true)
+    public function parseExpression($precedence = 0, $allowArrow = false)
     {
         if ($allowArrow && $arrow = $this->parseArrow()) {
             return $arrow;
         }
 
         $expr = $this->getPrimary();
-        $previousToken = $token = $this->parser->getCurrentToken();
+        $token = $this->parser->getCurrentToken();
         while ($this->isBinary($token) && $this->binaryOperators[$token->getValue()]['precedence'] >= $precedence) {
             $op = $this->binaryOperators[$token->getValue()];
             $this->parser->getStream()->next();
@@ -105,19 +106,21 @@ class ExpressionParser
             } elseif (isset($op['callable'])) {
                 $expr = $op['callable']($this->parser, $expr);
             } else {
-                $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence'], true);
+                $previous = $this->setDeprecationCheck(true);
+                try {
+                    $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence'], true);
+                } finally {
+                    $this->setDeprecationCheck($previous);
+                }
                 $class = $op['class'];
                 $expr = new $class($expr, $expr1, $token->getLine());
             }
 
             $expr->setAttribute('operator', 'binary_'.$token->getValue());
 
-            $previousToken = $token;
-            $token = $this->parser->getCurrentToken();
-        }
+            $this->triggerPrecedenceDeprecations($expr, $token);
 
-        if ($deprecationCheck) {
-            $this->triggerPrecedenceDeprecations($expr, $previousToken);
+            $token = $this->parser->getCurrentToken();
         }
 
         if (0 === $precedence) {
@@ -147,7 +150,7 @@ class ExpressionParser
                     continue;
                 }
                 if ($node->hasAttribute('operator') && $operatorName === $node->getAttribute('operator')) {
-                    trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('Add explicit parentheses around the "%s" unary operator to avoid behavior change in the next major version as its precedence will change in "%s" at line %d.', $target, $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
+                    trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('Add explicit parentheses around the "%s" unary operator to avoid behavior change in the next major version as its precedence will change in "%s" at line %d.', $target, $this->parser->getStream()->getSourceContext()->getName(), $node->getTemplateLine()));
                 }
             }
         } else {
@@ -157,7 +160,7 @@ class ExpressionParser
                     if ($node->hasAttribute('operator') && $operatorName === $node->getAttribute('operator') && !$node->hasExplicitParentheses()) {
                         $op = explode('_', $operatorName)[1];
                         $change = $this->binaryOperators[$op]['precedence_change'];
-                        trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('Add explicit parentheses around the "%s" binary operator to avoid behavior change in the next major version as its precedence will change in "%s" at line %d.', $op, $this->parser->getStream()->getSourceContext()->getName(), $token->getLine()));
+                        trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('Add explicit parentheses around the "%s" binary operator to avoid behavior change in the next major version as its precedence will change in "%s" at line %d.', $op, $this->parser->getStream()->getSourceContext()->getName(), $node->getTemplateLine()));
                     }
                 }
             }
@@ -178,7 +181,7 @@ class ExpressionParser
             $names = [new AssignNameExpression($token->getValue(), $token->getLine())];
             $stream->expect(Token::ARROW_TYPE);
 
-            return new ArrowFunctionExpression($this->parseExpression(0), new Nodes($names), $line);
+            return new ArrowFunctionExpression($this->parseExpression(), new Nodes($names), $line);
         }
 
         // first, determine if we are parsing an arrow function by finding => (long form)
@@ -219,7 +222,7 @@ class ExpressionParser
         $stream->expect(Token::PUNCTUATION_TYPE, ')');
         $stream->expect(Token::ARROW_TYPE);
 
-        return new ArrowFunctionExpression($this->parseExpression(0), new Nodes($names), $line);
+        return new ArrowFunctionExpression($this->parseExpression(), new Nodes($names), $line);
     }
 
     private function getPrimary(): AbstractExpression
@@ -235,10 +238,19 @@ class ExpressionParser
             $expr = new $class($expr, $token->getLine());
             $expr->setAttribute('operator', 'unary_'.$token->getValue());
 
+            if ($this->deprecationCheck) {
+                $this->triggerPrecedenceDeprecations($expr, $token);
+            }
+
             return $this->parsePostfixExpression($expr);
         } elseif ($token->test(Token::PUNCTUATION_TYPE, '(')) {
             $this->parser->getStream()->next();
-            $expr = $this->parseExpression(deprecationCheck: false)->setExplicitParentheses();
+            $previous = $this->setDeprecationCheck(false);
+            try {
+                $expr = $this->parseExpression()->setExplicitParentheses();
+            } finally {
+                $this->setDeprecationCheck($previous);
+            }
             $this->parser->getStream()->expect(Token::PUNCTUATION_TYPE, ')', 'An opened parenthesis is not properly closed');
 
             return $this->parsePostfixExpression($expr);
@@ -920,5 +932,13 @@ class ExpressionParser
         }
 
         return true;
+    }
+
+    private function setDeprecationCheck(bool $deprecationCheck): bool
+    {
+        $current = $this->deprecationCheck;
+        $this->deprecationCheck = $deprecationCheck;
+
+        return $current;
     }
 }
