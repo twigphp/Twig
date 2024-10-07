@@ -167,10 +167,10 @@ final class HtmlExtension extends AbstractExtension
                     $value = (array) $value;
                 }
 
-                $result[$deepMergeKey] = array_merge($result[$deepMergeKey] ?? [], $value);
+                $result[$deepMergeKey] = [...$result[$deepMergeKey] ?? [], ...$value];
             }
 
-            $result = array_merge($result, $array);
+            $result = [...$result, ...$array];
         }
 
         return $result;
