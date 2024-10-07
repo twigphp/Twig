@@ -10,7 +10,7 @@ class HtmlAttrMergeTest extends TestCase
     /**
      * @dataProvider htmlAttrProvider
      */
-    public function testMerge(array $expected, array $inputs): void
+    public function testMerge(array $expected, array $inputs)
     {
         $result = HtmlExtension::htmlAttrMerge(...$inputs);
 
