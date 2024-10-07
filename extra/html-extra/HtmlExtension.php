@@ -15,8 +15,6 @@ use Symfony\Component\Mime\MimeTypes;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
-use Twig\Extension\CoreExtension;
-use Twig\Extension\EscaperExtension;
 use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -144,21 +142,32 @@ final class HtmlExtension extends AbstractExtension
                 throw new RuntimeError(sprintf('The "attr_merge" filter only works with arrays or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
             }
 
-            $array = CoreExtension::toArray($array);
+            $array = (array) ($array);
 
-            foreach (['class', 'style', 'data', 'aria'] as $deepMergeKey) {
-                if (isset($array[$deepMergeKey])) {
-                    $value = $array[$deepMergeKey];
-                    unset($array[$deepMergeKey]);
-
-                    if (!is_iterable($value)) {
-                        $value = (array) $value;
-                    }
-
-                    $value = CoreExtension::toArray($value);
-
-                    $result[$deepMergeKey] = array_merge($result[$deepMergeKey] ?? [], $value);
+            foreach (['data', 'aria'] as $flatOutKey) {
+                if (!isset($array[$flatOutKey])) {
+                    continue;
                 }
+                $values = (array) $array[$flatOutKey];
+                foreach ($values as $key => $value) {
+                    $result[$flatOutKey.'-'.$key] = $value;
+                }
+                unset($array[$flatOutKey]);
+            }
+
+            foreach (['class', 'style'] as $deepMergeKey) {
+                if (!isset($array[$deepMergeKey])) {
+                    continue;
+                }
+
+                $value = $array[$deepMergeKey];
+                unset($array[$deepMergeKey]);
+
+                if (!is_iterable($value)) {
+                    $value = (array) $value;
+                }
+
+                $result[$deepMergeKey] = array_merge($result[$deepMergeKey] ?? [], $value);
             }
 
             $result = array_merge($result, $array);
