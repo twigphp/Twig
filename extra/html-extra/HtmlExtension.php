@@ -139,7 +139,7 @@ final class HtmlExtension extends AbstractExtension
             }
 
             if (!is_iterable($array)) {
-                throw new RuntimeError(sprintf('The "attr_merge" filter only works with arrays or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
+                throw new RuntimeError(sprintf('The "attr_merge" filter only works with mappings or "Traversable", got "%s" for argument %d.', \gettype($array), $argNumber + 1));
             }
 
             $array = (array) ($array);
