@@ -3,14 +3,40 @@ Twig supports the ?? operator
 --DEPRECATION--
 Since twig/twig 3.15: Add explicit parentheses around the "??" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 4.
 Since twig/twig 3.15: Add explicit parentheses around the "??" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 5.
+Since twig/twig 3.15: Add explicit parentheses around the "??" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 6.
+Since twig/twig 3.15: Add explicit parentheses around the "??" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 7.
+Since twig/twig 3.15: Add explicit parentheses around the "??" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 10.
+Since twig/twig 3.15: Add explicit parentheses around the "~" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 9.
+Since twig/twig 3.15: Add explicit parentheses around the "~" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 11.
+Since twig/twig 3.15: Add explicit parentheses around the "??" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 16.
+Since twig/twig 3.15: Add explicit parentheses around the "~" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 15.
+Since twig/twig 3.15: Add explicit parentheses around the "~" binary operator to avoid behavior change in the next major version as its precedence will change in "index.twig" at line 17.
 --TEMPLATE--
 {{ nope ?? nada ?? 'OK' -}} {# no deprecation as the operators have the same precedence #}
 
 {{ 1 + nope ?? nada ?? 2 }}
-{{ 1 + nope ?? 3 + nada ?? 2 }}
+{{ 1 + nope ??
+   3 + nada ?? 2 }}
+{{ 1 ~ 'notnull' ?? 'foo' ~ '_bar' }}
+{{
+  1 ~ 2 + 3
+  ??
+  1 ~
+  2 + 4
+}}
+{{ (
+  1 ~ 2 + 3
+  ??
+  1 ~
+  2 + 4
+  )
+}}
 --DATA--
 return []
 --EXPECT--
 OK
 3
 6
+1notnull_bar
+48
+48
