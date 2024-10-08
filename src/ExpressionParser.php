@@ -13,7 +13,6 @@
 namespace Twig;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
-use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
@@ -135,7 +134,7 @@ class ExpressionParser
         return $expr;
     }
 
-    private function triggerPrecedenceDeprecations(AbstractExpression $expr, Token $token): void
+    private function triggerPrecedenceDeprecations(AbstractExpression $expr): void
     {
         // Check that the all nodes that are between the 2 precedences have explicit parentheses
         if (!$expr->hasAttribute('operator') || !isset($this->precedenceChanges[$expr->getAttribute('operator')])) {
