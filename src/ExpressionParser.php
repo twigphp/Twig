@@ -87,9 +87,13 @@ class ExpressionParser
         }
     }
 
-    public function parseExpression($precedence = 0, $allowArrow = false)
+    public function parseExpression($precedence = 0)
     {
-        if ($allowArrow && $arrow = $this->parseArrow()) {
+        if (func_num_args() > 1) {
+            trigger_deprecation('twig/twig', '3.15', 'Passing a second argument ($allowArrow) to "%s()" is deprecated.', __METHOD__);
+        }
+
+        if ($arrow = $this->parseArrow()) {
             return $arrow;
         }
 
@@ -108,7 +112,7 @@ class ExpressionParser
             } else {
                 $previous = $this->setDeprecationCheck(true);
                 try {
-                    $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence'], true);
+                    $expr1 = $this->parseExpression(self::OPERATOR_LEFT === $op['associativity'] ? $op['precedence'] + 1 : $op['precedence']);
                 } finally {
                     $this->setDeprecationCheck($previous);
                 }
@@ -672,7 +676,7 @@ class ExpressionParser
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '(')) {
                 $arguments = new EmptyNode();
             } else {
-                $arguments = $this->parseArguments(true, false, true);
+                $arguments = $this->parseArguments(true);
             }
 
             $filter = $this->getFilter($token->getValue(), $token->getLine());
@@ -708,8 +712,12 @@ class ExpressionParser
      *
      * @throws SyntaxError
      */
-    public function parseArguments($namedArguments = false, $definition = false, $allowArrow = false)
+    public function parseArguments($namedArguments = false, $definition = false)
     {
+        if (func_num_args() > 2) {
+            trigger_deprecation('twig/twig', '3.15', 'Passing a third argument ($allowArrow) to "%s()" is deprecated.', __METHOD__);
+        }
+
         $args = [];
         $stream = $this->parser->getStream();
 
@@ -731,11 +739,11 @@ class ExpressionParser
             } else {
                 if ($stream->nextIf(Token::SPREAD_TYPE)) {
                     $hasSpread = true;
-                    $value = new SpreadUnary($this->parseExpression(0, $allowArrow), $stream->getCurrent()->getLine());
+                    $value = new SpreadUnary($this->parseExpression(), $stream->getCurrent()->getLine());
                 } elseif ($hasSpread) {
                     throw new SyntaxError('Normal arguments must be placed before argument unpacking.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
                 } else {
-                    $value = $this->parseExpression(0, $allowArrow);
+                    $value = $this->parseExpression();
                 }
             }
 
@@ -753,7 +761,7 @@ class ExpressionParser
                         throw new SyntaxError('A default value for an argument must be a constant (a boolean, a string, a number, a sequence, or a mapping).', $token->getLine(), $stream->getSourceContext());
                     }
                 } else {
-                    $value = $this->parseExpression(0, $allowArrow);
+                    $value = $this->parseExpression();
                 }
             }
 

@@ -1,0 +1,19 @@
+--TEST--
+macro
+--TEMPLATE--
+{% set people = [
+    {first: "Bob", last: "Smith"},
+    {first: "Alice", last: "Dupond"},
+] %}
+
+{% set first_name_fn = (p) => p.first %}
+
+{{ _self.display_people(people, first_name_fn) }}
+
+{% macro display_people(people, fn) %}
+    {{ people|map(fn)|join(', ') }}
+{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+Bob, Alice
