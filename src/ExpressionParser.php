@@ -87,10 +87,6 @@ class ExpressionParser
 
     public function parseExpression($precedence = 0)
     {
-        if (func_num_args() > 1) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing a second argument ($allowArrow) to "%s()" is deprecated.', __METHOD__);
-        }
-
         if ($arrow = $this->parseArrow()) {
             return $arrow;
         }
@@ -664,10 +660,6 @@ class ExpressionParser
      */
     public function parseArguments($namedArguments = false, $definition = false)
     {
-        if (func_num_args() > 2) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing a third argument ($allowArrow) to "%s()" is deprecated.', __METHOD__);
-        }
-
         $args = [];
         $stream = $this->parser->getStream();
 

@@ -1,10 +1,6 @@
 ``guard``
 =========
 
-.. versionadded:: 3.13
-
-    The ``guard`` tag was added in Twig 3.15.
-
 The ``guard`` statement checks if some Twig callables are available at
 **compilation time** to bypass code compilation that would otherwise fail.
 

@@ -967,11 +967,6 @@ The following operators don't fit into any of the other categories:
 
       {{ people|map(first_name_fn)|join(', ') }}
 
-  .. versionadded:: 3.15
-
-    Arrow function support for functions, macros, and method calls was added in
-    Twig 3.15 (filters and tests were already supported).
-
 Operators
 ~~~~~~~~~
 
