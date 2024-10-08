@@ -1,0 +1,673 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-11T13:18:38Z
+
+I think this could work to solve the linked issue. But, let me add some comments.
+
+Imagine that your bundle template uses `importmap()` function without knowing if AssetMapper is installed in the user app or not:
+
+(1) If it's available, the correct Twig function is used
+(2) If it's NOT available, an exception occurs
+
+The (2) problem is solved by this PR, but there are some sub-cases when defining a stub:
+
+(2.1) You define an empty/simple stub (e.g. `return ''`). User doesn't see an exception, but the app doesn't work as expected either and this can be confusing;
+(2.2) You add some logic to the stub. The problem is duplicating code and e.g. providing unsafe alternatives. E.g. `'csrf_token', fn (string $tokenId) => md5($tokenId)`);
+(2.3) You throw an exception on purpose when using the filter/function/test. E.g. `'importmap', fn (...) => throw new \RuntimeException('... Did you forgot to install symfony/asset-mapper?')`
+
+My use-case would be to always use (2.3). This way:
+
+* If the app doesn't have AssetMapper installed, no exception occurs for having `importmap()` in some Twig templates ...
+* ... but if you try to use that feature actively, you'll see an exception telling you that you must install `symfony/asset-mapper`.
+
+So, if for other folks the use case is always (2.3) or similar, we could do something like Symfony's `UnefinedCallableHandler` and define the stubs like this (`registerFunctionStub(string $functionName, string $nameOfPackageThatDefinesIt)`) to always thro an exception when trying to use those:
+
+```
+$twig->registerFunctionStub('csrf_token', 'symfony/security-csrf');
+$twig->registerFunctionStub('importmap', 'symfony/asset-mapper');
+$twig->registerTestStub('random', '...');
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-11T14:13:54Z
+
+> ```
+> $twig->registerFunctionStub('csrf_token', 'symfony/security-csrf');
+> $twig->registerFunctionStub('importmap', 'symfony/asset-mapper');
+> $twig->registerTestStub('random', '...');
+> ```
+
+We need the function because we need its signature. But I like this idea. I'm not sure it covers that many use cases though.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-11T15:21:58Z
+
+In its current form, it looks like that this is just syntactic sugar over what undefined callable callbacks can do already (the implementation could correspond to registering an undefined callable callback that return `false` when the name does not match).
+And if we allow that stub to produce a non-throwing behavior, the function signature is not enough. We also need the callable options (otherwise, auto-escaping might be off), making this even closer to the undefined callable callbacks.
+
+I'm not sure we need this shortcut implementation as a separate API in the Environment itself.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-11T15:54:35Z
+
+Maybe this is just a recipe in the documentation then?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-12T01:51:16Z
+
+For the importmap scenario i wonder if something like this could do the work, without the negative impact
+
+```twig
+ {% if function('importmap') is defined %}
+    {{ importmap('app', ....) }}
+ {% endif %}
+ ```
+
+ or maybe
+
+```twig
+ {% if 'importmap' is function %}
+    {{ importmap('app', ....) }}
+ {% endif %}
+ ```
+
+As you said @javiereguiluz, either
+ * you do _need_ this function => it looks like a requirement problem, you can add a undefined callback like symfony bridge does
+ * you don't _need_ it => maybe the final app needs it in other places, so hiding the exception / message does not feel like a good idea (as it would impact the whole Environment right?)
+
+ As i see it, stubs could be really usefull in functional tests, but i imagine this is not the same need
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-14T08:59:29Z
+
+> For the importmap scenario i wonder if something like this could do the work, without the negative impact
+>
+> ```
+>  {% if function('importmap') is defined %}
+>     {{ importmap('app', ....) }}
+>  {% endif %}
+> ```
+>
+> or maybe
+>
+> ```
+>  {% if 'importmap' is function %}
+>     {{ importmap('app', ....) }}
+>  {% endif %}
+> ```
+
+No, it's not possible as the function must be defined at compilation time.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-14T09:08:12Z
+
+I've pushed Javier's suggestion: `$twig->registerFunctionStub('importmap', 'symfony/asset-mapper');`
+
+Is it worth it? Would a recipe in the docs be enough?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-14T09:22:32Z
+
+I like this, and I think this would work in most cases. Thanks. But, looking at some real example, I think we might need something more.
+
+E.g. I have this in  the Twig template:
+
+```twig
+<form class="d-none" method="post" id="delete-form">
+    <input type="hidden" name="token" value="{{ ea_csrf_token('ea-delete') }}" />
+</form>
+```
+
+Thanks to this PR, I'd change `ea_csrf_token('ea-delete')` by just `csrf_token('ea-delete')` and folks not having `symfony/security-csrf` will see this error message when loading a  backend page:
+
+> Cannot use the "csrf_token" function because the "symfony/security-csrf" composer package is not installed. Try running "composer require symfony/security-csrf".
+
+But, this could be confusing because the CSRF token is like an indirect feature not related to what the user is doing at this moment.
+
+So, maybe the stub should allow to define an optional error message to display to the user?
+
+```php
+public function registerFunctionStub(string $name, string $package, ?string $customErrorMessage): void
+```
+
+And I'd use it like this:
+
+```php
+registerFunctionStub(
+    'csrf_token',
+    'symfony/security-csrf',
+    'When using the delete action on any backend page, EasyAdmin generates a CSRF token to protect your application. This uses the "csrf_token()" Twig function provided by the "symfony/security-csrf" package. So, you must install that package in your app by running "composer require symfony/security-csrf"'
+);
+```
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-14T09:32:36Z
+
+Just **a random thought**. This feature is needed by a small niche of apps like backend bundles that don't have control over the app where they are installed.
+
+So, maybe we could simplify this by creating a `try ... catch ... endtry` tag. I know this feels like programming :pray: but this already exists in Jinja as a plugin: https://pypi.org/project/jinja-try-catch/
+
+So, my original Twig template:
+
+```twig
+<form class="d-none" method="post" id="delete-form">
+    <input type="hidden" name="token" value="{{ ea_csrf_token('ea-delete') }}" />
+</form>
+```
+
+Would become:
+
+```twig
+<form class="d-none" method="post" id="delete-form">
+    {% try %}
+        <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}" />
+    {% catch %}
+        When using the delete action on any backend page, EasyAdmin generates a CSRF token to protect your application.
+        This uses the "csrf_token()" Twig function provided by the "symfony/security-csrf" package. So, you must install
+        that package in your app by running "composer require symfony/security-csrf"
+    {% endtry %}
+</form>
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-14T14:04:33Z
+
+I may not have understood all this correctly, so please correct me if i missread something :)
+
+### DX (before)
+
+I took an open project (no security, no easyadmin) and added `{{ csrf_token() }}` on a page.
+
+> An exception has been thrown during the rendering of a template ("CSRF tokens can only be generated if a CsrfTokenManagerInterface is injected in FormRenderer::__construct(). Try running "composer require symfony/security-csrf".").
+
+Here, i understand the situation, the "problem" and the solution.
+
+### DX (after) ?
+
+With this stub registration, if easyadmin is installed in the project, i'll read this:
+
+> When using the **delete action** on any **backend** page, **EasyAdmin** generates a CSRF [...]
+
+It would feel _very_ confusing to me, as nothing here is related to what i did 🤷‍♂️
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-14T14:23:21Z
+
+@smnandre for this `csrf_token()` example it might be better to just do nothing and let users see the exception (we did this in case some folks didn't use security with the bundle).
+
+But here's a more realistic use-case. We added support for AssetMapper in EA very early because AssetMapper is great. BUT, many people still use WebpackEncore or nothing at all. So, we have to use this in the template:
+
+```twig
+{% block head_javascript %}
+    {# ... #}
+
+    {% block importmap %}
+        {{ ea_importmap(assets|map(asset => asset.value)) }}
+    {% endblock %}
+{% endblock head_javascript %}
+```
+
+We cannot use `importmap()` directly because not having AssetMapper installed is a common and legit scenario.
+
+The ideal solution is what you proposed earlier:
+
+```twig
+ {% if function('importmap') is defined %}
+    {{ importmap('app', ....) }}
+ {% endif %}
+```
+
+or
+
+```twig
+ {% if 'importmap' is function %}
+    {{ importmap('app', ....) }}
+ {% endif %}
+```
+
+but apparently is not possible technically speaking.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-14T14:50:40Z
+
+Thank you for the example !
+
+I imagine you have something similar for webpack ? So the two of them must be "detected" ?
+
+---
+
+Regardless of the stubs.... i may have something that could help you
+
+In your bundle recipe, do you know you can target / differenciate assetmapper and webpack users ?
+
+Exemple with the [StimulusBundle recipe](https://github.com/symfony/recipes/blob/flex/main/symfony.stimulus-bundle.2.13.json)
+
+```json
+
+      {
+          "file": "assets/bootstrap.js",
+          "content": "import { startStimulusApp } from '@symfony/stimulus-bridge';\n\n// Registers Stimulus controllers from controllers.json and in the controllers/ directory\nexport const app = startStimulusApp(require.context(\n    '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',\n    true,\n    /\\.[jt]sx?$/\n));",
+          "position": "top",
+          "requires": "symfony/webpack-encore-bundle"
+      },
+      {
+          "file": "assets/bootstrap.js",
+          "content": "import { startStimulusApp } from '@symfony/stimulus-bundle';\n\nconst app = startStimulusApp();",
+          "position": "top",
+          "requires": "symfony/asset-mapper"
+      }
+
+```
+
+This is how the bridge/bundle is installed with two ways, the "good  one" being selected wether the packages are installed and the precence of key files :)
+
+So maybe you could do something similar to change/comment a file (ex: a twig path?) or a line of your configuration ?
+
+Not a silver bullet but it's always good to know (if you did not already 😅 )
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-15T17:33:38Z
+
+As we need to execute the test at compilation time, here are two proposals:
+
+```twig
+{% if when compiling 'importmap' is function %}
+    {{ importmap('app') }}
+{% else %}
+    importmap does not exist
+{% endif %}
+```
+
+I've implemented this one and it works well. Basically, it only executes the branch for which the condition is `true`, avoiding the branch for which we are using the non-existing function.
+
+or:
+
+```twig
+## if 'importmap' is function ##
+    {{ importmap('app') }}
+## else ##
+    importmap does not exist
+## endif ##
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-15T17:45:39Z
+
+👏
+
+I love both syntaxes!
+
+Also, this could open the door for nice things .. what are the limits / constraints ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-16T07:09:55Z
+
+The proposed syntaxes look a bit rough to me. Even if we're talking about an advanced feature here, we should keep Twig somewhat friendly to designers.
+
+Another random proposal: introduce `function_exists()`, `filter_exists()` and `test_exists()` functions? (they would be evaluated at compile time too)
+
+```twig
+{% if function_exists('importmap') %}
+    {{ importmap('app', ....) }}
+{% endif %}
+
+{% if filter_exists('u') %}
+    {{ user.biography|u.truncate(120, '…', false) }}
+{% else %}
+    {{ user.biography[:120] }}
+{% endif %}
+
+{% set is_foo = test_exists('foo') ? (variable is foo) : false %}
+```
+
+And don't throw exceptions or output any messages to users:
+
+* If some filter/function/test is really needed, add it as a dependency in your bundle/app
+* If they are optional, then use these functions to use alternative (but fully functional) code when they are not available
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-16T07:33:30Z
+
+> The proposed syntaxes look a bit rough to me. Even if we're talking about an advanced feature here, we should keep Twig somewhat friendly to designers.
+>
+> Another random proposal: introduce `function_exists()`, `filter_exists()` and `test_exists()` functions? (they would be evaluated at compile time too)
+>
+> ```
+> {% if function_exists('importmap') %}
+>     {{ importmap('app', ....) }}
+> {% endif %}
+>
+> {% if filter_exists('u') %}
+>     {{ user.biography|u.truncate(120, '…', false) }}
+> {% else %}
+>     {{ user.biography[:120] }}
+> {% endif %}
+>
+> {% set is_foo = test_exists('foo') ? (variable is foo) : false %}
+> ```
+>
+> And don't throw exceptions or output any messages to users:
+>
+>     * If some filter/function/test is really needed, add it as a dependency in your bundle/app
+>
+>     * If they are optional, then use these functions to use alternative (but fully functional) code when they are not available
+
+The main "problem" is that the test expression (whatever the syntax) must be evaluated at compile time to avoid parsing the branch that won't work. So, we need a way to signal that to the parser.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-16T07:34:25Z
+
+Another syntax (whatever we end up with) is probably the way to go (like a pre-processor).
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-16T07:42:55Z
+
+I thought the `*_exists()` functions were "simple" because in my mind, this is how it would work:
+
+**(1)** Original template code:
+
+```twig
+{% if function_exists('importmap') %}
+    {{ importmap('app', ....) }}
+{% endif %}
+
+{% if filter_exists('u') %}
+    {{ user.biography|u.truncate(120, '…', false) }}
+{% else %}
+    {{ user.biography[:120] }}
+{% endif %}
+
+{% set is_foo = test_exists('foo') ? (variable is foo) : false %}
+```
+
+**(2)** A new compiler pass that evaluates the functions at compiling time and replaces them by `true` or `false`:
+
+Let's consider that `importmap()` exists, `|u` and `foo` don't exist:
+
+```twig
+{% if true %}
+    {{ importmap('app', ....) }}
+{% endif %}
+
+{% if false %}
+    {{ user.biography|u.truncate(120, '…', false) }}
+{% else %}
+    {{ user.biography[:120] }}
+{% endif %}
+
+{% set is_foo = false ? (variable is foo) : false %}
+```
+
+About this concern --> _"So, we need a way to signal that to the parser."_ Just using these `*_exists()` functions would be that signal. In the docs we'd mention that they are evaluated at compile time.
+
+**(3)** A DCE _(dead code elimination)_ compiler pass simplifies the code like this:
+
+```twig
+{{ importmap('app', ....) }}
+
+{{ user.biography[:120] }}
+
+{% set is_foo = false %}
+```
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-16T13:32:25Z
+
+@javiereguiluz the issue is not the `function_exists` that needs to be replaced. It is the body of the `{% if %}` or `{% else %}` that must be parsed in relaxed mode instead of the normal parsing, so that it does not fail at **compile-time** for unknown functions (we cannot skip parsing entirely if we reuse the `{% if %}` and `{% else %}` tags for that, as that would break for nested tags)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-09-28T07:28:55Z
+
+We need to make a decision here. Are we interested in implementing something like I've described? Or is it not worth it?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-28T14:49:25Z
+
+I'd like to have this feature but only if it's simple and the syntax is friendly like the rest of Twig.
+
+I wouldn't use the following because it requires a whole new syntax for a niche feature:
+
+```
+## if 'importmap' is function ##
+    {{ importmap('app') }}
+## else ##
+    importmap does not exist
+## endif ##
+```
+
+This other proposed syntax is growing on me, but I still find it a bit verbose:
+
+```twig
+{% if when compiling 'importmap' is function %}
+    {{ importmap('app') }}
+{% else %}
+    importmap does not exist
+{% endif %}
+```
+
+I asked AI and after a long discussion, it proposed to use a new `guard` tag:
+
+```twig
+{% guard 'importmap' is function %}
+    {{ importmap('app') }}
+{% else %}
+    {# importmap does not exist #}
+{% endguard %}
+```
+
+Why `guard`?
+
+* In general English, “guard” means to protect, watch over, or ensure the safety of something
+* In computing, “guard” often refers to a mechanism that ensures certain conditions are met before proceeding with a block of code. It is typically used to protect code from executing in situations where certain criteria or preconditions are not satisfied.
+
+Some programming languages like Swift use the `guard` keyword for a similar purpose: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/statements/#Guard-Statement
+
+If we want to use a word more commonly used by PHP/Twig developers, we could just use `try`:
+
+```
+{% try 'importmap' is function %}
+    {{ importmap('app') }}
+{% else %}
+    {# importmap does not exist #}
+{% endtry %}
+```
+
+What do you think?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-28T15:20:08Z
+
+> > or maybe
+> > ```
+> >  {% if 'importmap' is function %}
+> >     {{ importmap('app', ....) }}
+> >  {% endif %}
+> > ```
+>
+> No, it's not possible as the function must be defined at compilation time.
+
+Thinking about this again... I fully understand why the syntax i wrote here would be problematic.
+
+But.. what about this one ?
+
+```twig
+{% if 'importmap' is function %}
+
+    {{ function('importmap', {foo: bar}) }}
+
+{% endif %}
+```
+
+Or, similar to block
+
+```twig
+{% if function('importmap') is defined %}
+
+    {{ function('importmap', {foo: bar}) }}
+
+{% endif %}
+```
+
+Or even...
+
+```twig
+
+{{ function('importmap', {foo: bar}, ignore_undefined: true) }}
+
+```
+
+We can imagine this could be compiled/simplified if the function is already defined.
+
+It would both "_not require_" a new syntax, fullfill @javiereguiluz needs (correct me if i'm wrong here), with no performance impact 99% of the time..
+
+... or do i miss something here ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-28T17:18:37Z
+
+@smnandre if this is technically possible, it would solve my issue and not introduce anything special except a new function called `function` and a new filter called `filter`:
+
+```twig
+{{ function('importmap', ['app', ....]) }}
+{{ user.biography|filter('u.truncate', [120, '…', false]) }}
+```
+
+Since `|filter` already exists, we should come up with new names. E.g.:
+
+```twig
+{{ try_function('importmap', ['app', ....]) }}
+{{ user.biography|try_filter('u.truncate', [120, '…', false]) }}
+```
+
+By default, I would not throw if undefined:
+
+```twig
+try_function(string functionName, array functionArguments, bool throw_if_undefined = false)
+try_filter(string filterName, array filterArguments, bool throw_if_undefined = false) }}
+```
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-10-07T07:49:01Z
+
+I've just pushed a second commit that implements a new `guard` tag with a limited syntax that only allows for testing filters/functions/tests:
+
+```twig
+{% guard function importmap %}
+    {{ importmap('app') }}
+{% else %}
+    importmap does not exist
+{% endguard %}
+```
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-10-08T06:35:38Z
+
+@fabpot thanks for your work here! And thanks to all people who contributed ideas and comments.
+
+I checked the new `guard` tag and to me, it'd solve all my needs. I just checked all usages of the hack that I had to avoid calling Twig functions directly. Replacing them with `guard` will work beautifully:
+
+```twig
+{# Before #}
+<link rel="preload" href="{{ ea_call_function_if_exists('preload', asset(css_asset.value, css_asset.packageName), { as: 'style', nopush: css_asset.nopush }) }}"
+    {% for attr, value in css_asset.htmlAttributes %}{{ attr }}="{{ value|e('html_attr') }}" {% endfor %}>
+
+{# After #}
+{% guard function preload %}
+    <link rel="preload" href="{{ preload(asset(css_asset.value, css_asset.packageName), { as: 'style', nopush: css_asset.nopush }) }}"
+        {% for attr, value in css_asset.htmlAttributes %}{{ attr }}="{{ value|e('html_attr') }}" {% endfor %}>
+{% endguard %}
+```
+
+```twig
+{# Before #}
+{% for encore_asset in assets %}
+    {{ ea_call_function_if_exists('encore_entry_link_tags', encore_asset.value, encore_asset.webpackPackageName, encore_asset.webpackEntrypointName, encore_asset.htmlAttributes) }}
+{% endfor %}
+
+{# After #}
+{% guard function encore_entry_link_tags %}
+    {% for encore_asset in assets %}
+        {{ encore_entry_link_tags(encore_asset.value, encore_asset.webpackPackageName, encore_asset.webpackEntrypointName, encore_asset.htmlAttributes) }}
+    {% endfor %}
+{% endguard %}
+```
+
+```twig
+{# Before #}
+{% for encore_asset in assets %}
+    {{ ea_call_function_if_exists('encore_entry_script_tags', encore_asset.value, encore_asset.webpackPackageName, encore_asset.webpackEntrypointName, encore_asset.htmlAttributes) }}
+{% endfor %}
+
+{# After #}
+{% guard function encore_entry_script_tags %}
+    {% for encore_asset in assets %}
+        {{ encore_entry_script_tags(encore_asset.value, encore_asset.webpackPackageName, encore_asset.webpackEntrypointName, encore_asset.htmlAttributes) }}
+    {% endfor %}
+{% endguard %}
+```
+
+```twig
+{# Before #}
+{% for js_asset in assets %}
+    {% if js_asset.preload %}
+        <link rel="preload" href="{{ ea_call_function_if_exists('preload', asset(js_asset.value, js_asset.packageName), { as: 'script', nopush: js_asset.nopush }) }}"
+        {% for attr, value in js_asset.htmlAttributes %}{{ attr }}="{{ value|e('html_attr') }}" {% endfor %}>
+    {% else %}
+        <script src="{{ asset(js_asset.value, js_asset.packageName) }}" {{ js_asset.async ? 'async' }} {{ js_asset.defer ? 'defer' }}
+        {% for attr, value in js_asset.htmlAttributes %}{{ attr }}="{{ value|e('html_attr') }}" {% endfor %}></script>
+    {% endif %}
+{% endfor %}
+
+{# After #}
+{% for js_asset in assets %}
+    {% if js_asset.preload %}
+        {% guard function preload %}
+            <link rel="preload" href="{{ preload(asset(js_asset.value, js_asset.packageName), { as: 'script', nopush: js_asset.nopush }) }}"
+            {% for attr, value in js_asset.htmlAttributes %}{{ attr }}="{{ value|e('html_attr') }}" {% endfor %}>
+        {% endguard %}
+    {% else %}
+        <script src="{{ asset(js_asset.value, js_asset.packageName) }}" {{ js_asset.async ? 'async' }} {{ js_asset.defer ? 'defer' }}
+        {% for attr, value in js_asset.htmlAttributes %}{{ attr }}="{{ value|e('html_attr') }}" {% endfor %}></script>
+    {% endif %}
+{% endfor %}
+```
+
+```twig
+{# Before #}
+<form class="d-none" method="post" id="delete-form">
+    <input type="hidden" name="token" value="{{ ea_csrf_token('ea-delete') }}" />
+</form>
+
+{# After #}
+<form class="d-none" method="post" id="delete-form">
+    <input type="hidden" name="token" value="{% guard function csrf_token %}{{ csrf_token('ea-delete') %}{% endguard %}" />
+</form>
+```
+
+In my case I don't even need to use the `else` clause because in PHP we already check if you are trying to use some feature (e.g. link to AssetMapper assets) without having the needed dependencies and throw an exception. But, this `guard` tag is needed to avoid Twig errors when rendering that template in case you don't use those features and don't have the dependencies that define those Twig functions.
+
+TL;DR thanks, this would work great!
