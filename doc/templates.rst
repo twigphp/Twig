@@ -946,6 +946,32 @@ The following operators don't fit into any of the other categories:
 
       {{ 'Hello %s %s!'|format(...['Fabien', 'Potencier']) }}
 
+* ``=>``: The arrow operator allows the creation of functions. A function is
+  made of arguments (use parentheses for multiple arguments) and an arrow
+  (``=>``) followed by an expression to execute. The expression has access to
+  all passed arguments. Arrow functions are supported as arguments for filters,
+  functions, tests, macros, and method calls.
+
+  For instance, the built-in ``map``, ``reduce``, ``sort``, ``filter``, and
+  ``find`` filters accept arrow functions as arguments:
+
+  .. code-block:: twig
+
+      {{ people|map(p => p.first_name)|join(', ') }}
+
+  Arrow functions can be stored in variables:
+
+  .. code-block:: twig
+
+      {% set first_name_fn = (p) => p.first_name %}
+
+      {{ people|map(first_name_fn)|join(', ') }}
+
+  .. versionadded:: 3.15
+
+    Arrow function support for functions, macros, and method calls was added in
+    Twig 3.15 (filters and tests were already supported).
+
 Operators
 ~~~~~~~~~
 

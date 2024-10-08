@@ -12,6 +12,7 @@ Tags
     do
     embed
     extends
+    guard
     flush
     for
     from
