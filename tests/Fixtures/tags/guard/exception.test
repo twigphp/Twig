@@ -1,0 +1,12 @@
+--TEST--
+"guard" creates a compilation time condition on Twig callables availability
+--TEMPLATE--
+{% guard function foobar %}
+    {{ foobar() }}
+{% else %}
+    {{ foobar() }}
+{% endguard %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Unknown "foobar" function in "index.twig" at line 5.

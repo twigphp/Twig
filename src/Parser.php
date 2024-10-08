@@ -46,10 +46,16 @@ class Parser
     private $traits;
     private $embeddedTemplates = [];
     private $varNameSalt = 0;
+    private $ignoreUnknownTwigCallables = false;
 
     public function __construct(
         private Environment $env,
     ) {
+    }
+
+    public function getEnvironment(): Environment
+    {
+        return $this->env;
     }
 
     public function getVarName(): string
@@ -114,6 +120,22 @@ class Parser
         }
 
         return $node;
+    }
+
+    public function shouldIgnoreUnknownTwigCallables(): bool
+    {
+        return $this->ignoreUnknownTwigCallables;
+    }
+
+    public function subparseIgnoreUnknownTwigCallables($test, bool $dropNeedle = false): void
+    {
+        $previous = $this->ignoreUnknownTwigCallables;
+        $this->ignoreUnknownTwigCallables = true;
+        try {
+            $this->subparse($test, $dropNeedle);
+        } finally {
+            $this->ignoreUnknownTwigCallables = $previous;
+        }
     }
 
     public function subparse($test, bool $dropNeedle = false): Node

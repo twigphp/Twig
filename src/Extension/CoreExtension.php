@@ -81,6 +81,7 @@ use Twig\TokenParser\ExtendsTokenParser;
 use Twig\TokenParser\FlushTokenParser;
 use Twig\TokenParser\ForTokenParser;
 use Twig\TokenParser\FromTokenParser;
+use Twig\TokenParser\GuardTokenParser;
 use Twig\TokenParser\IfTokenParser;
 use Twig\TokenParser\ImportTokenParser;
 use Twig\TokenParser\IncludeTokenParser;
@@ -195,6 +196,7 @@ final class CoreExtension extends AbstractExtension
             new EmbedTokenParser(),
             new WithTokenParser(),
             new DeprecatedTokenParser(),
+            new GuardTokenParser(),
         ];
     }
 

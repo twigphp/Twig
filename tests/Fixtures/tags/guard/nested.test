@@ -1,0 +1,60 @@
+--TEST--
+"guard" creates a compilation time condition on Twig callables availability
+--TEMPLATE--
+{% guard function constant %}
+    {% guard filter foobar %}
+        NEVER
+        {{ 'a'|foobar }}
+    {% else %}
+        The constant function does exist, but the foobar filter does not
+    {%- endguard %}
+{% else %}
+    NEVER
+{% endguard %}
+
+{% guard function constant -%}
+    {% guard filter upper -%}
+        The constant function does exist, and the upper filter as well
+    {%- else %}
+        NEVER
+    {% endguard %}
+{% else %}
+    NEVER
+{% endguard %}
+
+{% guard filter foobar %}
+    NEVER
+    {{ 'a'|foobar }}
+{% else -%}
+    {% guard function barfoo %}
+        NEVER
+    {% else -%}
+        The foobar filter does not exist, and the barfoo function does not exist
+    {%- endguard %}
+{% endguard %}
+
+{% guard filter foobar %}
+    NEVER
+    {{ 'a'|foobar }}
+{% else %}
+    {%- guard function constant -%}
+        The foobar filter does not exist, but the constant function exists
+    {% else -%}
+        NEVER
+    {% endguard %}
+{% endguard %}
+
+{% guard function first %}
+    {% guard function second %}
+        NEVER
+        {{ second() }}
+    {% endguard %}
+    {{ first() }}
+{% endguard %}
+--DATA--
+return []
+--EXPECT--
+The constant function does exist, but the foobar filter does not
+The constant function does exist, and the upper filter as well
+The foobar filter does not exist, and the barfoo function does not exist
+The foobar filter does not exist, but the constant function exists
