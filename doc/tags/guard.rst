@@ -1,7 +1,7 @@
 ``guard``
 =========
 
-.. versionadded:: 3.13
+.. versionadded:: 3.15
 
     The ``guard`` tag was added in Twig 3.15.
 
