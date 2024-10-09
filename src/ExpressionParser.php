@@ -356,19 +356,6 @@ class ExpressionParser
                     break;
                 }
 
-                if (isset($this->unaryOperators[$token->getValue()])) {
-                    $class = $this->unaryOperators[$token->getValue()]['class'];
-                    if (!\in_array($class, [NegUnary::class, PosUnary::class])) {
-                        throw new SyntaxError(\sprintf('Unexpected unary operator "%s".', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
-                    }
-
-                    $this->parser->getStream()->next();
-                    $expr = $this->parsePrimaryExpression();
-
-                    $node = new $class($expr, $token->getLine());
-                    break;
-                }
-
                 if ('=' === $token->getValue() && ('==' === $this->parser->getStream()->look(-1)->getValue() || '!=' === $this->parser->getStream()->look(-1)->getValue())) {
                     throw new SyntaxError(\sprintf('Unexpected operator of value "%s". Did you try to use "===" or "!==" for strict comparison? Use "is same as(value)" instead.', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
                 }
@@ -759,7 +746,7 @@ class ExpressionParser
                 $name = $value->getAttribute('name');
 
                 if ($definition) {
-                    $value = $this->parsePrimaryExpression();
+                    $value = $this->getPrimary();
 
                     if (!$this->checkConstantExpression($value)) {
                         throw new SyntaxError('A default value for an argument must be a constant (a boolean, a string, a number, a sequence, or a mapping).', $token->getLine(), $stream->getSourceContext());
@@ -842,7 +829,7 @@ class ExpressionParser
         if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
             $arguments = $this->parseArguments(true);
         } elseif ($test->hasOneMandatoryArgument()) {
-            $arguments = new Nodes([0 => $this->parsePrimaryExpression()]);
+            $arguments = new Nodes([0 => $this->getPrimary()]);
         }
 
         if ('defined' === $test->getName() && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
