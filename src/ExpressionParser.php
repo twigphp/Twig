@@ -341,6 +341,14 @@ class ExpressionParser
                 $node = $this->parseStringExpression();
                 break;
 
+            case Token::PUNCTUATION_TYPE:
+                $node = match ($token->getValue()) {
+                    '[' => $this->parseSequenceExpression(),
+                    '{' => $this->parseMappingExpression(),
+                    default => throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext()),
+                };
+                break;
+
             case Token::OPERATOR_TYPE:
                 if (preg_match(Lexer::REGEX_NAME, $token->getValue(), $matches) && $matches[0] == $token->getValue()) {
                     // in this context, string operators are variable names
@@ -362,17 +370,13 @@ class ExpressionParser
                     break;
                 }
 
+                if ('=' === $token->getValue() && ('==' === $this->parser->getStream()->look(-1)->getValue() || '!=' === $this->parser->getStream()->look(-1)->getValue())) {
+                    throw new SyntaxError(\sprintf('Unexpected operator of value "%s". Did you try to use "===" or "!==" for strict comparison? Use "is same as(value)" instead.', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
+                }
+
                 // no break
             default:
-                if ($token->test(Token::PUNCTUATION_TYPE, '[')) {
-                    $node = $this->parseSequenceExpression();
-                } elseif ($token->test(Token::PUNCTUATION_TYPE, '{')) {
-                    $node = $this->parseMappingExpression();
-                } elseif ($token->test(Token::OPERATOR_TYPE, '=') && ('==' === $this->parser->getStream()->look(-1)->getValue() || '!=' === $this->parser->getStream()->look(-1)->getValue())) {
-                    throw new SyntaxError(\sprintf('Unexpected operator of value "%s". Did you try to use "===" or "!==" for strict comparison? Use "is same as(value)" instead.', $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
-                } else {
-                    throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
-                }
+                throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
         }
 
         return $this->parsePostfixExpression($node);
