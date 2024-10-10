@@ -15,17 +15,21 @@ use Twig\Compiler;
 
 class TempNameExpression extends AbstractExpression
 {
-    public function __construct(string $name, int $lineno)
+    public const RESERVED_NAMES = ['varargs', 'context', 'macros', 'blocks', 'this'];
+
+    public function __construct(string|int $name, int $lineno)
     {
+        if (is_int($name) || ctype_digit($name)) {
+            $name = (int) $name;
+        } elseif (in_array($name, self::RESERVED_NAMES)) {
+            $name = '_'.$name.'_';
+        }
+
         parent::__construct([], ['name' => $name], $lineno);
     }
 
     public function compile(Compiler $compiler): void
     {
-        $compiler
-            ->raw('$_')
-            ->raw($this->getAttribute('name'))
-            ->raw('_')
-        ;
+        $compiler->raw('$'.$this->getAttribute('name'));
     }
 }

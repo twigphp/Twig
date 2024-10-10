@@ -26,6 +26,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\NegUnary;
@@ -530,11 +531,7 @@ class ExpressionParser
     public function getFunctionNode($name, $line)
     {
         if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
-            $arguments = new ArrayExpression([], $line);
-            foreach ($this->parseArguments() as $n) {
-                $arguments->addElement($n);
-            }
-
+            $arguments = $this->createArguments($line);
             $node = new MethodCallExpression($alias['node'], $alias['name'], $arguments, $line);
             $node->setAttribute('safe', true);
 
@@ -575,9 +572,7 @@ class ExpressionParser
                 $stream->expect(Token::PUNCTUATION_TYPE, ')');
                 if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
                     $type = Template::METHOD_CALL;
-                    foreach ($this->parseArguments() as $n) {
-                        $arguments->addElement($n);
-                    }
+                    $arguments = $this->createArguments($lineno);
                 }
 
                 return new GetAttrExpression($node, $arg, $arguments, $type, $lineno);
@@ -594,9 +589,7 @@ class ExpressionParser
 
                 if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
                     $type = Template::METHOD_CALL;
-                    foreach ($this->parseArguments() as $n) {
-                        $arguments->addElement($n);
-                    }
+                    $arguments = $this->createArguments($lineno);
                 }
             } else {
                 throw new SyntaxError(\sprintf('Expected name or number, got value "%s" of type %s.', $token->getValue(), Token::typeToEnglish($token->getType())), $lineno, $stream->getSourceContext());
@@ -707,6 +700,9 @@ class ExpressionParser
     {
         if (func_num_args() > 2) {
             trigger_deprecation('twig/twig', '3.15', 'Passing a third argument ($allowArrow) to "%s()" is deprecated.', __METHOD__);
+        }
+        if (!$namedArguments) {
+            trigger_deprecation('twig/twig', '3.15', 'Passing "false" for the first argument ($namedArguments) to "%s()" is deprecated.', __METHOD__);
         }
 
         $args = [];
@@ -948,5 +944,15 @@ class ExpressionParser
         $this->deprecationCheck = $deprecationCheck;
 
         return $current;
+    }
+
+    private function createArguments(int $line): ArrayExpression
+    {
+        $arguments = new ArrayExpression([], $line);
+        foreach ($this->parseArguments(true) as $k => $n) {
+            $arguments->addElement($n, new TempNameExpression($k, $line));
+        }
+
+        return $arguments;
     }
 }

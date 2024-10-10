@@ -14,6 +14,7 @@ namespace Twig\Node;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
+use Twig\Node\Expression\TempNameExpression;
 
 /**
  * Represents a macro node.
@@ -31,12 +32,16 @@ class MacroNode extends Node
     public function __construct(string $name, Node $body, Node $arguments, int $lineno)
     {
         if (!$body instanceof BodyNode) {
-            trigger_deprecation('twig/twig', '3.12', \sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, static::class));
+            trigger_deprecation('twig/twig', '3.12', \sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated ("%s" given).', BodyNode::class, static::class, $body::class));
         }
 
         foreach ($arguments as $argumentName => $argument) {
             if (self::VARARGS_NAME === $argumentName) {
                 throw new SyntaxError(\sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments.', self::VARARGS_NAME, $name, self::VARARGS_NAME), $argument->getTemplateLine(), $argument->getSourceContext());
+            }
+            if (in_array($argumentName, TempNameExpression::RESERVED_NAMES)) {
+                $arguments->setNode('_'.$argumentName.'_', $argument);
+                $arguments->removeNode($argumentName);
             }
         }
 
@@ -54,7 +59,7 @@ class MacroNode extends Node
         $pos = 0;
         foreach ($this->getNode('arguments') as $name => $default) {
             $compiler
-                ->raw('$__'.$name.'__ = ')
+                ->raw('$'.$name.' = ')
                 ->subcompile($default)
             ;
 
@@ -68,7 +73,7 @@ class MacroNode extends Node
         }
 
         $compiler
-            ->raw('...$__varargs__')
+            ->raw('...$varargs')
             ->raw(")\n")
             ->write("{\n")
             ->indent()
@@ -80,8 +85,8 @@ class MacroNode extends Node
         foreach ($this->getNode('arguments') as $name => $default) {
             $compiler
                 ->write('')
-                ->string($name)
-                ->raw(' => $__'.$name.'__')
+                ->string(trim($name, '_'))
+                ->raw(' => $'.$name)
                 ->raw(",\n")
             ;
         }
@@ -92,7 +97,7 @@ class MacroNode extends Node
             ->write('')
             ->string(self::VARARGS_NAME)
             ->raw(' => ')
-            ->raw("\$__varargs__,\n")
+            ->raw("\$varargs,\n")
             ->outdent()
             ->write("] + \$this->env->getGlobals();\n\n")
             ->write("\$blocks = [];\n\n")

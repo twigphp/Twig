@@ -6,6 +6,9 @@ Twig supports method calls
 {{ items.foo.bar }}
 {{ items.foo['bar'] }}
 {{ items.foo.bar('a', 43) }}
+{{ items.foo.bar(param1: 'a', param2: 43) }}
+{{ items.foo.bar(param2: 43, param1: 'a') }}
+{{ items.foo.bar('a', param2: 43) }}
 {{ items.foo.bar(foo) }}
 {{ items.foo.self.foo() }}
 {{ items.foo.is }}
@@ -20,6 +23,9 @@ foo
 foo
 bar
 
+bar_a-43
+bar_a-43
+bar_a-43
 bar_a-43
 bar_bar
 foo
