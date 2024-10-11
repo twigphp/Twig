@@ -1,5 +1,7 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Add named arguments support for the dot operator arguments (`foo.bar(some: arg)`)
+ * Add named arguments support for macros
  * Add a new `guard` tag that allows to test if some Twig callables are available at compilation time
  * Allow arrow functions everywhere
  * Deprecate passing a string or an array to Twig callable arguments accepting arrow functions (pass a `\Closure`)

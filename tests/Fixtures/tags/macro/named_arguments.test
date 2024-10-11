@@ -1,0 +1,14 @@
+--TEST--
+"macro" tag
+--TEMPLATE--
+{% import _self as forms %}
+
+{{ forms.input(size: 10, name: 'username') }}
+
+{% macro input(name, value, type, size) %}
+  <input type="{{ type|default("text") }}" name="{{ name }}" value="{{ value|e|default('') }}" size="{{ size|default(20) }}">
+{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+  <input type="text" name="username" value="" size="10">

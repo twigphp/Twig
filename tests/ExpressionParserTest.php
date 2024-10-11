@@ -275,24 +275,6 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    public function testAttributeCallDoesNotSupportNamedArguments()
-    {
-        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
-        $parser = new Parser($env);
-
-        $this->expectException(SyntaxError::class);
-        $parser->parse($env->tokenize(new Source('{{ foo.bar(name="Foo") }}', 'index')));
-    }
-
-    public function testMacroCallDoesNotSupportNamedArguments()
-    {
-        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
-        $parser = new Parser($env);
-
-        $this->expectException(SyntaxError::class);
-        $parser->parse($env->tokenize(new Source('{% from _self import foo %}{% macro foo() %}{% endmacro %}{{ foo(name="Foo") }}', 'index')));
-    }
-
     public function testMacroDefinitionDoesNotSupportNonNameVariableName()
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);

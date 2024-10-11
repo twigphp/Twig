@@ -43,21 +43,9 @@ class MethodCallExpression extends AbstractExpression
             ->repr($this->getNode('node')->getAttribute('name'))
             ->raw('], ')
             ->repr($this->getAttribute('method'))
-            ->raw(', [')
-        ;
-        $first = true;
-        /** @var ArrayExpression */
-        $args = $this->getNode('arguments');
-        foreach ($args->getKeyValuePairs() as $pair) {
-            if (!$first) {
-                $compiler->raw(', ');
-            }
-            $first = false;
-
-            $compiler->subcompile($pair['value']);
-        }
-        $compiler
-            ->raw('], ')
+            ->raw(', ')
+            ->subcompile($this->getNode('arguments'))
+            ->raw(', ')
             ->repr($this->getTemplateLine())
             ->raw(', $context, $this->getSourceContext())');
     }

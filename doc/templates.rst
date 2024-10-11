@@ -225,7 +225,13 @@ built-in functions.
 Named Arguments
 ---------------
 
-Named arguments are supported in functions, filters, and tests.
+Named arguments are supported everywhere you can pass arguments: functions,
+filters, tests, macros, and dot operator arguments.
+
+.. versionadded:: 3.15
+
+    Named arguments for macros and dot operator arguments were added in Twig
+    3.15.
 
 .. versionadded:: 3.12
 
@@ -873,11 +879,14 @@ The following operators don't fit into any of the other categories:
 * ``.``, ``[]``: Gets an attribute of a variable.
 
   The (``.``) operator abstracts getting an attribute of a variable (methods,
- properties or constants of a PHP object, or items of a PHP array):
+  properties or constants of a PHP object, or items of a PHP array):
 
   .. code-block:: twig
 
       {{ user.name }}
+
+      Twig supports a specific syntax via the ``[]`` operator for accessing items
+      on sequences and mappings, like in ``user['name']``:
 
   After the ``.``, you can use any expression by wrapping it with parenthesis
   ``()``.
@@ -900,6 +909,22 @@ The following operators don't fit into any of the other categories:
   Before Twig 3.15, use the :doc:`attribute <functions/attribute>` function
   instead for the two previous use cases.
 
+  Twig supports a specific syntax via the ``[]`` operator for accessing items
+  on sequences and mappings:
+
+  .. code-block:: twig
+
+      {{ user['name'] }}
+
+  When calling a method, you can pass arguments using the ``()`` operator:
+
+  .. code-block:: twig
+
+      {{ html.generate_input() }}
+      {{ html.generate_input('pwd', 'password') }}
+      {# or using named arguments #}
+      {{ html.generate_input(name: 'pwd', type: 'password') }}
+
   .. sidebar:: PHP Implementation
 
       To resolve ``user.name`` to a PHP call, Twig uses the following algorithm
@@ -915,8 +940,8 @@ The following operators don't fit into any of the other categories:
       * if not, and if ``strict_variables`` is ``false``, return ``null``;
       * if not, throw an exception.
 
-      Twig supports a specific syntax via the ``[]`` operator for accessing items
-      on sequences and mappings, like in ``user['name']``:
+      To resolve ``user['name']`` to a PHP call, Twig uses the following algorithm
+      at runtime:
 
       * check if ``user`` is an array and ``name`` a valid element;
       * if not, and if ``strict_variables`` is ``false``, return ``null``;
