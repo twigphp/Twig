@@ -228,11 +228,6 @@ Named Arguments
 Named arguments are supported everywhere you can pass arguments: functions,
 filters, tests, macros, and dot operator arguments.
 
-.. versionadded:: 3.15
-
-    Named arguments for macros and dot operator arguments were added in Twig
-    3.15.
-
 .. code-block:: twig
 
     {% for i in range(low: 1, high: 10, step: 2) %}
