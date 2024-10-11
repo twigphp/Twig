@@ -505,7 +505,7 @@ class ExpressionParser
             return $node;
         }
 
-        $args = $this->parseArguments(true);
+        $args = $this->parseArguments();
         $function = $this->getFunction($name, $line);
 
         if ($function->getParserCallable()) {
@@ -615,7 +615,7 @@ class ExpressionParser
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '(')) {
                 $arguments = new EmptyNode();
             } else {
-                $arguments = $this->parseArguments(true);
+                $arguments = $this->parseArguments();
             }
 
             $filter = $this->getFilter($token->getValue(), $token->getLine());
@@ -635,19 +635,14 @@ class ExpressionParser
     /**
      * Parses arguments.
      *
-     * @param bool $namedArguments Whether to allow named arguments or not
-     * @param bool $definition     Whether we are parsing arguments for a function (or macro) definition
+     * @param bool $definition Whether we are parsing arguments for a function (or macro) definition
      *
      * @return Node
      *
      * @throws SyntaxError
      */
-    public function parseArguments($namedArguments = false, $definition = false)
+    public function parseArguments($namedArguments = true, $definition = false)
     {
-        if (!$namedArguments) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing "false" for the first argument ($namedArguments) to "%s()" is deprecated.', __METHOD__);
-        }
-
         $args = [];
         $stream = $this->parser->getStream();
 
@@ -678,7 +673,7 @@ class ExpressionParser
             }
 
             $name = null;
-            if ($namedArguments && (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':')))) {
+            if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
                 if (!$value instanceof NameExpression) {
                     throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', $value::class), $token->getLine(), $stream->getSourceContext());
                 }
@@ -766,7 +761,7 @@ class ExpressionParser
 
         $arguments = null;
         if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
-            $arguments = $this->parseArguments(true);
+            $arguments = $this->parseArguments();
         } elseif ($test->hasOneMandatoryArgument()) {
             $arguments = new Nodes([0 => $this->getPrimary()]);
         }
@@ -883,7 +878,7 @@ class ExpressionParser
     private function createArguments(int $line): ArrayExpression
     {
         $arguments = new ArrayExpression([], $line);
-        foreach ($this->parseArguments(true) as $k => $n) {
+        foreach ($this->parseArguments() as $k => $n) {
             $arguments->addElement($n, new TempNameExpression($k, $line));
         }
 
