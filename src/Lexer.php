@@ -423,7 +423,7 @@ class Lexer
                 $result .= $nextChar;
             } elseif ("'" === $nextChar || '"' === $nextChar) {
                 if ($nextChar !== $quoteType) {
-                    trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d in string on line %d should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.', $nextChar, $i + 1, $this->lineno);
+                    trigger_deprecation('twig/twig', '3.12', 'Character "%s" should not be escaped; the "\" character is ignored in Twig 3 but will not be in Twig 4. Please remove the extra "\" character at position %d in "%s" at line %d.', $nextChar, $i + 1, $this->source->getName(), $this->lineno);
                 }
                 $result .= $nextChar;
             } elseif ('#' === $nextChar && $i + 1 < $length && '{' === $str[$i + 1]) {
@@ -442,7 +442,7 @@ class Lexer
                 }
                 $result .= \chr(octdec($octal));
             } else {
-                trigger_deprecation('twig/twig', '3.12', 'Character "%s" at position %d in string on line %d should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.', $nextChar, $i + 1, $this->lineno);
+                trigger_deprecation('twig/twig', '3.12', 'Character "%s" should not be escaped; the "\" character is ignored in Twig 3 but will not be in Twig 4. Please remove the extra "\" character at position %d in "%s" at line %d.', $nextChar, $i + 1, $this->source->getName(), $this->lineno);
                 $result .= $nextChar;
             }
 
