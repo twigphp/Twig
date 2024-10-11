@@ -281,7 +281,7 @@ class LexerTest extends TestCase
             {{ 'App\Test' }}
             EOF,
             'AppTest',
-            'Since twig/twig 3.12: Character "T" at position 5 in string on line 1 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
+            'Since twig/twig 3.12: Character "T" should not be escaped; the "\" character is ignored in Twig 3 but will not be in Twig 4. Please remove the extra "\" character at position 5 in "index" at line 1.',
         ];
         yield [
             <<<'EOF'
@@ -290,14 +290,14 @@ class LexerTest extends TestCase
             <<<'EOF'
             foo ' bar
             EOF,
-            'Since twig/twig 3.12: Character "\'" at position 6 in string on line 1 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
+            'Since twig/twig 3.12: Character "\'" should not be escaped; the "\" character is ignored in Twig 3 but will not be in Twig 4. Please remove the extra "\" character at position 6 in "index" at line 1.',
         ];
         yield [
             <<<'EOF'
             {{ 'foo \" bar' }}
             EOF,
             'foo " bar',
-            'Since twig/twig 3.12: Character """ at position 6 in string on line 1 should not be escaped; the "\" character is ignored in Twig v3 but will not be in v4. Please remove the extra "\" character.',
+            'Since twig/twig 3.12: Character """ should not be escaped; the "\" character is ignored in Twig 3 but will not be in Twig 4. Please remove the extra "\" character at position 6 in "index" at line 1.',
         ];
     }
 
