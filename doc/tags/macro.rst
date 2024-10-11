@@ -52,8 +52,8 @@ tag:
     {% import "forms.twig" as forms %}
 
 The above ``import`` call imports the ``forms.twig`` file (which can contain
-only macros, or a template and some macros), and import the macros as items of
-the ``forms`` local variable.
+only macros, or a template and some macros), and import the macros as
+attributes of the ``forms`` local variable.
 
 The macros can then be called at will in the *current* template:
 
@@ -61,6 +61,8 @@ The macros can then be called at will in the *current* template:
 
     <p>{{ forms.input('username') }}</p>
     <p>{{ forms.input('password', null, 'password') }}</p>
+    {# You can also use named arguments #}
+    <p>{{ forms.input(name: 'password', type: 'password') }}</p>
 
 Alternatively you can import names from the template into the current namespace
 via the ``from`` tag:
@@ -70,6 +72,7 @@ via the ``from`` tag:
     {% from 'forms.twig' import input as input_field, textarea %}
 
     <p>{{ input_field('password', '', 'password') }}</p>
+    <p>{{ input_field(name: 'password', type: 'password') }}</p>
     <p>{{ textarea('comment') }}</p>
 
 .. caution::

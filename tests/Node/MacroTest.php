@@ -46,13 +46,13 @@ class MacroTest extends NodeTestCase
 
         yield 'with use_yield = true' => [$node, <<<EOF
 // line 1
-public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
+public function macro_foo(\$foo = null, \$bar = "Foo", ...\$varargs)
 {
     \$macros = \$this->macros;
     \$context = [
-        "foo" => \$__foo__,
-        "bar" => \$__bar__,
-        "varargs" => \$__varargs__,
+        "foo" => \$foo,
+        "bar" => \$bar,
+        "varargs" => \$varargs,
     ] + \$this->env->getGlobals();
 
     \$blocks = [];
@@ -68,13 +68,13 @@ EOF
 
         yield 'with use_yield = false' => [$node, <<<EOF
 // line 1
-public function macro_foo(\$__foo__ = null, \$__bar__ = "Foo", ...\$__varargs__)
+public function macro_foo(\$foo = null, \$bar = "Foo", ...\$varargs)
 {
     \$macros = \$this->macros;
     \$context = [
-        "foo" => \$__foo__,
-        "bar" => \$__bar__,
-        "varargs" => \$__varargs__,
+        "foo" => \$foo,
+        "bar" => \$bar,
+        "varargs" => \$varargs,
     ] + \$this->env->getGlobals();
 
     \$blocks = [];
