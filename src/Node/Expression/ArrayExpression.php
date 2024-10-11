@@ -67,17 +67,10 @@ class ArrayExpression extends AbstractExpression
 
     public function compile(Compiler $compiler): void
     {
-        $keyValuePairs = $this->getKeyValuePairs();
         $compiler->raw('[');
         $first = true;
-        $reopenAfterMergeSpread = false;
         $nextIndex = 0;
-        foreach ($keyValuePairs as $pair) {
-            if ($reopenAfterMergeSpread) {
-                $compiler->raw(', [');
-                $reopenAfterMergeSpread = false;
-            }
-
+        foreach ($this->getKeyValuePairs() as $pair) {
             if (!$first) {
                 $compiler->raw(', ');
             }
@@ -109,8 +102,6 @@ class ArrayExpression extends AbstractExpression
 
             $compiler->subcompile($pair['value']);
         }
-        if (!$reopenAfterMergeSpread) {
-            $compiler->raw(']');
-        }
+        $compiler->raw(']');
     }
 }
