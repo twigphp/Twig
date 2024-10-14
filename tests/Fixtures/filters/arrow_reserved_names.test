@@ -1,0 +1,8 @@
+--TEST--
+"map" filter
+--TEMPLATE--
+{{ [1, 2]|map(true => true * 2)|join(', ') }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: You cannot assign a value to "true" in "index.twig" at line 2.
