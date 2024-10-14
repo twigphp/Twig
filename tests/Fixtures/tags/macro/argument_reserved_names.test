@@ -1,0 +1,12 @@
+--TEST--
+"macro" tag
+--TEMPLATE--
+{% import _self as macros %}
+
+{% macro input(true, false, null) %}
+    {{ true }}
+{% endmacro %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: You cannot assign a value to "true" in "index.twig" at line 4.
