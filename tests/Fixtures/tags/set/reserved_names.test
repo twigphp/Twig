@@ -1,0 +1,8 @@
+--TEST--
+"set" tag
+--TEMPLATE--
+{% set true = 'foo' %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: You cannot assign a value to "true" in "index.twig" at line 2.

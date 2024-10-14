@@ -1,0 +1,8 @@
+--TEST--
+"import" tag
+--TEMPLATE--
+{% import _self as true %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: You cannot assign a value to "true" in "index.twig" at line 2.

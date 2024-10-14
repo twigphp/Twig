@@ -1,0 +1,10 @@
+--TEST--
+"macro" tag does not support : as a separator in definition, only = is supported
+--TEMPLATE--
+{% macro test(foo: "foo") -%}
+    {{ foo }}
+{%- endmacro %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Arguments must be separated by a comma. Unexpected token "punctuation" of value ":" ("punctuation" expected with value ",") in "index.twig" at line 2.

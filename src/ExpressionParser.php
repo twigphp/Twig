@@ -673,7 +673,7 @@ class ExpressionParser
             }
 
             $name = null;
-            if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
+            if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || (!$definition && $token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
                 if (!$value instanceof NameExpression) {
                     throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', $value::class), $token->getLine(), $stream->getSourceContext());
                 }
@@ -722,11 +722,7 @@ class ExpressionParser
             } else {
                 $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
             }
-            $value = $token->getValue();
-            if (\in_array(strtolower($value), ['true', 'false', 'none', 'null'])) {
-                throw new SyntaxError(\sprintf('You cannot assign a value to "%s".', $value), $token->getLine(), $stream->getSourceContext());
-            }
-            $targets[] = new AssignNameExpression($value, $token->getLine());
+            $targets[] = new AssignNameExpression($token->getValue(), $token->getLine());
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;
