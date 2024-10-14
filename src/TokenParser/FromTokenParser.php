@@ -35,9 +35,10 @@ final class FromTokenParser extends AbstractTokenParser
         while (true) {
             $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
-            $alias = $name;
             if ($stream->nextIf('as')) {
-                $alias = $stream->expect(Token::NAME_TYPE)->getValue();
+                $alias = new AssignNameExpression($stream->expect(Token::NAME_TYPE)->getValue(), $token->getLine());
+            } else {
+                $alias = new AssignNameExpression($name, $token->getLine());
             }
 
             $targets[$name] = $alias;
@@ -53,7 +54,7 @@ final class FromTokenParser extends AbstractTokenParser
         $node = new ImportNode($macro, $var, $token->getLine(), $this->parser->isMainScope());
 
         foreach ($targets as $name => $alias) {
-            $this->parser->addImportedSymbol('function', $alias, 'macro_'.$name, $var);
+            $this->parser->addImportedSymbol('function', $alias->getAttribute('name'), 'macro_'.$name, $var);
         }
 
         return $node;

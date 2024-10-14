@@ -1,0 +1,9 @@
+--TEST--
+"for" tag
+--TEMPLATE--
+{% for true in [1, 2] %}
+{% endfor %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: You cannot assign a value to "true" in "index.twig" at line 2.
