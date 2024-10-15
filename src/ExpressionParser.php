@@ -538,7 +538,7 @@ class ExpressionParser
             return $node;
         }
 
-        $args = $this->parseArguments(true);
+        $args = $this->parseOnlyArguments();
         $function = $this->getFunction($name, $line);
 
         if ($function->getParserCallable()) {
@@ -660,7 +660,7 @@ class ExpressionParser
             if (!$this->parser->getStream()->test(Token::PUNCTUATION_TYPE, '(')) {
                 $arguments = new EmptyNode();
             } else {
-                $arguments = $this->parseArguments(true);
+                $arguments = $this->parseOnlyArguments();
             }
 
             $filter = $this->getFilter($token->getValue(), $token->getLine());
@@ -689,20 +689,24 @@ class ExpressionParser
     /**
      * Parses arguments.
      *
-     * @param bool $namedArguments Whether to allow named arguments or not
-     * @param bool $definition     Whether we are parsing arguments for a function (or macro) definition
-     *
      * @return Node
      *
      * @throws SyntaxError
      */
-    public function parseArguments($namedArguments = false, $definition = false)
+    public function parseArguments()
     {
+        $namedArguments = false;
+        $definition = false;
         if (func_num_args() > 2) {
             trigger_deprecation('twig/twig', '3.15', 'Passing a third argument ($allowArrow) to "%s()" is deprecated.', __METHOD__);
         }
-        if (!$namedArguments) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing "false" for the first argument ($namedArguments) to "%s()" is deprecated.', __METHOD__);
+        if (func_num_args() > 1) {
+            trigger_deprecation('twig/twig', '3.15', 'Passing a second argument ($definition) to "%s()" is deprecated.', __METHOD__);
+            $definition = func_get_arg(1);
+        }
+        if (func_num_args() > 0) {
+            trigger_deprecation('twig/twig', '3.15', 'Passing a first argument ($namedArguments) to "%s()" is deprecated.', __METHOD__);
+            $namedArguments = func_get_arg(0);
         }
 
         $args = [];
@@ -819,7 +823,7 @@ class ExpressionParser
 
         $arguments = null;
         if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
-            $arguments = $this->parseArguments(true);
+            $arguments = $this->parseOnlyArguments();
         } elseif ($test->hasOneMandatoryArgument()) {
             $arguments = new Nodes([0 => $this->getPrimary()]);
         }
@@ -917,6 +921,7 @@ class ExpressionParser
     }
 
     // checks that the node only contains "constant" elements
+    // to be removed in 4.0
     private function checkConstantExpression(Node $node): bool
     {
         if (!($node instanceof ConstantExpression || $node instanceof ArrayExpression
@@ -945,10 +950,55 @@ class ExpressionParser
     private function createArguments(int $line): ArrayExpression
     {
         $arguments = new ArrayExpression([], $line);
-        foreach ($this->parseArguments(true) as $k => $n) {
+        foreach ($this->parseOnlyArguments() as $k => $n) {
             $arguments->addElement($n, new TempNameExpression($k, $line));
         }
 
         return $arguments;
+    }
+
+    public function parseOnlyArguments()
+    {
+        $args = [];
+        $stream = $this->parser->getStream();
+        $stream->expect(Token::PUNCTUATION_TYPE, '(', 'A list of arguments must begin with an opening parenthesis');
+        $hasSpread = false;
+        while (!$stream->test(Token::PUNCTUATION_TYPE, ')')) {
+            if ($args) {
+                $stream->expect(Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
+
+                // if the comma above was a trailing comma, early exit the argument parse loop
+                if ($stream->test(Token::PUNCTUATION_TYPE, ')')) {
+                    break;
+                }
+            }
+
+            if ($stream->nextIf(Token::SPREAD_TYPE)) {
+                $hasSpread = true;
+                $value = new SpreadUnary($this->parseExpression(), $stream->getCurrent()->getLine());
+            } elseif ($hasSpread) {
+                throw new SyntaxError('Normal arguments must be placed before argument unpacking.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+            } else {
+                $value = $this->parseExpression();
+            }
+
+            $name = null;
+            if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
+                if (!$value instanceof NameExpression) {
+                    throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', \get_class($value)), $token->getLine(), $stream->getSourceContext());
+                }
+                $name = $value->getAttribute('name');
+                $value = $this->parseExpression();
+            }
+
+            if (null === $name) {
+                $args[] = $value;
+            } else {
+                $args[$name] = $value;
+            }
+        }
+        $stream->expect(Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
+
+        return new Nodes($args);
     }
 }
