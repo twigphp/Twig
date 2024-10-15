@@ -185,12 +185,11 @@ EOF
             ->getNode('arguments')
         ;
 
-        $this->assertTrue($argumentNodes->getNode('po')->hasAttribute('is_implicit'));
-        $this->assertTrue($argumentNodes->getNode('po')->getAttribute('is_implicit'));
-        $this->assertNull($argumentNodes->getNode('po')->getAttribute('value'));
+        $this->assertTrue($argumentNodes->getNode(1)->hasAttribute('is_implicit'));
+        $this->assertNull($argumentNodes->getNode(1)->getAttribute('value'));
 
-        $this->assertFalse($argumentNodes->getNode('lo')->hasAttribute('is_implicit'));
-        $this->assertTrue($argumentNodes->getNode('lo')->getAttribute('value'));
+        $this->assertFalse($argumentNodes->getNode(3)->hasAttribute('is_implicit'));
+        $this->assertTrue($argumentNodes->getNode(3)->getAttribute('value'));
     }
 
     protected function getParser()
