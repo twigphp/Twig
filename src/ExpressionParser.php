@@ -641,20 +641,6 @@ class ExpressionParser
      */
     public function parseArguments()
     {
-        $namedArguments = false;
-        $definition = false;
-        if (func_num_args() > 2) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing a third argument ($allowArrow) to "%s()" is deprecated.', __METHOD__);
-        }
-        if (func_num_args() > 1) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing a second argument ($definition) to "%s()" is deprecated.', __METHOD__);
-            $definition = func_get_arg(1);
-        }
-        if (func_num_args() > 0) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing a first argument ($namedArguments) to "%s()" is deprecated.', __METHOD__);
-            $namedArguments = func_get_arg(0);
-        }
-
         $args = [];
         $stream = $this->parser->getStream();
 
@@ -670,51 +656,28 @@ class ExpressionParser
                 }
             }
 
-            if ($definition) {
-                $token = $stream->expect(Token::NAME_TYPE, null, 'An argument must be a name');
-                $value = new NameExpression($token->getValue(), $this->parser->getCurrentToken()->getLine());
+            if ($stream->nextIf(Token::SPREAD_TYPE)) {
+                $hasSpread = true;
+                $value = new SpreadUnary($this->parseExpression(), $stream->getCurrent()->getLine());
+            } elseif ($hasSpread) {
+                throw new SyntaxError('Normal arguments must be placed before argument unpacking.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
             } else {
-                if ($stream->nextIf(Token::SPREAD_TYPE)) {
-                    $hasSpread = true;
-                    $value = new SpreadUnary($this->parseExpression(), $stream->getCurrent()->getLine());
-                } elseif ($hasSpread) {
-                    throw new SyntaxError('Normal arguments must be placed before argument unpacking.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
-                } else {
-                    $value = $this->parseExpression();
-                }
+                $value = $this->parseExpression();
             }
 
             $name = null;
-            if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || (!$definition && $token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
+            if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
                 if (!$value instanceof NameExpression) {
                     throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', $value::class), $token->getLine(), $stream->getSourceContext());
                 }
                 $name = $value->getAttribute('name');
-
-                if ($definition) {
-                    $value = $this->getPrimary();
-
-                    if (!$this->checkConstantExpression($value)) {
-                        throw new SyntaxError('A default value for an argument must be a constant (a boolean, a string, a number, a sequence, or a mapping).', $token->getLine(), $stream->getSourceContext());
-                    }
-                } else {
-                    $value = $this->parseExpression();
-                }
+                $value = $this->parseExpression();
             }
 
-            if ($definition) {
-                if (null === $name) {
-                    $name = $value->getAttribute('name');
-                    $value = new ConstantExpression(null, $this->parser->getCurrentToken()->getLine());
-                    $value->setAttribute('is_implicit', true);
-                }
-                $args[$name] = $value;
+            if (null === $name) {
+                $args[] = $value;
             } else {
-                if (null === $name) {
-                    $args[] = $value;
-                } else {
-                    $args[$name] = $value;
-                }
+                $args[$name] = $value;
             }
         }
         $stream->expect(Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
@@ -855,25 +818,6 @@ class ExpressionParser
         }
 
         return $filter;
-    }
-
-    // checks that the node only contains "constant" elements
-    // to be removed in 4.0
-    private function checkConstantExpression(Node $node): bool
-    {
-        if (!($node instanceof ConstantExpression || $node instanceof ArrayExpression
-            || $node instanceof NegUnary || $node instanceof PosUnary
-        )) {
-            return false;
-        }
-
-        foreach ($node as $n) {
-            if (!$this->checkConstantExpression($n)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private function setDeprecationCheck(bool $deprecationCheck): bool
