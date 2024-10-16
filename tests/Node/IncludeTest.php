@@ -79,13 +79,13 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 try {
-    \$__internal_%s = \$this->loadTemplate("foo.twig", null, 1);
+    \$_v%s = \$this->loadTemplate("foo.twig", null, 1);
 } catch (LoaderError \$e) {
     // ignore missing template
-    \$__internal_%s = null;
+    \$_v%s = null;
 }
-if (\$__internal_%s) {
-    yield from \$__internal_%s->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
+if (\$_v%s) {
+    yield from \$_v%s->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
 }
 EOF
             , null, true];

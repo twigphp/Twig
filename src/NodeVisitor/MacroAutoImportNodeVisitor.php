@@ -12,11 +12,12 @@
 namespace Twig\NodeVisitor;
 
 use Twig\Environment;
-use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\AssignContextVariable;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ImportNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
@@ -46,7 +47,7 @@ final class MacroAutoImportNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ModuleNode) {
             $this->inAModule = false;
             if ($this->hasMacroCalls) {
-                $node->getNode('constructor_end')->setNode('_auto_macro_import', new ImportNode(new NameExpression('_self', 0), new AssignNameExpression('_self', 0), 0));
+                $node->getNode('constructor_end')->setNode('_auto_macro_import', new ImportNode(new ContextVariable('_self', 0), new AssignContextVariable('_self', 0), 0));
             }
         } elseif ($this->inAModule) {
             if (
