@@ -11,8 +11,8 @@ namespace Twig\Tests\Node;
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\AssignNameExpression;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\AssignContextVariable;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ForNode;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
@@ -22,10 +22,10 @@ class ForTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $keyTarget = new AssignNameExpression('key', 1);
-        $valueTarget = new AssignNameExpression('item', 1);
-        $seq = new NameExpression('items', 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
+        $keyTarget = new AssignContextVariable('key', 1);
+        $valueTarget = new AssignContextVariable('item', 1);
+        $seq = new ContextVariable('items', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
@@ -36,7 +36,7 @@ class ForTest extends NodeTestCase
         $this->assertEquals($body, $node->getNode('body')->getNode('0'));
         $this->assertFalse($node->hasNode('else'));
 
-        $else = new PrintNode(new NameExpression('foo', 1), 1);
+        $else = new PrintNode(new ContextVariable('foo', 1), 1);
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
         $this->assertEquals($else, $node->getNode('else'));
@@ -46,10 +46,10 @@ class ForTest extends NodeTestCase
     {
         $tests = [];
 
-        $keyTarget = new AssignNameExpression('key', 1);
-        $valueTarget = new AssignNameExpression('item', 1);
-        $seq = new NameExpression('items', 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
+        $keyTarget = new AssignContextVariable('key', 1);
+        $valueTarget = new AssignContextVariable('item', 1);
+        $seq = new ContextVariable('items', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
@@ -71,10 +71,10 @@ unset(\$context['_seq'], \$context['key'], \$context['item'], \$context['_parent
 EOF
         ];
 
-        $keyTarget = new AssignNameExpression('k', 1);
-        $valueTarget = new AssignNameExpression('v', 1);
-        $seq = new NameExpression('values', 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
+        $keyTarget = new AssignContextVariable('k', 1);
+        $valueTarget = new AssignContextVariable('v', 1);
+        $seq = new ContextVariable('values', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);
@@ -113,10 +113,10 @@ unset(\$context['_seq'], \$context['k'], \$context['v'], \$context['_parent'], \
 EOF
         ];
 
-        $keyTarget = new AssignNameExpression('k', 1);
-        $valueTarget = new AssignNameExpression('v', 1);
-        $seq = new NameExpression('values', 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
+        $keyTarget = new AssignContextVariable('k', 1);
+        $valueTarget = new AssignContextVariable('v', 1);
+        $seq = new ContextVariable('values', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);
@@ -155,11 +155,11 @@ unset(\$context['_seq'], \$context['k'], \$context['v'], \$context['_parent'], \
 EOF
         ];
 
-        $keyTarget = new AssignNameExpression('k', 1);
-        $valueTarget = new AssignNameExpression('v', 1);
-        $seq = new NameExpression('values', 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
-        $else = new PrintNode(new NameExpression('foo', 1), 1);
+        $keyTarget = new AssignContextVariable('k', 1);
+        $valueTarget = new AssignContextVariable('v', 1);
+        $seq = new ContextVariable('values', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
+        $else = new PrintNode(new ContextVariable('foo', 1), 1);
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);
 
