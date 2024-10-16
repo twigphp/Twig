@@ -13,23 +13,23 @@ namespace Twig\Tests\Node\Expression;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Test\NodeTestCase;
 
-class NameTest extends NodeTestCase
+class ContextVariableTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $node = new NameExpression('foo', 1);
+        $node = new ContextVariable('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
     public static function provideTests(): iterable
     {
-        $node = new NameExpression('foo', 1);
-        $self = new NameExpression('_self', 1);
-        $context = new NameExpression('_context', 1);
+        $node = new ContextVariable('foo', 1);
+        $self = new ContextVariable('_self', 1);
+        $context = new ContextVariable('_context', 1);
 
         $env = new Environment(new ArrayLoader(), ['strict_variables' => true]);
         $env1 = new Environment(new ArrayLoader(), ['strict_variables' => false]);

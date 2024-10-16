@@ -18,7 +18,6 @@ use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ArrowFunctionExpression;
-use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConditionalExpression;
@@ -26,13 +25,15 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
-use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Expression\Unary\SpreadUnary;
+use Twig\Node\Expression\Variable\AssignContextVariable;
+use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\LocalVariable;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
 
@@ -183,7 +184,7 @@ class ExpressionParser
         if ($stream->look(1)->test(Token::ARROW_TYPE)) {
             $line = $stream->getCurrent()->getLine();
             $token = $stream->expect(Token::NAME_TYPE);
-            $names = [new AssignNameExpression($token->getValue(), $token->getLine())];
+            $names = [new AssignContextVariable($token->getValue(), $token->getLine())];
             $stream->expect(Token::ARROW_TYPE);
 
             return new ArrowFunctionExpression($this->parseExpression(), new Nodes($names), $line);
@@ -218,7 +219,7 @@ class ExpressionParser
         $names = [];
         while (true) {
             $token = $stream->expect(Token::NAME_TYPE);
-            $names[] = new AssignNameExpression($token->getValue(), $token->getLine());
+            $names[] = new AssignContextVariable($token->getValue(), $token->getLine());
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;
@@ -326,7 +327,7 @@ class ExpressionParser
                         if ('(' === $this->parser->getCurrentToken()->getValue()) {
                             $node = $this->getFunctionNode($token->getValue(), $token->getLine());
                         } else {
-                            $node = new NameExpression($token->getValue(), $token->getLine());
+                            $node = new ContextVariable($token->getValue(), $token->getLine());
                         }
                 }
                 break;
@@ -353,7 +354,7 @@ class ExpressionParser
                 if (preg_match(Lexer::REGEX_NAME, $token->getValue(), $matches) && $matches[0] == $token->getValue()) {
                     // in this context, string operators are variable names
                     $this->parser->getStream()->next();
-                    $node = new NameExpression($token->getValue(), $token->getLine());
+                    $node = new ContextVariable($token->getValue(), $token->getLine());
                     break;
                 }
 
@@ -484,7 +485,7 @@ class ExpressionParser
 
                 // {a} is a shortcut for {a:a}
                 if ($stream->test(Token::PUNCTUATION_TYPE, [',', '}'])) {
-                    $value = new NameExpression($key->getAttribute('value'), $key->getTemplateLine());
+                    $value = new ContextVariable($key->getAttribute('value'), $key->getTemplateLine());
                     $node->addElement($value, $key);
                     continue;
                 }
@@ -726,7 +727,7 @@ class ExpressionParser
 
             if ($definition) {
                 $token = $stream->expect(Token::NAME_TYPE, null, 'An argument must be a name');
-                $value = new NameExpression($token->getValue(), $this->parser->getCurrentToken()->getLine());
+                $value = new ContextVariable($token->getValue(), $this->parser->getCurrentToken()->getLine());
             } else {
                 if ($stream->nextIf(Token::SPREAD_TYPE)) {
                     $hasSpread = true;
@@ -788,7 +789,7 @@ class ExpressionParser
             } else {
                 $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
             }
-            $targets[] = new AssignNameExpression($token->getValue(), $token->getLine());
+            $targets[] = new AssignContextVariable($token->getValue(), $token->getLine());
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;
@@ -951,7 +952,7 @@ class ExpressionParser
     {
         $arguments = new ArrayExpression([], $line);
         foreach ($this->parseOnlyArguments() as $k => $n) {
-            $arguments->addElement($n, new TempNameExpression($k, $line));
+            $arguments->addElement($n, new LocalVariable($k, $line));
         }
 
         return $arguments;

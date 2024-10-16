@@ -12,15 +12,15 @@ namespace Twig\Tests\Node\Expression;
  */
 
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\NullCoalesceExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Test\NodeTestCase;
 
 class NullCoalesceTest extends NodeTestCase
 {
     public static function provideTests(): iterable
     {
-        $left = new NameExpression('foo', 1);
+        $left = new ContextVariable('foo', 1);
         $right = new ConstantExpression(2, 1);
         $node = new NullCoalesceExpression($left, $right, 1);
 
