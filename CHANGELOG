@@ -1,5 +1,8 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Deprecate `TempNameExpression` in favor of `LocalVariable`
+ * Deprecate `NameExpression` in favor of `ContextVariable`
+ * Deprecate `AssignNameExpression` in favor of `AssignContextVariable`
  * Remove `MacroAutoImportNodeVisitor`
  * Deprecate `MethodCallExpression` in favor of `MacroReferenceExpression`
  * Fix support for the "is defined" test on `_self.xxx` (auto-imported) macros

@@ -14,8 +14,9 @@ namespace Twig\Node;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\GlobalTemplateVariable;
+use Twig\Node\Expression\Variable\TemplateVariable;
 
 /**
  * Represents an import node.
@@ -28,7 +29,7 @@ class ImportNode extends Node
     /**
      * @param bool $global
      */
-    public function __construct(AbstractExpression $expr, AbstractExpression|string $var, int $lineno, $global = true)
+    public function __construct(AbstractExpression $expr, AbstractExpression|TemplateVariable $var, int $lineno, $global = true)
     {
         if (null === $global || \is_string($global)) {
             trigger_deprecation('twig/twig', '3.12', 'Passing a tag to %s() is deprecated.', __METHOD__);
@@ -37,31 +38,28 @@ class ImportNode extends Node
             throw new \TypeError(\sprintf('Argument 4 passed to "%s()" must be a boolean, "%s" given.', __METHOD__, get_debug_type($global)));
         }
 
-        if (!\is_string($var)) {
-            trigger_deprecation('twig/twig', '3.15', \sprintf('Passing a "%s" instance as the second argument of "%s" is deprecated, pass a "string" instead.', $var::class, __CLASS__));
-        } else {
-            $var = new AssignNameExpression($var, $lineno);
+        if (!$var instanceof TemplateVariable) {
+            trigger_deprecation('twig/twig', '3.15', \sprintf('Passing a "%s" instance as the second argument of "%s" is deprecated, pass a "%s" instead.', $var::class, __CLASS__, TemplateVariable::class));
+
+            $var = new TemplateVariable($var->getAttribute('name'), $lineno);
         }
 
-        $this->deprecateNode('var', new NameDeprecation('var', '3.15'));
-
-        parent::__construct(['expr' => $expr, 'var' => $var], ['global' => $global, 'var' => $var->getAttribute('name')], $lineno);
+        parent::__construct(['expr' => $expr, 'var' => $var], ['global' => $global], $lineno);
     }
 
     public function compile(Compiler $compiler): void
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('$macros[')
-            ->repr($this->getAttribute('var'))
-            ->raw('] = ')
+            ->write('')
+            ->subcompile($this->getNode('var'))
+            ->raw(' = ')
         ;
 
         if ($this->getAttribute('global')) {
             $compiler
-                ->raw('$this->macros[')
-                ->repr($this->getAttribute('var'))
-                ->raw('] = ')
+                ->subcompile(new GlobalTemplateVariable($this->getNode('var')->getAttribute('name'), $this->getTemplateLine()))
+                ->raw(' = ')
             ;
         }
 

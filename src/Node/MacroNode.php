@@ -15,7 +15,7 @@ use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\TempNameExpression;
+use Twig\Node\Expression\Variable\LocalVariable;
 
 /**
  * Represents a macro node.
@@ -42,7 +42,7 @@ class MacroNode extends Node
 
             $args = new ArrayExpression([], $arguments->getTemplateLine());
             foreach ($arguments as $name => $default) {
-                $args->addElement($default, new TempNameExpression($name, $default->getTemplateLine()));
+                $args->addElement($default, new LocalVariable($name, $default->getTemplateLine()));
             }
             $arguments = $args;
         }

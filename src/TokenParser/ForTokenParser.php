@@ -12,7 +12,7 @@
 
 namespace Twig\TokenParser;
 
-use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\ForNode;
 use Twig\Node\Node;
 use Twig\Token;
@@ -50,13 +50,13 @@ final class ForTokenParser extends AbstractTokenParser
 
         if (\count($targets) > 1) {
             $keyTarget = $targets->getNode('0');
-            $keyTarget = new AssignNameExpression($keyTarget->getAttribute('name'), $keyTarget->getTemplateLine());
+            $keyTarget = new AssignContextVariable($keyTarget->getAttribute('name'), $keyTarget->getTemplateLine());
             $valueTarget = $targets->getNode('1');
         } else {
-            $keyTarget = new AssignNameExpression('_key', $lineno);
+            $keyTarget = new AssignContextVariable('_key', $lineno);
             $valueTarget = $targets->getNode('0');
         }
-        $valueTarget = new AssignNameExpression($valueTarget->getAttribute('name'), $valueTarget->getTemplateLine());
+        $valueTarget = new AssignContextVariable($valueTarget->getAttribute('name'), $valueTarget->getTemplateLine());
 
         return new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, $lineno);
     }

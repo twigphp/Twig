@@ -11,21 +11,21 @@ namespace Twig\Tests\Node\Expression;
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Test\NodeTestCase;
 
-class AssignNameTest extends NodeTestCase
+class AssignContextVariableTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $node = new AssignNameExpression('foo', 1);
+        $node = new AssignContextVariable('foo', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
     public static function provideTests(): iterable
     {
-        $node = new AssignNameExpression('foo', 1);
+        $node = new AssignContextVariable('foo', 1);
 
         return [
             [$node, '$context["foo"]'],

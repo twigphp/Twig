@@ -173,6 +173,16 @@ Nodes
 * The ``MethodCallExpression`` class is deprecated as of Twig 3.15, use
   ``MacroReferenceExpression`` instead.
 
+* The ``Twig\Node\Expression\TempNameExpression`` class is deprecated as of
+  Twig 3.15; use ``Twig\Node\Expression\Variable\LocalVariable`` instead.
+
+* The ``Twig\Node\Expression\NameExpression`` class is deprecated as of Twig
+  3.15; use ``Twig\Node\Expression\Variable\ContextVariable`` instead.
+
+* The ``Twig\Node\Expression\AssignNameExpression`` class is deprecated as of
+  Twig 3.15; use ``Twig\Node\Expression\Variable\AssignContextVariable``
+  instead.
+
 Node Visitors
 -------------
 

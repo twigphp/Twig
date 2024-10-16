@@ -16,9 +16,9 @@ use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\Node\Expression\Variable\LocalVariable;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
 use Twig\Token;
@@ -85,7 +85,7 @@ final class MacroTokenParser extends AbstractTokenParser
             }
 
             $token = $stream->expect(Token::NAME_TYPE, null, 'An argument must be a name');
-            $name = new TempNameExpression($token->getValue(), $this->parser->getCurrentToken()->getLine());
+            $name = new LocalVariable($token->getValue(), $this->parser->getCurrentToken()->getLine());
             if ($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) {
                 $default = $this->parser->getExpressionParser()->parseExpression();
             } else {
