@@ -68,7 +68,7 @@ class ForTest extends NodeTestCase
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$itemsGetter});
-\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
+yield from (\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
     \$parent = \$context;
     foreach (\$iterator as \$context["key"] => \$context["item"]) {
@@ -77,8 +77,7 @@ class ForTest extends NodeTestCase
     unset(\$context['key'], \$context['item']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
-};
-yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
+})(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
         ];
 
@@ -93,7 +92,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
+yield from (\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
@@ -103,8 +102,7 @@ EOF
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
-};
-yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
+})(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
         ];
 
@@ -119,7 +117,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
+yield from (\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
@@ -129,8 +127,7 @@ EOF
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
-};
-yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
+})(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
         ];
 
@@ -146,7 +143,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
+yield from (\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
@@ -161,8 +158,7 @@ EOF
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
-};
-yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
+})(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
         ];
 
@@ -173,7 +169,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$__internal_compile_0 = new \Twig\Runtime\LoopIterator({$itemsGetter});
-\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
+yield from (\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
     \$macros = \$this->macros;
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
@@ -183,8 +179,7 @@ EOF
     unset(\$context['_key'], \$context['item'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
-};
-yield from \$__internal_compile_1(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
+})(\$__internal_compile_0, \$context, \$blocks, \$__internal_compile_1, 0);
 EOF
             , $env];
 
