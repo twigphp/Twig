@@ -697,15 +697,11 @@ class ExpressionParser
     {
         $namedArguments = false;
         $definition = false;
-        if (func_num_args() > 2) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing a third argument ($allowArrow) to "%s()" is deprecated.', __METHOD__);
-        }
         if (func_num_args() > 1) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing a second argument ($definition) to "%s()" is deprecated.', __METHOD__);
             $definition = func_get_arg(1);
         }
         if (func_num_args() > 0) {
-            trigger_deprecation('twig/twig', '3.15', 'Passing a first argument ($namedArguments) to "%s()" is deprecated.', __METHOD__);
+            trigger_deprecation('twig/twig', '3.15', 'Passing arguments to "%s()" is deprecated.', __METHOD__);
             $namedArguments = func_get_arg(0);
         }
 
