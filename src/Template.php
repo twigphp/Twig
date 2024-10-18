@@ -478,6 +478,35 @@ abstract class Template
         }
     }
 
+    protected function hasMacro(string $name, array $context): bool
+    {
+        if (method_exists($this, $name)) {
+            return true;
+        }
+
+        if (!$parent = $this->getParent($context)) {
+            return false;
+        }
+
+        return $parent->hasMacro($name, $context);
+    }
+
+    protected function getTemplateForMacro(string $name, array $context, int $line, Source $source): Template
+    {
+        if (method_exists($this, $name)) {
+            return $this;
+        }
+
+        $parent = $this;
+        while ($parent = $parent->getParent($context)) {
+            if (method_exists($parent, $name)) {
+                return $parent;
+            }
+        }
+
+        throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', substr($name, \strlen('macro_')), $this->getTemplateName()), $line, $source);
+    }
+
     /**
      * Auto-generated method to display the template with the given context.
      *

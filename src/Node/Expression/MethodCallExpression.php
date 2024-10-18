@@ -17,6 +17,8 @@ class MethodCallExpression extends AbstractExpression
 {
     public function __construct(AbstractExpression $node, string $method, ArrayExpression $arguments, int $lineno)
     {
+        trigger_deprecation('twig/twig', '3.15', 'The "%s" class is deprecated, use "%s" instead.', __CLASS__, MacroReferenceExpression::class);
+
         parent::__construct(['node' => $node, 'arguments' => $arguments], ['method' => $method, 'safe' => false, 'is_defined_test' => false], $lineno);
 
         if ($node instanceof NameExpression) {
