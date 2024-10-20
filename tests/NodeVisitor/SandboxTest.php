@@ -17,7 +17,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Node\BodyNode;
 use Twig\Node\CheckToStringNode;
 use Twig\Node\EmptyNode;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ModuleNode;
 use Twig\Node\PrintNode;
 use Twig\NodeTraverser;
@@ -29,7 +29,7 @@ class SandboxTest extends TestCase
     public function testGeneratorExpression()
     {
         $env = new Environment(new ArrayLoader());
-        $expr = new NameExpression('foo', 1);
+        $expr = new ContextVariable('foo', 1);
         $expr->setAttribute('is_generator', true);
         $node = new ModuleNode(new BodyNode([new PrintNode($expr, 1)]), null, new EmptyNode(), new EmptyNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
         $traverser = new NodeTraverser($env, [new SandboxNodeVisitor($env)]);

@@ -11,7 +11,7 @@
 
 namespace Twig\TokenParser;
 
-use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\ImportNode;
 use Twig\Node\Node;
 use Twig\Token;
@@ -29,7 +29,7 @@ final class ImportTokenParser extends AbstractTokenParser
     {
         $macro = $this->parser->getExpressionParser()->parseExpression();
         $this->parser->getStream()->expect(Token::NAME_TYPE, 'as');
-        $var = new AssignNameExpression($this->parser->getStream()->expect(Token::NAME_TYPE)->getValue(), $token->getLine());
+        $var = new AssignContextVariable($this->parser->getStream()->expect(Token::NAME_TYPE)->getValue(), $token->getLine());
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
         $this->parser->addImportedSymbol('template', $var->getAttribute('name'));

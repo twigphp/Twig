@@ -60,6 +60,8 @@ class Parser
 
     public function getVarName(): string
     {
+        trigger_deprecation('twig/twig', '3.15', 'The "%s()" method is deprecated.', __METHOD__);
+
         return \sprintf('__internal_parse_%d', $this->varNameSalt++);
     }
 
