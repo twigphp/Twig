@@ -532,11 +532,7 @@ class ExpressionParser
     public function getFunctionNode($name, $line)
     {
         if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
-            $arguments = $this->createArguments($line);
-            $node = new MacroReferenceExpression(new TemplateVariable($alias['node'], $line), $alias['name'], $arguments, $line);
-            $node->setAttribute('safe', true);
-
-            return $node;
+            return new MacroReferenceExpression(new TemplateVariable($alias['node'], $line), $alias['name'], $this->createArguments($line), $line);
         }
 
         $args = $this->parseOnlyArguments();
@@ -758,7 +754,6 @@ class ExpressionParser
 
         if ('defined' === $test->getName() && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
             $node = new MacroReferenceExpression(new TemplateVariable($alias['node'], $node->getTemplateLine()), $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
-            $node->setAttribute('safe', true);
         }
 
         $ready = $test instanceof TwigTest;
@@ -970,11 +965,7 @@ class ExpressionParser
                 '_self' === $node->getAttribute('name') && $attribute instanceof ConstantExpression
             )
         ) {
-            $name = $attribute->getAttribute('value');
-            $node = new MacroReferenceExpression(new TemplateVariable($node->getAttribute('name'), $node->getTemplateLine()), 'macro_'.$name, $arguments, $node->getTemplateLine());
-            $node->setAttribute('safe', true);
-
-            return $node;
+            return new MacroReferenceExpression(new TemplateVariable($node->getAttribute('name'), $node->getTemplateLine()), 'macro_'.$attribute->getAttribute('value'), $arguments, $node->getTemplateLine());
         }
 
         return new GetAttrExpression($node, $attribute, $arguments, $type, $lineno);

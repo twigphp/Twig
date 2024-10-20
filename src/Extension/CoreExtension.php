@@ -1285,6 +1285,8 @@ final class CoreExtension extends AbstractExtension
 
     /**
      * @internal
+     *
+     * to be removed in 4.0
      */
     public static function callMacro(Template $template, string $method, array $args, int $lineno, array $context, Source $source)
     {

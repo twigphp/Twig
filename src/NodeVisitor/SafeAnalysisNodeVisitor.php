@@ -128,11 +128,8 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
                 $this->setSafe($node, []);
             }
         } elseif ($node instanceof MethodCallExpression || $node instanceof MacroReferenceExpression) {
-            if ($node->getAttribute('safe')) {
-                $this->setSafe($node, ['all']);
-            } else {
-                $this->setSafe($node, []);
-            }
+            // all macro calls are safe
+            $this->setSafe($node, ['all']);
         } elseif ($node instanceof GetAttrExpression && $node->getNode('node') instanceof NameExpression) {
             $name = $node->getNode('node')->getAttribute('name');
             if (\in_array($name, $this->safeVars)) {
