@@ -1,6 +1,6 @@
 # 3.15.0 (2024-XX-XX)
 
- * Deprecate `MacroAutoImportNodeVisitor`
+ * Remove `MacroAutoImportNodeVisitor`
  * Deprecate `MethodCallExpression` in favor of `MacroReferenceExpression`
  * Fix support for the "is defined" test on `_self.xxx` (auto-imported) macros
  * Fix support for the "is defined" test on inherited macros

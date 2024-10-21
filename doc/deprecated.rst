@@ -184,9 +184,6 @@ Node Visitors
   deprecated as of Twig 3.12 and will be removed in Twig 4.0; they don't do
   anything anymore.
 
-* The ``Twig\NodeVisitor\MacroAutoImportNodeVisitor`` class is deprecated as of
-  Twig 3.15.
-
 Parser
 ------
 
