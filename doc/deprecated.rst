@@ -170,6 +170,9 @@ Nodes
   deprecated as of Twig 3.12: ``arguments``,  ``callable``,  ``is_variadic``,
   and ``dynamic_name``.
 
+* The ``MethodCallExpression`` class is deprecated as of Twig 3.15, use
+  ``MacroReferenceExpression`` instead.
+
 Node Visitors
 -------------
 

@@ -11,7 +11,6 @@ namespace Twig\Tests\Node;
  * file that was distributed with this source code.
  */
 
-use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ImportNode;
 use Twig\Test\NodeTestCase;
@@ -21,11 +20,10 @@ class ImportTest extends NodeTestCase
     public function testConstructor()
     {
         $macro = new ConstantExpression('foo.twig', 1);
-        $var = new AssignNameExpression('macro', 1);
-        $node = new ImportNode($macro, $var, 1);
+        $node = new ImportNode($macro, $var = 'macro', 1);
 
         $this->assertEquals($macro, $node->getNode('expr'));
-        $this->assertEquals($var, $node->getNode('var'));
+        $this->assertEquals($var, $node->getAttribute('var'));
     }
 
     public static function provideTests(): iterable
@@ -33,8 +31,7 @@ class ImportTest extends NodeTestCase
         $tests = [];
 
         $macro = new ConstantExpression('foo.twig', 1);
-        $var = new AssignNameExpression('macro', 1);
-        $node = new ImportNode($macro, $var, 1);
+        $node = new ImportNode($macro, 'macro', 1);
 
         $tests[] = [$node, <<<EOF
 // line 1

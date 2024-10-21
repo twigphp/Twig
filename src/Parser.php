@@ -292,9 +292,15 @@ class Parser
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedSymbol(string $type, string $alias, ?string $name = null, ?AbstractExpression $node = null): void
+    public function addImportedSymbol(string $type, string $alias, ?string $name = null, AbstractExpression|string|null $internalRef = null): void
     {
-        $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $node];
+        if ($internalRef instanceof AbstractExpression) {
+            trigger_deprecation('twig/twig', '3.15', 'Passing a non-string internal reference name to "%s" is deprecated ("%s" given).', __METHOD__, $internalRef::class);
+
+            $internalRef = $internalRef->getAttribute('name');
+        }
+
+        $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $internalRef];
     }
 
     public function getImportedSymbol(string $type, string $alias)

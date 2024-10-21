@@ -20,6 +20,7 @@ use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TestExpression;
@@ -54,6 +55,8 @@ class DefinedTest extends TestExpression
             $node->setAttribute('is_defined_test', true);
             $this->changeIgnoreStrictCheck($node);
         } elseif ($node instanceof BlockReferenceExpression) {
+            $node->setAttribute('is_defined_test', true);
+        } elseif ($node instanceof MacroReferenceExpression) {
             $node->setAttribute('is_defined_test', true);
         } elseif ($node instanceof FunctionExpression && 'constant' === $node->getAttribute('name')) {
             $node->setAttribute('is_defined_test', true);

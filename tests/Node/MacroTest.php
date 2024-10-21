@@ -19,7 +19,6 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\MacroNode;
-use Twig\Node\Nodes;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
 

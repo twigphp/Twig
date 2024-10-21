@@ -1,41 +1,80 @@
 --TEST--
 "defined" support for macros
 --TEMPLATE--
+{% extends 'macros.twig' %}
+
+{% import 'macros.twig' as macros_ext %}
+{% from 'macros.twig' import lol, baz %}
 {% import _self as macros %}
 {% from _self import hello, bar %}
 
-{% if macros.hello is defined -%}
-    OK
-{% endif %}
+{% block content %}
+    {{~ macros.hello is defined ? 'OK' : 'KO' }}
+    {{~ macros.hello() is defined ? 'OK' : 'KO' }}
 
-{% if macros.foo is not defined -%}
-    OK
-{% endif %}
+    {{~ macros_ext.lol is defined ? 'OK' : 'KO' }}
+    {{~ macros_ext.lol() is defined ? 'OK' : 'KO' }}
 
-{% if hello is defined -%}
-    OK
-{% endif %}
+    {{~ macros.foo is not defined ? 'OK' : 'KO' }}
+    {{~ macros.foo() is not defined ? 'OK' : 'KO' }}
 
-{% if bar is not defined -%}
-    OK
-{% endif %}
+    {{~ macros_ext.hello is not defined ? 'OK' : 'KO' }}
+    {{~ macros_ext.hello() is not defined ? 'OK' : 'KO' }}
 
-{% if foo is not defined -%}
-    OK
-{% endif %}
+    {{~ hello is defined ? 'OK' : 'KO' }}
+    {{~ hello() is defined ? 'OK' : 'KO' }}
 
-{% macro hello(name) %}
-    Hello {{ name }}
-{% endmacro %}
+    {{~ lol is defined ? 'OK' : 'KO' }}
+    {{~ lol() is defined ? 'OK' : 'KO' }}
+
+    {{~ baz is not defined ? 'OK' : 'KO' }}
+    {{~ baz() is not defined ? 'OK' : 'KO' }}
+
+    {{~ _self.hello is defined ? 'OK' : 'KO' }}
+    {{~ _self.hello() is defined ? 'OK' : 'KO' }}
+
+    {{~ _self.bar is not defined ? 'OK' : 'KO' }}
+    {{~ _self.bar() is not defined ? 'OK' : 'KO' }}
+
+    {{~ _self.lol is defined ? 'OK' : 'KO' }}
+    {{~ _self.lol() is defined ? 'OK' : 'KO' }}
+{% endblock %}
+
+{% macro hello(name) %}{% endmacro %}
+--TEMPLATE(macros.twig)--
+{% block content %}
+{% endblock %}
+
+{% macro lol(name) -%}{% endmacro %}
 --DATA--
 return []
 --EXPECT--
 OK
-
 OK
 
 OK
-
 OK
 
+OK
+OK
+
+OK
+OK
+
+OK
+OK
+
+OK
+OK
+
+OK
+OK
+
+OK
+OK
+
+OK
+OK
+
+OK
 OK

@@ -16,13 +16,11 @@ use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
-use Twig\Node\Nodes;
 use Twig\Token;
 
 /**
