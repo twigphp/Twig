@@ -9,14 +9,13 @@ The ``types`` tag declares the types of template variables.
 
 To do this, specify a :ref:`mapping <twig-expressions>` of names to their types as strings.
 
-Here is how to declare that ``is_correct`` is a boolean, while ``score`` is an
-integer (see note below):
+Here is how to declare that ``is_correct`` is a boolean, while ``score`` is a number (see note below):
 
 .. code-block:: twig
 
     {% types {
-        is_correct: 'bool',
-        score: 'int',
+        is_correct: 'boolean',
+        score: 'number',
     } %}
 
 You can declare variables as optional by adding the ``?`` suffix:
@@ -24,8 +23,8 @@ You can declare variables as optional by adding the ``?`` suffix:
 .. code-block:: twig
 
     {% types {
-        is_correct: 'bool',
-        score?: 'int',
+        is_correct: 'boolean',
+        score?: 'number',
     } %}
 
 By default, this tag does not affect the template compilation or runtime behavior.
