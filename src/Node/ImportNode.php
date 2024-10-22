@@ -13,6 +13,7 @@ namespace Twig\Node;
 
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
+use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\NameExpression;
 
@@ -26,6 +27,11 @@ class ImportNode extends Node
 {
     public function __construct(AbstractExpression $expr, string $var, int $lineno, bool $global = true)
     {
+        // All names supported by ExpressionParser::parsePrimaryExpression() should be excluded
+        if (\in_array(strtolower($var), ['true', 'false', 'none', 'null'])) {
+            throw new SyntaxError(\sprintf('You cannot assign a value to "%s".', $var), $lineno);
+        }
+
         parent::__construct(['expr' => $expr], ['global' => $global, 'var' => $var], $lineno);
     }
 
