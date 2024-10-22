@@ -9,14 +9,14 @@ class TypesTest extends NodeTestCase
 {
     private static function getValidMapping(): array
     {
-        // {foo: 'string', bar?: 'int'}
+        // {foo: 'string', bar?: 'number'}
         return [
             'foo' => [
                 'type' => 'string',
                 'optional' => false,
             ],
             'bar' => [
-                'type' => 'int',
+                'type' => 'number',
                 'optional' => true,
             ],
         ];
