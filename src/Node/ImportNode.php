@@ -26,9 +26,7 @@ class ImportNode extends Node
 {
     public function __construct(AbstractExpression $expr, string $var, int $lineno, bool $global = true)
     {
-        $this->deprecateNode('var', new NameDeprecation('var', '3.15'));
-
-        parent::__construct(['expr' => $expr, 'var' => $var], ['global' => $global, 'var' => $var], $lineno);
+        parent::__construct(['expr' => $expr], ['global' => $global, 'var' => $var], $lineno);
     }
 
     public function compile(Compiler $compiler): void
