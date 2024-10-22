@@ -19,7 +19,6 @@ use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
-use Twig\Node\Expression\MethodCallExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Node;
@@ -113,7 +112,7 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
             } else {
                 $this->setSafe($node, []);
             }
-        } elseif ($node instanceof MethodCallExpression || $node instanceof MacroReferenceExpression) {
+        } elseif ($node instanceof MacroReferenceExpression) {
             // all macro calls are safe
             $this->setSafe($node, ['all']);
         } elseif ($node instanceof GetAttrExpression && $node->getNode('node') instanceof NameExpression) {

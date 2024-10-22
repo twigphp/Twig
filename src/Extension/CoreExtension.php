@@ -1260,27 +1260,6 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * @internal
-     *
-     * to be removed in 4.0
-     */
-    public static function callMacro(Template $template, string $method, array $args, int $lineno, array $context, Source $source)
-    {
-        if (!method_exists($template, $method)) {
-            $parent = $template;
-            while ($parent = $parent->getParent($context)) {
-                if (method_exists($parent, $method)) {
-                    return $parent->$method(...$args);
-                }
-            }
-
-            throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', substr($method, \strlen('macro_')), $template->getTemplateName()), $lineno, $source);
-        }
-
-        return $template->$method(...$args);
-    }
-
-    /**
      * @template TSequence
      *
      * @param TSequence $seq
