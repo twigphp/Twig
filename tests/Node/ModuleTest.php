@@ -129,7 +129,7 @@ class __TwigTemplate_%x extends Template
 EOF
             , $twig, true];
 
-        $import = new ImportNode(new ConstantExpression('foo.twig', 1), new AssignNameExpression('macro', 1), 2);
+        $import = new ImportNode(new ConstantExpression('foo.twig', 1), 'macro', 2);
 
         $body = new BodyNode([$import]);
         $extends = new ConstantExpression('layout.twig', 1);

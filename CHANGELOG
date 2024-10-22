@@ -1,5 +1,9 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Remove `MacroAutoImportNodeVisitor`
+ * Deprecate `MethodCallExpression` in favor of `MacroReferenceExpression`
+ * Fix support for the "is defined" test on `_self.xxx` (auto-imported) macros
+ * Fix support for the "is defined" test on inherited macros
  * Add named arguments support for the dot operator arguments (`foo.bar(some: arg)`)
  * Add named arguments support for macros
  * Add a new `guard` tag that allows to test if some Twig callables are available at compilation time
