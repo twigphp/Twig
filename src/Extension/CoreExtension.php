@@ -70,7 +70,6 @@ use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Node;
-use Twig\NodeVisitor\MacroAutoImportNodeVisitor;
 use Twig\OperatorPrecedenceChange;
 use Twig\Parser;
 use Twig\Source;
@@ -297,7 +296,7 @@ final class CoreExtension extends AbstractExtension
 
     public function getNodeVisitors(): array
     {
-        return [new MacroAutoImportNodeVisitor()];
+        return [];
     }
 
     public function getOperators(): array
@@ -1262,6 +1261,8 @@ final class CoreExtension extends AbstractExtension
 
     /**
      * @internal
+     *
+     * to be removed in 4.0
      */
     public static function callMacro(Template $template, string $method, array $args, int $lineno, array $context, Source $source)
     {

@@ -24,9 +24,11 @@ use Twig\Node\Expression\NameExpression;
 #[YieldReady]
 class ImportNode extends Node
 {
-    public function __construct(AbstractExpression $expr, AbstractExpression $var, int $lineno, bool $global = true)
+    public function __construct(AbstractExpression $expr, string $var, int $lineno, bool $global = true)
     {
-        parent::__construct(['expr' => $expr, 'var' => $var], ['global' => $global], $lineno);
+        $this->deprecateNode('var', new NameDeprecation('var', '3.15'));
+
+        parent::__construct(['expr' => $expr, 'var' => $var], ['global' => $global, 'var' => $var], $lineno);
     }
 
     public function compile(Compiler $compiler): void
@@ -34,14 +36,14 @@ class ImportNode extends Node
         $compiler
             ->addDebugInfo($this)
             ->write('$macros[')
-            ->repr($this->getNode('var')->getAttribute('name'))
+            ->repr($this->getAttribute('var'))
             ->raw('] = ')
         ;
 
         if ($this->getAttribute('global')) {
             $compiler
                 ->raw('$this->macros[')
-                ->repr($this->getNode('var')->getAttribute('name'))
+                ->repr($this->getAttribute('var'))
                 ->raw('] = ')
             ;
         }

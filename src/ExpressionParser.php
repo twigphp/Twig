@@ -23,7 +23,7 @@ use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\MethodCallExpression;
+use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Expression\TestExpression;
@@ -32,6 +32,7 @@ use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Expression\Unary\SpreadUnary;
+use Twig\Node\Expression\Variable\TemplateVariable;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
 
@@ -498,11 +499,7 @@ class ExpressionParser
     public function getFunctionNode($name, $line)
     {
         if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
-            $arguments = $this->createArguments($line);
-            $node = new MethodCallExpression($alias['node'], $alias['name'], $arguments, $line);
-            $node->setAttribute('safe', true);
-
-            return $node;
+            return new MacroReferenceExpression(new TemplateVariable($alias['node'], $line), $alias['name'], $this->createArguments($line), $line);
         }
 
         $args = $this->parseOnlyArguments();
@@ -520,84 +517,11 @@ class ExpressionParser
 
     public function parseSubscriptExpression($node)
     {
-        $stream = $this->parser->getStream();
-        $token = $stream->next();
-        $lineno = $token->getLine();
-        $arguments = new ArrayExpression([], $lineno);
-        $type = Template::ANY_CALL;
-        if ('.' == $token->getValue()) {
-            if ($stream->nextIf(Token::PUNCTUATION_TYPE, '(')) {
-                $arg = $this->parseExpression();
-                $stream->expect(Token::PUNCTUATION_TYPE, ')');
-                if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
-                    $type = Template::METHOD_CALL;
-                    $arguments = $this->createArguments($lineno);
-                }
-
-                return new GetAttrExpression($node, $arg, $arguments, $type, $lineno);
-            }
-            $token = $stream->next();
-            if (
-                Token::NAME_TYPE == $token->getType()
-                ||
-                Token::NUMBER_TYPE == $token->getType()
-                ||
-                (Token::OPERATOR_TYPE == $token->getType() && preg_match(Lexer::REGEX_NAME, $token->getValue()))
-            ) {
-                $arg = new ConstantExpression($token->getValue(), $lineno);
-
-                if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
-                    $type = Template::METHOD_CALL;
-                    $arguments = $this->createArguments($lineno);
-                }
-            } else {
-                throw new SyntaxError(\sprintf('Expected name or number, got value "%s" of type %s.', $token->getValue(), Token::typeToEnglish($token->getType())), $lineno, $stream->getSourceContext());
-            }
-
-            if ($node instanceof NameExpression && null !== $this->parser->getImportedSymbol('template', $node->getAttribute('name'))) {
-                $name = $arg->getAttribute('value');
-
-                $node = new MethodCallExpression($node, 'macro_'.$name, $arguments, $lineno);
-                $node->setAttribute('safe', true);
-
-                return $node;
-            }
-        } else {
-            $type = Template::ARRAY_CALL;
-
-            // slice?
-            $slice = false;
-            if ($stream->test(Token::PUNCTUATION_TYPE, ':')) {
-                $slice = true;
-                $arg = new ConstantExpression(0, $token->getLine());
-            } else {
-                $arg = $this->parseExpression();
-            }
-
-            if ($stream->nextIf(Token::PUNCTUATION_TYPE, ':')) {
-                $slice = true;
-            }
-
-            if ($slice) {
-                if ($stream->test(Token::PUNCTUATION_TYPE, ']')) {
-                    $length = new ConstantExpression(null, $token->getLine());
-                } else {
-                    $length = $this->parseExpression();
-                }
-
-                $filter = $this->getFilter('slice', $token->getLine());
-                $arguments = new Nodes([$arg, $length]);
-                $filter = new ($filter->getNodeClass())($node, $filter, $arguments, $token->getLine());
-
-                $stream->expect(Token::PUNCTUATION_TYPE, ']');
-
-                return $filter;
-            }
-
-            $stream->expect(Token::PUNCTUATION_TYPE, ']');
+        if ('.' === $this->parser->getStream()->next()->getValue()) {
+            return $this->parseSubscriptExpressionDot($node);
         }
 
-        return new GetAttrExpression($node, $arg, $arguments, $type, $lineno);
+        return $this->parseSubscriptExpressionArray($node);
     }
 
     public function parseFilterExpression($node)
@@ -738,8 +662,7 @@ class ExpressionParser
         }
 
         if ('defined' === $test->getName() && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
-            $node = new MethodCallExpression($alias['node'], $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
-            $node->setAttribute('safe', true);
+            $node = new MacroReferenceExpression(new TemplateVariable($alias['node'], $node->getTemplateLine()), $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
         }
 
         return new ($test->getNodeClass())($node, $test, $arguments, $this->parser->getCurrentToken()->getLine());
@@ -881,5 +804,92 @@ class ExpressionParser
         $stream->expect(Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
 
         return new Nodes($args);
+    }
+
+    private function parseSubscriptExpressionDot(Node $node): AbstractExpression
+    {
+        $stream = $this->parser->getStream();
+        $token = $stream->getCurrent();
+        $lineno = $token->getLine();
+        $arguments = new ArrayExpression([], $lineno);
+        $type = Template::ANY_CALL;
+
+        if ($stream->nextIf(Token::PUNCTUATION_TYPE, '(')) {
+            $attribute = $this->parseExpression();
+            $stream->expect(Token::PUNCTUATION_TYPE, ')');
+        } else {
+            $token = $stream->next();
+            if (
+                Token::NAME_TYPE == $token->getType()
+                ||
+                Token::NUMBER_TYPE == $token->getType()
+                ||
+                (Token::OPERATOR_TYPE == $token->getType() && preg_match(Lexer::REGEX_NAME, $token->getValue()))
+            ) {
+                $attribute = new ConstantExpression($token->getValue(), $token->getLine());
+            } else {
+                throw new SyntaxError(\sprintf('Expected name or number, got value "%s" of type %s.', $token->getValue(), Token::typeToEnglish($token->getType())), $token->getLine(), $stream->getSourceContext());
+            }
+        }
+
+        if ($stream->test(Token::PUNCTUATION_TYPE, '(')) {
+            $type = Template::METHOD_CALL;
+            $arguments = $this->createArguments($token->getLine());
+        }
+
+        if (
+            $node instanceof NameExpression
+            &&
+            (
+                null !== $this->parser->getImportedSymbol('template', $node->getAttribute('name'))
+                ||
+                '_self' === $node->getAttribute('name') && $attribute instanceof ConstantExpression
+            )
+        ) {
+            return new MacroReferenceExpression(new TemplateVariable($node->getAttribute('name'), $node->getTemplateLine()), 'macro_'.$attribute->getAttribute('value'), $arguments, $node->getTemplateLine());
+        }
+
+        return new GetAttrExpression($node, $attribute, $arguments, $type, $lineno);
+    }
+
+    private function parseSubscriptExpressionArray(Node $node): AbstractExpression
+    {
+        $stream = $this->parser->getStream();
+        $token = $stream->getCurrent();
+        $lineno = $token->getLine();
+        $arguments = new ArrayExpression([], $lineno);
+
+        // slice?
+        $slice = false;
+        if ($stream->test(Token::PUNCTUATION_TYPE, ':')) {
+            $slice = true;
+            $attribute = new ConstantExpression(0, $token->getLine());
+        } else {
+            $attribute = $this->parseExpression();
+        }
+
+        if ($stream->nextIf(Token::PUNCTUATION_TYPE, ':')) {
+            $slice = true;
+        }
+
+        if ($slice) {
+            if ($stream->test(Token::PUNCTUATION_TYPE, ']')) {
+                $length = new ConstantExpression(null, $token->getLine());
+            } else {
+                $length = $this->parseExpression();
+            }
+
+            $filter = $this->getFilter('slice', $token->getLine());
+            $arguments = new Nodes([$attribute, $length]);
+            $filter = new ($filter->getNodeClass())($node, $filter, $arguments, $token->getLine());
+
+            $stream->expect(Token::PUNCTUATION_TYPE, ']');
+
+            return $filter;
+        }
+
+        $stream->expect(Token::PUNCTUATION_TYPE, ']');
+
+        return new GetAttrExpression($node, $attribute, $arguments, Template::ARRAY_CALL, $lineno);
     }
 }
