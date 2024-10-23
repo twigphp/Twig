@@ -22,15 +22,14 @@ final class HtmlAttributes
      * `['class' => ['a' => true, 'b' => true, 'c' => true]]`.
      *
      * style attributes are also merged into an array so they can be concatenated in later processing.
-     * style attributes are split into key, value pairs.
      *
-     * `HtmlAttributes::merge(['style' => 'color: red'], ['style' => 'background-color: blue'])` becomes
-     * `['style' => ['color' => 'red', 'background-color' => 'blue']]`.
+     * `HtmlAttributes::merge(['style' => 'color: red'], ['style' => ['background-color' => 'blue']])` becomes
+     * `['style' => ['color: red;' => true, 'background-color: blue;' => true]]`.
      *
      * style attributes which are arrays with false and null values are also processed
      *
      * `HtmlAttributes::merge(['style' => ['color: red' => true]], ['style' => ['display: block' => false]]) becomes
-     * `['style' => ['color' => 'red', 'display' => false]]`.
+     * `['style' => ['color: red;' => true, 'display: block;' => false]]`.
      *
      * attributes can be provided as an array of key, value where the value can be true, false or null.
      *
@@ -134,7 +133,7 @@ final class HtmlAttributes
                                 $style = explode(':', $style);
                                 $sKey = trim($style[0]);
                                 $sValue = trim($style[1]);
-                                $result['style'][$sKey] = $sValue;
+                                $result['style']["$sKey: $sValue;"] = true;
                             }
                         } elseif (is_bool($v) || is_null($v)) {
                             $styles = array_filter(explode(';', $k));
@@ -142,12 +141,12 @@ final class HtmlAttributes
                                 $style = explode(':', $style);
                                 $sKey = trim($style[0]);
                                 $sValue = trim($style[1]);
-                                $result['style'][$sKey] = $v ? $sValue : $v;
+                                $result['style']["$sKey: $sValue;"] = $v;
                             }
                         } else {
                             $sKey = trim($k);
                             $sValue = trim($v);
-                            $result['style'][$sKey] = $sValue;
+                            $result['style']["$sKey: $sValue;"] = true;
                         }
                     }
                     continue;

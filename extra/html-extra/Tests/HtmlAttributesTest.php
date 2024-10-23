@@ -126,9 +126,14 @@ class HtmlAttributesTest extends TestCase
 
         /**
          * style attributes are merged into an array so they can be concatenated in later processing.
-         * style strings are split into key, value pairs eg. 'color: red' becomes ['color' => 'red']
-         * style attributes which are arrays with false and null values are also processed
-         * false and null values override string values eg. ['display: block' => false] becomes ['display' => false]
+         * // Strings are true by default.
+         * `HtmlAttributes::merge(['color: red']) === ['color: red' => true]`
+         * // Arrays have a boolean / null value
+         * `HtmlAttributes::merge(['color: red' => true ]) === ['color: red' => true]`
+         * `HtmlAttributes::merge(['color: red' => false ]) === ['color: red' => false]`
+         * String values are split into key value pairs and then processed
+         * `HtmlAttributes::merge(['color: red; background: blue']) === ['color: red' => true, 'background: blue' => true]`
+         * `HtmlAttributes::merge(['color: red; background: blue' => true]) === ['color: red' => true, 'background: blue' => true]`
          */
         yield 'merging style attributes' => [
             [
@@ -142,14 +147,14 @@ class HtmlAttributesTest extends TestCase
                 ]],
             ],
             ['style' => [
-                'a' => 'b',
-                'c' => 'd',
-                'e' => 'f',
-                'g' => 'h',
-                'i' => 'j',
-                'k' => 'l',
-                'm' => false,
-                'o' => null,
+                'a: b;' => true,
+                'c: d;' => true,
+                'e: f;' => true,
+                'g: h;' => true,
+                'i: j;' => true,
+                'k: l;' => true,
+                'm: n;' => false,
+                'o: p;' => null,
             ]],
         ];
 
