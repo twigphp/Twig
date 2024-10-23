@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by ruudk at 2024-10-21T07:57:09Z
+
+`boolean` is a valid PHPStan type, but `number` is not.
+See https://phpstan.org/writing-php-code/phpdoc-types
+
+Can we maybe update the example, to not use a `number` instead?
+
+[TwigStan](https://github.com/twigstan/twigstan) will only accept PHPStan types, as it's a PHPStan analyzer.
+
+Making this `types` tag too strict up front, only limits its usage in the wild.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-10-21T09:08:30Z
+
+The documentation is not up to date. PHPStan _does_ properly understand `number` 🎉
+I'll fix the docs.
+
+See https://phpstan.org/r/24895f82-975a-4e08-b7b1-5da29d058ddd
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-10-21T09:09:27Z
+
+Done:
+- https://github.com/phpstan/phpstan/pull/11882
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-21T15:41:13Z
+
+Do you think it's worth it to update TypesTest.php and TypesTokenParser.php ?
