@@ -14,7 +14,7 @@ namespace Twig\Tests\Node\Expression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Template;
 use Twig\Test\NodeTestCase;
 
@@ -22,10 +22,10 @@ class GetAttrTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $expr = new NameExpression('foo', 1);
+        $expr = new ContextVariable('foo', 1);
         $attr = new ConstantExpression('bar', 1);
         $args = new ArrayExpression([], 1);
-        $args->addElement(new NameExpression('foo', 1));
+        $args->addElement(new ContextVariable('foo', 1));
         $args->addElement(new ConstantExpression('bar', 1));
         $node = new GetAttrExpression($expr, $attr, $args, Template::ARRAY_CALL, 1);
 
@@ -39,18 +39,18 @@ class GetAttrTest extends NodeTestCase
     {
         $tests = [];
 
-        $expr = new NameExpression('foo', 1);
+        $expr = new ContextVariable('foo', 1);
         $attr = new ConstantExpression('bar', 1);
         $args = new ArrayExpression([], 1);
         $node = new GetAttrExpression($expr, $attr, $args, Template::ANY_CALL, 1);
         $tests[] = [$node, \sprintf('%s%s, "bar", [], "any", false, false, false, 1)', self::createAttributeGetter(), self::createVariableGetter('foo', 1))];
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ARRAY_CALL, 1);
-        $tests[] = [$node, '(($__internal_%s = // line 1'."\n".
-            '($context["foo"] ?? null)) && is_array($__internal_%s) || $__internal_%s instanceof ArrayAccess ? ($__internal_%s["bar"] ?? null) : null)', null, true, ];
+        $tests[] = [$node, '(($_v%s = // line 1'."\n".
+            '($context["foo"] ?? null)) && is_array($_v%s) || $_v%s instanceof ArrayAccess ? ($_v%s["bar"] ?? null) : null)', null, true, ];
 
         $args = new ArrayExpression([], 1);
-        $args->addElement(new NameExpression('foo', 1));
+        $args->addElement(new ContextVariable('foo', 1));
         $args->addElement(new ConstantExpression('bar', 1));
         $node = new GetAttrExpression($expr, $attr, $args, Template::METHOD_CALL, 1);
         $tests[] = [$node, \sprintf('%s%s, "bar", [%s, "bar"], "method", false, false, false, 1)', self::createAttributeGetter(), self::createVariableGetter('foo', 1), self::createVariableGetter('foo'))];

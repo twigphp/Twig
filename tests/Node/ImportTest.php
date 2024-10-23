@@ -12,6 +12,7 @@ namespace Twig\Tests\Node;
  */
 
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\Variable\TemplateVariable;
 use Twig\Node\ImportNode;
 use Twig\Test\NodeTestCase;
 
@@ -20,10 +21,10 @@ class ImportTest extends NodeTestCase
     public function testConstructor()
     {
         $macro = new ConstantExpression('foo.twig', 1);
-        $node = new ImportNode($macro, $var = 'macro', 1);
+        $node = new ImportNode($macro, new TemplateVariable('macro', 1), 1);
 
         $this->assertEquals($macro, $node->getNode('expr'));
-        $this->assertEquals($var, $node->getAttribute('var'));
+        $this->assertEquals('macro', $node->getNode('var')->getAttribute('name'));
     }
 
     public static function provideTests(): iterable
@@ -31,7 +32,7 @@ class ImportTest extends NodeTestCase
         $tests = [];
 
         $macro = new ConstantExpression('foo.twig', 1);
-        $node = new ImportNode($macro, 'macro', 1);
+        $node = new ImportNode($macro, new TemplateVariable('macro', 1), 1);
 
         $tests[] = [$node, <<<EOF
 // line 1

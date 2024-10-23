@@ -12,12 +12,8 @@
 namespace Twig\Node\Expression\Variable;
 
 use Twig\Compiler;
-use Twig\Node\Expression\TempNameExpression;
 
-/**
- * @final
- */
-class TemplateVariable extends TempNameExpression
+final class GlobalTemplateVariable extends TemplateVariable
 {
     public function compile(Compiler $compiler): void
     {
@@ -29,7 +25,7 @@ class TemplateVariable extends TempNameExpression
             $compiler->raw('$this');
         } else {
             $compiler
-                ->raw('$macros[')
+                ->raw('$this->macros[')
                 ->string($this->getAttribute('name'))
                 ->raw(']')
             ;
