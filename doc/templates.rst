@@ -69,6 +69,8 @@ You might also be interested in:
 * `Twig Language Server`_: provides some language features like syntax
   highlighting, diagnostics, auto complete, ...
 
+* `TwigQI`_: an extension which analyzes your templates for common bugs.
+
 Variables
 ---------
 
@@ -597,7 +599,7 @@ exist:
    * ``\x``: Hexadecimal escape sequence
    * ``\0`` to ``\377``: Octal escape sequences representing characters
    * ``\``: Backslash
-  
+
    When using single-quoted strings, the single quote character (``'``) needs to be escaped with a backslash (``\'``).
    When using double-quoted strings, the double quote character (``"``) needs to be escaped with a backslash (``\"``).
 
@@ -1134,6 +1136,7 @@ Twig can be extended. If you want to create your own extensions, read the
 .. _`regular expressions`:                  https://www.php.net/manual/en/pcre.pattern.php
 .. _`PHP-twig for atom`:                    https://github.com/reesef/php-twig
 .. _`TwigFiddle`:                           https://twigfiddle.com/
+.. _`TwigQI`:                               https://github.com/alisqi/TwigQI
 .. _`Twig pack`:                            https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
 .. _`Modern Twig`:                          https://marketplace.visualstudio.com/items?itemName=Stanislav.vscode-twig
 .. _`Twig Language Server`:                 https://github.com/kaermorchen/twig-language-server/tree/master/packages/language-server
