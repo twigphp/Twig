@@ -49,7 +49,11 @@ class EmbedNode extends IncludeNode
         if ($this->getAttribute('ignore_missing')) {
             $compiler
                 ->raw(";\n")
+                ->write(sprintf("if (\$%s) {\n", $template))
+                ->indent()
                 ->write(\sprintf("\$%s->getParent(\$context);\n", $template))
+                ->outdent()
+                ->write("}\n")
             ;
         }
     }
