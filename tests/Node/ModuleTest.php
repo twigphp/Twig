@@ -90,6 +90,7 @@ class __TwigTemplate_%x extends Template
     {
         parent::__construct(\$env);
 
+        \$macros = \$this->macros;
         \$this->source = \$this->getSourceContext();
 
         \$this->parent = false;
@@ -120,7 +121,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  42 => 1,);
+        return array (  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -167,6 +168,7 @@ class __TwigTemplate_%x extends Template
     {
         parent::__construct(\$env);
 
+        \$macros = \$this->macros;
         \$this->source = \$this->getSourceContext();
 
         \$this->blocks = [
@@ -211,7 +213,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  48 => 1,  46 => 2,  39 => 1,);
+        return array (  49 => 1,  47 => 2,  40 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -263,6 +265,7 @@ class __TwigTemplate_%x extends Template
     {
         parent::__construct(\$env);
 
+        \$macros = \$this->macros;
         \$this->source = \$this->getSourceContext();
 
         \$this->blocks = [
@@ -306,7 +309,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  48 => 2,  46 => 4,  39 => 2,);
+        return array (  49 => 2,  47 => 4,  40 => 2,);
     }
 
     public function getSourceContext(): Source
