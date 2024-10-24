@@ -1,0 +1,19 @@
+--TEST--
+"html_attr_merge" function
+--TEMPLATE--
+{% autoescape false %}
+#1 - {{ { foo: 'bar' } | html_attr_merge({ bar: 'baz' }) | json_encode }}
+#2 - {{ { class: 'foo' } | html_attr_merge({ class: 'bar' })  | json_encode }}
+#3 - {{ { class: 'foo' } | html_attr_merge({ class: ['bar', 'baz'] })  | json_encode }}
+#4 - {{ { class: { special: 'foo' } }
+    | html_attr_merge({ class: ['bar', 'baz'] })
+    | html_attr_merge({ class: { special: 'qux' } })
+    | json_encode }}
+{% endautoescape %}
+--DATA--
+return []
+--EXPECT--
+#1 - {"foo":"bar","bar":"baz"}
+#2 - {"class":["foo","bar"]}
+#3 - {"class":["foo","bar","baz"]}
+#4 - {"class":{"special":"qux","0":"bar","1":"baz"}}
