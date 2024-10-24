@@ -186,7 +186,9 @@ class __TwigTemplate_%x extends Template
         \$macros["macro"] = \$this->macros["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2)->unwrap();
         // line 1
         \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
-        yield from \$this->parent->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
+        if (\$this->parent) {
+            yield from \$this->parent->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
+        }
     }
 
     /**
@@ -281,7 +283,9 @@ class __TwigTemplate_%x extends Template
         // line 4
         \$context["foo"] = "foo";
         // line 2
-        yield from \$this->getParent(\$context)->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
+        if (\$_v0 = \$this->getParent(\$context)) {
+            yield from \$_v0->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
+        }
     }
 
     /**

@@ -344,14 +344,24 @@ final class ModuleNode extends Node
                     ->raw(");\n")
                 ;
             }
-            $compiler->write('yield from ');
 
             if ($parent instanceof ConstantExpression) {
-                $compiler->raw('$this->parent');
+                $compiler
+                    ->write("if (\$this->parent) {\n")
+                    ->indent()
+                    ->write("yield from \$this->parent");
             } else {
-                $compiler->raw('$this->getParent($context)');
+                $parentTemplate = $compiler->getVarName();
+                $compiler
+                    ->write(sprintf("if ($%s = \$this->getParent(\$context)) {\n", $parentTemplate))
+                    ->indent()
+                    ->write(sprintf("yield from \$%s", $parentTemplate));
             }
-            $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
+
+            $compiler
+                ->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n")
+                ->outdent()
+                ->write("}\n");
         }
 
         $compiler->subcompile($this->getNode('display_end'));
