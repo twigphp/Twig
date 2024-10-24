@@ -13,21 +13,33 @@ namespace Twig\Node\Expression\Variable;
 
 use Twig\Compiler;
 
-final class GlobalTemplateVariable extends TemplateVariable
+final class AssignTemplateVariable extends TemplateVariable
 {
+    public function __construct(string|int|null $name, int $lineno, bool $global = true)
+    {
+        parent::__construct($name, $lineno);
+
+        $this->setAttribute('global', $global);
+    }
+
     public function compile(Compiler $compiler): void
     {
         if (null === $this->getAttribute('name')) {
             $this->setAttribute('name', \sprintf('_l%d', $compiler->getVarName()));
         }
 
-        if ('_self' === $this->getAttribute('name')) {
-            $compiler->raw('$this');
-        } else {
+        $compiler
+            ->addDebugInfo($this)
+            ->write('$macros[')
+            ->string($this->getAttribute('name'))
+            ->raw('] = ')
+        ;
+
+        if ($this->getAttribute('global')) {
             $compiler
                 ->raw('$this->macros[')
                 ->string($this->getAttribute('name'))
-                ->raw(']')
+                ->raw('] = ')
             ;
         }
     }

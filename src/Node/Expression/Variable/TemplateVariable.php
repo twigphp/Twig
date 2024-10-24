@@ -14,9 +14,6 @@ namespace Twig\Node\Expression\Variable;
 use Twig\Compiler;
 use Twig\Node\Expression\TempNameExpression;
 
-/**
- * @final
- */
 class TemplateVariable extends TempNameExpression
 {
     public function compile(Compiler $compiler): void
