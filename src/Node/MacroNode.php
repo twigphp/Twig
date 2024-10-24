@@ -14,6 +14,7 @@ namespace Twig\Node;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
+use Twig\Markup;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Variable\LocalVariable;
 
@@ -76,7 +77,7 @@ class MacroNode extends Node
 
         $compiler
             ->raw('...$varargs')
-            ->raw(")\n")
+            ->raw("): string|Markup\n")
             ->write("{\n")
             ->indent()
             ->write("\$macros = \$this->macros;\n")

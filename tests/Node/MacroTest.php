@@ -49,7 +49,7 @@ class MacroTest extends NodeTestCase
 
         yield 'with use_yield = true' => [$node, <<<EOF
 // line 1
-public function macro_foo(\$foo = null, \$bar = "Foo", ...\$varargs)
+public function macro_foo(\$foo = null, \$bar = "Foo", ...\$varargs): string|Markup
 {
     \$macros = \$this->macros;
     \$context = [
@@ -71,7 +71,7 @@ EOF
 
         yield 'with use_yield = false' => [$node, <<<EOF
 // line 1
-public function macro_foo(\$foo = null, \$bar = "Foo", ...\$varargs)
+public function macro_foo(\$foo = null, \$bar = "Foo", ...\$varargs): string|Markup
 {
     \$macros = \$this->macros;
     \$context = [
