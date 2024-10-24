@@ -16,6 +16,7 @@ use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\AssignTemplateVariable;
 
 /**
  * Represents an import node.
@@ -25,32 +26,24 @@ use Twig\Node\Expression\NameExpression;
 #[YieldReady]
 class ImportNode extends Node
 {
-    public function __construct(AbstractExpression $expr, string $var, int $lineno, bool $global = true)
+    public function __construct(AbstractExpression $expr, AbstractExpression|AssignTemplateVariable $var, int $lineno)
     {
-        // All names supported by ExpressionParser::parsePrimaryExpression() should be excluded
-        if (\in_array(strtolower($var), ['true', 'false', 'none', 'null'])) {
-            throw new SyntaxError(\sprintf('You cannot assign a value to "%s".', $var), $lineno);
+        if (!\is_bool(\func_num_args() > 3)) {
+            trigger_deprecation('twig/twig', '3.15', \sprintf('Passing more than 3 arguments to "%s()" is deprecated.', __METHOD__));
         }
 
-        parent::__construct(['expr' => $expr], ['global' => $global, 'var' => $var], $lineno);
+        if (!$var instanceof AssignTemplateVariable) {
+            trigger_deprecation('twig/twig', '3.15', \sprintf('Passing a "%s" instance as the second argument of "%s" is deprecated, pass a "%s" instead.', $var::class, __CLASS__, AssignTemplateVariable::class));
+
+            $var = new AssignTemplateVariable($var->getAttribute('name'), $lineno);
+        }
+
+        parent::__construct(['expr' => $expr, 'var' => $var], [], $lineno);
     }
 
     public function compile(Compiler $compiler): void
     {
-        $compiler
-            ->addDebugInfo($this)
-            ->write('$macros[')
-            ->repr($this->getAttribute('var'))
-            ->raw('] = ')
-        ;
-
-        if ($this->getAttribute('global')) {
-            $compiler
-                ->raw('$this->macros[')
-                ->repr($this->getAttribute('var'))
-                ->raw('] = ')
-            ;
-        }
+        $compiler->subcompile($this->getNode('var'));
 
         if ($this->getNode('expr') instanceof NameExpression && '_self' === $this->getNode('expr')->getAttribute('name')) {
             $compiler->raw('$this');

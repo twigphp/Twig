@@ -12,7 +12,7 @@ namespace Twig\Tests\Node;
  */
 
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\IfNode;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
@@ -24,7 +24,7 @@ class IfTest extends NodeTestCase
     {
         $t = new Nodes([
             new ConstantExpression(true, 1),
-            new PrintNode(new NameExpression('foo', 1), 1),
+            new PrintNode(new ContextVariable('foo', 1), 1),
         ], 1);
         $else = null;
         $node = new IfNode($t, $else, 1);
@@ -32,7 +32,7 @@ class IfTest extends NodeTestCase
         $this->assertEquals($t, $node->getNode('tests'));
         $this->assertFalse($node->hasNode('else'));
 
-        $else = new PrintNode(new NameExpression('bar', 1), 1);
+        $else = new PrintNode(new ContextVariable('bar', 1), 1);
         $node = new IfNode($t, $else, 1);
         $this->assertEquals($else, $node->getNode('else'));
     }
@@ -43,7 +43,7 @@ class IfTest extends NodeTestCase
 
         $t = new Nodes([
             new ConstantExpression(true, 1),
-            new PrintNode(new NameExpression('foo', 1), 1),
+            new PrintNode(new ContextVariable('foo', 1), 1),
         ], 1);
         $else = null;
         $node = new IfNode($t, $else, 1);
@@ -61,9 +61,9 @@ EOF
 
         $t = new Nodes([
             new ConstantExpression(true, 1),
-            new PrintNode(new NameExpression('foo', 1), 1),
+            new PrintNode(new ContextVariable('foo', 1), 1),
             new ConstantExpression(false, 1),
-            new PrintNode(new NameExpression('bar', 1), 1),
+            new PrintNode(new ContextVariable('bar', 1), 1),
         ], 1);
         $else = null;
         $node = new IfNode($t, $else, 1);
@@ -80,9 +80,9 @@ EOF
 
         $t = new Nodes([
             new ConstantExpression(true, 1),
-            new PrintNode(new NameExpression('foo', 1), 1),
+            new PrintNode(new ContextVariable('foo', 1), 1),
         ], 1);
-        $else = new PrintNode(new NameExpression('bar', 1), 1);
+        $else = new PrintNode(new ContextVariable('bar', 1), 1);
         $node = new IfNode($t, $else, 1);
 
         $tests[] = [$node, <<<EOF

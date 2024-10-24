@@ -18,6 +18,7 @@ use Twig\Node\BlockReferenceNode;
 use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\Variable\TemplateVariable;
 use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
@@ -79,6 +80,8 @@ class Parser
 
     public function getVarName(): string
     {
+        trigger_deprecation('twig/twig', '3.15', 'The "%s()" method is deprecated.', __METHOD__);
+
         return \sprintf('__internal_parse_%d', $this->varNameSalt++);
     }
 
@@ -273,8 +276,14 @@ class Parser
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedSymbol(string $type, string $alias, ?string $name = null, string|null $internalRef = null): void
+    public function addImportedSymbol(string $type, string $alias, ?string $name = null, AbstractExpression|TemplateVariable|null $internalRef = null): void
     {
+        if ($internalRef && !$internalRef instanceof TemplateVariable) {
+            trigger_deprecation('twig/twig', '3.15', 'Not passing a "%s" instance as an internal reference is deprecated ("%s" given).', __METHOD__, TemplateVariable::class, $internalRef::class);
+
+            $internalRef = new TemplateVariable($internalRef->getAttribute('name'), $internalRef->getTemplateLine());
+        }
+
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $internalRef];
     }
 

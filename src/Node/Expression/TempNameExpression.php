@@ -18,14 +18,18 @@ class TempNameExpression extends AbstractExpression
 {
     public const RESERVED_NAMES = ['varargs', 'context', 'macros', 'blocks', 'this'];
 
-    public function __construct(string|int $name, int $lineno)
+    public function __construct(string|int|null $name, int $lineno)
     {
         // All names supported by ExpressionParser::parsePrimaryExpression() should be excluded
-        if (\in_array(strtolower($name), ['true', 'false', 'none', 'null'])) {
+        if ($name && \in_array(strtolower($name), ['true', 'false', 'none', 'null'])) {
             throw new SyntaxError(\sprintf('You cannot assign a value to "%s".', $name), $lineno);
         }
 
-        if (is_int($name) || ctype_digit($name)) {
+        if (self::class === static::class) {
+            trigger_deprecation('twig/twig', '3.15', 'The "%s" class is deprecated.', self::class);
+        }
+
+        if (null !== $name && (is_int($name) || ctype_digit($name))) {
             $name = (int) $name;
         } elseif (in_array($name, self::RESERVED_NAMES)) {
             $name = '_'.$name.'_';
@@ -36,6 +40,10 @@ class TempNameExpression extends AbstractExpression
 
     public function compile(Compiler $compiler): void
     {
+        if (null === $this->getAttribute('name')) {
+            $this->setAttribute('name', \sprintf('_l%d', $compiler->getVarName()));
+        }
+
         $compiler->raw('$'.$this->getAttribute('name'));
     }
 }

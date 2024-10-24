@@ -244,7 +244,7 @@ class Compiler
 
     public function getVarName(): string
     {
-        return \sprintf('__internal_compile_%d', $this->varNameSalt++);
+        return \sprintf('_v%d', $this->varNameSalt++);
     }
 
     private function checkForEcho(string $string): void

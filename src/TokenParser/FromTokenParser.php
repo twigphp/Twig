@@ -11,7 +11,8 @@
 
 namespace Twig\TokenParser;
 
-use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\Variable\AssignContextVariable;
+use Twig\Node\Expression\Variable\AssignTemplateVariable;
 use Twig\Node\ImportNode;
 use Twig\Node\Node;
 use Twig\Token;
@@ -36,9 +37,9 @@ final class FromTokenParser extends AbstractTokenParser
             $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
             if ($stream->nextIf('as')) {
-                $alias = new AssignNameExpression($stream->expect(Token::NAME_TYPE)->getValue(), $token->getLine());
+                $alias = new AssignContextVariable($stream->expect(Token::NAME_TYPE)->getValue(), $token->getLine());
             } else {
-                $alias = new AssignNameExpression($name, $token->getLine());
+                $alias = new AssignContextVariable($name, $token->getLine());
             }
 
             $targets[$name] = $alias;
@@ -50,8 +51,8 @@ final class FromTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        $internalRef = $this->parser->getVarName();
-        $node = new ImportNode($macro, $internalRef, $token->getLine(), $this->parser->isMainScope());
+        $internalRef = new AssignTemplateVariable(null, $token->getLine(), $this->parser->isMainScope());
+        $node = new ImportNode($macro, $internalRef, $token->getLine());
 
         foreach ($targets as $name => $alias) {
             $this->parser->addImportedSymbol('function', $alias->getAttribute('name'), 'macro_'.$name, $internalRef);

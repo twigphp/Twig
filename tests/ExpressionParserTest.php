@@ -22,6 +22,11 @@ use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\Unary\SpreadUnary;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
+use Twig\Node\Expression\TestExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Node;
 use Twig\Parser;
 use Twig\Source;
 use Twig\TwigFilter;
@@ -163,9 +168,9 @@ class ExpressionParserTest extends TestCase
             ],
             ['{{ {a, b} }}', new ArrayExpression([
                 new ConstantExpression('a', 1),
-                new NameExpression('a', 1),
+                new ContextVariable('a', 1),
                 new ConstantExpression('b', 1),
-                new NameExpression('b', 1),
+                new ContextVariable('b', 1),
             ], 1)],
 
             // sequence with spread operator
@@ -178,7 +183,7 @@ class ExpressionParserTest extends TestCase
                     new ConstantExpression(2, 1),
 
                     new ConstantExpression(2, 1),
-                    new SpreadUnary(new NameExpression('foo', 1), 1),
+                    self::createContextVariable(new SpreadUnary(new NameExpression('foo', 1), 1)),
                 ], 1)],
 
             // mapping with spread operator
@@ -191,7 +196,7 @@ class ExpressionParserTest extends TestCase
                     new ConstantExpression('c', 1),
 
                     new ConstantExpression(0, 1),
-                    new SpreadUnary(new NameExpression('otherLetters', 1), 1),
+                    self::createContextVariable(new SpreadUnary(new NameExpression('otherLetters', 1), 1)),
                 ], 1)],
         ];
     }
@@ -223,7 +228,7 @@ class ExpressionParserTest extends TestCase
             [
                 '{{ "foo #{bar}" }}', new ConcatBinary(
                     new ConstantExpression('foo ', 1),
-                    new NameExpression('bar', 1),
+                    new ContextVariable('bar', 1),
                     1
                 ),
             ],
@@ -231,7 +236,7 @@ class ExpressionParserTest extends TestCase
                 '{{ "foo #{bar} baz" }}', new ConcatBinary(
                     new ConcatBinary(
                         new ConstantExpression('foo ', 1),
-                        new NameExpression('bar', 1),
+                        new ContextVariable('bar', 1),
                         1
                     ),
                     new ConstantExpression(' baz', 1),
@@ -246,7 +251,7 @@ class ExpressionParserTest extends TestCase
                         new ConcatBinary(
                             new ConcatBinary(
                                 new ConstantExpression('foo ', 1),
-                                new NameExpression('bar', 1),
+                                new ContextVariable('bar', 1),
                                 1
                             ),
                             new ConstantExpression(' baz', 1),
@@ -439,5 +444,15 @@ class ExpressionParserTest extends TestCase
 
         $parser->parse($env->tokenize(new Source('{{ 1 is empty element }}', 'index')));
         $this->expectNotToPerformAssertions();
+    }
+
+    private static function createContextVariable(string $name, array $attributes): ContextVariable
+    {
+        $expression = new ContextVariable($name, 1);
+        foreach ($attributes as $key => $value) {
+            $expression->setAttribute($key, $value);
+        }
+
+        return $expression;
     }
 }

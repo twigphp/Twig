@@ -17,7 +17,6 @@ use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ArrowFunctionExpression;
-use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConditionalExpression;
@@ -25,13 +24,15 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\NameExpression;
-use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Expression\Unary\SpreadUnary;
+use Twig\Node\Expression\Variable\AssignContextVariable;
+use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\LocalVariable;
 use Twig\Node\Expression\Variable\TemplateVariable;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -175,7 +176,7 @@ class ExpressionParser
         if ($stream->look(1)->test(Token::ARROW_TYPE)) {
             $line = $stream->getCurrent()->getLine();
             $token = $stream->expect(Token::NAME_TYPE);
-            $names = [new AssignNameExpression($token->getValue(), $token->getLine())];
+            $names = [new AssignContextVariable($token->getValue(), $token->getLine())];
             $stream->expect(Token::ARROW_TYPE);
 
             return new ArrowFunctionExpression($this->parseExpression(), new Nodes($names), $line);
@@ -210,7 +211,7 @@ class ExpressionParser
         $names = [];
         while (true) {
             $token = $stream->expect(Token::NAME_TYPE);
-            $names[] = new AssignNameExpression($token->getValue(), $token->getLine());
+            $names[] = new AssignContextVariable($token->getValue(), $token->getLine());
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;
@@ -318,7 +319,7 @@ class ExpressionParser
                         if ('(' === $this->parser->getCurrentToken()->getValue()) {
                             $node = $this->getFunctionNode($token->getValue(), $token->getLine());
                         } else {
-                            $node = new NameExpression($token->getValue(), $token->getLine());
+                            $node = new ContextVariable($token->getValue(), $token->getLine());
                         }
                 }
                 break;
@@ -345,7 +346,7 @@ class ExpressionParser
                 if (preg_match(Lexer::REGEX_NAME, $token->getValue(), $matches) && $matches[0] == $token->getValue()) {
                     // in this context, string operators are variable names
                     $this->parser->getStream()->next();
-                    $node = new NameExpression($token->getValue(), $token->getLine());
+                    $node = new ContextVariable($token->getValue(), $token->getLine());
                     break;
                 }
 
@@ -452,7 +453,7 @@ class ExpressionParser
 
                 // {a} is a shortcut for {a:a}
                 if ($stream->test(Token::PUNCTUATION_TYPE, [',', '}'])) {
-                    $value = new NameExpression($key->getAttribute('value'), $key->getTemplateLine());
+                    $value = new ContextVariable($key->getAttribute('value'), $key->getTemplateLine());
                     $node->addElement($value, $key);
                     continue;
                 }
@@ -499,7 +500,7 @@ class ExpressionParser
     public function getFunctionNode($name, $line)
     {
         if (null !== $alias = $this->parser->getImportedSymbol('function', $name)) {
-            return new MacroReferenceExpression(new TemplateVariable($alias['node'], $line), $alias['name'], $this->createArguments($line), $line);
+            return new MacroReferenceExpression(new TemplateVariable($alias['node']->getAttribute('name'), $line), $alias['name'], $this->createArguments($line), $line);
         }
 
         $args = $this->parseOnlyArguments();
@@ -621,7 +622,7 @@ class ExpressionParser
             } else {
                 $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
             }
-            $targets[] = new AssignNameExpression($token->getValue(), $token->getLine());
+            $targets[] = new AssignContextVariable($token->getValue(), $token->getLine());
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;
@@ -662,7 +663,7 @@ class ExpressionParser
         }
 
         if ('defined' === $test->getName() && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
-            $node = new MacroReferenceExpression(new TemplateVariable($alias['node'], $node->getTemplateLine()), $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
+            $node = new MacroReferenceExpression(new TemplateVariable($alias['node']->getAttribute('name'), $node->getTemplateLine()), $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
         }
 
         return new ($test->getNodeClass())($node, $test, $arguments, $this->parser->getCurrentToken()->getLine());
@@ -755,7 +756,7 @@ class ExpressionParser
     {
         $arguments = new ArrayExpression([], $line);
         foreach ($this->parseOnlyArguments() as $k => $n) {
-            $arguments->addElement($n, new TempNameExpression($k, $line));
+            $arguments->addElement($n, new LocalVariable($k, $line));
         }
 
         return $arguments;
@@ -841,7 +842,7 @@ class ExpressionParser
             $node instanceof NameExpression
             &&
             (
-                null !== $this->parser->getImportedSymbol('template', $node->getAttribute('name'))
+                null !== $this->parser->getImportedSymbol('template', (new TemplateVariable($node->getAttribute('name'), $node->getTemplateLine()))->getAttribute('name'))
                 ||
                 '_self' === $node->getAttribute('name') && $attribute instanceof ConstantExpression
             )

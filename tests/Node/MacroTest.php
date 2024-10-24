@@ -16,8 +16,8 @@ use Twig\Loader\ArrayLoader;
 use Twig\Node\BodyNode;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\NameExpression;
-use Twig\Node\Expression\TempNameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\LocalVariable;
 use Twig\Node\MacroNode;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
@@ -27,7 +27,7 @@ class MacroTest extends NodeTestCase
     public function testConstructor()
     {
         $body = new BodyNode([new TextNode('foo', 1)]);
-        $arguments = new ArrayExpression([new NameExpression('foo', 1), new ConstantExpression(null, 1)], 1);
+        $arguments = new ArrayExpression([new ContextVariable('foo', 1), new ConstantExpression(null, 1)], 1);
         $node = new MacroNode('foo', $body, $arguments, 1);
 
         $this->assertEquals($body, $node->getNode('body'));
@@ -38,9 +38,9 @@ class MacroTest extends NodeTestCase
     public static function provideTests(): iterable
     {
         $arguments = new ArrayExpression([
-            new TempNameExpression('foo', 1),
+            new LocalVariable('foo', 1),
             new ConstantExpression(null, 1),
-            new TempNameExpression('bar', 1),
+            new LocalVariable('bar', 1),
             new ConstantExpression('Foo', 1),
         ], 1);
 

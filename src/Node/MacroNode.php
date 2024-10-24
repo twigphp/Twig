@@ -15,7 +15,7 @@ use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\TempNameExpression;
+use Twig\Node\Expression\Variable\LocalVariable;
 
 /**
  * Represents a macro node.

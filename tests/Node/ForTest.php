@@ -16,6 +16,8 @@ use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\AssignContextVariable;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ForNode;
 use Twig\Node\IfNode;
 use Twig\Node\Nodes;
@@ -26,8 +28,8 @@ class ForTest extends NodeTestCase
 {
     public function testConstructor()
     {
-        $keyTarget = new AssignNameExpression('key', 1);
-        $valueTarget = new AssignNameExpression('item', 1);
+        $keyTarget = new AssignContextVariable('key', 1);
+        $valueTarget = new AssignContextVariable('item', 1);
         $seq = new NameExpression('items', 1);
         $ifexpr = new ConstantExpression(true, 1);
         $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
@@ -43,7 +45,7 @@ class ForTest extends NodeTestCase
         $this->assertEquals($body, $node->getNode('body')->getNode('tests')->getNode(1));
         $this->assertFalse($node->hasNode('else'));
 
-        $else = new PrintNode(new NameExpression('foo', 1), 1);
+        $else = new PrintNode(new ContextVariable('foo', 1), 1);
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
         $this->assertEquals($else, $node->getNode('else'));
@@ -53,10 +55,10 @@ class ForTest extends NodeTestCase
     {
         $tests = [];
 
-        $keyTarget = new AssignNameExpression('key', 1);
-        $valueTarget = new AssignNameExpression('item', 1);
-        $seq = new NameExpression('items', 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
+        $keyTarget = new AssignContextVariable('key', 1);
+        $valueTarget = new AssignContextVariable('item', 1);
+        $seq = new ContextVariable('items', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
@@ -81,10 +83,10 @@ yield from (\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks,
 EOF
         ];
 
-        $keyTarget = new AssignNameExpression('k', 1);
-        $valueTarget = new AssignNameExpression('v', 1);
-        $seq = new NameExpression('values', 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
+        $keyTarget = new AssignContextVariable('k', 1);
+        $valueTarget = new AssignContextVariable('v', 1);
+        $seq = new ContextVariable('values', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);
@@ -106,10 +108,10 @@ yield from (\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks,
 EOF
         ];
 
-        $keyTarget = new AssignNameExpression('k', 1);
-        $valueTarget = new AssignNameExpression('v', 1);
-        $seq = new NameExpression('values', 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
+        $keyTarget = new AssignContextVariable('k', 1);
+        $valueTarget = new AssignContextVariable('v', 1);
+        $seq = new ContextVariable('values', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);
@@ -131,8 +133,8 @@ yield from (\$__internal_compile_1 = function (\$iterator, &\$context, \$blocks,
 EOF
         ];
 
-        $keyTarget = new AssignNameExpression('k', 1);
-        $valueTarget = new AssignNameExpression('v', 1);
+        $keyTarget = new AssignContextVariable('k', 1);
+        $valueTarget = new AssignContextVariable('v', 1);
         $seq = new NameExpression('values', 1);
         $ifexpr = new ConstantExpression(true, 1);
         $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);

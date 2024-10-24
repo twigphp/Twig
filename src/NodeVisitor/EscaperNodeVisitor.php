@@ -67,7 +67,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
         } elseif ($node instanceof BlockNode) {
             $this->statusStack[] = $this->blocks[$node->getAttribute('name')] ?? $this->needEscaping();
         } elseif ($node instanceof ImportNode) {
-            $this->safeVars[] = $node->getAttribute('var');
+            $this->safeVars[] = $node->getNode('var')->getAttribute('name');
         }
 
         return $node;
