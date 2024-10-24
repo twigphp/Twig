@@ -41,7 +41,7 @@ class TempNameExpression extends AbstractExpression
     public function compile(Compiler $compiler): void
     {
         if (null === $this->getAttribute('name')) {
-            $this->setAttribute('name', \sprintf('_l%d', $compiler->getVarName()));
+            $this->setAttribute('name', $compiler->getVarName());
         }
 
         $compiler->raw('$'.$this->getAttribute('name'));
