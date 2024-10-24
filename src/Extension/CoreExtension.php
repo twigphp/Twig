@@ -260,7 +260,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('attribute', null, ['parser_callable' => [self::class, 'parseAttributeFunction']]),
             new TwigFunction('max', 'max'),
             new TwigFunction('min', 'min'),
-            new TwigFunction('range', 'range', ['deprecation_info' => new DeprecatedCallableInfo('twig/twig', '3.15')]),
+            new TwigFunction('range', 'range'),
             new TwigFunction('constant', [self::class, 'constant']),
             new TwigFunction('cycle', [self::class, 'cycle']),
             new TwigFunction('random', [self::class, 'random'], ['needs_charset' => true]),

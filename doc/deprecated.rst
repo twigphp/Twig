@@ -28,9 +28,6 @@ Functions
 
   Note that it won't be removed in 4.0 to allow a smoother upgrade path.
 
-* The ``range`` function is deprecated as of Twig 3.15, use the ``..`` operator
-  instead.
-
 Extensions
 ----------
 

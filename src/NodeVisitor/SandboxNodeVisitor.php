@@ -69,7 +69,6 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             }
 
             // the .. operator is equivalent to the range() function
-            // To be removed in 4.0
             if ($node instanceof RangeBinary && !isset($this->functions['range'])) {
                 $this->functions['range'] = $node->getTemplateLine();
             }
