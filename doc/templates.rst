@@ -69,7 +69,9 @@ You might also be interested in:
 * `Twig Language Server`_: provides some language features like syntax
   highlighting, diagnostics, auto complete, ...
 
-* `TwigQI`_: an extension which analyzes your templates for common bugs.
+* `TwigQI`_: an extension which analyzes your templates for common bugs during compilation.
+
+* `TwigStan`_: a static analyzer for Twig templates powered by PHPStan
 
 Variables
 ---------
@@ -1137,6 +1139,7 @@ Twig can be extended. If you want to create your own extensions, read the
 .. _`PHP-twig for atom`:                    https://github.com/reesef/php-twig
 .. _`TwigFiddle`:                           https://twigfiddle.com/
 .. _`TwigQI`:                               https://github.com/alisqi/TwigQI
+.. _`TwigStan`:                             https://github.com/twigstan/twigstan
 .. _`Twig pack`:                            https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
 .. _`Modern Twig`:                          https://marketplace.visualstudio.com/items?itemName=Stanislav.vscode-twig
 .. _`Twig Language Server`:                 https://github.com/kaermorchen/twig-language-server/tree/master/packages/language-server
