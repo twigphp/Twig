@@ -40,6 +40,12 @@ class TwigExtraExtension extends Extension
 
                 if ('markdown' === $extension && class_exists(CommonMarkConverter::class)) {
                     $loader->load('markdown_league.php');
+
+                    if ($container->hasDefinition('twig.markdown.league_common_mark_converter_factory')) {
+                        $container
+                            ->getDefinition('twig.markdown.league_common_mark_converter_factory')
+                            ->setArgument('$config', $config['commonmark'] ?? []);
+                    }
                 }
             }
         }
