@@ -16,8 +16,8 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\BlockReferenceExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\ParentExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ForNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\OptimizerNodeVisitor;
@@ -71,7 +71,7 @@ class OptimizerTest extends TestCase
     public function checkForVarConfiguration(Node $node, $target)
     {
         foreach ($node as $n) {
-            if (NameExpression::class === $n::class && $target === $n->getAttribute('name')) {
+            if (ContextVariable::class === $n::class && $target === $n->getAttribute('name')) {
                 $this->assertTrue($n->getAttribute('always_defined'));
             } else {
                 $this->checkForVarConfiguration($n, $target);

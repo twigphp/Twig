@@ -17,6 +17,7 @@ use Twig\Node\Expression\Binary\AndBinary;
 use Twig\Node\Expression\Test\DefinedTest;
 use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\Unary\NotUnary;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\TwigTest;
 
 class NullCoalesceExpression extends ConditionalExpression
@@ -45,7 +46,7 @@ class NullCoalesceExpression extends ConditionalExpression
          * cases might be implemented as an optimizer node visitor, but has not been done
          * as benefits are probably not worth the added complexity.
          */
-        if ($this->getNode('expr2') instanceof NameExpression) {
+        if ($this->getNode('expr2') instanceof ContextVariable) {
             $this->getNode('expr2')->setAttribute('always_defined', true);
             $compiler
                 ->raw('((')

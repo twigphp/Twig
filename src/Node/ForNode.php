@@ -15,7 +15,7 @@ namespace Twig\Node;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\Expression\AssignNameExpression;
+use Twig\Node\Expression\Variable\AssignContextVariable;
 
 /**
  * Represents a for node.
@@ -25,7 +25,7 @@ use Twig\Node\Expression\AssignNameExpression;
 #[YieldReady]
 class ForNode extends Node
 {
-    public function __construct(AssignNameExpression $keyTarget, AssignNameExpression $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?Node $else, int $lineno)
+    public function __construct(AssignContextVariable $keyTarget, AssignContextVariable $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?Node $else, int $lineno)
     {
         if ($ifexpr) {
             $body = new IfNode(new Nodes([$ifexpr, $body]), null, $lineno);

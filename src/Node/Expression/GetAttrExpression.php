@@ -14,11 +14,12 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 use Twig\Extension\SandboxExtension;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Template;
 
 class GetAttrExpression extends AbstractExpression
 {
-    public function __construct(AbstractExpression $node, AbstractExpression $attribute, ArrayExpression|NameExpression|null $arguments, string $type, int $lineno)
+    public function __construct(AbstractExpression $node, AbstractExpression $attribute, ArrayExpression|ContextVariable|null $arguments, string $type, int $lineno)
     {
         $nodes = ['node' => $node, 'attribute' => $attribute];
         if (null !== $arguments) {

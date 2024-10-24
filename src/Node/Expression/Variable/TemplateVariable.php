@@ -12,10 +12,29 @@
 namespace Twig\Node\Expression\Variable;
 
 use Twig\Compiler;
-use Twig\Node\Expression\TempNameExpression;
+use Twig\Error\SyntaxError;
+use Twig\Node\Expression\AbstractExpression;
 
-class TemplateVariable extends TempNameExpression
+class TemplateVariable extends AbstractExpression
 {
+    public const RESERVED_NAMES = ['varargs', 'context', 'macros', 'blocks', 'this'];
+
+    public function __construct(string|int|null $name, int $lineno)
+    {
+        // All names supported by ExpressionParser::parsePrimaryExpression() should be excluded
+        if ($name && \in_array(strtolower($name), ['true', 'false', 'none', 'null'])) {
+            throw new SyntaxError(\sprintf('You cannot assign a value to "%s".', $name), $lineno);
+        }
+
+        if (null !== $name && (is_int($name) || ctype_digit($name))) {
+            $name = (int) $name;
+        } elseif (in_array($name, self::RESERVED_NAMES)) {
+            $name = '_'.$name.'_';
+        }
+
+        parent::__construct([], ['name' => $name], $lineno);
+    }
+
     public function compile(Compiler $compiler): void
     {
         if (null === $this->getAttribute('name')) {

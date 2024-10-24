@@ -13,9 +13,7 @@ namespace Twig\Tests\Node;
 
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
-use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ForNode;
@@ -30,9 +28,9 @@ class ForTest extends NodeTestCase
     {
         $keyTarget = new AssignContextVariable('key', 1);
         $valueTarget = new AssignContextVariable('item', 1);
-        $seq = new NameExpression('items', 1);
+        $seq = new ContextVariable('items', 1);
         $ifexpr = new ConstantExpression(true, 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = null;
         $node = new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
         $node->setAttribute('with_loop', false);
@@ -135,10 +133,10 @@ EOF
 
         $keyTarget = new AssignContextVariable('k', 1);
         $valueTarget = new AssignContextVariable('v', 1);
-        $seq = new NameExpression('values', 1);
+        $seq = new ContextVariable('values', 1);
         $ifexpr = new ConstantExpression(true, 1);
-        $body = new Nodes([new PrintNode(new NameExpression('foo', 1), 1)], 1);
-        $else = new PrintNode(new NameExpression('foo', 1), 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
+        $else = new PrintNode(new ContextVariable('foo', 1), 1);
         $node = new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
         $node->setAttribute('with_loop', true);
 

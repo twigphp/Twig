@@ -56,7 +56,6 @@ use Twig\Node\Expression\Filter\RawFilter;
 use Twig\Node\Expression\FunctionNode\EnumCasesFunction;
 use Twig\Node\Expression\FunctionNode\EnumFunction;
 use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\NullCoalesceExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Expression\Test\ConstantTest;
@@ -69,8 +68,8 @@ use Twig\Node\Expression\Test\SameasTest;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
-use Twig\OperatorPrecedenceChange;
 use Twig\Parser;
 use Twig\Source;
 use Twig\Template;
@@ -1937,7 +1936,7 @@ final class CoreExtension extends AbstractExtension
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
         $recurseArgs = new ArrayExpression([new ConstantExpression(0, $line), $args[0]], $line);
-        $expr = new GetAttrExpression(new NameExpression('loop', $line), new ConstantExpression('__invoke', $line), $recurseArgs, Template::METHOD_CALL, $line);
+        $expr = new GetAttrExpression(new ContextVariable('loop', $line), new ConstantExpression('__invoke', $line), $recurseArgs, Template::METHOD_CALL, $line);
         $expr->setAttribute('is_generator', true);
         $expr = new RawFilter($expr);
         $expr->setAttribute('is_generator', true);

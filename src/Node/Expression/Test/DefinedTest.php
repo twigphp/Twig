@@ -21,8 +21,8 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TestExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\TwigTest;
 
@@ -41,7 +41,7 @@ class DefinedTest extends TestExpression
     #[FirstClassTwigCallableReady]
     public function __construct(AbstractExpression $node, TwigTest $name, ?Node $arguments, int $lineno)
     {
-        if ($node instanceof NameExpression) {
+        if ($node instanceof ContextVariable) {
             $node->setAttribute('is_defined_test', true);
         } elseif ($node instanceof GetAttrExpression) {
             $node->setAttribute('is_defined_test', true);

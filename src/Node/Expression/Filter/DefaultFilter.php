@@ -19,8 +19,8 @@ use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\Test\DefinedTest;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\TwigFilter;
 use Twig\TwigTest;
@@ -40,7 +40,7 @@ class DefaultFilter extends FilterExpression
         $name = $filter->getName();
         $default = new FilterExpression($node, $filter, $arguments, $node->getTemplateLine());
 
-        if ('default' === $name && ($node instanceof NameExpression || $node instanceof GetAttrExpression)) {
+        if ('default' === $name && ($node instanceof ContextVariable || $node instanceof GetAttrExpression)) {
             $test = new DefinedTest(clone $node, new TwigTest('defined'), new EmptyNode(), $node->getTemplateLine());
             $false = \count($arguments) ? $arguments->getNode(0) : new ConstantExpression('', $node->getTemplateLine());
 

@@ -78,13 +78,6 @@ class Parser
         return $this->env;
     }
 
-    public function getVarName(): string
-    {
-        trigger_deprecation('twig/twig', '3.15', 'The "%s()" method is deprecated.', __METHOD__);
-
-        return \sprintf('__internal_parse_%d', $this->varNameSalt++);
-    }
-
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
         $vars = get_object_vars($this);
@@ -276,14 +269,8 @@ class Parser
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedSymbol(string $type, string $alias, ?string $name = null, AbstractExpression|TemplateVariable|null $internalRef = null): void
+    public function addImportedSymbol(string $type, string $alias, ?string $name = null, ?TemplateVariable $internalRef = null): void
     {
-        if ($internalRef && !$internalRef instanceof TemplateVariable) {
-            trigger_deprecation('twig/twig', '3.15', 'Not passing a "%s" instance as an internal reference is deprecated ("%s" given).', __METHOD__, TemplateVariable::class, $internalRef::class);
-
-            $internalRef = new TemplateVariable($internalRef->getAttribute('name'), $internalRef->getTemplateLine());
-        }
-
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $internalRef];
     }
 

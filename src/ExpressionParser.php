@@ -23,7 +23,6 @@ use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\NegUnary;
@@ -592,7 +591,7 @@ class ExpressionParser
 
             $name = null;
             if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
-                if (!$value instanceof NameExpression) {
+                if (!$value instanceof ContextVariable) {
                     throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', $value::class), $token->getLine(), $stream->getSourceContext());
                 }
                 $name = $value->getAttribute('name');
@@ -662,7 +661,7 @@ class ExpressionParser
             $arguments = new Nodes([0 => $this->getPrimary()]);
         }
 
-        if ('defined' === $test->getName() && $node instanceof NameExpression && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
+        if ('defined' === $test->getName() && $node instanceof ContextVariable && null !== $alias = $this->parser->getImportedSymbol('function', $node->getAttribute('name'))) {
             $node = new MacroReferenceExpression(new TemplateVariable($alias['node']->getAttribute('name'), $node->getTemplateLine()), $alias['name'], new ArrayExpression([], $node->getTemplateLine()), $node->getTemplateLine());
         }
 
@@ -789,7 +788,7 @@ class ExpressionParser
 
             $name = null;
             if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
-                if (!$value instanceof NameExpression) {
+                if (!$value instanceof ContextVariable) {
                     throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', \get_class($value)), $token->getLine(), $stream->getSourceContext());
                 }
                 $name = $value->getAttribute('name');
@@ -839,7 +838,7 @@ class ExpressionParser
         }
 
         if (
-            $node instanceof NameExpression
+            $node instanceof ContextVariable
             &&
             (
                 null !== $this->parser->getImportedSymbol('template', (new TemplateVariable($node->getAttribute('name'), $node->getTemplateLine()))->getAttribute('name'))
