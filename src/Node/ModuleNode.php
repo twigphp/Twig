@@ -187,6 +187,7 @@ final class ModuleNode extends Node
             ->indent()
             ->subcompile($this->getNode('constructor_start'))
             ->write("parent::__construct(\$env);\n\n")
+            ->write("\$macros = \$this->macros;\n")
             ->write("\$this->source = \$this->getSourceContext();\n\n")
         ;
 
