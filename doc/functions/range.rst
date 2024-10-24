@@ -1,6 +1,11 @@
 ``range``
 =========
 
+.. warning::
+
+    The ``range`` function is deprecated as of Twig 3.15. Use the ``..``
+    operator instead.
+
 Returns a list containing an arithmetic progression of integers:
 
 .. code-block:: twig

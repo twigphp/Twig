@@ -1,5 +1,6 @@
 # 3.15.0 (2024-XX-XX)
 
+ * Deprecate the `range` function, use the `..` operator
  * Deprecate `TempNameExpression` in favor of `LocalVariable`
  * Deprecate `NameExpression` in favor of `ContextVariable`
  * Deprecate `AssignNameExpression` in favor of `AssignContextVariable`
