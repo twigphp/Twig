@@ -18,9 +18,11 @@ use Twig\TemplateWrapper;
  *
  * @deprecated since Twig 3.9
  */
-function twig_template_from_string(Environment $env, $template, ?string $name = null): TemplateWrapper
-{
-    trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
+if (!function_exists('twig_template_from_string')) {
+    function twig_template_from_string(Environment $env, $template, ?string $name = null): TemplateWrapper
+    {
+        trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return StringLoaderExtension::templateFromString($env, $template, $name);
+        return StringLoaderExtension::templateFromString($env, $template, $name);
+    }
 }

@@ -19,11 +19,13 @@ use Twig\Runtime\EscaperRuntime;
  *
  * @deprecated since Twig 3.9
  */
-function twig_raw_filter($string)
-{
-    trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
+if (!function_exists('twig_raw_filter')) {
+    function twig_raw_filter($string)
+    {
+        trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return $string;
+        return $string;
+    }
 }
 
 /**
@@ -31,11 +33,13 @@ function twig_raw_filter($string)
  *
  * @deprecated since Twig 3.9
  */
-function twig_escape_filter(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
-{
-    trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
+if (!function_exists('twig_escape_filter')) {
+    function twig_escape_filter(Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false)
+    {
+        trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return $env->getRuntime(EscaperRuntime::class)->escape($string, $strategy, $charset, $autoescape);
+        return $env->getRuntime(EscaperRuntime::class)->escape($string, $strategy, $charset, $autoescape);
+    }
 }
 
 /**
@@ -43,9 +47,11 @@ function twig_escape_filter(Environment $env, $string, $strategy = 'html', $char
  *
  * @deprecated since Twig 3.9
  */
-function twig_escape_filter_is_safe(Node $filterArgs)
-{
-    trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
+if (!function_exists('twig_escape_filter_is_safe')) {
+    function twig_escape_filter_is_safe(Node $filterArgs)
+    {
+        trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return EscaperExtension::escapeFilterIsSafe($filterArgs);
+        return EscaperExtension::escapeFilterIsSafe($filterArgs);
+    }
 }
