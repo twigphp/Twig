@@ -1,0 +1,40 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-10-25T11:39:49Z
+
+As this method is meant to make this similar to `TemplateWrapper` to support easily cases dealing with a union `Template|TemplateWrapper`, which benefit does this provide ?
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-10-25T11:45:06Z
+
+Because of this:
+```php
+$macros['greeter'] = $this->macros['greeter'] = $this->loadTemplate(
+        'macros.twig',
+        '@__main__/EndToEnd/Macros/layout.twig',
+        1
+    )->unwrap();
+```
+
+I can instruct PHPStan using a `loadTemplate` extension, that this call returns the `__TwigTemplate_8a8feb39bb5837ab39c1764f9795e711` class.
+
+But since the code calls `unwrap` on it, it becomes `Template` again.
+
+That means that we loose the specific type immediately.
+
+By adding `@return $this` on the `unwrap` method _only_ on the Template, we tell PHPStan: this returns the same instance.
+
+The TemplateWrapper is not changed. The `unwrap` method there, will still return Template.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-10-25T11:46:58Z
+
+Exactly for this scenario, the `@return $this` is invented/supported by PHPStan.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-10-25T12:08:57Z
+
+@fabpot This one is ready for review.
