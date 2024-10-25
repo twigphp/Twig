@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by ruudk at 2024-10-24T11:25:58Z
+
+/cc @fabpot @stof
+
+This would be good to support macros in TwigStan:
+- https://github.com/twigstan/twigstan/issues/4
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-10-24T11:47:32Z
+
+I don't think we should merge it yet. I'd like for macros to yield instead.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-10-24T11:50:24Z
+
+Since it's compiled code, we change it to become iterable later?
