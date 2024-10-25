@@ -32,7 +32,7 @@ abstract class Template
     public const ARRAY_CALL = 'array';
     public const METHOD_CALL = 'method';
 
-    protected $parent;
+    protected ?self $parent = null;
     protected $parents = [];
     protected $blocks = [];
     protected $traits = [];
@@ -74,14 +74,14 @@ abstract class Template
      *
      * @return self|TemplateWrapper|false The parent template or false if there is no parent
      */
-    public function getParent(array $context): self|TemplateWrapper|false
+    public function getParent(array $context): self|TemplateWrapper|null
     {
         if (null !== $this->parent) {
             return $this->parent;
         }
 
         if (!$parent = $this->doGetParent($context)) {
-            return false;
+            return null;
         }
 
         if ($parent instanceof self || $parent instanceof TemplateWrapper) {

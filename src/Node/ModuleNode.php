@@ -190,11 +190,6 @@ final class ModuleNode extends Node
             ->write("\$this->source = \$this->getSourceContext();\n\n")
         ;
 
-        // parent
-        if (!$this->hasNode('parent')) {
-            $compiler->write("\$this->parent = false;\n\n");
-        }
-
         $countTraits = \count($this->getNode('traits'));
         if ($countTraits) {
             // traits
@@ -344,13 +339,15 @@ final class ModuleNode extends Node
                     ->raw(");\n")
                 ;
             }
+
             $compiler->write('yield from ');
 
             if ($parent instanceof ConstantExpression) {
                 $compiler->raw('$this->parent');
             } else {
-                $compiler->raw('$this->getParent($context)');
+                $compiler->raw('$this->getParent($context)?');
             }
+
             $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
         }
 

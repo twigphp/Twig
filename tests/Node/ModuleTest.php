@@ -92,8 +92,6 @@ class __TwigTemplate_%x extends Template
 
         \$this->source = \$this->getSourceContext();
 
-        \$this->parent = false;
-
         \$this->blocks = [
         ];
     }
@@ -120,7 +118,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  42 => 1,);
+        return array (  40 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -281,7 +279,7 @@ class __TwigTemplate_%x extends Template
         // line 4
         \$context["foo"] = "foo";
         // line 2
-        yield from \$this->getParent(\$context)->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
+        yield from \$this->getParent(\$context)?->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
     /**
