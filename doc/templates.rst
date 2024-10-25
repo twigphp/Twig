@@ -69,7 +69,7 @@ You might also be interested in:
 * `Twig Language Server`_: provides some language features like syntax
   highlighting, diagnostics, auto complete, ...
 
-* `TwigQI`_: an extension which analyzes your templates for common bugs during compilation.
+* `TwigQI`_: an extension which analyzes your templates for common bugs during compilation
 
 * `TwigStan`_: a static analyzer for Twig templates powered by PHPStan
 
