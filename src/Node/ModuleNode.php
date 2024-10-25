@@ -339,7 +339,6 @@ final class ModuleNode extends Node
                     ->raw(");\n")
                 ;
             }
-
             $compiler->write('yield from ');
 
             if ($parent instanceof ConstantExpression) {
@@ -347,7 +346,6 @@ final class ModuleNode extends Node
             } else {
                 $compiler->raw('$this->getParent($context)?');
             }
-
             $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
         }
 
