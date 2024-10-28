@@ -1,0 +1,21 @@
+--TEST--
+"all" filter
+--TEMPLATE--
+{{ [1, 2]|all((v) => v > 1) ? 'true' : 'false' }}
+{{ [1, 2]|all(v => v >= 1) ? 'true' : 'false' }}
+{{ {a: 1, b: 2, c: 5, d: 8}|all(v => v < 10) ? 'true' : 'false' }}
+{{ {a: 1, b: 2, c: 5, d: 8}|all((v, k) => (v < 10) and (k != "c")) ? 'true' : 'false' }}
+{{ it|all((v) => v > 3) ? 'true' : 'false' }}
+{{ ita|all(v => v < 10) ? 'true' : 'false' }}
+--DATA--
+return [
+    'it' => new \ArrayIterator(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8]),
+    'ita' => new Twig\Tests\IteratorAggregateStub(['a' => 1, 'b' => 2, 'c' => 5, 'd' => 8]),
+]
+--EXPECT--
+false
+true
+true
+false
+false
+true
