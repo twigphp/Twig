@@ -3,16 +3,16 @@
 
 .. versionadded:: 3.15
 
-    The ``any`` filter was added in Twig 3.15.
+    The ``any`` test was added in Twig 3.15.
 
-The ``any`` filter returns ``true`` if any of the elements in the array return ``true`` when passed to the arrow function.
+The ``any`` test returns ``true`` if any of the elements in the array return ``true`` when passed to the arrow function.
 The arrow function receives the value of the sequence:
 
 .. code-block:: twig
 
     {% set sizes = [34, 36, 38, 40, 42] %}
 
-    {{ sizes|any(v => v > 38) }} {# true #}
+    {{ sizes is any(v => v > 38) }} {# true #}
 
 It also works with mappings:
 
@@ -26,13 +26,13 @@ It also works with mappings:
         xl:  42,
     } %}
 
-    {{ sizes|any(v => v > 38) }} {# true #}
+    {{ sizes is any(v => v > 38) }} {# true #}
 
 The arrow function also receives the key as a second argument:
 
 .. code-block:: twig
 
-    {{ sizes|any((v, k) => k == 'xxl') }} {# false #}
+    {{ sizes is any((v, k) => k == 'xxl') }} {# false #}
 
 Note that the arrow function has access to the current context:
 
@@ -40,7 +40,7 @@ Note that the arrow function has access to the current context:
 
     {% set my_size = 39 %}
 
-    {{ sizes|any(v => v >= my_size) }} {# true #}
+    {{ sizes is any(v => v >= my_size) }} {# true #}
 
 Arguments
 ---------

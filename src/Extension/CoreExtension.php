@@ -237,7 +237,6 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('map', [self::class, 'map'], ['needs_environment' => true]),
             new TwigFilter('reduce', [self::class, 'reduce'], ['needs_environment' => true]),
             new TwigFilter('find', [self::class, 'find'], ['needs_environment' => true]),
-            new TwigFilter('any', [self::class, 'any'], ['needs_environment' => true]),
 
             // string/array filters
             new TwigFilter('reverse', [self::class, 'reverse'], ['needs_charset' => true]),
@@ -288,6 +287,7 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('iterable', 'is_iterable'),
             new TwigTest('sequence', [self::class, 'testSequence']),
             new TwigTest('mapping', [self::class, 'testMapping']),
+            new TwigTest('any', [self::class, 'any'], [/*'needs_environment' => true, */'one_mandatory_argument' => true]),
         ];
     }
 
@@ -1890,13 +1890,13 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function any(Environment $env, $array, $arrow): bool
+    public static function any(/*Environment $env, */$array, $arrow): bool
     {
         if (!is_iterable($array)) {
-            throw new RuntimeError(\sprintf('The "any" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
+            throw new RuntimeError(\sprintf('The "any" test expects a sequence or a mapping, got "%s".', get_debug_type($array)));
         }
 
-        self::checkArrow($env, $arrow, 'any', 'filter');
+//        self::checkArrow($env, $arrow, 'any', 'filter');
 
         foreach ($array as $k => $v) {
             if ($arrow($v, $k)) {
