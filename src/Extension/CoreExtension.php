@@ -686,12 +686,13 @@ final class CoreExtension extends AbstractExtension
     /**
      * Slices a variable.
      *
-     * @param mixed $item         A variable
-     * @param int   $start        Start of the slice
-     * @param int   $length       Size of the slice
-     * @param bool  $preserveKeys Whether to preserve key or not (when the input is an array)
+     * @template TValue
+     * @param \Traversable<TValue>|array<TValue>|string $item         A variable
+     * @param int                                       $start        Start of the slice
+     * @param int                                       $length       Size of the slice
+     * @param bool                                      $preserveKeys Whether to preserve key or not (when the input is an array)
      *
-     * @return mixed The sliced variable
+     * @return ($item is string ? string : array<TValue>)
      *
      * @internal
      */
