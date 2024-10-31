@@ -46,7 +46,7 @@ class FilterTest extends NodeTestCase
         $node = self::createFilter($environment, $expr, 'upper');
         $node = self::createFilter($environment, $node, 'number_format', [new ConstantExpression(2, 1), new ConstantExpression('.', 1), new ConstantExpression(',', 1)]);
 
-        $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->formatNumber(Twig\Extension\CoreExtension::upper($this->env->getCharset(), "foo"), 2, ".", ",")'];
+        $tests[] = [$node, '$this->getExtension(\'Twig\Extension\CoreExtension\')->formatNumber(Twig\Extension\CoreExtension::upper($this->env->getCharset(), "foo"), 2, ".", ",")'];
 
         // named arguments
         $date = new ConstantExpression(0, 1);
@@ -54,14 +54,14 @@ class FilterTest extends NodeTestCase
             'timezone' => new ConstantExpression('America/Chicago', 1),
             'format' => new ConstantExpression('d/m/Y H:i:s P', 1),
         ]);
-        $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->formatDate(0, "d/m/Y H:i:s P", "America/Chicago")'];
+        $tests[] = [$node, '$this->getExtension(\'Twig\Extension\CoreExtension\')->formatDate(0, "d/m/Y H:i:s P", "America/Chicago")'];
 
         // skip an optional argument
         $date = new ConstantExpression(0, 1);
         $node = self::createFilter($environment, $date, 'date', [
             'timezone' => new ConstantExpression('America/Chicago', 1),
         ]);
-        $tests[] = [$node, '$this->extensions[\'Twig\Extension\CoreExtension\']->formatDate(0, null, "America/Chicago")'];
+        $tests[] = [$node, '$this->getExtension(\'Twig\Extension\CoreExtension\')->formatDate(0, null, "America/Chicago")'];
 
         // underscores vs camelCase for named arguments
         $string = new ConstantExpression('abc', 1);
@@ -103,7 +103,7 @@ class FilterTest extends NodeTestCase
             $tests[] = [$node, 'Twig\Tests\Node\Expression\FilterTestExtension::staticMethod("abc")', $environment];
 
             $node = self::createFilter($environment, $string, 'first_class_callable_object');
-            $tests[] = [$node, '$this->extensions[\'Twig\Tests\Node\Expression\FilterTestExtension\']->objectMethod("abc")', $environment];
+            $tests[] = [$node, '$this->getExtension(\'Twig\Tests\Node\Expression\FilterTestExtension\')->objectMethod("abc")', $environment];
         }
 
         $node = self::createFilter($environment, $string, 'barbar', [
@@ -116,7 +116,7 @@ class FilterTest extends NodeTestCase
 
         // from extension
         $node = self::createFilter($environment, $string, 'foo');
-        $tests[] = [$node, \sprintf('$this->extensions[\'%s\']->foo("abc")', \get_class(self::createExtension())), $environment];
+        $tests[] = [$node, \sprintf('$this->getExtension(\'%s\')->foo("abc")', \get_class(self::createExtension())), $environment];
 
         $node = self::createFilter($environment, $string, 'foobar');
         $tests[] = [$node, '$this->env->getFilter(\'foobar\')->getCallable()("abc")', $environment];

@@ -52,7 +52,7 @@ abstract class CallExpression extends AbstractExpression
                     // Compile a non-optimized call to trigger a \Twig\Error\RuntimeError, which cannot be a compile-time error
                     $compiler->raw(\sprintf('$this->env->getExtension(\'%s\')', $class));
                 } else {
-                    $compiler->raw(\sprintf('$this->extensions[\'%s\']', ltrim($class, '\\')));
+                    $compiler->raw(\sprintf('$this->getExtension(\'%s\')', ltrim($class, '\\')));
                 }
 
                 $compiler->raw(\sprintf('->%s', $callable[1]));

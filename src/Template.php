@@ -14,6 +14,7 @@ namespace Twig;
 
 use Twig\Error\Error;
 use Twig\Error\RuntimeError;
+use Twig\Extension\ExtensionInterface;
 
 /**
  * Default base class for compiled templates.
@@ -506,6 +507,18 @@ abstract class Template
         }
 
         throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', substr($name, \strlen('macro_')), $this->getTemplateName()), $line, $source);
+    }
+
+    /**
+     * @template TExtension of ExtensionInterface
+     *
+     * @param class-string<TExtension> $class
+     *
+     * @return TExtension
+     */
+    protected function getExtension(string $class): ExtensionInterface
+    {
+        return $this->extensions[$class];
     }
 
     /**
