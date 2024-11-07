@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-31T12:03:52Z
+
+PR updated with a simpler and more performant approach, that makes DateTimeInterface a special case (because it is).
