@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-01T17:33:28Z
+
+@fabpot this one is ready
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-01T18:42:30Z
+
+You can see here how it works:
+https://github.com/twigstan/twigstan/pull/90
+
+I had to ignore the error that is fixed by this PR:
+https://github.com/twigstan/twigstan/blob/d7a85dab53b9d9146169185e9d0225d0b6c52c24/tests/EndToEnd/Filters/errors.json
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-05T20:32:56Z
+
+@fabpot What's needed to get this PR merged? Do I need to do changes?
