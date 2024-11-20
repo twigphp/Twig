@@ -1,0 +1,22 @@
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-11-20T12:31:35Z
+
+Tests were already failing and fabbot error is unrelated
+https://fabbot.io/report/twigphp/Twig/4458/93ca91b81d9be93d0a21441c03ef24ed7c274ab0
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-20T16:28:58Z
+
+@VincentLanglet Can you also rebase to see (as stof fixed a bunch of test issues)
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-11-20T18:39:04Z
+
+> @VincentLanglet Can you also rebase to see (as stof fixed a bunch of test issues)
+
+I rebased and added back the `int|string` phpdoc @fabpot
+
+In the next PR I'll try to bump level 4
