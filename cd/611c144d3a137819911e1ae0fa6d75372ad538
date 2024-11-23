@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-07T17:04:03Z
+
+@fabpot this one is also ready
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-08T03:17:40Z
+
+I think the return type is wrong too, as it is always a float
+
+https://3v4l.org/aA0u3#v8.3.13
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-08T08:09:35Z
+
+@smnandre You're right.
+
+Also visible in the PHP docs http://php.net/round
+
+Made the change.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-18T06:18:18Z
+
+@fabpot can this be merged?
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-23T08:01:28Z
+
+@fabpot Let's merge or close this one.
