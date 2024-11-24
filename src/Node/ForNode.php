@@ -25,7 +25,7 @@ use Twig\Node\Expression\Variable\AssignContextVariable;
 #[YieldReady]
 class ForNode extends Node
 {
-    public function __construct(AssignContextVariable $keyTarget, AssignContextVariable $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?Node $else, int $lineno)
+    public function __construct(AssignContextVariable $keyTarget, AssignContextVariable $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?ForElseNode $else, int $lineno)
     {
         if ($ifexpr) {
             $body = new IfNode(new Nodes([$ifexpr, $body]), null, $lineno);
@@ -72,13 +72,7 @@ class ForNode extends Node
         ;
 
         if ($this->hasNode('else')) {
-            $compiler
-                ->write("if (0 === \$iterator->getIndex0()) {\n")
-                ->indent()
-                ->subcompile($this->getNode('else'))
-                ->outdent()
-                ->write("}\n")
-            ;
+            $compiler->subcompile($this->getNode('else'));
         }
 
         // remove some "private" loop variables (needed for nested loops)
