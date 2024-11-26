@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-11-25T17:47:31Z
+
+What if the original name starts and ends with underscores ?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-11-25T17:48:16Z
+
+What was the reason for the trimming anyway ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-26T15:55:49Z
+
+> What was the reason for the trimming anyway ?
+
+We allow people to use variables like `this`, `context`, ... So, we need to add a prefix on the PHP side, and trim it when using it in the Twig code.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-26T15:55:57Z
+
+> What if the original name starts and ends with underscores ?
+
+Fixed
