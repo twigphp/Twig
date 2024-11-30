@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-11-25T16:54:45Z
+
+IIRC, there was a discussion on the Symfony repo reporting that Twig coding standards don't define the spacing rule around the `=` operator in macro argument declarations and around the `=` or `:` separators for named arguments.
+Maybe those could be defined as well.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-11-28T22:48:19Z
+
+> IIRC, there was a discussion on the Symfony repo reporting that Twig coding standards don't define the spacing rule around the `=` operator in macro argument declarations and around the `=` or `:` separators for named arguments. Maybe those could be defined as well.
+
+For the record, currently Twig-CS-Fixer consider it should be
+```
+foo(name_arg=42) // no space at all
+```
+and
+```
+foo(name_args: 42) // one space after
+```
+cf
+https://github.com/VincentLanglet/Twig-CS-Fixer/blob/main/src/Rules/Function/NamedArgumentSpacingRule.php
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-29T20:27:23Z
+
+Updated
