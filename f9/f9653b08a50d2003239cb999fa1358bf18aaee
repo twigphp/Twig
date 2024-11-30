@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-22T09:08:04Z
+
+@VincentLanglet I've just merged 3.x into 4.x to keep this PR only about phpstan.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-11-22T09:57:39Z
+
+> Can you add a test that would break without this change?
+
+For the iterable/Iterator issue, I think it's an issue with PHPStan instead.
+So I created an issue on https://github.com/phpstan/phpstan/issues/12102 (and a fix on phpstan side)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-22T10:07:28Z
+
+> > Can you add a test that would break without this change?
+>
+> For the iterable/Iterator issue, I think it's an issue with PHPStan instead. So I created an issue on [phpstan/phpstan#12102](https://github.com/phpstan/phpstan/issues/12102) (and a fix on phpstan side)
+
+Let's revert the change then.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-11-22T10:16:55Z
+
+> > > Can you add a test that would break without this change?
+> >
+> >
+> > For the iterable/Iterator issue, I think it's an issue with PHPStan instead. So I created an issue on [phpstan/phpstan#12102](https://github.com/phpstan/phpstan/issues/12102) (and a fix on phpstan side)
+>
+> Let's revert the change then.
+
+I reverted the extra if I added.
+
+We still need `/** @var \Iterator<TKey, TValue> $seq */` to not lose the `template type`.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-11-29T22:20:29Z
+
+I rebased @fabpot
