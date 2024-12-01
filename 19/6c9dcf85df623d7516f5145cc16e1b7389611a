@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-25T08:23:06Z
+
+@ruudk That works for me. We used to have PHPunit 11.3. Here, you're suggesting to bump to 11.5, but tests don't pass, can you have a look?
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-25T08:58:13Z
+
+Reported problem upstream:
+- https://github.com/sebastianbergmann/phpunit/issues/6043
+
+I'll report back here when it's resolved.
+
+---------------------------------------------------------------------------
+
+by sebastianbergmann at 2024-11-25T10:22:56Z
+
+> you're suggesting to bump to 11.5
+
+I am also interested in why you propose to use a development version of PHPUnit.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-25T10:45:11Z
+
+@sebastianbergmann I did not do this on purpose. I ran `composer require phpunit/phpunit --dev` and it picked ^11.5. Even when I manually choose ^11.4 is still installs the dev version.
+
+I think we need to change this:
+https://github.com/twigphp/Twig/blob/c0689e3e686f5c8b5e9b9bdb10a74ea6ccfea350/composer.json#L8
+
+I was unaware of this setting.
+
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-25T10:53:18Z
+
+PR is ready for review now.
