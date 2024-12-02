@@ -1,0 +1,86 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-30T07:28:17Z
+
+LGTM on 3.x
+Can you also add an entry in the changelog and add a note in the docs ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-30T09:24:34Z
+
+@fabpot updated to target 3.x, mention syntax in documentation & add a line in changelog
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-30T12:27:07Z
+
+What about doing the same changes as we’ve done on Symfony? Both the regex and the logic.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-30T15:14:10Z
+
+Yep i have been interrupted earlier.. will finish later today!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-30T19:01:32Z
+
+Update: i missread things.. i'm sorry.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-30T22:40:24Z
+
+Update: i missread the scanner code.. 🤕
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-01T00:32:27Z
+
+@fabpot  it took time to hit me ... it should be as you expected now.
+
+Only thing missing is the "float without integer" syntax (ie `.99`).
+
+What do you think we handle this in following PR ?
+I'm afraid it would require other (bigger?) changes.
+
+-
+
+So, i had to update a bit the symfony regep, to disallow the "decimal part without integer part".
+
+```diff
+    public const REGEX_NUMBER = '/
+                (?(DEFINE)(?P<LNUM>[0-9]+(_[0-9]+)*))
+-                (?:\.(?&LNUM)|(?&LNUM)(?:\.(?!\.)(?&LNUM)?)?)(?:[eE][+-]?(?&LNUM))?/Ax';
++                (?:(?&LNUM)(?:\.(?!\.)(?&LNUM)?)?)(?:[eE][+-]?(?&LNUM))?/Ax';
+```
+
+The following tests _pass_ with the current state of this PR, but would  fail if  we kept the original Symfony regexp.
+
+-
+
+❌ nested.definedArray.0
+
+> Twig\Error\Error: Twig\Error\SyntaxError: Unexpected token "number" ("end of print statement" expected) in "index.twig" at line 16.
+
+Pretty much the same thing/cause
+
+```twig
+{{ nested.definedArray.0          is     defined ? 'ok' : 'ko' }}
+```
+
+https://github.com/twigphp/Twig/blob/6823b64cad3ce8f9300ff69cfa7d23e20d61f10c/tests/Fixtures/tests/defined.test
+
+❌  ``if items.3 is defined``
+
+> Twig\Error\Error: Twig\Error\SyntaxError: Unexpected token "number" of value "0.3" ("end of statement block" expected) in "index.twig" at line 7
+
+https://github.com/twigphp/Twig/blob/6823b64cad3ce8f9300ff69cfa7d23e20d61f10c/tests/Fixtures/tags/apply/with_if_tag.test#L9
+
+I guess we are in the same situation you explained me quite recently (with a block name "cb-1")
+
+Not sure how would fix this though 🤷‍♂️
+
+--
