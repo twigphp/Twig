@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by faizanakram99 at 2024-12-12T13:58:26Z
+
+@fabpot errors are unrelated
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-12-12T14:29:35Z
+
+Last comment and I think we're good: can you add an item in the CHANGELOG file?
+
+---------------------------------------------------------------------------
+
+by faizanakram99 at 2024-12-12T14:41:40Z
+
+> Last comment and I think we're good: can you add an item in the CHANGELOG file?
+
+Done
+
+---------------------------------------------------------------------------
+
+by faizanakram99 at 2024-12-12T14:48:19Z
+
+> LGTM I'd suggest opening an issue on php-src also, get_class_methods() should return __invoke to me (and other non static methods BTW).
+
+Done https://github.com/php/php-src/issues/17126
