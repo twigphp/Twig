@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-12-16T12:51:45Z
+
+I thought about streaming blocks as well, but I'm not sure this is worth it.
+
+---------------------------------------------------------------------------
+
+by yceruto at 2024-12-16T15:08:51Z
+
+This will allow us to improve this method https://github.com/symfony/symfony/blob/7.3/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php#L267 👍
+
+>I thought about streaming blocks as well, but I'm not sure this is worth it.
+
+I think yes, since there is a `renderBlock()` method added recently https://github.com/symfony/symfony/blob/dd882dbbd4910dce577d5bd280920e259dd782a5/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php#L428
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-18T02:00:50Z
+
+> I think yes, since there is a `renderBlock()` method added recentl
+
+And it's used via the #[Template] attribute too.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-18T02:02:17Z
+
+And this will probably allow some decent optimizations in the TwigEngineRenderer / block systems :)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-12-18T06:30:29Z
+
+I've just added a `streamBlock()` method as well.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-12-18T06:34:08Z
+
+> Will you add a helper `Twig\Environment::stream()` as well?
+
+No, I don't think this is needed. The Environment class has already too many methods. I would like to do the opposite actually and deprecate the `Environment::render()` method.
