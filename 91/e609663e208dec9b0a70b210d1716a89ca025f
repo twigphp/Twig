@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-12-18T14:25:03Z
+
+The note about the algorithm being the same than the dot operator should be updated, removing the `except` part, as the dot operator also supports arbitrary expression now (which is why the function is deprecated)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-12-18T16:35:17Z
+
+You are right. I just removed the note. Thanks.
