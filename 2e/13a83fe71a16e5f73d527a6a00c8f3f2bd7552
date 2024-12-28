@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by rxu at 2024-12-28T10:44:45Z
+
+There's a similar entry but for binary operators on line 169
+https://github.com/twigphp/Twig/blob/2cf1939d0142ba65cdea288f84624f9177da3fb7/src/ExpressionParser.php#L169
+Probably needs adjusting as well.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-12-28T10:46:42Z
+
+> There's a similar entry but for binary operators on line 169
+>
+> https://github.com/twigphp/Twig/blob/2cf1939d0142ba65cdea288f84624f9177da3fb7/src/ExpressionParser.php#L169
+>
+> Probably needs adjusting as well.
+
+I don't think so.
