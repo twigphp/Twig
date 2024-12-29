@@ -1,0 +1,60 @@
+---------------------------------------------------------------------------
+
+by ruudk at 2024-11-23T08:02:51Z
+
+I think this should be a generic solution, not just for this specific extension.
+
+It also feels similar to this problem I tried to solve: https://github.com/twigphp/Twig/pull/4124
+
+---------------------------------------------------------------------------
+
+by nlemoine at 2024-11-25T14:43:03Z
+
+In the meantime, that seems legit to me. @fabpot?
+
+---------------------------------------------------------------------------
+
+by faizanakram99 at 2024-12-12T20:12:05Z
+
+> I think this should be a generic solution, not just for this specific extension.
+>
+> It also feels similar to this problem I tried to solve: #4124
+
+It already works for core extension, {{ obj }} is casted into string
+
+---------------------------------------------------------------------------
+
+by nlemoine at 2024-12-17T21:32:45Z
+
+For reminder, this PR is about `html_classes` only (part of `html-extra`), not Twig `{{ stringableObject }}` 🙂
+
+~It handles cases likes:~
+(edit)
+See: https://github.com/twigphp/Twig/pull/4467#issuecomment-2550687890
+
+```twig
+{{ html_classes(class_a, {
+    (stringableObjectThatMightBeConvertedToAClass): true
+}) }}
+```
+Which currently throws exception.
+
+Can you please take a closer look at it? 🙏
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-12-18T06:48:58Z
+
+I must be missing something here, but even without your patch, the new test passes. See #4506 where I've added your test without changing the code.
+
+---------------------------------------------------------------------------
+
+by nlemoine at 2024-12-18T08:35:58Z
+
+Sorry, the test case was the wrong one. You should [get an error](https://php-play.dev/?c=DwfgDgFmBQ0GYFcB2BjALgSwPZIAQTQFsAbAYWIEMBnKgUyoAoA6FgEgoCcBzKgSgC5cVNBwxIu0AN7Rcs3KxSUa9XAF5cAbQC6Abhly4WDrQooIuBu25Vc1eRjUA%2BeZy69c0uV9wY4FgDoYVAD6wqLilq687p7ecQpKdFTaahZhYm4u3HpxsgC%2BuLTEdL4BQcGcHBQAnpHc0R76uQZGJmYWVly2NgnUNqrOCjgAJhiYODFNzd6lDACEgSHpEb00DbHT02gQHFgA7rhItAcAogAeKLRg40gM-lRg4WhwDADkACoQtLgARAQkwUUfXoP1wiFQN1s3AQhFoSDQuAApMMLABrWjVJHDdxUCBYBDEFEAI2%2BFCEIgyuCMtjwYmEFFQ3ywfgAyhTxBQicRaAAaXBcLAIn6Iqg-JivPmsDCSoE0PlcWhoYLDWhEhBcYJoapgWiWWV8aI5TbePJTY0%2BPzzIZIUY3Sbm5ooHCYJAIWhGh24U2e2SrJIpdQMZaZP0e6be3IFIp0Rrm7a7A5HU4XK43O4PJ4vD5fX7-YiAxIgsHIdDYPCuGFwhHIoR4gnE760MZfDi2cnhLh8hk%2BJD0xlU1nsric7lU1vdyo1eWC34isUS%2BzyxXK1XqzXa3WdaK8MNeCP5WBeYxoBAcWmEMDELAqt64BeT6rBZAYACOboYD%2BCcAwxDQtA4eqFlQfL0pgKDFhCZYdAAbjEuDHqeeCvK8uBzKo6isNBOhetueimtAfqkKkSa4PqPgXtysLwjYbIdiO3wbLgYAIFyGDgeCpY4LgwSalgtEZAwAjthkUyMUeiqIXeKCvGGpp5Ho0C0GYWD4EQZBAYBfSkDuQA&v=8.1&f=html) in the current code with:
+
+```twig
+{{ html_classes(stringableObjectThatMightBeConvertedToAClass) }}
+```
+
+The test fixtures have been updated accordingly.
