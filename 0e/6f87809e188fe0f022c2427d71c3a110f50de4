@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2025-01-02T08:43:17Z
+
+> Do php-stan annotation have an impact on BC promise?
+
+Like phpdocs, no.
