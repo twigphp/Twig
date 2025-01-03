@@ -1,0 +1,52 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-26T09:35:43Z
+
+Do we need to add it to the interface ? Could we not simply ignore extensions not implementing this interface ?
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2024-12-26T13:39:07Z
+
+Is it a thing to implement the interface without extending the abstract class? Adding this method should not be an issue for the large majority of projects, but it helps keeping the code simple.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-26T13:54:26Z
+
+Well this may break external extensions in prod ...  but you're right:
+* there is some time before 4.0
+* no one is forced to upgrade day one
+* and .... yes in the vast majority i guess AbstractExtension is behind :)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-12-29T10:20:00Z
+
+> Is it a thing to implement the interface without extending the abstract class? Adding this method should not be an issue for the large majority of projects, but it helps keeping the code simple.
+
+"large majority" is not enough when talking about BC breaks :)
+
+Let's add a proper interface as this is a new capability (we've done it in the past with `ExistsLoaderInterface` for instance).
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2024-12-29T12:45:15Z
+
+> Let's add a proper interface as this is a new capability
+
+Ok, interface added.
+
+I'll also add automatic detection of `Runtime` classes to make it automatically work with Symfony TwigBridge extensions.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-01-02T13:38:37Z
+
+@GromNaN LGMT, can you add a note in the CHANGELOG (you will need to rebase as I've just bump the version to 3.19.0)?
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2025-01-02T13:51:22Z
+
+Rebased, squashed, changelog updated.
