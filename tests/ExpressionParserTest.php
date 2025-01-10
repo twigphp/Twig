@@ -13,6 +13,9 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Twig\Attribute\FirstClassTwigCallableReady;
+use Twig\Compiler;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
@@ -21,6 +24,10 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Unary\SpreadUnary;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
+use Twig\Node\Expression\TestExpression;
+use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Parser;
 use Twig\Source;
@@ -438,6 +445,28 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ 1 is empty element }}', 'index')));
+        $this->expectNotToPerformAssertions();
+    }
+
+    public function testUnaryPrecedenceChange()
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+        $env->addExtension(new class () extends AbstractExtension {
+            public function getOperators()
+            {
+                $class = new class (new ConstantExpression('foo', 1), 1) extends AbstractUnary {
+                    public function operator(Compiler $compiler): Compiler
+                    {
+                        return $compiler->raw('!');
+                    }
+                };
+
+                return [['!' => ['precedence' => 50, 'class' => $class::class]], []];
+            }
+        });
+        $parser = new Parser($env);
+
+        $parser->parse($env->tokenize(new Source('{{ !false ? "OK" : "KO" }}', 'index')));
         $this->expectNotToPerformAssertions();
     }
 }

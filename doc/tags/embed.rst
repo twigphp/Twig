@@ -11,8 +11,8 @@ Think of an embedded template as a "micro layout skeleton".
 
 .. code-block:: twig
 
-    {% embed "teasers_skeleton.twig" %}
-        {# These blocks are defined in "teasers_skeleton.twig" #}
+    {% embed "teasers_skeleton.html.twig" %}
+        {# These blocks are defined in "teasers_skeleton.html.twig" #}
         {# and we override them right here:                    #}
         {% block left_teaser %}
             Some content for the left teaser box
@@ -111,14 +111,14 @@ code can live in a single base template, and the two different content structure
 let's call them "micro layouts" go into separate templates which are embedded
 as necessary:
 
-Page template ``page_1.twig``:
+Page template ``page_1.html.twig``:
 
 .. code-block:: twig
 
-    {% extends "layout_skeleton.twig" %}
+    {% extends "layout_skeleton.html.twig" %}
 
     {% block content %}
-        {% embed "vertical_boxes_skeleton.twig" %}
+        {% embed "vertical_boxes_skeleton.html.twig" %}
             {% block top %}
                 Some content for the top box
             {% endblock %}
@@ -129,7 +129,7 @@ Page template ``page_1.twig``:
         {% endembed %}
     {% endblock %}
 
-And here is the code for ``vertical_boxes_skeleton.twig``:
+And here is the code for ``vertical_boxes_skeleton.html.twig``:
 
 .. code-block:: html+twig
 
@@ -145,7 +145,7 @@ And here is the code for ``vertical_boxes_skeleton.twig``:
         {% endblock %}
     </div>
 
-The goal of the ``vertical_boxes_skeleton.twig`` template being to factor
+The goal of the ``vertical_boxes_skeleton.html.twig`` template being to factor
 out the HTML markup for the boxes.
 
 The ``embed`` tag takes the exact same arguments as the ``include`` tag:

@@ -14,7 +14,7 @@ debug:
 
 .. code-block:: twig
 
-    {% extends "base.html" %}
+    {% extends "base.html.twig" %}
 
     {% block title %}{% endblock %}
     {% block content %}{% endblock %}
@@ -24,20 +24,19 @@ but without the associated complexity:
 
 .. code-block:: twig
 
-    {% extends "base.html" %}
+    {% extends "base.html.twig" %}
 
-    {% use "blocks.html" %}
+    {% use "blocks.html.twig" %}
 
     {% block title %}{% endblock %}
     {% block content %}{% endblock %}
 
 The ``use`` statement tells Twig to import the blocks defined in
-``blocks.html`` into the current template (it's like macros, but for blocks):
+``blocks.html.twig`` into the current template (it's like macros, but for blocks):
 
 .. code-block:: twig
 
-    {# blocks.html #}
-    
+    {# blocks.html.twig #}
     {% block sidebar %}{% endblock %}
 
 In this example, the ``use`` statement imports the ``sidebar`` block into the
@@ -46,7 +45,7 @@ imported blocks are not outputted automatically):
 
 .. code-block:: twig
 
-    {% extends "base.html" %}
+    {% extends "base.html.twig" %}
 
     {% block sidebar %}{% endblock %}
     {% block title %}{% endblock %}
@@ -64,14 +63,14 @@ imported blocks are not outputted automatically):
     passed to the template, the template reference cannot be an expression.
 
 The main template can also override any imported block. If the template
-already defines the ``sidebar`` block, then the one defined in ``blocks.html``
+already defines the ``sidebar`` block, then the one defined in ``blocks.html.twig``
 is ignored. To avoid name conflicts, you can rename imported blocks:
 
 .. code-block:: twig
 
-    {% extends "base.html" %}
+    {% extends "base.html.twig" %}
 
-    {% use "blocks.html" with sidebar as base_sidebar, title as base_title %}
+    {% use "blocks.html.twig" with sidebar as base_sidebar, title as base_title %}
 
     {% block sidebar %}{% endblock %}
     {% block title %}{% endblock %}
@@ -83,9 +82,9 @@ template:
 
 .. code-block:: twig
 
-    {% extends "base.html" %}
+    {% extends "base.html.twig" %}
 
-    {% use "blocks.html" %}
+    {% use "blocks.html.twig" %}
 
     {% block sidebar %}
         {{ parent() }}
@@ -95,7 +94,7 @@ template:
     {% block content %}{% endblock %}
 
 In this example, ``parent()`` will correctly call the ``sidebar`` block from
-the ``blocks.html`` template.
+the ``blocks.html.twig`` template.
 
 .. tip::
 
@@ -103,9 +102,9 @@ the ``blocks.html`` template.
 
     .. code-block:: twig
 
-        {% extends "base.html" %}
+        {% extends "base.html.twig" %}
 
-        {% use "blocks.html" with sidebar as parent_sidebar %}
+        {% use "blocks.html.twig" with sidebar as parent_sidebar %}
 
         {% block sidebar %}
             {{ block('parent_sidebar') }}

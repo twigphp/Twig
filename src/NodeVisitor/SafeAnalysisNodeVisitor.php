@@ -41,7 +41,7 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
      */
     public function getSafe(Node $node)
     {
-        $hash = spl_object_hash($node);
+        $hash = spl_object_id($node);
         if (!isset($this->data[$hash])) {
             return [];
         }
@@ -63,7 +63,7 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
 
     private function setSafe(Node $node, array $safe): void
     {
-        $hash = spl_object_hash($node);
+        $hash = spl_object_id($node);
         if (isset($this->data[$hash])) {
             foreach ($this->data[$hash] as &$bucket) {
                 if ($bucket['key'] === $node) {

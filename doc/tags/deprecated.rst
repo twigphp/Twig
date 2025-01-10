@@ -6,9 +6,9 @@ PHP function) where the ``deprecated`` tag is used in a template:
 
 .. code-block:: twig
 
-    {# base.twig #}
-    {% deprecated 'The "base.twig" template is deprecated, use "layout.twig" instead.' %}
-    {% extends 'layout.twig' %}
+    {# base.html.twig #}
+    {% deprecated 'The "base.html.twig" template is deprecated, use "layout.html.twig" instead.' %}
+    {% extends 'layout.html.twig' %}
 
 You can also deprecate a macro in the following way:
 
@@ -27,8 +27,8 @@ You can optionally add the package and the version that introduced the deprecati
 
 .. code-block:: twig
 
-    {% deprecated 'The "base.twig" template is deprecated, use "layout.twig" instead.' package='twig/twig' %}
-    {% deprecated 'The "base.twig" template is deprecated, use "layout.twig" instead.' package='twig/twig' version='3.11' %}
+    {% deprecated 'The "base.html.twig" template is deprecated, use "layout.html.twig" instead.' package='twig/twig' %}
+    {% deprecated 'The "base.html.twig" template is deprecated, use "layout.html.twig" instead.' package='twig/twig' version='3.11' %}
 
 .. note::
 

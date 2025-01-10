@@ -3,10 +3,18 @@
 --TEMPLATE--
 {{ html_classes('a', {'b': true, 'c': false}, 'd', false ? 'e', true ? 'f', '0') }}
 {% set class_a = 'a' %}
-{% set class_b = 'b' %}
-{{ html_classes(class_a, {(class_b): true})}}
+{%- set class_b -%}
+b
+{%- endset -%}
+{{ html_classes(class_a) }}
+{{ html_classes(class_b) }}
+{{ html_classes({ (class_a): true }) }}
+{{ html_classes({ (class_b): true }) }}
 --DATA--
 return []
 --EXPECT--
 a b d f 0
-a b
+a
+b
+a
+b

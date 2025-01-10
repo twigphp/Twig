@@ -19,9 +19,9 @@ use Twig\Token;
 /**
  * Includes a template.
  *
- *   {% include 'header.html' %}
+ *   {% include 'header.html.twig' %}
  *     Body
- *   {% include 'footer.html' %}
+ *   {% include 'footer.html.twig' %}
  *
  * @internal
  */

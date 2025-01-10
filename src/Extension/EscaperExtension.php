@@ -52,6 +52,14 @@ final class EscaperExtension extends AbstractExtension
         ];
     }
 
+    public function getLastModified(): int
+    {
+        return max(
+            parent::getLastModified(),
+            filemtime((new \ReflectionClass(EscaperRuntime::class))->getFileName()),
+        );
+    }
+
     /**
      * Sets the default strategy to use when not defined by the user.
      *

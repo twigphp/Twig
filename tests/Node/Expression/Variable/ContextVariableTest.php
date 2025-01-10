@@ -27,20 +27,47 @@ class ContextVariableTest extends NodeTestCase
 
     public static function provideTests(): iterable
     {
+        // special variables
+        foreach (['_self' => '$this->getTemplateName()', '_context' => '$context', '_charset' => '$this->env->getCharset()'] as $special => $compiled) {
+            $node = new ContextVariable($special, 1);
+            yield $special => [$node, "// line 1\n$compiled"];
+            $node = new ContextVariable($special, 1);
+            $node->setAttribute('is_defined_test', true);
+            yield $special.'_defined_test' => [$node, "// line 1\ntrue"];
+        }
+
+        $env = new Environment(new ArrayLoader(), ['strict_variables' => false]);
+        $envStrict = new Environment(new ArrayLoader(), ['strict_variables' => true]);
+
+        // regular
         $node = new ContextVariable('foo', 1);
-        $self = new ContextVariable('_self', 1);
-        $context = new ContextVariable('_context', 1);
+        $output = '(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : (function () { throw new RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source); })())';
+        yield 'strict' => [$node, "// line 1\n".$output, $envStrict];
+        yield 'non_strict' => [$node, self::createVariableGetter('foo', 1), $env];
 
-        $env = new Environment(new ArrayLoader(), ['strict_variables' => true]);
-        $env1 = new Environment(new ArrayLoader(), ['strict_variables' => false]);
+        // ignore strict check
+        $node = new ContextVariable('foo', 1);
+        $node->setAttribute('ignore_strict_check', true);
+        yield 'ignore_strict_check_strict' => [$node, "// line 1\n(\$context[\"foo\"] ?? null)", $envStrict];
+        yield 'ignore_strict_check_non_strict' => [$node, "// line 1\n(\$context[\"foo\"] ?? null)", $env];
 
-        $output = '(array_key_exists("foo", $context) ? $context["foo"] : throw new RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source))';
+        // always defined
+        $node = new ContextVariable('foo', 1);
+        $node->setAttribute('always_defined', true);
+        yield 'always_defined_strict' => [$node, "// line 1\n\$context[\"foo\"]", $envStrict];
+        yield 'always_defined_non_strict' => [$node, "// line 1\n\$context[\"foo\"]", $env];
 
-        return [
-            [$node, "// line 1\n".$output, $env],
-            [$node, self::createVariableGetter('foo', 1), $env1],
-            [$self, "// line 1\n\$this->getTemplateName()"],
-            [$context, "// line 1\n\$context"],
-        ];
+        // is defined test
+        $node = new ContextVariable('foo', 1);
+        $node->setAttribute('is_defined_test', true);
+        yield 'is_defined_test_strict' => [$node, "// line 1\narray_key_exists(\"foo\", \$context)", $envStrict];
+        yield 'is_defined_test_non_strict' => [$node, "// line 1\narray_key_exists(\"foo\", \$context)", $env];
+
+        // is defined test // always defined
+        $node = new ContextVariable('foo', 1);
+        $node->setAttribute('is_defined_test', true);
+        $node->setAttribute('always_defined', true);
+        yield 'is_defined_test_always_defined_strict' => [$node, "// line 1\ntrue", $envStrict];
+        yield 'is_defined_test_always_defined_non_strict' => [$node, "// line 1\ntrue", $env];
     }
 }

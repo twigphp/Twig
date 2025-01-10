@@ -6,7 +6,7 @@ parent block when overriding a block by using the ``parent`` function:
 
 .. code-block:: html+twig
 
-    {% extends "base.html" %}
+    {% extends "base.html.twig" %}
 
     {% block sidebar %}
         <h3>Table Of Contents</h3>
@@ -15,7 +15,7 @@ parent block when overriding a block by using the ``parent`` function:
     {% endblock %}
 
 The ``parent()`` call will return the content of the ``sidebar`` block as
-defined in the ``base.html`` template.
+defined in the ``base.html.twig`` template.
 
 .. seealso::
 

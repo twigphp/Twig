@@ -17,7 +17,7 @@ template:
 
 .. code-block:: twig
 
-    {{ block("title", "common_blocks.twig") }}
+    {{ block("title", "common_blocks.html.twig") }}
 
 Use the ``defined`` test to check if a block exists in the context of the
 current template:
@@ -28,7 +28,7 @@ current template:
         ...
     {% endif %}
 
-    {% if block("footer", "common_blocks.twig") is defined %}
+    {% if block("footer", "common_blocks.html.twig") is defined %}
         ...
     {% endif %}
 

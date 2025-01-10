@@ -14,6 +14,7 @@ namespace Twig;
 use Twig\Error\RuntimeError;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
+use Twig\Extension\LastModifiedExtensionInterface;
 use Twig\Extension\StagingExtension;
 use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Unary\AbstractUnary;
@@ -120,14 +121,19 @@ final class ExtensionSet
             return $this->lastModified;
         }
 
+        $lastModified = 0;
         foreach ($this->extensions as $extension) {
-            $r = new \ReflectionObject($extension);
-            if (is_file($r->getFileName()) && ($extensionTime = filemtime($r->getFileName())) > $this->lastModified) {
-                $this->lastModified = $extensionTime;
+            if ($extension instanceof LastModifiedExtensionInterface) {
+                $lastModified = max($extension->getLastModified(), $lastModified);
+            } else {
+                $r = new \ReflectionObject($extension);
+                if (is_file($r->getFileName())) {
+                    $lastModified = max(filemtime($r->getFileName()), $lastModified);
+                }
             }
         }
 
-        return $this->lastModified;
+        return $this->lastModified = $lastModified;
     }
 
     public function addExtension(ExtensionInterface $extension): void

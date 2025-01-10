@@ -34,7 +34,7 @@ class ContextVariable extends AbstractExpression
         $compiler->addDebugInfo($this);
 
         if ($this->getAttribute('is_defined_test')) {
-            if (isset($this->specialVars[$name])) {
+            if (isset($this->specialVars[$name]) || $this->getAttribute('always_defined')) {
                 $compiler->repr(true);
             } else {
                 $compiler

@@ -464,21 +464,4 @@ final class ModuleNode extends Node
             ->write("}\n")
         ;
     }
-
-    protected function compileLoadTemplate(Compiler $compiler, $node, $var): void
-    {
-        if ($node instanceof ConstantExpression) {
-            $compiler
-                ->write(\sprintf('%s = $this->loadTemplate(', $var))
-                ->subcompile($node)
-                ->raw(', ')
-                ->repr($node->getTemplateName())
-                ->raw(', ')
-                ->repr($node->getTemplateLine())
-                ->raw(");\n")
-            ;
-        } else {
-            throw new \LogicException('Trait templates can only be constant nodes.');
-        }
-    }
 }

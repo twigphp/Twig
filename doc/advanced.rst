@@ -842,7 +842,7 @@ must be autoload-able)::
             // implement the logic to create an instance of $class
             // and inject its dependencies
             // most of the time, it means using your dependency injection container
-            if ('CustomRuntimeExtension' === $class) {
+            if ('CustomTwigRuntime' === $class) {
                 return new $class(new Rot13Provider());
             } else {
                 // ...
@@ -858,9 +858,9 @@ must be autoload-able)::
     (``\Twig\RuntimeLoader\ContainerRuntimeLoader``).
 
 It is now possible to move the runtime logic to a new
-``CustomRuntimeExtension`` class and use it directly in the extension::
+``CustomTwigRuntime`` class and use it directly in the extension::
 
-    class CustomRuntimeExtension
+    class CustomTwigRuntime
     {
         private $rot13Provider;
 
@@ -880,12 +880,20 @@ It is now possible to move the runtime logic to a new
         public function getFunctions(): array
         {
             return [
-                new \Twig\TwigFunction('rot13', ['CustomRuntimeExtension', 'rot13']),
+                new \Twig\TwigFunction('rot13', ['CustomTwigRuntime', 'rot13']),
                 // or
-                new \Twig\TwigFunction('rot13', 'CustomRuntimeExtension::rot13'),
+                new \Twig\TwigFunction('rot13', 'CustomTwigRuntime::rot13'),
             ];
         }
     }
+
+.. note::
+
+    The extension class should implement the ``Twig\Extension\LastModifiedExtensionInterface``
+    interface to invalidate the template cache when the runtime class is modified.
+    The ``AbstractExtension`` class implements this interface and tracks the
+    runtime class if its name is the same as the extension class but ends with
+    ``Runtime`` instead of ``Extension``.
 
 Testing an Extension
 --------------------

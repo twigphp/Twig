@@ -65,6 +65,15 @@ class TypesTokenParserTest extends TestCase
                     'baz' => ['type' => 'baz', 'optional' => false],
                 ],
             ],
+
+            // without {} enclosing
+            [
+                '{% types foo: "foo", bar: "bar" %}',
+                [
+                    'foo' => ['type' => 'foo', 'optional' => false],
+                    'bar' => ['type' => 'bar', 'optional' => false],
+                ],
+            ],
         ];
     }
 }

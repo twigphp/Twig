@@ -31,9 +31,7 @@ final class TypesTokenParser extends AbstractTokenParser
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
-
         $types = $this->parseSimpleMappingExpression($stream);
-
         $stream->expect(Token::BLOCK_END_TYPE);
 
         return new TypesNode($types, $token->getLine());
@@ -46,17 +44,15 @@ final class TypesTokenParser extends AbstractTokenParser
      */
     private function parseSimpleMappingExpression(TokenStream $stream): array
     {
-        $stream->expect(Token::PUNCTUATION_TYPE, '{', 'A mapping element was expected');
-
+        $enclosed = null !== $stream->nextIf(Token::PUNCTUATION_TYPE, '{');
         $types = [];
-
         $first = true;
-        while (!$stream->test(Token::PUNCTUATION_TYPE, '}')) {
+        while (!($stream->test(Token::PUNCTUATION_TYPE, '}') || $stream->test(Token::BLOCK_END_TYPE))) {
             if (!$first) {
                 $stream->expect(Token::PUNCTUATION_TYPE, ',', 'A type string must be followed by a comma');
 
                 // trailing ,?
-                if ($stream->test(Token::PUNCTUATION_TYPE, '}')) {
+                if ($stream->test(Token::PUNCTUATION_TYPE, '}') || $stream->test(Token::BLOCK_END_TYPE)) {
                     break;
                 }
             }
@@ -78,7 +74,10 @@ final class TypesTokenParser extends AbstractTokenParser
                 'optional' => $isOptional,
             ];
         }
-        $stream->expect(Token::PUNCTUATION_TYPE, '}', 'An opened mapping is not properly closed');
+
+        if ($enclosed) {
+            $stream->expect(Token::PUNCTUATION_TYPE, '}', 'An opened mapping is not properly closed');
+        }
 
         return $types;
     }

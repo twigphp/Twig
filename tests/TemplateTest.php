@@ -361,6 +361,10 @@ class TemplateTest extends TestCase
             [true, ['foo' => 'bar'], $arrayAccess, 'vars', [], $anyType],
         ]);
 
+        // test for Closure::__invoke()
+        $tests[] = [true, 'closure called', fn (): string => 'closure called', '__invoke', [], $anyType];
+        $tests[] = [true, 'closure called', fn (): string => 'closure called', '__invoke', [], $methodType];
+
         // tests when input is not an array or object
         $tests = array_merge($tests, [
             [false, null, 42, 'a', [], $anyType, 'Impossible to access an attribute ("a") on a int variable ("42") in "index.twig".'],

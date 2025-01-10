@@ -15,8 +15,8 @@ function where you define ``base`` classes that should always be present and the
 
     {# templates/alert.html.twig #}
     {% set alert = html_cva(
-        base='alert',
-        variants={
+        base: 'alert',
+        variants: {
             color: {
                 blue: 'bg-blue',
                 red: 'bg-red',
@@ -79,8 +79,8 @@ when multiple other variant conditions are met:
 .. code-block:: html+twig
 
     {% set alert = html_cva(
-        base='alert',
-        variants={
+        base: 'alert',
+        variants: {
             color: {
                 blue: 'bg-blue',
                 red: 'bg-red',
@@ -92,7 +92,7 @@ when multiple other variant conditions are met:
                 lg: 'text-lg',
             }
         },
-        compoundVariants=[{
+        compoundVariants: [{
             // if color = red AND size = (md or lg), add the `font-bold` class
             color: ['red'],
             size: ['md', 'lg'],
@@ -123,8 +123,8 @@ If no variants match, you can define a default set of classes to apply:
 .. code-block:: html+twig
 
     {% set alert = html_cva(
-        base='alert',
-        variants={
+        base: 'alert',
+        variants: {
             color: {
                 blue: 'bg-blue',
                 red: 'bg-red',
@@ -141,7 +141,7 @@ If no variants match, you can define a default set of classes to apply:
                 lg: 'rounded-lg',
             }
         },
-        defaultVariant={
+        defaultVariant: {
             rounded: 'md',
         }
     ) %}

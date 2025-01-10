@@ -9,7 +9,7 @@ The ``extends`` tag can be used to extend a template from another one.
     one extends tag called per rendering. However, Twig supports horizontal
     :doc:`reuse<use>`.
 
-Let's define a base template, ``base.html``, which defines a simple HTML
+Let's define a base template, ``base.html.twig``, which defines a simple HTML
 skeleton document:
 
 .. code-block:: html+twig
@@ -45,7 +45,7 @@ A child template might look like this:
 
 .. code-block:: html+twig
 
-    {% extends "base.html" %}
+    {% extends "base.html.twig" %}
 
     {% block title %}Index{% endblock %}
     {% block head %}
@@ -156,16 +156,16 @@ instance, Twig will use it as the parent template::
 
     // {% extends layout %}
 
-    $layout = $twig->load('some_layout_template.twig');
+    $layout = $twig->load('some_layout_template.html.twig');
 
-    $twig->display('template.twig', ['layout' => $layout]);
+    $twig->display('template.html.twig', ['layout' => $layout]);
 
 You can also provide a list of templates that are checked for existence. The
 first template that exists will be used as a parent:
 
 .. code-block:: twig
 
-    {% extends ['layout.html', 'base_layout.html'] %}
+    {% extends ['layout.html.twig', 'base_layout.html.twig'] %}
 
 Conditional Inheritance
 -----------------------
@@ -175,10 +175,10 @@ possible to make the inheritance mechanism conditional:
 
 .. code-block:: twig
 
-    {% extends standalone ? "minimum.html" : "base.html" %}
+    {% extends standalone ? "minimum.html.twig" : "base.html.twig" %}
 
-In this example, the template will extend the "minimum.html" layout template
-if the ``standalone`` variable evaluates to ``true``, and "base.html"
+In this example, the template will extend the "minimum.html.twig" layout template
+if the ``standalone`` variable evaluates to ``true``, and "base.html.twig"
 otherwise.
 
 How do blocks work?
@@ -192,7 +192,7 @@ importantly, how it does not work:
 
 .. code-block:: html+twig
 
-    {# base.twig #}
+    {# base.html.twig #}
     {% for post in posts %}
         {% block post %}
             <h1>{{ post.title }}</h1>
@@ -206,8 +206,8 @@ to make it overridable by a child template:
 
 .. code-block:: html+twig
 
-    {# child.twig #}
-    {% extends "base.twig" %}
+    {# child.html.twig #}
+    {% extends "base.html.twig" %}
 
     {% block post %}
         <article>

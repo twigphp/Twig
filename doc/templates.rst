@@ -41,8 +41,13 @@ There are two kinds of delimiters: ``{% ... %}`` and ``{{ ... }}``. The first
 one is used to execute statements such as for-loops, the latter outputs the
 result of an expression.
 
-IDEs Integration
-----------------
+.. tip::
+
+    To experiment with Twig, you can use the `Twig Playground
+    <https://twig.symfony.com/play>`_.
+
+Third-party Integrations
+------------------------
 
 Many IDEs support syntax highlighting and auto-completion for Twig:
 
@@ -62,9 +67,6 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Visual Studio Code* via the `Twig pack`_, `Modern Twig`_ or `Twiggy`_
 
 You might also be interested in:
-
-* `TwigFiddle`_: an online service that allows you to execute Twig templates
-  from a browser; it supports all versions of Twig
 
 * `Twig Language Server`_: provides some language features like syntax
   highlighting, diagnostics, auto complete, ...
@@ -192,7 +194,7 @@ filters.
     .. code-block:: twig
 
         {{ -1|abs }} {# returns -1 #}
-        {{ -1**0 }} {% returns -1 %}
+        {{ -1**0 }} {# returns -1 #}
 
         {# as it is equivalent to #}
 
@@ -204,7 +206,7 @@ filters.
     .. code-block:: twig
 
         {{ (-1)|abs }} {# returns 1 as expected #}
-        {{ (-1)**0 }} {% returns 1 %}
+        {{ (-1)**0 }} {# returns 1 as expected #}
 
 Functions
 ---------
@@ -363,7 +365,7 @@ and return the rendered content of that template into the current one:
 
 .. code-block:: twig
 
-    {{ include('sidebar.html') }}
+    {{ include('sidebar.html.twig') }}
 
 By default, included templates have access to the same context as the template
 which includes them. This means that any variable defined in the main template
@@ -372,10 +374,10 @@ will be available in the included template too:
 .. code-block:: twig
 
     {% for box in boxes %}
-        {{ include('render_box.html') }}
+        {{ include('render_box.html.twig') }}
     {% endfor %}
 
-The included template ``render_box.html`` is able to access the ``box`` variable.
+The included template ``render_box.html.twig`` is able to access the ``box`` variable.
 
 The name of the template depends on the template loader. For instance, the
 ``\Twig\Loader\FilesystemLoader`` allows you to access other templates by giving the
@@ -383,7 +385,7 @@ filename. You can access templates in subdirectories with a slash:
 
 .. code-block:: twig
 
-    {{ include('sections/articles/sidebar.html') }}
+    {{ include('sections/articles/sidebar.html.twig') }}
 
 This behavior depends on the application embedding Twig.
 
@@ -397,7 +399,7 @@ override.
 
 It's easier to understand the concept by starting with an example.
 
-Let's define a base template, ``base.html``, which defines an HTML skeleton
+Let's define a base template, ``base.html.twig``, which defines an HTML skeleton
 document that might be used for a two-column page:
 
 .. code-block:: html+twig
@@ -429,7 +431,7 @@ A child template might look like this:
 
 .. code-block:: html+twig
 
-    {% extends "base.html" %}
+    {% extends "base.html.twig" %}
 
     {% block title %}Index{% endblock %}
     {% block head %}
@@ -1114,7 +1116,6 @@ Twig can be extended. If you want to create your own extensions, read the
 .. _`web-mode.el`:                          https://web-mode.org/
 .. _`regular expressions`:                  https://www.php.net/manual/en/pcre.pattern.php
 .. _`PHP-twig for atom`:                    https://github.com/reesef/php-twig
-.. _`TwigFiddle`:                           https://twigfiddle.com/
 .. _`TwigQI`:                               https://github.com/alisqi/TwigQI
 .. _`TwigStan`:                             https://github.com/twigstan/twigstan
 .. _`Twig pack`:                            https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack

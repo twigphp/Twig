@@ -30,6 +30,22 @@ final class TemplateWrapper
     ) {
     }
 
+    /**
+     * @return iterable<scalar|\Stringable|null>
+     */
+    public function stream(array $context = []): iterable
+    {
+        yield from $this->template->yield($context);
+    }
+
+    /**
+     * @return iterable<scalar|\Stringable|null>
+     */
+    public function streamBlock(string $name, array $context = []): iterable
+    {
+        yield from $this->template->yieldBlock($name, $context);
+    }
+
     public function render(array $context = []): string
     {
         return $this->template->render($context);

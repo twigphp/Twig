@@ -376,6 +376,11 @@ class CoreTest extends TestCase
         $this->expectException(SecurityError::class);
         $twig->render('index');
     }
+
+    public function testLastModified()
+    {
+        $this->assertGreaterThan(1000000000, (new CoreExtension())->getLastModified());
+    }
 }
 
 final class CoreTestIteratorAggregate implements \IteratorAggregate

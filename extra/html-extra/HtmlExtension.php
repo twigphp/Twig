@@ -14,6 +14,7 @@ namespace Twig\Extra\Html;
 use Symfony\Component\Mime\MimeTypes;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
+use Twig\Markup;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -92,8 +93,8 @@ final class HtmlExtension extends AbstractExtension
     {
         $classes = [];
         foreach ($args as $i => $arg) {
-            if (\is_string($arg)) {
-                $classes[] = $arg;
+            if (\is_string($arg) || $arg instanceof Markup) {
+                $classes[] = (string) $arg;
             } elseif (\is_array($arg)) {
                 foreach ($arg as $class => $condition) {
                     if (!\is_string($class)) {

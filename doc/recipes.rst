@@ -66,7 +66,7 @@ the request is made via Ajax and choose the layout accordingly:
 
 .. code-block:: twig
 
-    {% extends request.ajax ? "base_ajax.html" : "base.html" %}
+    {% extends request.ajax ? "base_ajax.html.twig" : "base.html.twig" %}
 
     {% block content %}
         This is the content to be displayed.
@@ -80,9 +80,9 @@ instance, the name can depend on the value of a variable:
 
 .. code-block:: twig
 
-    {% include var ~ '_foo.html' %}
+    {% include var ~ '_foo.html.twig' %}
 
-If ``var`` evaluates to ``index``, the ``index_foo.html`` template will be
+If ``var`` evaluates to ``index``, the ``index_foo.html.twig`` template will be
 rendered.
 
 As a matter of fact, the template name can be any valid expression, such as
@@ -90,7 +90,7 @@ the following:
 
 .. code-block:: twig
 
-    {% include var|default('index') ~ '_foo.html' %}
+    {% include var|default('index') ~ '_foo.html.twig' %}
 
 Overriding a Template that also extends itself
 ----------------------------------------------
@@ -108,13 +108,13 @@ But how do you combine both: *replace* a template that also extends itself
 (aka a template in a directory further in the list)?
 
 Let's say that your templates are loaded from both ``.../templates/mysite``
-and ``.../templates/default`` in this order. The ``page.twig`` template,
+and ``.../templates/default`` in this order. The ``page.html.twig`` template,
 stored in ``.../templates/default`` reads as follows:
 
 .. code-block:: twig
 
-    {# page.twig #}
-    {% extends "layout.twig" %}
+    {# page.html.twig #}
+    {% extends "layout.html.twig" %}
 
     {% block content %}
     {% endblock %}
@@ -125,8 +125,8 @@ might be tempted to write the following:
 
 .. code-block:: twig
 
-    {# page.twig in .../templates/mysite #}
-    {% extends "page.twig" %} {# from .../templates/default #}
+    {# page.html.twig in .../templates/mysite #}
+    {% extends "page.html.twig" %} {# from .../templates/default #}
 
 However, this will not work as Twig will always load the template from
 ``.../templates/mysite``.
@@ -141,8 +141,8 @@ parent's full, unambiguous template path in the extends tag:
 
 .. code-block:: twig
 
-    {# page.twig in .../templates/mysite #}
-    {% extends "default/page.twig" %} {# from .../templates #}
+    {# page.html.twig in .../templates/mysite #}
+    {% extends "default/page.html.twig" %} {# from .../templates #}
 
 .. note::
 
@@ -348,15 +348,15 @@ First, let's create a temporary in-memory SQLite3 database to work with::
     $dbh->exec('CREATE TABLE templates (name STRING, source STRING, last_modified INTEGER)');
     $base = '{% block content %}{% endblock %}';
     $index = '
-    {% extends "base.twig" %}
+    {% extends "base.html.twig" %}
     {% block content %}Hello {{ name }}{% endblock %}
     ';
     $now = time();
-    $dbh->prepare('INSERT INTO templates (name, source, last_modified) VALUES (?, ?, ?)')->execute(['base.twig', $base, $now]);
-    $dbh->prepare('INSERT INTO templates (name, source, last_modified) VALUES (?, ?, ?)')->execute(['index.twig', $index, $now]);
+    $dbh->prepare('INSERT INTO templates (name, source, last_modified) VALUES (?, ?, ?)')->execute(['base.html.twig', $base, $now]);
+    $dbh->prepare('INSERT INTO templates (name, source, last_modified) VALUES (?, ?, ?)')->execute(['index.html.twig', $index, $now]);
 
 We have created a simple ``templates`` table that hosts two templates:
-``base.twig`` and ``index.twig``.
+``base.html.twig`` and ``index.html.twig``.
 
 Now, let's define a loader able to use this database::
 
@@ -411,7 +411,7 @@ Finally, here is an example on how you can use it::
     $loader = new DatabaseTwigLoader($dbh);
     $twig = new \Twig\Environment($loader);
 
-    echo $twig->render('index.twig', ['name' => 'Fabien']);
+    echo $twig->render('index.html.twig', ['name' => 'Fabien']);
 
 Using different Template Sources
 --------------------------------
@@ -429,15 +429,15 @@ logical name, and not the path from the filesystem::
 
     $loader1 = new DatabaseTwigLoader($dbh);
     $loader2 = new \Twig\Loader\ArrayLoader([
-        'base.twig' => '{% block content %}{% endblock %}',
+        'base.html.twig' => '{% block content %}{% endblock %}',
     ]);
     $loader = new \Twig\Loader\ChainLoader([$loader1, $loader2]);
 
     $twig = new \Twig\Environment($loader);
 
-    echo $twig->render('index.twig', ['name' => 'Fabien']);
+    echo $twig->render('index.html.twig', ['name' => 'Fabien']);
 
-Now that the ``base.twig`` templates is defined in an array loader, you can
+Now that the ``base.html.twig`` templates is defined in an array loader, you can
 remove it from the database, and everything else will still work as before.
 
 Loading a Template from a String

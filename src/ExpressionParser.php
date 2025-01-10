@@ -140,7 +140,6 @@ class ExpressionParser
                 return;
             }
             $target = explode('_', $unaryOp)[1];
-            $change = $this->unaryOperators[$target]['precedence_change'];
             /** @var AbstractExpression $node */
             $node = $expr->getNode('node');
             foreach ($this->precedenceChanges as $operatorName => $changes) {
@@ -148,6 +147,7 @@ class ExpressionParser
                     continue;
                 }
                 if ($node->hasAttribute('operator') && $operatorName === $node->getAttribute('operator')) {
+                    $change = $this->unaryOperators[$target]['precedence_change'];
                     trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('Add explicit parentheses around the "%s" unary operator to avoid behavior change in the next major version as its precedence will change in "%s" at line %d.', $target, $this->parser->getStream()->getSourceContext()->getName(), $node->getTemplateLine()));
                 }
             }

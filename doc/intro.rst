@@ -69,6 +69,6 @@ filesystem loader::
         'cache' => '/path/to/compilation_cache',
     ]);
 
-    echo $twig->render('index.html', ['name' => 'Fabien']);
+    echo $twig->render('index.html.twig', ['name' => 'Fabien']);
 
 .. _`SymfonyCasts Twig Tutorial`: https://symfonycasts.com/screencast/twig

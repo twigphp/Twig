@@ -55,7 +55,7 @@ function:
 
 .. code-block:: twig
 
-    {{ include('user.html', sandboxed: true) }}
+    {{ include('user.html.twig', sandboxed: true) }}
 
 You can sandbox all templates by passing ``true`` as the second argument of
 the extension constructor::
