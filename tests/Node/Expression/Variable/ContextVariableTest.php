@@ -41,7 +41,7 @@ class ContextVariableTest extends NodeTestCase
 
         // regular
         $node = new ContextVariable('foo', 1);
-        $output = '(isset($context["foo"]) || array_key_exists("foo", $context) ? $context["foo"] : (function () { throw new RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source); })())';
+        $output = '(array_key_exists("foo", $context) ? $context["foo"] : throw new RuntimeError(\'Variable "foo" does not exist.\', 1, $this->source))';
         yield 'strict' => [$node, "// line 1\n".$output, $envStrict];
         yield 'non_strict' => [$node, self::createVariableGetter('foo', 1), $env];
 

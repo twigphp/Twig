@@ -452,7 +452,7 @@ class ExpressionParserTest extends TestCase
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class () extends AbstractExtension {
-            public function getOperators()
+            public function getOperators(): array
             {
                 $class = new class (new ConstantExpression('foo', 1), 1) extends AbstractUnary {
                     public function operator(Compiler $compiler): Compiler
