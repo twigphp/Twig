@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2024-12-30T09:31:37Z
+
+This change also deserves an entry in the changelog for 3.19.0.
+
+---------------------------------------------------------------------------
+
+by Lorenzschaef at 2024-12-30T13:54:11Z
+
+@xabbuh, I can add that.
+
+What about the documentation? Should I also add a page to the filter reference in the docs? And mention it in the section about arrow functions? Or do you have something different in mind?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2024-12-30T15:14:29Z
+
+Doing what you suggested looks good to me.
