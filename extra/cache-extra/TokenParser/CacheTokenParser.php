@@ -32,7 +32,7 @@ class CacheTokenParser extends AbstractTokenParser
         while ($stream->test(Token::NAME_TYPE)) {
             $k = $stream->getCurrent()->getValue();
             $stream->next();
-            $args = $expressionParser->parseArguments();
+            $args = $expressionParser->parseNamedArguments();
 
             switch ($k) {
                 case 'ttl':
