@@ -548,61 +548,6 @@ class ExpressionParser
         return $node;
     }
 
-    /**
-     * Parses arguments.
-     *
-     * @return Node
-     *
-     * @throws SyntaxError
-     *
-     * @deprecated since Twig 3.19 Use parseNamedArguments() instead
-     */
-    public function parseArguments()
-    {
-        $args = [];
-        $stream = $this->parser->getStream();
-
-        $stream->expect(Token::PUNCTUATION_TYPE, '(', 'A list of arguments must begin with an opening parenthesis');
-        $hasSpread = false;
-        while (!$stream->test(Token::PUNCTUATION_TYPE, ')')) {
-            if ($args) {
-                $stream->expect(Token::PUNCTUATION_TYPE, ',', 'Arguments must be separated by a comma');
-
-                // if the comma above was a trailing comma, early exit the argument parse loop
-                if ($stream->test(Token::PUNCTUATION_TYPE, ')')) {
-                    break;
-                }
-            }
-
-            if ($stream->nextIf(Token::SPREAD_TYPE)) {
-                $hasSpread = true;
-                $value = new SpreadUnary($this->parseExpression(), $stream->getCurrent()->getLine());
-            } elseif ($hasSpread) {
-                throw new SyntaxError('Normal arguments must be placed before argument unpacking.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
-            } else {
-                $value = $this->parseExpression();
-            }
-
-            $name = null;
-            if (($token = $stream->nextIf(Token::OPERATOR_TYPE, '=')) || ($token = $stream->nextIf(Token::PUNCTUATION_TYPE, ':'))) {
-                if (!$value instanceof ContextVariable) {
-                    throw new SyntaxError(\sprintf('A parameter name must be a string, "%s" given.', $value::class), $token->getLine(), $stream->getSourceContext());
-                }
-                $name = $value->getAttribute('name');
-                $value = $this->parseExpression();
-            }
-
-            if (null === $name) {
-                $args[] = $value;
-            } else {
-                $args[$name] = $value;
-            }
-        }
-        $stream->expect(Token::PUNCTUATION_TYPE, ')', 'A list of arguments must be closed by a parenthesis');
-
-        return new Nodes($args);
-    }
-
     public function parseAssignmentExpression()
     {
         $stream = $this->parser->getStream();
@@ -753,16 +698,6 @@ class ExpressionParser
         }
 
         return $arguments;
-    }
-
-    /**
-     * @deprecated since Twig 3.19 Use parseNamedArguments() instead
-     */
-    public function parseOnlyArguments()
-    {
-        trigger_deprecation('twig/twig', '3.19', \sprintf('The "%s()" method is deprecated, use "%s::parseNamedArguments()" instead.', __METHOD__, __CLASS__));
-
-        return $this->parseNamedArguments();
     }
 
     public function parseNamedArguments(): Nodes
