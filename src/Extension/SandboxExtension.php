@@ -66,7 +66,7 @@ final class SandboxExtension extends AbstractExtension
         return $this->sourcePolicy->enableSandbox($source);
     }
 
-    public function setSecurityPolicy(SecurityPolicyInterface $policy)
+    public function setSecurityPolicy(SecurityPolicyInterface $policy): void
     {
         $this->policy = $policy;
     }
@@ -111,6 +111,13 @@ final class SandboxExtension extends AbstractExtension
         }
     }
 
+    /**
+     * @param mixed $obj
+     *
+     * @return mixed
+     *
+     * @throws SecurityNotAllowedMethodError
+     */
     public function ensureToStringAllowed($obj, int $lineno = -1, ?Source $source = null)
     {
         if (\is_array($obj)) {

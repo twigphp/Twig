@@ -97,6 +97,8 @@ final class EscaperExtension extends AbstractExtension
 
     /**
      * @internal
+     *
+     * @return array<string>
      */
     public static function escapeFilterIsSafe(Node $filterArgs)
     {

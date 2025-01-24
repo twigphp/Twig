@@ -76,6 +76,8 @@ abstract class IntegrationTestCase extends TestCase
 
     /**
      * @dataProvider getTests
+     *
+     * @return void
      */
     #[DataProvider('getTests')]
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
@@ -87,6 +89,8 @@ abstract class IntegrationTestCase extends TestCase
      * @dataProvider getLegacyTests
      *
      * @group legacy
+     *
+     * @return void
      */
     #[DataProvider('getLegacyTests'), IgnoreDeprecations]
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
@@ -150,6 +154,9 @@ abstract class IntegrationTestCase extends TestCase
         return self::assembleTests(true);
     }
 
+    /**
+     * @return void
+     */
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         if (!$outputs) {
@@ -259,6 +266,9 @@ abstract class IntegrationTestCase extends TestCase
         }
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected static function parseTemplates($test)
     {
         $templates = [];

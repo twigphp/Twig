@@ -67,6 +67,9 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
         return $this->dynamicName;
     }
 
+    /**
+     * @return callable|array{class-string, string}|null
+     */
     public function getCallable()
     {
         return $this->callable;

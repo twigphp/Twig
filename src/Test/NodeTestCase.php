@@ -25,10 +25,20 @@ abstract class NodeTestCase extends TestCase
     /**
      * @return iterable<array{0: Node, 1: string, 2?: Environment|null, 3?: bool}>
      */
+    public function getTests()
+    {
+        return [];
+    }
+
+    /**
+     * @return iterable<array{0: Node, 1: string, 2?: Environment|null, 3?: bool}>
+     */
     abstract public static function provideTests(): iterable;
 
     /**
      * @dataProvider provideTests
+     *
+     * @return void
      */
     #[DataProvider('provideTests')]
     public function testCompile($node, $source, $environment = null, $isPattern = false)
@@ -36,6 +46,9 @@ abstract class NodeTestCase extends TestCase
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
 
+    /**
+     * @return void
+     */
     public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = false)
     {
         $compiler = $this->getCompiler($environment);
@@ -48,6 +61,9 @@ abstract class NodeTestCase extends TestCase
         }
     }
 
+    /**
+     * @return Compiler
+     */
     protected function getCompiler(?Environment $environment = null)
     {
         return new Compiler($environment ?? $this->getEnvironment());

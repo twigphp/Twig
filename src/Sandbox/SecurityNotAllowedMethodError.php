@@ -33,7 +33,7 @@ final class SecurityNotAllowedMethodError extends SecurityError
         return $this->className;
     }
 
-    public function getMethodName()
+    public function getMethodName(): string
     {
         return $this->methodName;
     }

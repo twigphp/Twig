@@ -78,6 +78,9 @@ class IncludeNode extends Node implements NodeOutputInterface
         }
     }
 
+    /**
+     * @return void
+     */
     protected function addGetTemplate(Compiler $compiler/* , string $template = '' */)
     {
         $compiler
@@ -91,6 +94,9 @@ class IncludeNode extends Node implements NodeOutputInterface
         ;
     }
 
+    /**
+     * @return void
+     */
     protected function addTemplateArguments(Compiler $compiler)
     {
         if (!$this->hasNode('variables')) {

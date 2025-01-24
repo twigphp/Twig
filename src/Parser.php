@@ -230,6 +230,9 @@ class Parser
         return new Nodes($rv, $lineno);
     }
 
+    /**
+     * @return string|null
+     */
     public function peekBlockStack()
     {
         return $this->blockStack[\count($this->blockStack) - 1] ?? null;
@@ -279,6 +282,9 @@ class Parser
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $internalRef];
     }
 
+    /**
+     * @return array{name: string, node: AssignTemplateVariable|null}|null
+     */
     public function getImportedSymbol(string $type, string $alias)
     {
         // if the symbol does not exist in the current scope (0), try in the main/global scope (last index)
@@ -305,6 +311,9 @@ class Parser
         return $this->expressionParser;
     }
 
+    /**
+     * @return bool
+     */
     public function hasInheritance()
     {
         return $this->parent || 0 < \count($this->traits);
