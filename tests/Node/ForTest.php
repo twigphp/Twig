@@ -16,6 +16,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\ForElseNode;
 use Twig\Node\ForNode;
 use Twig\Node\IfNode;
 use Twig\Node\Nodes;
@@ -43,7 +44,7 @@ class ForTest extends NodeTestCase
         $this->assertEquals($body, $node->getNode('body')->getNode('tests')->getNode(1));
         $this->assertFalse($node->hasNode('else'));
 
-        $else = new PrintNode(new ContextVariable('foo', 1), 1);
+        $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 1), 1), 5);
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
         $this->assertEquals($else, $node->getNode('else'));
@@ -136,7 +137,7 @@ EOF
         $seq = new ContextVariable('values', 1);
         $ifexpr = new ConstantExpression(true, 1);
         $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
-        $else = new PrintNode(new ContextVariable('foo', 1), 1);
+        $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 6), 6), 5);
         $node = new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
         $node->setAttribute('with_loop', true);
 
@@ -152,7 +153,9 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
             yield {$fooGetter};
         }
     }
+    // line 5
     if (0 === \$iterator->getIndex0()) {
+        // line 6
         yield {$fooGetter};
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);

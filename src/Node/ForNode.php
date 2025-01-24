@@ -31,6 +31,12 @@ class ForNode extends Node
             $body = new IfNode(new Nodes([$ifexpr, $body]), null, $lineno);
         }
 
+        if (null !== $else && !$else instanceof ForElseNode) {
+            trigger_deprecation('twig/twig', '3.19', \sprintf('Not passing an instance of "%s" to the "else" argument of the "%s" constructor is deprecated.', ForElseNode::class, static::class));
+
+            $else = new ForElseNode($else, $else->getTemplateLine());
+        }
+
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
         if (null !== $else) {
             $nodes['else'] = $else;
@@ -72,13 +78,7 @@ class ForNode extends Node
         ;
 
         if ($this->hasNode('else')) {
-            $compiler
-                ->write("if (0 === \$iterator->getIndex0()) {\n")
-                ->indent()
-                ->subcompile($this->getNode('else'))
-                ->outdent()
-                ->write("}\n")
-            ;
+            $compiler->subcompile($this->getNode('else'));
         }
 
         // remove some "private" loop variables (needed for nested loops)
