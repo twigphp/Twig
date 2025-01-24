@@ -25,16 +25,10 @@ use Twig\Node\Expression\Variable\AssignContextVariable;
 #[YieldReady]
 class ForNode extends Node
 {
-    public function __construct(AssignContextVariable $keyTarget, AssignContextVariable $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?Node $else, int $lineno)
+    public function __construct(AssignContextVariable $keyTarget, AssignContextVariable $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?ForElseNode $else, int $lineno)
     {
         if ($ifexpr) {
             $body = new IfNode(new Nodes([$ifexpr, $body]), null, $lineno);
-        }
-
-        if (null !== $else && !$else instanceof ForElseNode) {
-            trigger_deprecation('twig/twig', '3.19', \sprintf('Not passing an instance of "%s" to the "else" argument of the "%s" constructor is deprecated.', ForElseNode::class, static::class));
-
-            $else = new ForElseNode($else, $else->getTemplateLine());
         }
 
         $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
