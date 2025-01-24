@@ -1,7 +1,7 @@
 ``inline_css``
 ==============
 
-The ``inline_css`` filter inline CSS styles in HTML documents:
+The ``inline_css`` filter inlines CSS styles in HTML documents:
 
 .. code-block:: html+twig
 

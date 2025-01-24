@@ -4,9 +4,11 @@
 {{ constant('DATE_W3C') == expect ? 'true' : 'false' }}
 {{ constant('ARRAY_AS_PROPS', object) }}
 {{ constant('class', object) }}
+{{ constant('ARRAY_AS_PROPS', object) ?? 'KO' }}
 --DATA--
 return ['expect' => DATE_W3C, 'object' => new \ArrayObject(['hi'])]
 --EXPECT--
 true
 2
 ArrayObject
+2

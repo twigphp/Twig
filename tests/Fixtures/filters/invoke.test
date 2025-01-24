@@ -1,0 +1,14 @@
+--TEST--
+"invoke" filter
+--TEMPLATE--
+{% set func = x => 'Hello '~x %}
+{{ func|invoke('World') }}
+{% set func2 = (x, y) => x+y %}
+{{ func2|invoke(3, 2) }}
+--DATA--
+return []
+--CONFIG--
+return []
+--EXPECT--
+Hello World
+5

@@ -36,7 +36,7 @@ Hello
 =====
 
 Great!
-EOF
+EOF,
             ]));
             $twig->addExtension(new MarkdownExtension());
             $twig->addRuntimeLoader(new class($class) implements RuntimeLoaderInterface {

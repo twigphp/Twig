@@ -42,7 +42,7 @@ class ErrorTest extends TestCase
 {% block foo %}
     {{ foo.bar }}
 {% endblock %}
-EOHTML
+EOHTML,
         ]);
 
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
@@ -71,7 +71,7 @@ EOHTML
 {% block foo %}
     {{ foo.bar }}
 {% endblock %}
-EOHTML
+EOHTML,
         ]);
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
 
@@ -162,7 +162,7 @@ EOHTML
 {% for n in variable|filter(x => x > 3) %}
     This list contains {{n}}.
 {% endfor %}
-EOHTML
+EOHTML,
         ]);
 
         $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
@@ -189,7 +189,7 @@ EOHTML
 {% for n in variable|map(x => x * 3) %}
     {{- n -}}
 {% endfor %}
-EOHTML
+EOHTML,
         ]);
 
         $twig = new Environment($loader, ['debug' => true, 'cache' => false]);
@@ -214,7 +214,7 @@ EOHTML
             'reduce-null.html' => <<<EOHTML
 {# We expect a runtime error if `variable` is not traversable #}
 {{ variable|reduce((carry, x) => carry + x) }}
-EOHTML
+EOHTML,
         ]);
 
         $twig = new Environment($loader, ['debug' => true, 'cache' => false]);

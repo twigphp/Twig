@@ -53,7 +53,7 @@ abstract class AbstractExtension implements LastModifiedExtensionInterface
         $lastModified = filemtime($filename);
 
         // Track modifications of the runtime class if it exists and follows the naming convention
-        if (str_ends_with($filename, 'Extension.php') && is_file($filename = substr($filename, 0, -13) . 'Runtime.php')) {
+        if (str_ends_with($filename, 'Extension.php') && is_file($filename = substr($filename, 0, -13).'Runtime.php')) {
             $lastModified = max($lastModified, filemtime($filename));
         }
 

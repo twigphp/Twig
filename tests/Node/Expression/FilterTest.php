@@ -176,7 +176,7 @@ class FilterTest extends NodeTestCase
 
     private static function createExtension(): AbstractExtension
     {
-        return new class() extends AbstractExtension {
+        return new class extends AbstractExtension {
             public function getFilters(): array
             {
                 return [

@@ -178,7 +178,7 @@ class EnvironmentTest extends TestCase
 
         // force compilation
         $twig = new Environment($loader = new ArrayLoader(['index' => '{{ foo }}']), $options);
-        $twig->addExtension($extension = new class() extends AbstractExtension {
+        $twig->addExtension($extension = new class extends AbstractExtension {
             public bool $throw = false;
 
             public function getFilters(): array
@@ -464,7 +464,7 @@ class EnvironmentTest extends TestCase
     public function testResettingGlobals()
     {
         $twig = new Environment(new ArrayLoader(['index' => '']));
-        $twig->addExtension(new class() extends AbstractExtension implements GlobalsInterface {
+        $twig->addExtension(new class extends AbstractExtension implements GlobalsInterface {
             public function getGlobals(): array
             {
                 return [

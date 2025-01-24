@@ -68,7 +68,7 @@ class Lexer
         (?<DNUM>(?&LNUM)(?:(?&FRAC))?)          # Decimal number                123_456.456
     )(?:(?&DNUM)(?:(?&EXPONENT))?)              #                               123_456.456E+10
     /Ax';
-    
+
     public const REGEX_DQ_STRING_DELIM = '/"/A';
     public const REGEX_DQ_STRING_PART = '/[^#"\\\\]*(?:(?:\\\\.|#(?!\{))[^#"\\\\]*)*/As';
     public const REGEX_INLINE_COMMENT = '/#[^\n]*/A';

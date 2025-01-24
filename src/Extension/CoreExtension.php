@@ -268,6 +268,7 @@ final class CoreExtension extends AbstractExtension
             // iteration and runtime
             new TwigFilter('default', self::default(...), ['node_class' => DefaultFilter::class]),
             new TwigFilter('keys', self::keys(...)),
+            new TwigFilter('invoke', self::invoke(...)),
         ];
     }
 
@@ -906,6 +907,16 @@ final class CoreExtension extends AbstractExtension
         }
 
         return array_keys($array);
+    }
+
+    /**
+     * Invokes a callable.
+     *
+     * @internal
+     */
+    public static function invoke(\Closure $arrow, ...$arguments): mixed
+    {
+        return $arrow(...$arguments);
     }
 
     /**
@@ -2027,7 +2038,7 @@ final class CoreExtension extends AbstractExtension
 
         $property = $class->getProperty($property);
 
-        if (!$property->isPublic()) {
+        if (!$property->isPublic() || $property->isStatic()) {
             static $false;
 
             return $false ??= static fn () => false;

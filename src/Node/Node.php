@@ -98,6 +98,13 @@ abstract class Node implements \Countable, \IteratorAggregate
         return $repr;
     }
 
+    public function __clone()
+    {
+        foreach ($this->nodes as $name => $node) {
+            $this->nodes[$name] = clone $node;
+        }
+    }
+
     public function compile(Compiler $compiler): void
     {
         foreach ($this->nodes as $node) {

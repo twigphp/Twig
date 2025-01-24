@@ -442,7 +442,7 @@ abstract class Template
         return $parent->hasMacro($name, $context);
     }
 
-    protected function getTemplateForMacro(string $name, array $context, int $line, Source $source): Template
+    protected function getTemplateForMacro(string $name, array $context, int $line, Source $source): self
     {
         if (method_exists($this, $name)) {
             return $this;

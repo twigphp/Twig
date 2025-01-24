@@ -994,6 +994,9 @@ The following operators don't fit into any of the other categories:
 
       {{ people|map(first_name_fn)|join(', ') }}
 
+  Arrow functions can be called using the :doc:`invoke </filters/invoke>`
+  filter.
+
 Operators
 ~~~~~~~~~
 

@@ -29,7 +29,7 @@ class IntegrationTest extends IntegrationTestCase
     protected function getRuntimeLoaders()
     {
         return [
-            new class() implements RuntimeLoaderInterface {
+            new class implements RuntimeLoaderInterface {
                 public function load(string $class): ?object
                 {
                     return CacheRuntime::class === $class ? new CacheRuntime(new ArrayAdapter()) : null;

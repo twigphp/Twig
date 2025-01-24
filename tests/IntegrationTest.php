@@ -67,6 +67,8 @@ class TwigTestFoo implements \Iterator
     public $position = 0;
     public $array = [1, 2];
 
+    public static $foo = 'Foo';
+
     public function bar($param1 = null, $param2 = null)
     {
         return 'bar'.($param1 ? '_'.$param1 : '').($param2 ? '-'.$param2 : '');
