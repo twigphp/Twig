@@ -72,7 +72,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      * @param class-string<\Stringable> $class
      * @param string[]                  $strategies
      *
-     * @return void                                        
+     * @return void
      */
     public function addSafeClass(string $class, array $strategies)
     {

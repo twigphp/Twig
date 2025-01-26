@@ -70,7 +70,7 @@ class LexerTest extends TestCase
         $count = 0;
         while (!$stream->isEOF()) {
             $token = $stream->next();
-            if ($type === $token->getType()) {
+            if ($token->test($type)) {
                 if (null === $value || $value === $token->getValue()) {
                     ++$count;
                 }

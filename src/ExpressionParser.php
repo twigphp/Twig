@@ -285,8 +285,8 @@ class ExpressionParser
     public function parsePrimaryExpression()
     {
         $token = $this->parser->getCurrentToken();
-        switch ($token->getType()) {
-            case Token::NAME_TYPE:
+        switch (true) {
+            case $token->test(Token::NAME_TYPE):
                 $this->parser->getStream()->next();
                 switch ($token->getValue()) {
                     case 'true':
@@ -315,25 +315,25 @@ class ExpressionParser
                 }
                 break;
 
-            case Token::NUMBER_TYPE:
+            case $token->test(Token::NUMBER_TYPE):
                 $this->parser->getStream()->next();
                 $node = new ConstantExpression($token->getValue(), $token->getLine());
                 break;
 
-            case Token::STRING_TYPE:
-            case Token::INTERPOLATION_START_TYPE:
+            case $token->test(Token::STRING_TYPE):
+            case $token->test(Token::INTERPOLATION_START_TYPE)  :
                 $node = $this->parseStringExpression();
                 break;
 
-            case Token::PUNCTUATION_TYPE:
+            case $token->test(Token::PUNCTUATION_TYPE):
                 $node = match ($token->getValue()) {
                     '[' => $this->parseSequenceExpression(),
                     '{' => $this->parseMappingExpression(),
-                    default => throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext()),
+                    default => throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', $token->toEnglish(), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext()),
                 };
                 break;
 
-            case Token::OPERATOR_TYPE:
+            case $token->test(Token::OPERATOR_TYPE):
                 if (preg_match(Lexer::REGEX_NAME, $token->getValue(), $matches) && $matches[0] == $token->getValue()) {
                     // in this context, string operators are variable names
                     $this->parser->getStream()->next();
@@ -347,7 +347,7 @@ class ExpressionParser
 
                 // no break
             default:
-                throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', Token::typeToEnglish($token->getType()), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
+                throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', $token->toEnglish(), $token->getValue()), $token->getLine(), $this->parser->getStream()->getSourceContext());
         }
 
         return $this->parsePostfixExpression($node);
@@ -455,7 +455,7 @@ class ExpressionParser
             } else {
                 $current = $stream->getCurrent();
 
-                throw new SyntaxError(\sprintf('A mapping key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', Token::typeToEnglish($current->getType()), $current->getValue()), $current->getLine(), $stream->getSourceContext());
+                throw new SyntaxError(\sprintf('A mapping key must be a quoted string, a number, a name, or an expression enclosed in parentheses (unexpected token "%s" of value "%s".', $current->toEnglish(), $current->getValue()), $current->getLine(), $stream->getSourceContext());
             }
 
             $stream->expect(Token::PUNCTUATION_TYPE, ':', 'A mapping key must be followed by a colon (:)');
@@ -472,7 +472,7 @@ class ExpressionParser
     {
         while (true) {
             $token = $this->parser->getCurrentToken();
-            if (Token::PUNCTUATION_TYPE == $token->getType()) {
+            if ($token->test(Token::PUNCTUATION_TYPE)) {
                 if ('.' == $token->getValue() || '[' == $token->getValue()) {
                     $node = $this->parseSubscriptExpression($node);
                 } elseif ('|' == $token->getValue()) {
@@ -759,13 +759,13 @@ class ExpressionParser
         } else {
             $token = $stream->next();
             if (
-                Token::NAME_TYPE == $token->getType()
-                || Token::NUMBER_TYPE == $token->getType()
-                || (Token::OPERATOR_TYPE == $token->getType() && preg_match(Lexer::REGEX_NAME, $token->getValue()))
+                $token->test(Token::NAME_TYPE)
+                || $token->test(Token::NUMBER_TYPE)
+                || ($token->test(Token::OPERATOR_TYPE) && preg_match(Lexer::REGEX_NAME, $token->getValue()))
             ) {
                 $attribute = new ConstantExpression($token->getValue(), $token->getLine());
             } else {
-                throw new SyntaxError(\sprintf('Expected name or number, got value "%s" of type %s.', $token->getValue(), Token::typeToEnglish($token->getType())), $token->getLine(), $stream->getSourceContext());
+                throw new SyntaxError(\sprintf('Expected name or number, got value "%s" of type %s.', $token->getValue(), $token->toEnglish()), $token->getLine(), $stream->getSourceContext());
             }
         }
 

@@ -75,8 +75,13 @@ final class Token
         return $this->lineno;
     }
 
+    /**
+     * @deprecated since Twig 3.19
+     */
     public function getType(): int
     {
+        trigger_deprecation('twig/twig', '3.19', \sprintf('The "%s()" method is deprecated.', __METHOD__));
+
         return $this->type;
     }
 
@@ -86,6 +91,11 @@ final class Token
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function toEnglish(): string
+    {
+        return self::typeToEnglish($this->type);
     }
 
     public static function typeToString(int $type, bool $short = false): string
