@@ -131,14 +131,39 @@ The following variables are always available in templates:
 Setting Variables
 ~~~~~~~~~~~~~~~~~
 
-You can assign values to variables inside code blocks. Assignments use the
-:doc:`set<tags/set>` tag:
+You can assign values to variables inside code blocks using either the
+:doc:`set<tags/set>` tag or the :ref:`= operator <assignment-operator>`:
 
 .. code-block:: twig
 
     {% set name = 'Fabien' %}
     {% set numbers = [1, 2] %}
     {% set map = {'city': 'Paris'} %}
+
+    {# or #}
+
+    {% do name = 'Fabien' %}
+    {% do numbers = [1, 2] %}
+    {% do map = {'city': 'Paris'} %}
+
+For simple assignments, both are equivalent. However, the ``set`` tag provides
+additional features:
+
+* **Multi-target assignment**: Assign multiple variables at once:
+
+  .. code-block:: twig
+
+      {% set first, last = 'Fabien', 'Potencier' %}
+
+* **Block capture**: Capture chunks of template content into a variable:
+
+  .. code-block:: html+twig
+
+      {% set content %}
+          <div id="pagination">...</div>
+      {% endset %}
+
+See the :doc:`set<tags/set>` tag documentation for more details.
 
 Filters
 -------
@@ -993,6 +1018,29 @@ The following operators don't fit into any of the other categories:
 
     Support for expanding the arguments of a function call was introduced in
     Twig 3.15.
+
+.. _assignment-operator:
+
+* ``=``: The assignment operator assigns a value to a variable within an
+  expression:
+
+  .. code-block:: twig
+
+      {# assign #}
+      {% do b = 1 + 3 %}
+
+      {# assign and output the result #}
+      {{ b = 1 + 3 }}
+
+      {# assignments can be chained #}
+      {% do a = b = 'foo' %}
+
+      {# assignment can be used inside other expressions #}
+      {% do a = (b = 4) + 5 %}
+
+  .. versionadded:: 3.23
+
+      The ``=`` assignment operator was added in Twig 3.23.
 
 * ``=>``: The arrow operator allows the creation of functions. A function is
   made of arguments (use parentheses for multiple arguments) and an arrow

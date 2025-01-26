@@ -27,6 +27,16 @@ The assigned value can be any valid :ref:`Twig expression
     {% set user = {'name': 'Fabien'} %}
     {% set name = 'Fabien' ~ ' ' ~ 'Potencier' %}
 
+.. tip::
+
+    To assign a value within an expression, use the :ref:`= operator
+    <assignment-operator>`:
+
+    .. code-block:: twig
+
+        {# use assignment within a larger expression #}
+        {{ (result = fetch_data()) ? result : 'default' }}
+
 Several variables can be assigned in one block:
 
 .. code-block:: twig

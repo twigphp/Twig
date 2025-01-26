@@ -1,0 +1,20 @@
+--TEST--
+Twig supports the "=" operator (assignment)
+--TEMPLATE--
+{# stores #}
+{% do b = 1 + 3 %}{{ b }}
+{# stores and displays #}
+{{ b = 1 + 3 }}{{ b }}
+{# stores and returns #}
+{% do (c = 4) ? 0 : -1 %}{{ c }}
+{# = can be chained #}
+{% do c = d = "a" %}{{ c }}{{ d }}
+{% do a = (b = 4) + 5 %}{{ a }}{{ b }}
+--DATA--
+return []
+--EXPECT--
+4
+44
+4
+aa
+94

@@ -735,6 +735,13 @@ class ExpressionParserTest extends TestCase
 
         // ?? stronger than ()
         // yield '?? vs ()' => ['{{ (1 ?? "a") }}', '{{ ((1 ?? "a")) }}', eval("return 1;")];
+
+        // = stronger than anything else
+        yield '= same as literal' => ['{% do c = "a" %}{{ c }}', '{% do c = ("a") %}{{ c }}', eval("return 'a';")];
+        yield '= stronger than .' => ['{% do c = a.b %}{{ c }}', '{% do c = (a.b) %}{{ c }}', eval("\$a = ['b' => 1]; return \$a['b'];"), $context];
+        yield '= stronger than math' => ['{% do a = 1 + 3 %}{{ a }}', '{% do a = (1 + 3) %}{{ a }}', eval('$a = 1 + 3; return $a;')];
+        yield '= stronger than logical' => ['{% do a = false or true %}{{ a }}', '{% do a = (false or true) %}{{ a }}', eval('$a = false || true; return $a;')];
+        yield '= stronger than ternary' => ['{% do c = 4 ? 0 : -1 %}{{ c }}', '{% do c = (4 ? 0 : -1) %}{{ c }}', eval('return 4 ? 0 : -1;')];
     }
 }
 
