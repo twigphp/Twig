@@ -3,10 +3,12 @@ Twig supports the "same as" operator
 --TEMPLATE--
 {{ 1 is same as(1) ? 'OK' }}
 {{ 1 is same as 1 ? 'OK' }}
+{{ 1 === 1 ? 'OK' }}
+
 {{ 1 is not same as(true) ? 'OK' }}
 {{ 1 is not same as true ? 'OK' }}
-{{ 1 is same as(1) ? 'OK' }}
-{{ 1 is not same as(true) ? 'OK' }}
+{{ 1 !== true ? 'OK' }}
+
 {{ 1 is   same    as   (1) ? 'OK' }}
 {{ 1 is   same    as   1 ? 'OK' }}
 {{ 1 is  not  same    as   '1' ? 'OK' }}
@@ -20,9 +22,11 @@ return []
 OK
 OK
 OK
+
 OK
 OK
 OK
+
 OK
 OK
 OK

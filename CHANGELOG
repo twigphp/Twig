@@ -1,6 +1,6 @@
 # 3.22.2 (2026-XX-XX)
 
- * n/a
+ * Add `===` and `!==` operators (equivalent to the `same as` and `not same as` tests)
 
 # 3.22.2 (2025-12-14)
 

@@ -55,10 +55,12 @@ use Twig\Node\Expression\Binary\ModBinary;
 use Twig\Node\Expression\Binary\MulBinary;
 use Twig\Node\Expression\Binary\NotEqualBinary;
 use Twig\Node\Expression\Binary\NotInBinary;
+use Twig\Node\Expression\Binary\NotSameAsBinary;
 use Twig\Node\Expression\Binary\NullCoalesceBinary;
 use Twig\Node\Expression\Binary\OrBinary;
 use Twig\Node\Expression\Binary\PowerBinary;
 use Twig\Node\Expression\Binary\RangeBinary;
+use Twig\Node\Expression\Binary\SameAsBinary;
 use Twig\Node\Expression\Binary\SpaceshipBinary;
 use Twig\Node\Expression\Binary\StartsWithBinary;
 use Twig\Node\Expression\Binary\SubBinary;
@@ -360,6 +362,8 @@ final class CoreExtension extends AbstractExtension
             new BinaryOperatorExpressionParser(EndsWithBinary::class, 'ends with', 20),
             new BinaryOperatorExpressionParser(HasSomeBinary::class, 'has some', 20),
             new BinaryOperatorExpressionParser(HasEveryBinary::class, 'has every', 20),
+            new BinaryOperatorExpressionParser(SameAsBinary::class, '===', 20),
+            new BinaryOperatorExpressionParser(NotSameAsBinary::class, '!==', 20),
             new BinaryOperatorExpressionParser(RangeBinary::class, '..', 25),
             new BinaryOperatorExpressionParser(AddBinary::class, '+', 30),
             new BinaryOperatorExpressionParser(SubBinary::class, '-', 30),
