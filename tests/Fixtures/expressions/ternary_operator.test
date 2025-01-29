@@ -5,10 +5,11 @@ Twig supports the ternary operator
 {{ 0 ? 'YES' : 'NO' }}
 {{ 0 ? 'YES' : (1 ? 'YES1' : 'NO1') }}
 {{ 0 ? 'YES' : (0 ? 'YES1' : 'NO1') }}
-{{ 1 == 1 ? 'foo<br />':'' }}
+{{ 1 == 1 ? 'foo<br />' : '' }}
 {{ foo ~ (bar ? ('-' ~ bar) : '') }}
+{{ true ? tag : 'KO' }}
 --DATA--
-return ['foo' => 'foo', 'bar' => 'bar']
+return ['foo' => 'foo', 'bar' => 'bar', 'tag' => '<br>']
 --EXPECT--
 YES
 NO
@@ -16,3 +17,4 @@ YES1
 NO1
 foo<br />
 foo-bar
+&lt;br&gt;

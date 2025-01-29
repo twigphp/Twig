@@ -3,8 +3,10 @@ Twig supports the ternary operator
 --TEMPLATE--
 {{ 1 ? 'YES' }}
 {{ 0 ? 'YES' }}
+{{ tag ? tag }}
 --DATA--
-return []
+return ['tag' => '<br>']
 --EXPECT--
 YES
 
+&lt;br&gt;

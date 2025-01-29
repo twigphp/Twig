@@ -7,8 +7,9 @@ Twig supports the ternary operator
 {{ 0 ? : 'NO' }}
 {{ 'YES' ?  : 'NO' }}
 {{ 0 ?     : 'NO' }}
+{{ tag ?: 'KO' }}
 --DATA--
-return []
+return ['tag' => '<br>']
 --EXPECT--
 YES
 NO
@@ -16,3 +17,4 @@ YES
 NO
 YES
 NO
+&lt;br&gt;

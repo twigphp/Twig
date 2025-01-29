@@ -19,7 +19,6 @@ use Twig\Node\Expression\OperatorEscapeInterface;
 use Twig\Node\Expression\Test\DefinedTest;
 use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\Unary\NotUnary;
-use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\TwigTest;
 
 final class NullCoalesceBinary extends AbstractBinary implements OperatorEscapeInterface
@@ -28,47 +27,31 @@ final class NullCoalesceBinary extends AbstractBinary implements OperatorEscapeI
     {
         parent::__construct($left, $right, $lineno);
 
-        if (!$left instanceof ContextVariable) {
-            $test = new DefinedTest(clone $left, new TwigTest('defined'), new EmptyNode(), $left->getTemplateLine());
-            // for "block()", we don't need the null test as the return value is always a string
-            if (!$left instanceof BlockReferenceExpression) {
-                $test = new AndBinary(
-                    $test,
-                    new NotUnary(new NullTest($left, new TwigTest('null'), new EmptyNode(), $left->getTemplateLine()), $left->getTemplateLine()),
-                    $left->getTemplateLine(),
-                );
-            }
-
-            $this->setNode('test', $test);
-        } else {
-            $left->setAttribute('always_defined', true);
+        $test = new DefinedTest(clone $left, new TwigTest('defined'), new EmptyNode(), $left->getTemplateLine());
+        // for "block()", we don't need the null test as the return value is always a string
+        if (!$left instanceof BlockReferenceExpression) {
+            $test = new AndBinary(
+                $test,
+                new NotUnary(new NullTest($left, new TwigTest('null'), new EmptyNode(), $left->getTemplateLine()), $left->getTemplateLine()),
+                $left->getTemplateLine(),
+            );
         }
+
+        $left->setAttribute('always_defined', true);
+        $this->setNode('test', $test);
     }
 
     public function compile(Compiler $compiler): void
     {
-        /*
-         * This optimizes only one case. PHP 7 also supports more complex expressions
-         * that can return null. So, for instance, if log is defined, log("foo") ?? "..." works,
-         * but log($a["foo"]) ?? "..." does not if $a["foo"] is not defined. More advanced
-         * cases might be implemented as an optimizer node visitor, but has not been done
-         * as benefits are probably not worth the added complexity.
-         */
-        if ($this->hasNode('test')) {
-            $compiler
-                ->raw('((')
-                ->subcompile($this->getNode('test'))
-                ->raw(') ? (')
-                ->subcompile($this->getNode('left'))
-                ->raw(') : (')
-                ->subcompile($this->getNode('right'))
-                ->raw('))')
-            ;
-
-            return;
-        }
-
-        parent::compile($compiler);
+        $compiler
+            ->raw('((')
+            ->subcompile($this->getNode('test'))
+            ->raw(') ? (')
+            ->subcompile($this->getNode('left'))
+            ->raw(') : (')
+            ->subcompile($this->getNode('right'))
+            ->raw('))')
+        ;
     }
 
     public function operator(Compiler $compiler): Compiler
@@ -78,6 +61,6 @@ final class NullCoalesceBinary extends AbstractBinary implements OperatorEscapeI
 
     public function getOperandNamesToEscape(): array
     {
-        return $this->hasNode('test') ? ['left', 'right'] : ['right'];
+        return ['left', 'right'];
     }
 }

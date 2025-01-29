@@ -40,7 +40,7 @@ Then use the ``color`` and ``size`` variants to select the needed classes:
 
     {# index.html.twig #}
     {{ include('alert.html.twig', {'color': 'blue', 'size': 'md'}) }}
-    // class="alert bg-red text-md"
+    // class="alert bg-blue text-md"
 
     {{ include('alert.html.twig', {'color': 'green', 'size': 'sm'}) }}
     // class="alert bg-green text-sm"

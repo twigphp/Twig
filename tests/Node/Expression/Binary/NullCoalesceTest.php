@@ -24,6 +24,6 @@ class NullCoalesceTest extends NodeTestCase
         $right = new ConstantExpression(2, 1);
         $node = new NullCoalesceBinary($left, $right, 1);
 
-        return [[$node, "(// line 1\n\$context[\"foo\"] ?? 2)"]];
+        return [[$node, "(((// line 1\narray_key_exists(\"foo\", \$context) &&  !(null === \$context[\"foo\"]))) ? (\$context[\"foo\"]) : (2))"]];
     }
 }
