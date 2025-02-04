@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2025-02-04T09:52:32Z
+
+This will be useful to write integration tests for the guard tag ensuring that the case of handlers throwing a SyntaxError (which was supposed to be supported in 3.18.0) actually works (hint: it does not work in 3.18.0)
