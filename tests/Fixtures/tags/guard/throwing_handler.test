@@ -1,0 +1,22 @@
+--TEST--
+"guard" creates a compilation time condition on Twig callables availability
+--TEMPLATE--
+{% guard filter throwing_undefined_filter %}
+    NEVER
+    {{ 'a'|throwing_undefined_filter }}
+{% else -%}
+    The throwing_undefined_filter filter doesn't exist
+{% endguard %}
+
+{% guard function throwing_undefined_function -%}
+    NEVER
+    {{ throwing_undefined_function() }}
+{% else -%}
+    The throwing_undefined_function function doesn't exist
+{% endguard %}
+--DATA--
+return []
+--EXPECT--
+The throwing_undefined_filter filter doesn't exist
+
+The throwing_undefined_function function doesn't exist

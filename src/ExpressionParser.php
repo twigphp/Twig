@@ -321,7 +321,7 @@ class ExpressionParser
                 break;
 
             case $token->test(Token::STRING_TYPE):
-            case $token->test(Token::INTERPOLATION_START_TYPE)  :
+            case $token->test(Token::INTERPOLATION_START_TYPE):
                 $node = $this->parseStringExpression();
                 break;
 
@@ -644,7 +644,17 @@ class ExpressionParser
 
     private function getFunction(string $name, int $line): TwigFunction
     {
-        if (!$function = $this->env->getFunction($name)) {
+        try {
+            $function = $this->env->getFunction($name);
+        } catch (SyntaxError $e) {
+            if (!$this->parser->shouldIgnoreUnknownTwigCallables()) {
+                throw $e;
+            }
+
+            $function = null;
+        }
+
+        if (!$function) {
             if ($this->parser->shouldIgnoreUnknownTwigCallables()) {
                 return new TwigFunction($name, fn () => '');
             }
@@ -664,7 +674,16 @@ class ExpressionParser
 
     private function getFilter(string $name, int $line): TwigFilter
     {
-        if (!$filter = $this->env->getFilter($name)) {
+        try {
+            $filter = $this->env->getFilter($name);
+        } catch (SyntaxError $e) {
+            if (!$this->parser->shouldIgnoreUnknownTwigCallables()) {
+                throw $e;
+            }
+
+            $filter = null;
+        }
+        if (!$filter) {
             if ($this->parser->shouldIgnoreUnknownTwigCallables()) {
                 return new TwigFilter($name, fn () => '');
             }

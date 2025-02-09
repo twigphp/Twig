@@ -91,16 +91,12 @@ class ArrayExpression extends AbstractExpression
             }
 
             if ($nextIndex !== $key) {
-                if (\is_int($key)) {
-                    $nextIndex = $key + 1;
-                }
                 $compiler
                     ->subcompile($pair['key'])
                     ->raw(' => ')
                 ;
-            } else {
-                ++$nextIndex;
             }
+            ++$nextIndex;
 
             $compiler->subcompile($pair['value']);
         }

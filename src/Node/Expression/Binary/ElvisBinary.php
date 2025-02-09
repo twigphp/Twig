@@ -14,10 +14,15 @@ namespace Twig\Node\Expression\Binary;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
+use Twig\Node\Node;
 
 final class ElvisBinary extends AbstractBinary implements OperatorEscapeInterface
 {
-    public function __construct(AbstractExpression $left, AbstractExpression $right, int $lineno)
+    /**
+     * @param AbstractExpression $left
+     * @param AbstractExpression $right
+     */
+    public function __construct(Node $left, Node $right, int $lineno)
     {
         parent::__construct($left, $right, $lineno);
 

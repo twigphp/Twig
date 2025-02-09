@@ -15,7 +15,7 @@ namespace Twig\Node\Expression\Unary;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 
-abstract class AbstractUnary extends AbstractExpression
+abstract class AbstractUnary extends AbstractExpression implements UnaryInterface
 {
     public function __construct(AbstractExpression $node, int $lineno)
     {

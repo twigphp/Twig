@@ -12,6 +12,7 @@ namespace Twig\Tests;
  */
 
 use Twig\DeprecatedCallableInfo;
+use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\SandboxExtension;
@@ -46,6 +47,32 @@ class IntegrationTest extends IntegrationTestCase
             new SandboxExtension($policy, false),
             new StringLoaderExtension(),
             new TwigTestExtension(),
+        ];
+    }
+
+    protected function getUndefinedFunctionCallbacks(): array
+    {
+        return [
+            static function (string $name) {
+                if ('throwing_undefined_function' === $name) {
+                    throw new SyntaxError('This function is undefined in the tests.');
+                }
+
+                return false;
+            },
+        ];
+    }
+
+    protected function getUndefinedTokenParserCallbacks(): array
+    {
+        return [
+            static function (string $name) {
+                if ('throwing_undefined_filter' === $name) {
+                    throw new SyntaxError('This filter is undefined in the tests.');
+                }
+
+                return false;
+            },
         ];
     }
 

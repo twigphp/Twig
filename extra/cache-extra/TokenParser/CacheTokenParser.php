@@ -31,24 +31,26 @@ class CacheTokenParser extends AbstractTokenParser
         $tags = null;
         while ($stream->test(Token::NAME_TYPE)) {
             $k = $stream->getCurrent()->getValue();
-            $stream->next();
-            $args = $expressionParser->parseNamedArguments();
+            if (!in_array($k, ['ttl', 'tags'])) {
+                throw new SyntaxError(\sprintf('Unknown "%s" configuration.', $k), $stream->getCurrent()->getLine(), $stream->getSourceContext());
+            }
 
-            switch ($k) {
-                case 'ttl':
-                    if (1 !== \count($args)) {
-                        throw new SyntaxError(\sprintf('The "ttl" modifier takes exactly one argument (%d given).', \count($args)), $stream->getCurrent()->getLine(), $stream->getSourceContext());
-                    }
-                    $ttl = $args->getNode(0);
-                    break;
-                case 'tags':
-                    if (1 !== \count($args)) {
-                        throw new SyntaxError(\sprintf('The "tags" modifier takes exactly one argument (%d given).', \count($args)), $stream->getCurrent()->getLine(), $stream->getSourceContext());
-                    }
-                    $tags = $args->getNode(0);
-                    break;
-                default:
-                    throw new SyntaxError(\sprintf('Unknown "%s" configuration.', $k), $stream->getCurrent()->getLine(), $stream->getSourceContext());
+            $stream->next();
+            $stream->expect(Token::PUNCTUATION_TYPE, '(');
+            $line = $stream->getCurrent()->getLine();
+            if ($stream->test(Token::PUNCTUATION_TYPE, ')')) {
+                throw new SyntaxError(\sprintf('The "%s" modifier takes exactly one argument (0 given).', $k), $line, $stream->getSourceContext());
+            }
+            $arg = $expressionParser->parseExpression();
+            if ($stream->test(Token::PUNCTUATION_TYPE, ',')) {
+                throw new SyntaxError(\sprintf('The "%s" modifier takes exactly one argument (2 given).', $k), $line, $stream->getSourceContext());
+            }
+            $stream->expect(Token::PUNCTUATION_TYPE, ')');
+
+            if ('ttl' === $k) {
+                $ttl = $arg;
+            } elseif ('tags' === $k) {
+                $tags = $arg;
             }
         }
 

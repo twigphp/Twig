@@ -55,6 +55,10 @@ jobs:
         strategy:
             matrix:
                 php-version:
+<<<<<<< HEAD
+=======
+                    - '8.1'
+>>>>>>> 3.x
                     - '8.2'
                     - '8.3'
                     - '8.4'

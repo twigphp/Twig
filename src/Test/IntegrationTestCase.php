@@ -20,6 +20,7 @@ use Twig\Error\Error;
 use Twig\Extension\ExtensionInterface;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
+use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -70,6 +71,30 @@ abstract class IntegrationTestCase extends TestCase
      * @return TwigTest[]
      */
     protected function getTwigTests()
+    {
+        return [];
+    }
+
+    /**
+     * @return array<callable(string): (TwigFilter|false)>
+     */
+    protected function getUndefinedFilterCallbacks(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array<callable(string): (TwigFunction|false)>
+     */
+    protected function getUndefinedFunctionCallbacks(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array<callable(string): (TokenParserInterface|false)>
+     */
+    protected function getUndefinedTokenParserCallbacks(): array
     {
         return [];
     }
@@ -201,6 +226,18 @@ abstract class IntegrationTestCase extends TestCase
 
             foreach ($this->getTwigFunctions() as $function) {
                 $twig->addFunction($function);
+            }
+
+            foreach ($this->getUndefinedFilterCallbacks() as $callback) {
+                $twig->registerUndefinedFilterCallback($callback);
+            }
+
+            foreach ($this->getUndefinedFunctionCallbacks() as $callback) {
+                $twig->registerUndefinedFunctionCallback($callback);
+            }
+
+            foreach ($this->getUndefinedTokenParserCallbacks() as $callback) {
+                $twig->registerUndefinedTokenParserCallback($callback);
             }
 
             $deprecations = [];

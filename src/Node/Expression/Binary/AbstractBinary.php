@@ -15,7 +15,7 @@ namespace Twig\Node\Expression\Binary;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 
-abstract class AbstractBinary extends AbstractExpression
+abstract class AbstractBinary extends AbstractExpression implements BinaryInterface
 {
     public function __construct(AbstractExpression $left, AbstractExpression $right, int $lineno)
     {
