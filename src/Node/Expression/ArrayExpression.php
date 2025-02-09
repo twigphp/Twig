@@ -12,6 +12,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
+use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Unary\StringCastUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Expression\Variable\LocalVariable;
@@ -90,7 +91,7 @@ class ArrayExpression extends AbstractExpression
                 $key = $pair['key']->getAttribute('value');
             }
 
-            if ($nextIndex !== $key) {
+            if ($nextIndex !== $key && !$pair['value'] instanceof SpreadUnary) {
                 $compiler
                     ->subcompile($pair['key'])
                     ->raw(' => ')
