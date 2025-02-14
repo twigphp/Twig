@@ -172,11 +172,7 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
             }
             $first = false;
 
-            if ($stream->nextIf(Token::SPREAD_TYPE)) {
-                $node->addElement(new SpreadUnary($parser->parseExpression(), $stream->getCurrent()->getLine()));
-            } else {
-                $node->addElement($parser->parseExpression());
-            }
+            $node->addElement($parser->parseExpression());
         }
         $stream->expect(Token::PUNCTUATION_TYPE, ']', 'An opened sequence is not properly closed');
 
@@ -203,8 +199,9 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
             }
             $first = false;
 
-            if ($stream->nextIf(Token::SPREAD_TYPE)) {
-                $node->addElement(new SpreadUnary($parser->parseExpression(), $stream->getCurrent()->getLine()));
+            if ($stream->test(Token::OPERATOR_TYPE, '...')) {
+                $node->addElement($parser->parseExpression());
+
                 continue;
             }
 

@@ -30,6 +30,9 @@ final class Token
     public const PUNCTUATION_TYPE = 9;
     public const INTERPOLATION_START_TYPE = 10;
     public const INTERPOLATION_END_TYPE = 11;
+    /**
+     * @deprecated since Twig 3.21, "spread" is now an operator
+     */
     public const SPREAD_TYPE = 13;
 
     public function __construct(
@@ -37,6 +40,9 @@ final class Token
         private $value,
         private int $lineno,
     ) {
+        if (self::SPREAD_TYPE === $type) {
+            trigger_deprecation('twig/twig', '3.21', 'The "%s" token type is deprecated, "spread" is now an operator.', self::SPREAD_TYPE);
+        }
     }
 
     public function __toString(): string

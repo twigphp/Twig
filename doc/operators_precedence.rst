@@ -2,7 +2,8 @@
 =========== ================ ======= ============= ===========
 Precedence  Operator         Type    Associativity Description
 =========== ================ ======= ============= ===========
-512         ``(``            infix   Left          Twig function call
+512         ``...``          prefix  n/a           Spread operator
+            ``(``            infix   Left          Twig function call
             ``.``                                  Get an attribute on a variable
             ``[``                                  Array access
 500         ``-``            prefix  n/a

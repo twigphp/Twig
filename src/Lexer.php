@@ -348,13 +348,8 @@ class Lexer
             }
         }
 
-        // spread operator
-        if ('.' === $this->code[$this->cursor] && ($this->cursor + 2 < $this->end) && '.' === $this->code[$this->cursor + 1] && '.' === $this->code[$this->cursor + 2]) {
-            $this->pushToken(Token::SPREAD_TYPE, '...');
-            $this->moveCursor('...');
-        }
         // operators
-        elseif (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
+        if (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
             $operator = preg_replace('/\s+/', ' ', $match[0]);
             if (\in_array($operator, $this->openingBrackets)) {
                 $this->checkBrackets($operator);

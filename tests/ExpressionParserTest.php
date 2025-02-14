@@ -29,6 +29,7 @@ use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\AbstractUnary;
+use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Parser;
 use Twig\Source;
@@ -471,16 +472,6 @@ class ExpressionParserTest extends TestCase
 
         $parser->parse($env->tokenize(new Source('{{ !false ? "OK" : "KO" }}', 'index')));
         $this->expectNotToPerformAssertions();
-    }
-
-    private static function createContextVariable(string $name, array $attributes): ContextVariable
-    {
-        $expression = new ContextVariable($name, 1);
-        foreach ($attributes as $key => $value) {
-            $expression->setAttribute($key, $value);
-        }
-
-        return $expression;
     }
 
     /**

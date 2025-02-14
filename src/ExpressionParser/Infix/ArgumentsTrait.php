@@ -50,13 +50,11 @@ trait ArgumentsTrait
                 }
             }
 
-            if ($stream->nextIf(Token::SPREAD_TYPE)) {
+            $value = $parser->parseExpression();
+            if ($value instanceof SpreadUnary) {
                 $hasSpread = true;
-                $value = new SpreadUnary($parser->parseExpression(), $stream->getCurrent()->getLine());
             } elseif ($hasSpread) {
                 throw new SyntaxError('Normal arguments must be placed before argument unpacking.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
-            } else {
-                $value = $parser->parseExpression();
             }
 
             $name = null;
