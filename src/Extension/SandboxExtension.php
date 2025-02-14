@@ -112,10 +112,6 @@ final class SandboxExtension extends AbstractExtension
     }
 
     /**
-     * @param mixed $obj
-     *
-     * @return mixed
-     *
      * @throws SecurityNotAllowedMethodError
      */
     public function ensureToStringAllowed($obj, int $lineno = -1, ?Source $source = null)

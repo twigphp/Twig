@@ -139,9 +139,6 @@ abstract class Node implements \Countable, \IteratorAggregate
         return \array_key_exists($name, $this->attributes);
     }
 
-    /**
-     * @return mixed
-     */
     public function getAttribute(string $name)
     {
         if (!\array_key_exists($name, $this->attributes)) {

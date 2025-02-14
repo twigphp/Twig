@@ -27,12 +27,12 @@ class TwigExtraExtensionTest extends TestCase
         ]));
         $container->registerExtension(new TwigExtraExtension());
         $container->loadFromExtension('twig_extra', [
-            'commonmark' =>  [
+            'commonmark' => [
                 'extra_key' => true,
                 'renderer' => [
                     'block_separator' => "\n",
                     'inner_separator' => "\n",
-                    'soft_break'      => "\n",
+                    'soft_break' => "\n",
                 ],
                 'commonmark' => [
                     'enable_em' => true,
@@ -43,7 +43,7 @@ class TwigExtraExtensionTest extends TestCase
                 ],
                 'html_input' => 'escape',
                 'allow_unsafe_links' => false,
-                'max_nesting_level' => PHP_INT_MAX,
+                'max_nesting_level' => \PHP_INT_MAX,
                 'slug_normalizer' => [
                     'max_length' => 255,
                 ],

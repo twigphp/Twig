@@ -989,8 +989,6 @@ final class CoreExtension extends AbstractExtension
      *
      * @param array|\Traversable|string|null $item
      *
-     * @return mixed
-     *
      * @internal
      */
     public static function shuffle(string $charset, $item)
@@ -1369,8 +1367,6 @@ final class CoreExtension extends AbstractExtension
      *        {# ... #}
      *    {% endif %}
      *
-     * @param mixed $value
-     *
      * @internal
      */
     public static function testSequence($value): bool
@@ -1393,8 +1389,6 @@ final class CoreExtension extends AbstractExtension
      *    {% if foo is mapping %}
      *        {# ... #}
      *    {% endif %}
-     *
-     * @param mixed $value
      *
      * @internal
      */
