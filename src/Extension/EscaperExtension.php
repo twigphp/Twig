@@ -28,7 +28,7 @@ final class EscaperExtension extends AbstractExtension
      * @see setDefaultStrategy()
      */
     public function __construct(
-        private $defaultStrategy = 'html'
+        private $defaultStrategy = 'html',
     ) {
         $this->setDefaultStrategy($defaultStrategy);
     }

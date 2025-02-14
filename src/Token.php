@@ -73,9 +73,6 @@ final class Token
         return $this->lineno;
     }
 
-    /**
-     * @return mixed
-     */
     public function getValue()
     {
         return $this->value;

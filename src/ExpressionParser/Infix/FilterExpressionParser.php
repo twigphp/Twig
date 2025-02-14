@@ -15,7 +15,6 @@ use Twig\ExpressionParser\AbstractExpressionParser;
 use Twig\ExpressionParser\ExpressionParserDescriptionInterface;
 use Twig\ExpressionParser\InfixAssociativity;
 use Twig\ExpressionParser\InfixExpressionParserInterface;
-use Twig\ExpressionParser\PrecedenceChange;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Parser;

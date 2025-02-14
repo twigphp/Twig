@@ -83,7 +83,6 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
                     default => throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', $token->toEnglish(), $token->getValue()), $token->getLine(), $stream->getSourceContext()),
                 };
 
-                // no break
             case $token->test(Token::OPERATOR_TYPE):
                 if ('[' === $token->getValue()) {
                     return $this->parseSequenceExpression($parser);

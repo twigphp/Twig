@@ -12,7 +12,6 @@
 namespace Twig\Extension;
 
 use Twig\ExpressionParser\ExpressionParserInterface;
-use Twig\ExpressionParser\PrecedenceChange;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;

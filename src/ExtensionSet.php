@@ -13,16 +13,10 @@ namespace Twig;
 
 use Twig\Error\RuntimeError;
 use Twig\ExpressionParser\ExpressionParsers;
-use Twig\ExpressionParser\Infix\BinaryOperatorExpressionParser;
-use Twig\ExpressionParser\InfixAssociativity;
-use Twig\ExpressionParser\InfixExpressionParserInterface;
-use Twig\ExpressionParser\PrecedenceChange;
-use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Extension\LastModifiedExtensionInterface;
 use Twig\Extension\StagingExtension;
-use Twig\Node\Expression\AbstractExpression;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 

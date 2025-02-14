@@ -36,6 +36,6 @@ class ForElseNode extends Node
             ->subcompile($this->getNode('body'))
             ->outdent()
             ->write("}\n")
-    ;
+        ;
     }
 }
