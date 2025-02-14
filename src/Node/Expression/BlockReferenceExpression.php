@@ -66,10 +66,8 @@ class BlockReferenceExpression extends AbstractExpression implements SupportDefi
             $compiler->write('$this');
         } else {
             $compiler
-                ->write('$this->loadTemplate(')
+                ->write('$this->load(')
                 ->subcompile($this->getNode('template'))
-                ->raw(', ')
-                ->repr($this->getTemplateName())
                 ->raw(', ')
                 ->repr($this->getTemplateLine())
                 ->raw(')')

@@ -42,7 +42,7 @@ class IncludeTest extends NodeTestCase
         $node = new IncludeNode($expr, null, false, false, 1);
         $tests[] = [$node, <<<'EOF'
 // line 1
-yield from $this->loadTemplate("foo.twig", null, 1)->unwrap()->yield($context);
+yield from $this->load("foo.twig", 1)->unwrap()->yield($context);
 EOF
         ];
 
@@ -55,7 +55,7 @@ EOF
         $node = new IncludeNode($expr, null, false, false, 1);
         $tests[] = [$node, <<<'EOF'
 // line 1
-yield from $this->loadTemplate(((true) ? ("foo") : ("foo")), null, 1)->unwrap()->yield($context);
+yield from $this->load(((true) ? ("foo") : ("foo")), 1)->unwrap()->yield($context);
 EOF
         ];
 
@@ -64,14 +64,14 @@ EOF
         $node = new IncludeNode($expr, $vars, false, false, 1);
         $tests[] = [$node, <<<'EOF'
 // line 1
-yield from $this->loadTemplate("foo.twig", null, 1)->unwrap()->yield(CoreExtension::merge($context, ["foo" => true]));
+yield from $this->load("foo.twig", 1)->unwrap()->yield(CoreExtension::merge($context, ["foo" => true]));
 EOF
         ];
 
         $node = new IncludeNode($expr, $vars, true, false, 1);
         $tests[] = [$node, <<<'EOF'
 // line 1
-yield from $this->loadTemplate("foo.twig", null, 1)->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
+yield from $this->load("foo.twig", 1)->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
 EOF
         ];
 
@@ -79,7 +79,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 try {
-    \$_v%s = \$this->loadTemplate("foo.twig", null, 1);
+    \$_v%s = \$this->load("foo.twig", 1);
 } catch (LoaderError \$e) {
     // ignore missing template
     \$_v%s = null;

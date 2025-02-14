@@ -89,7 +89,7 @@ abstract class Template
         }
 
         if (!isset($this->parents[$parent])) {
-            $this->parents[$parent] = $this->loadTemplate($parent);
+            $this->parents[$parent] = $this->load($parent, -1);
         }
 
         return $this->parents[$parent];
@@ -270,21 +270,15 @@ abstract class Template
     /**
      * @param string|TemplateWrapper|array<string|TemplateWrapper> $template
      */
-    protected function loadTemplate($template, $templateName = null, $line = null, $index = null): self|TemplateWrapper
+    protected function load(string|TemplateWrapper|array $template, int $line, int|null $index = null): self
     {
         try {
             if (\is_array($template)) {
-                return $this->env->resolveTemplate($template);
+                return $this->env->resolveTemplate($template)->unwrap();
             }
 
             if ($template instanceof TemplateWrapper) {
-                return $template;
-            }
-
-            if ($template instanceof self) {
-                trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', self::class, __METHOD__);
-
-                return $template;
+                return $template->unwrap();
             }
 
             if ($template === $this->getTemplateName()) {
@@ -299,14 +293,14 @@ abstract class Template
             return $this->env->loadTemplate($class, $template, $index);
         } catch (Error $e) {
             if (!$e->getSourceContext()) {
-                $e->setSourceContext($templateName ? new Source('', $templateName) : $this->getSourceContext());
+                $e->setSourceContext($this->getSourceContext());
             }
 
             if ($e->getTemplateLine() > 0) {
                 throw $e;
             }
 
-            if (!$line) {
+            if (-1 === $line) {
                 $e->guess();
             } else {
                 $e->setTemplateLine($line);
@@ -314,6 +308,28 @@ abstract class Template
 
             throw $e;
         }
+    }
+
+    /**
+     * @param string|TemplateWrapper|array<string|TemplateWrapper> $template
+     */
+    protected function loadTemplate($template, $templateName = null, int|null $line = null, int|null $index = null): self|TemplateWrapper
+    {
+        trigger_deprecation('twig/twig', '3.21', 'The "%s" method is deprecated.', __METHOD__);
+
+        if (null === $line) {
+            trigger_deprecation('twig/twig', '3.21', 'Passing a "null" line number to "%s" is deprecated.', __METHOD__);
+
+            $line = -1;
+        }
+
+        if ($template instanceof self) {
+            trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', self::class, __METHOD__);
+
+            return $template;
+        }
+
+        return $this->load($template, $line, $index);
     }
 
     /**
