@@ -35,7 +35,7 @@ class CacheTokenParser extends AbstractTokenParser
             }
 
             $stream->next();
-            $stream->expect(Token::PUNCTUATION_TYPE, '(');
+            $stream->expect(Token::OPERATOR_TYPE, '(');
             $line = $stream->getCurrent()->getLine();
             if ($stream->test(Token::PUNCTUATION_TYPE, ')')) {
                 throw new SyntaxError(\sprintf('The "%s" modifier takes exactly one argument (0 given).', $k), $line, $stream->getSourceContext());
