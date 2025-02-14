@@ -16,11 +16,17 @@ namespace Twig\Util;
  */
 class TemplateDirIterator extends \IteratorIterator
 {
+    /**
+     * @return string
+     */
     public function current(): mixed
     {
         return file_get_contents(parent::current());
     }
 
+    /**
+     * @return string
+     */
     public function key(): mixed
     {
         return (string) parent::key();
