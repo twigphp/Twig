@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2025-01-26T14:30:34Z
+
+New iteration where I have moved most pseudo-operators (logic hardcoded in `ExpressionParser`) to real operators like any other ones (think `|`, `.`,  `[`, `(`, `??`, ...).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-02-03T14:03:40Z
+
+Operators are just a subset of "expression parsers". I've reworked this PR to introduce expression parsers instead of operators. It's more modular and more flexible. That allowed me to extract all logic from ExpressionParser to expression parser classes.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-02-03T14:16:53Z
+
+@stof Most comments adressed.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-02-13T12:23:48Z
+
+I think I've taken all comments into account now.
+Ready for maybe a lst round of reviews?
