@@ -28,7 +28,7 @@ final class EmbedTokenParser extends IncludeTokenParser
     {
         $stream = $this->parser->getStream();
 
-        $parent = $this->parser->getExpressionParser()->parseExpression();
+        $parent = $this->parser->parseExpression();
 
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 

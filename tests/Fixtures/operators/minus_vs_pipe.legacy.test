@@ -1,0 +1,10 @@
+--TEST--
+| will have a higher precedence over + and - in Twig 4.0
+--DEPRECATION--
+Since twig/twig 3.21: As the "|" infix operator will change its precedence in the next major version, add explicit parentheses to avoid behavior change in "index.twig" at line 2.
+--TEMPLATE--
+{{ -1|abs }}
+--DATA--
+return []
+--EXPECT--
+-1

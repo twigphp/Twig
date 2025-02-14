@@ -8,7 +8,7 @@ Twig parses postfix expressions
 {{ 'a' }}
 {{ 'a'|upper }}
 {{ ('a')|upper }}
-{{ -1|upper }}
+{{ (-1)|abs }}
 {{ macros.foo() }}
 {{ (macros).foo() }}
 --DATA--
@@ -17,6 +17,6 @@ return []
 a
 A
 A
--1
+1
 foo
 foo

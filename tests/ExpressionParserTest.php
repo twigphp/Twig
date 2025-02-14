@@ -18,6 +18,7 @@ use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\ArrayExpression;
@@ -452,7 +453,7 @@ class ExpressionParserTest extends TestCase
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class extends AbstractExtension {
-            public function getOperators(): array
+            public function getExpressionParsers(): array
             {
                 $class = new class(new ConstantExpression('foo', 1), 1) extends AbstractUnary {
                     public function operator(Compiler $compiler): Compiler
@@ -461,12 +462,104 @@ class ExpressionParserTest extends TestCase
                     }
                 };
 
-                return [['!' => ['precedence' => 50, 'class' => $class::class]], []];
+                return [
+                    new UnaryOperatorExpressionParser($class::class, '!', 50),
+                ];
             }
         });
         $parser = new Parser($env);
 
         $parser->parse($env->tokenize(new Source('{{ !false ? "OK" : "KO" }}', 'index')));
         $this->expectNotToPerformAssertions();
+    }
+
+    private static function createContextVariable(string $name, array $attributes): ContextVariable
+    {
+        $expression = new ContextVariable($name, 1);
+        foreach ($attributes as $key => $value) {
+            $expression->setAttribute($key, $value);
+        }
+
+        return $expression;
+    }
+
+    /**
+     * @dataProvider getBindingPowerTests
+     */
+    public function testBindingPower(string $expression, string $expectedExpression, mixed $expectedResult, array $context = [])
+    {
+        $env = new Environment(new ArrayLoader([
+            'expression' => $expression,
+            'expected' => $expectedExpression,
+        ]));
+
+        $this->assertSame($env->render('expected', $context), $env->render('expression', $context));
+        $this->assertEquals($expectedResult, $env->render('expression', $context));
+    }
+
+    public static function getBindingPowerTests(): iterable
+    {
+        // * / // % stronger than + -
+        foreach (['*', '/', '//', '%'] as $op1) {
+            foreach (['+', '-'] as $op2) {
+                $e = "12 $op1 6 $op2 3";
+                if ('//' === $op1) {
+                    $php = eval("return (int) floor(12 / 6) $op2 3;");
+                } else {
+                    $php = eval("return $e;");
+                }
+                yield "$op1 vs $op2" => ["{{ $e }}", "{{ (12 $op1 6) $op2 3 }}", $php];
+
+                $e = "12 $op2 6 $op1 3";
+                if ('//' === $op1) {
+                    $php = eval("return 12 $op2 (int) floor(6 / 3);");
+                } else {
+                    $php = eval("return $e;");
+                }
+                yield "$op2 vs $op1" => ["{{ $e }}", "{{ 12 $op2 (6 $op1 3) }}", $php];
+            }
+        }
+
+        // + - * / // % stronger than == != <=> < > >= <= `not in` `in` `matches` `starts with` `ends with` `has some` `has every`
+        foreach (['+', '-', '*', '/', '//', '%'] as $op1) {
+            foreach (['==', '!=', '<=>', '<', '>', '>=', '<='] as $op2) {
+                $e = "12 $op1 6 $op2 3";
+                if ('//' === $op1) {
+                    $php = eval("return (int) floor(12 / 6) $op2 3;");
+                } else {
+                    $php = eval("return $e;");
+                }
+                yield "$op1 vs $op2" => ["{{ $e }}", "{{ (12 $op1 6) $op2 3 }}", $php];
+            }
+        }
+        yield '+ vs not in' => ['{{ 1 + 2 not in [3, 4] }}', '{{ (1 + 2) not in [3, 4] }}', eval('return !in_array(1 + 2, [3, 4]);')];
+        yield '+ vs in' => ['{{ 1 + 2 in [3, 4] }}', '{{ (1 + 2) in [3, 4] }}', eval('return in_array(1 + 2, [3, 4]);')];
+        yield '+ vs matches' => ['{{ 1 + 2 matches "/^3$/" }}', '{{ (1 + 2) matches "/^3$/" }}', eval("return preg_match('/^3$/', 1 + 2);")];
+
+        // ~ stronger than `starts with` `ends with`
+        yield '~ vs starts with' => ['{{ "a" ~ "b" starts with "a" }}', '{{ ("a" ~ "b") starts with "a" }}', eval("return str_starts_with('ab', 'a');")];
+        yield '~ vs ends with' => ['{{ "a" ~ "b" ends with "b" }}', '{{ ("a" ~ "b") ends with "b" }}', eval("return str_ends_with('ab', 'b');")];
+
+        // [] . stronger than anything else
+        $context = ['a' => ['b' => 1, 'c' => ['d' => 2]]];
+        yield '[] vs unary -' => ['{{ -a["b"] + 3 }}', '{{ -(a["b"]) + 3 }}', eval("\$a = ['b' => 1]; return -\$a['b'] + 3;"), $context];
+        yield '[] vs unary - (multiple levels)' => ['{{ -a["c"]["d"] }}', '{{ -((a["c"])["d"]) }}', eval("\$a = ['c' => ['d' => 2]]; return -\$a['c']['d'];"), $context];
+        yield '. vs unary -' => ['{{ -a.b }}', '{{ -(a.b) }}', eval("\$a = ['b' => 1]; return -\$a['b'];"), $context];
+        yield '. vs unary - (multiple levels)' => ['{{ -a.c.d }}', '{{ -((a.c).d) }}', eval("\$a = ['c' => ['d' => 2]]; return -\$a['c']['d'];"), $context];
+        yield '. [] vs unary -' => ['{{ -a.c["d"] }}', '{{ -((a.c)["d"]) }}', eval("\$a = ['c' => ['d' => 2]]; return -\$a['c']['d'];"), $context];
+        yield '[] . vs unary -' => ['{{ -a["c"].d }}', '{{ -((a["c"]).d) }}', eval("\$a = ['c' => ['d' => 2]]; return -\$a['c']['d'];"), $context];
+
+        // () stronger than anything else
+        yield '() vs unary -' => ['{{ -random(1, 1) + 3 }}', '{{ -(random(1, 1)) + 3 }}', eval('return -rand(1, 1) + 3;')];
+
+        // + - stronger than |
+        yield '+ vs |' => ['{{ 10 + 2|length }}', '{{ 10 + (2|length) }}', eval('return 10 + strlen(2);'), $context];
+
+        // - unary stronger than |
+        // To be uncomment in Twig 4.0
+        // yield '- vs |' => ['{{ -1|abs }}', '{{ (-1)|abs }}', eval("return abs(-1);"), $context];
+
+        // ?? stronger than ()
+        // yield '?? vs ()' => ['{{ (1 ?? "a") }}', '{{ ((1 ?? "a")) }}', eval("return 1;")];
     }
 }

@@ -36,7 +36,7 @@ final class IfTokenParser extends AbstractTokenParser
     public function parse(Token $token): Node
     {
         $lineno = $token->getLine();
-        $expr = $this->parser->getExpressionParser()->parseExpression();
+        $expr = $this->parser->parseExpression();
         $stream = $this->parser->getStream();
         $stream->expect(Token::BLOCK_END_TYPE);
         $body = $this->parser->subparse($this->decideIfFork(...));
@@ -52,7 +52,7 @@ final class IfTokenParser extends AbstractTokenParser
                     break;
 
                 case 'elseif':
-                    $expr = $this->parser->getExpressionParser()->parseExpression();
+                    $expr = $this->parser->parseExpression();
                     $stream->expect(Token::BLOCK_END_TYPE);
                     $body = $this->parser->subparse($this->decideIfFork(...));
                     $tests[] = $expr;

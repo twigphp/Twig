@@ -12,12 +12,17 @@
 namespace Twig;
 
 use Twig\Error\RuntimeError;
+use Twig\ExpressionParser\ExpressionParsers;
+use Twig\ExpressionParser\Infix\BinaryOperatorExpressionParser;
+use Twig\ExpressionParser\InfixAssociativity;
+use Twig\ExpressionParser\InfixExpressionParserInterface;
+use Twig\ExpressionParser\PrecedenceChange;
+use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Extension\LastModifiedExtensionInterface;
 use Twig\Extension\StagingExtension;
-use Twig\Node\Expression\Binary\AbstractBinary;
-use Twig\Node\Expression\Unary\AbstractUnary;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 
@@ -50,10 +55,7 @@ final class ExtensionSet
     private array $functions;
     /** @var array<string, TwigFunction> */
     private array $dynamicFunctions;
-    /** @var array<string, array{precedence: int, precedence_change?: OperatorPrecedenceChange, class: class-string<AbstractUnary>}> */
-    private array $unaryOperators;
-    /** @var array<string, array{precedence: int, precedence_change?: OperatorPrecedenceChange, class?: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}> */
-    private array $binaryOperators;
+    private ExpressionParsers $expressionParsers;
     /** @var array<string, mixed>|null */
     private ?array $globals = null;
     /** @var array<callable(string): (TwigFunction|false)> */
@@ -410,28 +412,13 @@ final class ExtensionSet
         return null;
     }
 
-    /**
-     * @return array<string, array{precedence: int, precedence_change?: OperatorPrecedenceChange, class: class-string<AbstractUnary>}>
-     */
-    public function getUnaryOperators(): array
+    public function getExpressionParsers(): ExpressionParsers
     {
         if (!$this->initialized) {
             $this->initExtensions();
         }
 
-        return $this->unaryOperators;
-    }
-
-    /**
-     * @return array<string, array{precedence: int, precedence_change?: OperatorPrecedenceChange, class?: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
-     */
-    public function getBinaryOperators(): array
-    {
-        if (!$this->initialized) {
-            $this->initExtensions();
-        }
-
-        return $this->binaryOperators;
+        return $this->expressionParsers;
     }
 
     private function initExtensions(): void
@@ -444,8 +431,7 @@ final class ExtensionSet
         $this->dynamicFunctions = [];
         $this->dynamicTests = [];
         $this->visitors = [];
-        $this->unaryOperators = [];
-        $this->binaryOperators = [];
+        $this->expressionParsers = new ExpressionParsers();
 
         foreach ($this->extensions as $extension) {
             $this->initExtension($extension);
@@ -495,14 +481,64 @@ final class ExtensionSet
             $this->visitors[] = $visitor;
         }
 
+        // expression parsers
+        if (method_exists($extension, 'getExpressionParsers')) {
+            $this->expressionParsers->add($extension->getExpressionParsers());
+        }
+
         // operators
         if ($operators = $extension->getOperators()) {
             if (2 !== \count($operators)) {
                 throw new \InvalidArgumentException(\sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', $extension::class, \count($operators)));
             }
-
-            $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
-            $this->binaryOperators = array_merge($this->binaryOperators, $operators[1]);
         }
+
+        $expressionParsers = [];
+        foreach ($operators[0] as $operator => $op) {
+            $expressionParsers[] = new UnaryOperatorExpressionParser($op['class'], $operator, $op['precedence'], $op['precedence_change'] ?? null, '', $op['aliases'] ?? []);
+        }
+        foreach ($operators[1] as $operator => $op) {
+            $op['associativity'] = match ($op['associativity']) {
+                1 => InfixAssociativity::Left,
+                2 => InfixAssociativity::Right,
+                default => throw new \InvalidArgumentException(\sprintf('Invalid associativity "%s" for operator "%s".', $op['associativity'], $operator)),
+            };
+
+            if ($op['callable']) {
+                $expressionParsers[] = $this->convertInfixExpressionParser($op['class'], $operator, $op['precedence'], $op['associativity'], $op['precedence_change'] ?? null, $op['aliases'] ?? [], $op['callable']);
+            } else {
+                $expressionParsers[] = new BinaryOperatorExpressionParser($op['class'], $operator, $op['precedence'], $op['associativity'], $op['precedence_change'] ?? null, $op['aliases'] ?? []);
+            }
+        }
+
+        if (\count($expressionParsers)) {
+            trigger_deprecation('twig/twig', '3.21', \sprintf('Extension "%s" uses the old signature for "getOperators()", please implement "getExpressionParsers()" instead.', $extension::class));
+
+            $this->expressionParsers->add($expressionParsers);
+        }
+    }
+
+    private function convertInfixExpressionParser(string $nodeClass, string $operator, int $precedence, InfixAssociativity $associativity, ?PrecedenceChange $precedenceChange, array $aliases, callable $callable): InfixExpressionParserInterface
+    {
+        trigger_deprecation('twig/twig', '3.21', \sprintf('Using a non-ExpressionParserInterface object to define the "%s" binary operator is deprecated.', $operator));
+
+        return new class($nodeClass, $operator, $precedence, $associativity, $precedenceChange, $aliases, $callable) extends BinaryOperatorExpressionParser {
+            public function __construct(
+                string $nodeClass,
+                string $operator,
+                int $precedence,
+                InfixAssociativity $associativity = InfixAssociativity::Left,
+                ?PrecedenceChange $precedenceChange = null,
+                array $aliases = [],
+                private $callable = null,
+            ) {
+                parent::__construct($nodeClass, $operator, $precedence, $associativity, $precedenceChange, $aliases);
+            }
+
+            public function parse(Parser $parser, AbstractExpression $expr, Token $token): AbstractExpression
+            {
+                return ($this->callable)($parser, $expr);
+            }
+        };
     }
 }

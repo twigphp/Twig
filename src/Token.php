@@ -30,6 +30,9 @@ final class Token
     public const PUNCTUATION_TYPE = 9;
     public const INTERPOLATION_START_TYPE = 10;
     public const INTERPOLATION_END_TYPE = 11;
+    /**
+     * @deprecated since Twig 3.21, "arrow" is now an operator
+     */
     public const ARROW_TYPE = 12;
     public const SPREAD_TYPE = 13;
 
@@ -38,6 +41,9 @@ final class Token
         private $value,
         private int $lineno,
     ) {
+        if (self::ARROW_TYPE === $type) {
+            trigger_deprecation('twig/twig', '3.21', 'The "%s" token type is deprecated, "arrow" is now an operator.', self::ARROW_TYPE);
+        }
     }
 
     public function __toString(): string
@@ -63,7 +69,39 @@ final class Token
             $type = self::NAME_TYPE;
         }
 
-        return ($this->type === $type) && (
+        if (self::ARROW_TYPE === $type) {
+            trigger_deprecation('twig/twig', '3.21', 'The "%s" token type is deprecated, "arrow" is now an operator.', self::typeToEnglish(self::ARROW_TYPE));
+
+            return self::OPERATOR_TYPE === $this->type && '=>' === $this->value;
+        }
+
+        $typeMatches = $this->type === $type;
+        if ($typeMatches && self::PUNCTUATION_TYPE === $type && \in_array($this->value, ['(', '[', '|', '.', '?', '?:']) && $values) {
+            foreach ((array) $values as $value) {
+                if (\in_array($value, ['(', '[', '|', '.', '?', '?:'])) {
+                    trigger_deprecation('twig/twig', '3.21', 'The "%s" token is now an "%s" token instead of a "%s" one.', $this->value, self::typeToEnglish(self::OPERATOR_TYPE), $this->toEnglish());
+
+                    break;
+                }
+            }
+        }
+        if (!$typeMatches) {
+            if (self::OPERATOR_TYPE === $type && self::PUNCTUATION_TYPE === $this->type) {
+                if ($values) {
+                    foreach ((array) $values as $value) {
+                        if (\in_array($value, ['(', '[', '|', '.', '?', '?:'])) {
+                            $typeMatches = true;
+
+                            break;
+                        }
+                    }
+                } else {
+                    $typeMatches = true;
+                }
+            }
+        }
+
+        return $typeMatches && (
             null === $values
             || (\is_array($values) && \in_array($this->value, $values))
             || $this->value == $values

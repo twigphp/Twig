@@ -20,6 +20,9 @@ use Twig\Loader\ArrayLoader;
 class CustomExtensionTest extends TestCase
 {
     #[DataProvider('provideInvalidExtensions')]
+    /**
+     * @group legacy
+     */
     public function testGetInvalidOperators(ExtensionInterface $extension, $expectedExceptionMessage)
     {
         $env = new Environment(new ArrayLoader());
@@ -28,7 +31,7 @@ class CustomExtensionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $env->getUnaryOperators();
+        $env->getExpressionParsers();
     }
 
     public static function provideInvalidExtensions()

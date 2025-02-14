@@ -63,7 +63,7 @@ final class TypesTokenParser extends AbstractTokenParser
             if ($stream->nextIf(Token::OPERATOR_TYPE, '?:')) {
                 $isOptional = true;
             } else {
-                $isOptional = null !== $stream->nextIf(Token::PUNCTUATION_TYPE, '?');
+                $isOptional = null !== $stream->nextIf(Token::OPERATOR_TYPE, '?');
                 $stream->expect(Token::PUNCTUATION_TYPE, ':', 'A type name must be followed by a colon (:)');
             }
 

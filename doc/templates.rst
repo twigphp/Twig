@@ -186,28 +186,6 @@ filters.
 
         {{ ('HELLO' ~ 'FABIEN')|lower }}
 
-    A common mistake is to forget using parentheses for filters on negative
-    numbers as a negative number in Twig is represented by the ``-`` operator
-    followed by a positive number. As the ``-`` operator has a lower precedence
-    than the filter operator, it can lead to confusion:
-
-    .. code-block:: twig
-
-        {{ -1|abs }} {# returns -1 #}
-        {{ -1**0 }} {# returns -1 #}
-
-        {# as it is equivalent to #}
-
-        {{ -(1|abs) }}
-        {{ -(1**0) }}
-
-    For such cases, use parentheses to force the precedence:
-
-    .. code-block:: twig
-
-        {{ (-1)|abs }} {# returns 1 as expected #}
-        {{ (-1)**0 }} {# returns 1 as expected #}
-
 Functions
 ---------
 
@@ -689,14 +667,16 @@ Twig allows you to do math in templates; the following operators are supported:
   ``4``.
 
 * ``//``: Divides two numbers and returns the floored integer result. ``{{ 20
-  // 7 }}`` is ``2``, ``{{ -20  // 7 }}`` is ``-3`` (this is just syntactic
+  // 7 }}`` is ``2``, ``{{ -20 // 7 }}`` is ``-3`` (this is just syntactic
   sugar for the :doc:`round<filters/round>` filter).
 
 * ``*``: Multiplies the left operand with the right one. ``{{ 2 * 2 }}`` would
   return ``4``.
 
 * ``**``: Raises the left operand to the power of the right operand. ``{{ 2 **
-  3 }}`` would return ``8``.
+  3 }}`` would return ``8``. Be careful as the ``**`` operator is right
+  associative, which means that ``{{ -1**0 }}`` is equivalent to ``{{ -(1**0)
+  }}`` and not ``{{ (-1)**0 }}``.
 
 .. _template_logic:
 
@@ -1005,35 +985,9 @@ Understanding the precedence of these operators is crucial for writing correct
 and efficient Twig templates.
 
 The operator precedence rules are as follows, with the lowest-precedence
-operators listed first:
+operators listed first.
 
-=============================  =================================== =====================================================
-Operator                       Score of precedence                 Description
-=============================  =================================== =====================================================
-``?:``                         0                                   Ternary operator, conditional statement
-``??``                         5                                   Default value when a variable is null
-``or``                         10                                  Logical OR operation between two boolean expressions
-``xor``                        12                                  Logical XOR operation between two boolean expressions
-``and``                        15                                  Logical AND operation between two boolean expressions
-``b-or``                       16                                  Bitwise OR operation on integers
-``b-xor``                      17                                  Bitwise XOR operation on integers
-``b-and``                      18                                  Bitwise AND operation on integers
-``==``, ``!=``, ``<=>``,       20                                  Comparison operators
-``<``, ``>``, ``>=``,
-``<=``, ``not in``, ``in``,
-``matches``, ``starts with``,
-``ends with``, ``has some``,
-``has every``
-``..``                         25                                  Range of values
-``~``                          27                                  String concatenation
-``+``, ``-``                   30                                  Addition and subtraction on numbers
-``*``, ``/``, ``//``, ``%``    60                                  Arithmetic operations on numbers
-``not``                        70                                  Negates a statement
-``is``, ``is not``             100                                 Tests
-``**``                         200                                 Raises a number to the power of another
-``+``, ``-``                   500                                 Unary operations on numbers
-``|``,``[]``,``.``             -                                   Filters, sequence, mapping, and attribute access
-=============================  =================================== =====================================================
+.. include:: operators_precedence.rst
 
 Without using any parentheses, the operator precedence rules are used to
 determine how to convert the code to PHP:

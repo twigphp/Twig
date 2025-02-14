@@ -749,26 +749,9 @@ responsible for parsing the tag and compiling it to PHP.
 Operators
 ~~~~~~~~~
 
-The ``getOperators()`` methods lets you add new operators. Here is how to add
-the ``!``, ``||``, and ``&&`` operators::
-
-    class CustomTwigExtension extends \Twig\Extension\AbstractExtension
-    {
-        public function getOperators(): array
-        {
-            return [
-                [
-                    '!' => ['precedence' => 50, 'class' => \Twig\Node\Expression\Unary\NotUnary::class],
-                ],
-                [
-                    '||' => ['precedence' => 10, 'class' => \Twig\Node\Expression\Binary\OrBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                    '&&' => ['precedence' => 15, 'class' => \Twig\Node\Expression\Binary\AndBinary::class, 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT],
-                ],
-            ];
-        }
-
-        // ...
-    }
+The ``getOperators()`` methods lets you add new operators. To implement a new
+one, have a look at the default operators provided by
+``Twig\Extension\CoreExtension``.
 
 Tests
 ~~~~~

@@ -5,4 +5,4 @@
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\SyntaxError: You cannot assign a value to "true" in "index.twig" at line 2.
+Twig\Error\SyntaxError: The arrow function argument must be a list of variables or a single variable in "index.twig" at line 2.
