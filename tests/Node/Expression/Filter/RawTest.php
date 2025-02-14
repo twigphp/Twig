@@ -32,7 +32,7 @@ class RawTest extends NodeTestCase
         $node = new RawFilter(new ConstantExpression('foo', 12));
 
         return [
-            [$node, '"foo"'],
+            [$node, '(is_scalar($tmp = "foo") ? new Markup($tmp, $this->env->getCharset()) : $tmp)'],
         ];
     }
 }

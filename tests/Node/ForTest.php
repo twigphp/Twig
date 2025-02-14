@@ -177,7 +177,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
     foreach (\$iterator as \$context["_key"] => \$context["item"]) {
-        yield from CoreExtension::getAttribute(\$this->env, \$this->source, \$context["loop"], "__invoke", arguments: [CoreExtension::getAttribute(\$this->env, \$this->source, \$context["item"], "children", arguments: [], lineno: 1)], type: "method", lineno: 1);
+        yield from (is_scalar(\$tmp = CoreExtension::getAttribute(\$this->env, \$this->source, \$context["loop"], "__invoke", arguments: [CoreExtension::getAttribute(\$this->env, \$this->source, \$context["item"], "children", arguments: [], lineno: 1)], type: "method", lineno: 1)) ? new Markup(\$tmp, \$this->env->getCharset()) : \$tmp);
     }
     unset(\$context['_key'], \$context['item'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
