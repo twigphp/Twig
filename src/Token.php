@@ -30,19 +30,12 @@ final class Token
     public const PUNCTUATION_TYPE = 9;
     public const INTERPOLATION_START_TYPE = 10;
     public const INTERPOLATION_END_TYPE = 11;
-    /**
-     * @deprecated since Twig 3.21, "spread" is now an operator
-     */
-    public const SPREAD_TYPE = 13;
 
     public function __construct(
         private int $type,
         private $value,
         private int $lineno,
     ) {
-        if (self::SPREAD_TYPE === $type) {
-            trigger_deprecation('twig/twig', '3.21', 'The "%s" token type is deprecated, "spread" is now an operator.', self::SPREAD_TYPE);
-        }
     }
 
     public function __toString(): string
@@ -109,7 +102,6 @@ final class Token
             self::PUNCTUATION_TYPE => 'PUNCTUATION_TYPE',
             self::INTERPOLATION_START_TYPE => 'INTERPOLATION_START_TYPE',
             self::INTERPOLATION_END_TYPE => 'INTERPOLATION_END_TYPE',
-            self::SPREAD_TYPE => 'SPREAD_TYPE',
             default => throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type)),
         };
 
@@ -132,7 +124,6 @@ final class Token
             self::PUNCTUATION_TYPE => 'punctuation',
             self::INTERPOLATION_START_TYPE => 'begin of string interpolation',
             self::INTERPOLATION_END_TYPE => 'end of string interpolation',
-            self::SPREAD_TYPE => 'spread operator',
             default => throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type)),
         };
     }
