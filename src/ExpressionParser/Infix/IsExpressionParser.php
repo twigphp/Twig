@@ -11,7 +11,6 @@
 
 namespace Twig\ExpressionParser\Infix;
 
-use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\ExpressionParser\AbstractExpressionParser;
 use Twig\ExpressionParser\ExpressionParserDescriptionInterface;
 use Twig\ExpressionParser\InfixAssociativity;
@@ -19,11 +18,10 @@ use Twig\ExpressionParser\InfixExpressionParserInterface;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Nodes;
 use Twig\Parser;
 use Twig\Token;
-use Twig\TwigTest;
 
 /**
  * @internal
@@ -31,8 +29,6 @@ use Twig\TwigTest;
 class IsExpressionParser extends AbstractExpressionParser implements InfixExpressionParserInterface, ExpressionParserDescriptionInterface
 {
     use ArgumentsTrait;
-
-    private $readyNodes = [];
 
     public function parse(Parser $parser, AbstractExpression $expr, Token $token): AbstractExpression
     {
@@ -46,20 +42,11 @@ class IsExpressionParser extends AbstractExpressionParser implements InfixExpres
             $arguments = new Nodes([0 => $parser->parseExpression($this->getPrecedence())]);
         }
 
-        if ('defined' === $test->getName() && $expr instanceof NameExpression && null !== $alias = $parser->getImportedSymbol('function', $expr->getAttribute('name'))) {
+        if ('defined' === $test->getName() && $expr instanceof ContextVariable && null !== $alias = $parser->getImportedSymbol('function', $expr->getAttribute('name'))) {
             $expr = new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], new ArrayExpression([], $expr->getTemplateLine()), $expr->getTemplateLine());
         }
 
-        $ready = $test instanceof TwigTest;
-        if (!isset($this->readyNodes[$class = $test->getNodeClass()])) {
-            $this->readyNodes[$class] = (bool) (new \ReflectionClass($class))->getConstructor()->getAttributes(FirstClassTwigCallableReady::class);
-        }
-
-        if (!$ready = $this->readyNodes[$class]) {
-            trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigTest" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
-        }
-
-        return new $class($expr, $ready ? $test : $test->getName(), $arguments, $stream->getCurrent()->getLine());
+        return new ($test->getNodeClass())($expr, $test, $arguments, $stream->getCurrent()->getLine());
     }
 
     public function getPrecedence(): int

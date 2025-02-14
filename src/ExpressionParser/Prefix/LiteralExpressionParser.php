@@ -20,6 +20,7 @@ use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Parser;
 use Twig\Token;
@@ -78,13 +79,10 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
                 return $this->parseStringExpression($parser);
 
             case $token->test(Token::PUNCTUATION_TYPE):
-                // In 4.0, we should always return the node or throw an error for default
-                if ($node = match ($token->getValue()) {
+                return match ($token->getValue()) {
                     '{' => $this->parseMappingExpression($parser),
-                    default => null,
-                }) {
-                    return $node;
-                }
+                    default => throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', $token->toEnglish(), $token->getValue()), $token->getLine(), $stream->getSourceContext()),
+                };
 
                 // no break
             case $token->test(Token::OPERATOR_TYPE):
@@ -175,9 +173,7 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
             $first = false;
 
             if ($stream->nextIf(Token::SPREAD_TYPE)) {
-                $expr = $parser->parseExpression();
-                $expr->setAttribute('spread', true);
-                $node->addElement($expr);
+                $node->addElement(new SpreadUnary($parser->parseExpression(), $stream->getCurrent()->getLine()));
             } else {
                 $node->addElement($parser->parseExpression());
             }
@@ -208,9 +204,7 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
             $first = false;
 
             if ($stream->nextIf(Token::SPREAD_TYPE)) {
-                $value = $parser->parseExpression();
-                $value->setAttribute('spread', true);
-                $node->addElement($value);
+                $node->addElement(new SpreadUnary($parser->parseExpression(), $stream->getCurrent()->getLine()));
                 continue;
             }
 

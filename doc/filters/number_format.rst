@@ -15,15 +15,6 @@ separator using the additional arguments:
 
     {{ 9800.333|number_format(2, '.', ',') }}
 
-To format negative numbers, wrap the previous statement with parentheses (note
-that as of Twig 3.21, not using parentheses is deprecated as the filter
-operator will change precedence in Twig 4.0):
-
-.. code-block:: twig
-
-    {{ -9800.333|number_format(2, '.', ',') }} {# outputs : -9 #}
-    {{ (-9800.333)|number_format(2, '.', ',') }} {# outputs : -9,800.33 #}
-
 To format math calculation, wrap the previous statement with parentheses
 (needed because of Twig's :ref:`precedence of operators -<twig-expressions>`):
 

@@ -41,7 +41,7 @@ final class ForTokenParser extends AbstractTokenParser
 
         $ifexpr = null;
         if ($stream->nextIf(Token::NAME_TYPE, 'if')) {
-            $ifexpr = $this->parser->getExpressionParser()->parseExpression();
+            $ifexpr = $this->parser->parseExpression();
         }
 
         $stream->expect(Token::BLOCK_END_TYPE);

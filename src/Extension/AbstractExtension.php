@@ -38,11 +38,6 @@ abstract class AbstractExtension implements LastModifiedExtensionInterface
         return [];
     }
 
-    public function getOperators(): array
-    {
-        return [[], []];
-    }
-
     public function getExpressionParsers(): array
     {
         return [];

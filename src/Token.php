@@ -30,10 +30,6 @@ final class Token
     public const PUNCTUATION_TYPE = 9;
     public const INTERPOLATION_START_TYPE = 10;
     public const INTERPOLATION_END_TYPE = 11;
-    /**
-     * @deprecated since Twig 3.21, "arrow" is now an operator
-     */
-    public const ARROW_TYPE = 12;
     public const SPREAD_TYPE = 13;
 
     public function __construct(
@@ -41,9 +37,6 @@ final class Token
         private $value,
         private int $lineno,
     ) {
-        if (self::ARROW_TYPE === $type) {
-            trigger_deprecation('twig/twig', '3.21', 'The "%s" token type is deprecated, "arrow" is now an operator.', self::ARROW_TYPE);
-        }
     }
 
     public function __toString(): string
@@ -69,39 +62,7 @@ final class Token
             $type = self::NAME_TYPE;
         }
 
-        if (self::ARROW_TYPE === $type) {
-            trigger_deprecation('twig/twig', '3.21', 'The "%s" token type is deprecated, "arrow" is now an operator.', self::typeToEnglish(self::ARROW_TYPE));
-
-            return self::OPERATOR_TYPE === $this->type && '=>' === $this->value;
-        }
-
-        $typeMatches = $this->type === $type;
-        if ($typeMatches && self::PUNCTUATION_TYPE === $type && \in_array($this->value, ['(', '[', '|', '.', '?', '?:']) && $values) {
-            foreach ((array) $values as $value) {
-                if (\in_array($value, ['(', '[', '|', '.', '?', '?:'])) {
-                    trigger_deprecation('twig/twig', '3.21', 'The "%s" token is now an "%s" token instead of a "%s" one.', $this->value, self::typeToEnglish(self::OPERATOR_TYPE), $this->toEnglish());
-
-                    break;
-                }
-            }
-        }
-        if (!$typeMatches) {
-            if (self::OPERATOR_TYPE === $type && self::PUNCTUATION_TYPE === $this->type) {
-                if ($values) {
-                    foreach ((array) $values as $value) {
-                        if (\in_array($value, ['(', '[', '|', '.', '?', '?:'])) {
-                            $typeMatches = true;
-
-                            break;
-                        }
-                    }
-                } else {
-                    $typeMatches = true;
-                }
-            }
-        }
-
-        return $typeMatches && (
+        return $this->type === $type && (
             null === $values
             || (\is_array($values) && \in_array($this->value, $values))
             || $this->value == $values
@@ -111,16 +72,6 @@ final class Token
     public function getLine(): int
     {
         return $this->lineno;
-    }
-
-    /**
-     * @deprecated since Twig 3.19
-     */
-    public function getType(): int
-    {
-        trigger_deprecation('twig/twig', '3.19', \sprintf('The "%s()" method is deprecated.', __METHOD__));
-
-        return $this->type;
     }
 
     /**
@@ -152,7 +103,6 @@ final class Token
             self::PUNCTUATION_TYPE => 'PUNCTUATION_TYPE',
             self::INTERPOLATION_START_TYPE => 'INTERPOLATION_START_TYPE',
             self::INTERPOLATION_END_TYPE => 'INTERPOLATION_END_TYPE',
-            self::ARROW_TYPE => 'ARROW_TYPE',
             self::SPREAD_TYPE => 'SPREAD_TYPE',
             default => throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type)),
         };
@@ -176,7 +126,6 @@ final class Token
             self::PUNCTUATION_TYPE => 'punctuation',
             self::INTERPOLATION_START_TYPE => 'begin of string interpolation',
             self::INTERPOLATION_END_TYPE => 'end of string interpolation',
-            self::ARROW_TYPE => 'arrow function',
             self::SPREAD_TYPE => 'spread operator',
             default => throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type)),
         };

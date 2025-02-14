@@ -11,7 +11,6 @@
 
 namespace Twig\Extension;
 
-use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -26,7 +25,6 @@ use Twig\ExpressionParser\Infix\IsExpressionParser;
 use Twig\ExpressionParser\Infix\IsNotExpressionParser;
 use Twig\ExpressionParser\Infix\SquareBracketExpressionParser;
 use Twig\ExpressionParser\InfixAssociativity;
-use Twig\ExpressionParser\PrecedenceChange;
 use Twig\ExpressionParser\Prefix\GroupingExpressionParser;
 use Twig\ExpressionParser\Prefix\LiteralExpressionParser;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
@@ -333,13 +331,13 @@ final class CoreExtension extends AbstractExtension
     {
         return [
             // unary operators
-            new UnaryOperatorExpressionParser(NotUnary::class, 'not', 50, new PrecedenceChange('twig/twig', '3.15', 70)),
+            new UnaryOperatorExpressionParser(NotUnary::class, 'not', 70),
             new UnaryOperatorExpressionParser(NegUnary::class, '-', 500),
             new UnaryOperatorExpressionParser(PosUnary::class, '+', 500),
 
             // binary operators
             new BinaryOperatorExpressionParser(ElvisBinary::class, '?:', 5, InfixAssociativity::Right, description: 'Elvis operator (a ?: b)', aliases: ['? :']),
-            new BinaryOperatorExpressionParser(NullCoalesceBinary::class, '??', 300, InfixAssociativity::Right, new PrecedenceChange('twig/twig', '3.15', 5), description: 'Null coalescing operator (a ?? b)'),
+            new BinaryOperatorExpressionParser(NullCoalesceBinary::class, '??', 5, InfixAssociativity::Right, description: 'Null coalescing operator (a ?? b)'),
             new BinaryOperatorExpressionParser(OrBinary::class, 'or', 10),
             new BinaryOperatorExpressionParser(XorBinary::class, 'xor', 12),
             new BinaryOperatorExpressionParser(AndBinary::class, 'and', 15),
@@ -363,7 +361,7 @@ final class CoreExtension extends AbstractExtension
             new BinaryOperatorExpressionParser(RangeBinary::class, '..', 25),
             new BinaryOperatorExpressionParser(AddBinary::class, '+', 30),
             new BinaryOperatorExpressionParser(SubBinary::class, '-', 30),
-            new BinaryOperatorExpressionParser(ConcatBinary::class, '~', 40, precedenceChange: new PrecedenceChange('twig/twig', '3.15', 27)),
+            new BinaryOperatorExpressionParser(ConcatBinary::class, '~', 27),
             new BinaryOperatorExpressionParser(MulBinary::class, '*', 60),
             new BinaryOperatorExpressionParser(DivBinary::class, '/', 60),
             new BinaryOperatorExpressionParser(FloorDivBinary::class, '//', 60, description: 'Floor division'),

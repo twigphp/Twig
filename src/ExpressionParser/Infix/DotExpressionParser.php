@@ -22,7 +22,7 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Expression\Variable\TemplateVariable;
 use Twig\Parser;
 use Twig\Template;
@@ -65,7 +65,7 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
         }
 
         if (
-            $expr instanceof NameExpression
+            $expr instanceof ContextVariable
             && (
                 null !== $parser->getImportedSymbol('template', $expr->getAttribute('name'))
                 || '_self' === $expr->getAttribute('name') && $attribute instanceof ConstantExpression

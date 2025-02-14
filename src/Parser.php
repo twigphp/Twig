@@ -49,7 +49,6 @@ class Parser
      * @var NodeVisitorInterface[]|null
      */
     private ?array $visitors = null;
-    private ?ExpressionParser $expressionParser = null;
     /**
      * @var Node[]
      */
@@ -89,7 +88,7 @@ class Parser
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
         $vars = get_object_vars($this);
-        unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames'], $vars['varNameSalt']);
+        unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['reservedMacroNames'], $vars['varNameSalt']);
         $this->stack[] = $vars;
 
         // node visitors
@@ -311,20 +310,6 @@ class Parser
         array_shift($this->importedSymbols);
     }
 
-    /**
-     * @deprecated since Twig 3.21
-     */
-    public function getExpressionParser(): ExpressionParser
-    {
-        trigger_deprecation('twig/twig', '3.21', 'Method "%s()" is deprecated, use "parseExpression()" instead.', __METHOD__);
-
-        if (null === $this->expressionParser) {
-            $this->expressionParser = new ExpressionParser($this, $this->env);
-        }
-
-        return $this->expressionParser;
-    }
-
     public function parseExpression(int $precedence = 0): AbstractExpression
     {
         $token = $this->getCurrentToken();
@@ -345,13 +330,6 @@ class Parser
         }
 
         return $expr;
-    }
-
-    public function getParent(): ?Node
-    {
-        trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
-
-        return $this->parent;
     }
 
     /**

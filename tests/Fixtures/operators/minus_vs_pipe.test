@@ -1,0 +1,8 @@
+--TEST--
+| will have a higher precedence over + and - in Twig 4.0
+--TEMPLATE--
+{{ -1|abs }}
+--DATA--
+return []
+--EXPECT--
+1

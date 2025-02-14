@@ -23,8 +23,6 @@ use Twig\TwigTest;
  * Interface implemented by extension classes.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @method array<ExpressionParserInterface> getExpressionParsers()
  */
 interface ExtensionInterface
 {
@@ -66,12 +64,7 @@ interface ExtensionInterface
     /**
      * Returns a list of operators to add to the existing list.
      *
-     * @return array<array>
-     *
-     * @psalm-return array{
-     *     array<string, array{precedence: int, precedence_change?: PrecedenceChange, class: class-string<AbstractUnary>}>,
-     *     array<string, array{precedence: int, precedence_change?: PrecedenceChange, class?: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
-     * }
+     * @return array<ExpressionParserInterface>
      */
-    public function getOperators(): array;
+    public function getExpressionParsers(): array;
 }
