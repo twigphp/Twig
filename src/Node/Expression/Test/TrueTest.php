@@ -15,20 +15,20 @@ use Twig\Compiler;
 use Twig\Node\Expression\TestExpression;
 
 /**
- * Checks that an expression is null.
+ * Checks that an expression is true.
  *
- *  {{ var is none }}
+ *  {{ var is true }}
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class NullTest extends TestExpression
+class TrueTest extends TestExpression
 {
     public function compile(Compiler $compiler): void
     {
         $compiler
-            ->raw('(null === ')
+            ->raw('(($tmp = ')
             ->subcompile($this->getNode('node'))
-            ->raw(')')
+            ->raw(') && $tmp instanceof Markup ? (string) $tmp : $tmp)')
         ;
     }
 }

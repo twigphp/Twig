@@ -76,6 +76,7 @@ use Twig\Node\Expression\Test\EvenTest;
 use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\Test\OddTest;
 use Twig\Node\Expression\Test\SameasTest;
+use Twig\Node\Expression\Test\TrueTest;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
@@ -318,6 +319,7 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('iterable', 'is_iterable'),
             new TwigTest('sequence', [self::class, 'testSequence']),
             new TwigTest('mapping', [self::class, 'testMapping']),
+            new TwigTest('true', null, ['node_class' => TrueTest::class]),
         ];
     }
 

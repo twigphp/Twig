@@ -1,0 +1,18 @@
+--TEST--
+Twig outputs 0 nodes correctly
+--TEMPLATE--
+{{ empty|trim ? 'KO' : 'ok' }}
+{{ spaces|trim ? 'KO' : 'ok' }}
+{% if empty %}KO{% else %}ok{% endif %}
+
+{% if spaces|trim %}KO{% else %}ok{% endif %}
+
+{% set bar %}    {% endset %}{{ bar|trim ? 'KO' : 'ok' }}
+--DATA--
+return ['spaces' => new Twig\Markup('    ', 'UTF-8'), 'empty' => new Twig\Markup('', 'UTF-8')]
+--EXPECT--
+ok
+ok
+ok
+ok
+ok
