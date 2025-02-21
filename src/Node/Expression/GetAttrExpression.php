@@ -19,7 +19,6 @@ use Twig\Template;
 
 class GetAttrExpression extends AbstractExpression implements SupportDefinedTestInterface
 {
-    use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
 
     public function __construct(AbstractExpression $node, AbstractExpression $attribute, ArrayExpression|ContextVariable|null $arguments, string $type, int $lineno)

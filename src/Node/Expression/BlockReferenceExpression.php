@@ -22,7 +22,6 @@ use Twig\Node\Node;
  */
 class BlockReferenceExpression extends AbstractExpression implements SupportDefinedTestInterface
 {
-    use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
 
     public function __construct(AbstractExpression $name, ?Node $template, int $lineno)

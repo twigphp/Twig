@@ -21,7 +21,6 @@ use Twig\Node\Expression\Variable\TemplateVariable;
  */
 class MacroReferenceExpression extends AbstractExpression implements SupportDefinedTestInterface
 {
-    use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
 
     public function __construct(TemplateVariable $template, string $name, AbstractExpression $arguments, int $lineno)

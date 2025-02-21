@@ -13,13 +13,11 @@ namespace Twig\Node\Expression\Variable;
 
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\Expression\SupportDefinedTestDeprecationTrait;
 use Twig\Node\Expression\SupportDefinedTestInterface;
 use Twig\Node\Expression\SupportDefinedTestTrait;
 
 class ContextVariable extends AbstractExpression implements SupportDefinedTestInterface
 {
-    use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
 
     private array $specialVars = [

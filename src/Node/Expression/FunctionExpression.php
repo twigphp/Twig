@@ -18,7 +18,6 @@ use Twig\TwigFunction;
 
 class FunctionExpression extends CallExpression implements SupportDefinedTestInterface
 {
-    use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
 
     #[FirstClassTwigCallableReady]
