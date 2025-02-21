@@ -12,8 +12,9 @@
 namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
+use Twig\Node\Expression\ReturnArrayInterface;
 
-class RangeBinary extends AbstractBinary
+class RangeBinary extends AbstractBinary implements ReturnArrayInterface
 {
     public function compile(Compiler $compiler): void
     {

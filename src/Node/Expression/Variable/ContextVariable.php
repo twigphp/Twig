@@ -13,9 +13,14 @@ namespace Twig\Node\Expression\Variable;
 
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\SupportDefinedTestDeprecationTrait;
+use Twig\Node\Expression\SupportDefinedTestTrait;
 
 class ContextVariable extends AbstractExpression
 {
+    use SupportDefinedTestDeprecationTrait;
+    use SupportDefinedTestTrait;
+
     private array $specialVars = [
         '_self' => '$this->getTemplateName()',
         '_context' => '$context',
@@ -24,7 +29,7 @@ class ContextVariable extends AbstractExpression
 
     public function __construct(string $name, int $lineno)
     {
-        parent::__construct([], ['name' => $name, 'is_defined_test' => false, 'ignore_strict_check' => false, 'always_defined' => false], $lineno);
+        parent::__construct([], ['name' => $name, 'ignore_strict_check' => false, 'always_defined' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void
@@ -33,7 +38,7 @@ class ContextVariable extends AbstractExpression
 
         $compiler->addDebugInfo($this);
 
-        if ($this->getAttribute('is_defined_test')) {
+        if ($this->definedTest) {
             if (isset($this->specialVars[$name]) || $this->getAttribute('always_defined')) {
                 $compiler->repr(true);
             } else {

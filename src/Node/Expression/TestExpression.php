@@ -16,7 +16,7 @@ use Twig\Node\EmptyNode;
 use Twig\Node\Node;
 use Twig\TwigTest;
 
-class TestExpression extends CallExpression
+class TestExpression extends CallExpression implements ReturnBoolInterface
 {
     #[FirstClassTwigCallableReady]
     public function __construct(AbstractExpression $node, TwigTest $test, ?Node $arguments, int $lineno)

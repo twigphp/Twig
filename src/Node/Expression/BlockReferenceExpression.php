@@ -20,8 +20,11 @@ use Twig\Node\Node;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class BlockReferenceExpression extends AbstractExpression
+class BlockReferenceExpression extends AbstractExpression implements SupportDefinedTestInterface
 {
+    use SupportDefinedTestDeprecationTrait;
+    use SupportDefinedTestTrait;
+
     public function __construct(AbstractExpression $name, ?Node $template, int $lineno)
     {
         $nodes = ['name' => $name];
@@ -29,12 +32,12 @@ class BlockReferenceExpression extends AbstractExpression
             $nodes['template'] = $template;
         }
 
-        parent::__construct($nodes, ['is_defined_test' => false, 'output' => false], $lineno);
+        parent::__construct($nodes, ['output' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void
     {
-        if ($this->getAttribute('is_defined_test')) {
+        if ($this->definedTest) {
             $this->compileTemplateCall($compiler, 'hasBlock');
         } else {
             if ($this->getAttribute('output')) {

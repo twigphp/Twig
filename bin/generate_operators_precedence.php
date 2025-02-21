@@ -21,19 +21,24 @@ require_once \dirname(__DIR__).'/vendor/autoload.php';
 $output = fopen(\dirname(__DIR__).'/doc/operators_precedence.rst', 'w');
 
 $twig = new Environment(new ArrayLoader([]));
+$descriptionLength = 11;
 $expressionParsers = [];
 foreach ($twig->getExpressionParsers() as $expressionParser) {
     $expressionParsers[] = $expressionParser;
+    $descriptionLength = max($descriptionLength, $expressionParser instanceof ExpressionParserDescriptionInterface ? strlen($expressionParser->getDescription()) : '');
 }
 
-fwrite($output, "\n=========== ================ ======= ============= ===========\n");
-fwrite($output, "Precedence  Operator         Type    Associativity Description\n");
-fwrite($output, '=========== ================ ======= ============= ===========');
+fwrite($output, "\n+------------+------------------+---------+---------------+".str_repeat('-', $descriptionLength + 2)."+\n");
+fwrite($output, "| Precedence | Operator         | Type    | Associativity | Description".str_repeat(' ', $descriptionLength - 11)." |\n");
+fwrite($output, '+============+==================+=========+===============+'.str_repeat('=', $descriptionLength + 2).'+');
 
 usort($expressionParsers, fn ($a, $b) => $b->getPrecedence() <=> $a->getPrecedence());
 
 $previous = null;
 foreach ($expressionParsers as $expressionParser) {
+    if (null !== $previous) {
+        fwrite($output, "\n+------------+------------------+---------+---------------+".str_repeat('-', $descriptionLength + 2).'+');
+    }
     $precedence = $expressionParser->getPrecedence();
     $previousPrecedence = $previous ? $previous->getPrecedence() : \PHP_INT_MAX;
     $associativity = $expressionParser instanceof InfixExpressionParserInterface ? (InfixAssociativity::Left === $expressionParser->getAssociativity() ? 'Left' : 'Right') : 'n/a';
@@ -41,7 +46,7 @@ foreach ($expressionParsers as $expressionParser) {
     if ($previousPrecedence !== $precedence) {
         $previous = null;
     }
-    fwrite($output, rtrim(\sprintf("\n%-11s %-16s %-7s %-13s %s\n",
+    fwrite($output, rtrim(\sprintf("\n| %-10s | %-16s | %-7s | %-13s | %-{$descriptionLength}s |\n",
         (!$previous || $previousPrecedence !== $precedence ? $precedence : '').($expressionParser->getPrecedenceChange() ? ' => '.$expressionParser->getPrecedenceChange()->getNewPrecedence() : ''),
         '``'.$expressionParser->getName().'``',
         !$previous || ExpressionParserType::getType($previous) !== ExpressionParserType::getType($expressionParser) ? ExpressionParserType::getType($expressionParser)->value : '',
@@ -50,7 +55,7 @@ foreach ($expressionParsers as $expressionParser) {
     )));
     $previous = $expressionParser;
 }
-fwrite($output, "\n=========== ================ ======= ============= ===========\n");
+fwrite($output, "\n+------------+------------------+---------+---------------+".str_repeat('-', $descriptionLength + 2)."+\n");
 fwrite($output, "\nWhen a precedence will change in the next major version, the new precedence is indicated by the arrow ``=>``.\n");
 
 fclose($output);

@@ -15,14 +15,8 @@ use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\BlockReferenceExpression;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\FunctionExpression;
-use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\MacroReferenceExpression;
+use Twig\Node\Expression\SupportDefinedTestInterface;
 use Twig\Node\Expression\TestExpression;
-use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\TwigTest;
 
@@ -41,34 +35,13 @@ class DefinedTest extends TestExpression
     #[FirstClassTwigCallableReady]
     public function __construct(AbstractExpression $node, TwigTest $name, ?Node $arguments, int $lineno)
     {
-        if ($node instanceof ContextVariable) {
-            $node->setAttribute('is_defined_test', true);
-        } elseif ($node instanceof GetAttrExpression) {
-            $node->setAttribute('is_defined_test', true);
-            $this->changeIgnoreStrictCheck($node);
-        } elseif ($node instanceof BlockReferenceExpression) {
-            $node->setAttribute('is_defined_test', true);
-        } elseif ($node instanceof MacroReferenceExpression) {
-            $node->setAttribute('is_defined_test', true);
-        } elseif ($node instanceof FunctionExpression && 'constant' === $node->getAttribute('name')) {
-            $node->setAttribute('is_defined_test', true);
-        } elseif ($node instanceof ConstantExpression || $node instanceof ArrayExpression) {
-            $node = new ConstantExpression(true, $node->getTemplateLine());
-        } else {
+        if (!$node instanceof SupportDefinedTestInterface) {
             throw new SyntaxError('The "defined" test only works with simple variables.', $lineno);
         }
 
+        $node->enableDefinedTest();
+
         parent::__construct($node, $name, $arguments, $lineno);
-    }
-
-    private function changeIgnoreStrictCheck(GetAttrExpression $node): void
-    {
-        $node->setAttribute('optimizable', false);
-        $node->setAttribute('ignore_strict_check', true);
-
-        if ($node->getNode('node') instanceof GetAttrExpression) {
-            $this->changeIgnoreStrictCheck($node->getNode('node'));
-        }
     }
 
     public function compile(Compiler $compiler): void

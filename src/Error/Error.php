@@ -39,10 +39,8 @@ use Twig\Template;
 class Error extends \Exception
 {
     private int $lineno;
-    private ?string $name;
     private string $rawMessage;
-    private ?string $sourcePath = null;
-    private ?string $sourceCode = null;
+    private ?Source $source;
 
     /**
      * Constructor.
@@ -57,16 +55,8 @@ class Error extends \Exception
     {
         parent::__construct('', 0, $previous);
 
-        if (null === $source) {
-            $name = null;
-        } else {
-            $name = $source->getName();
-            $this->sourceCode = $source->getCode();
-            $this->sourcePath = $source->getPath();
-        }
-
         $this->lineno = $lineno;
-        $this->name = $name;
+        $this->source = $source;
         $this->rawMessage = $message;
         $this->updateRepr();
     }
@@ -84,25 +74,17 @@ class Error extends \Exception
     public function setTemplateLine(int $lineno): void
     {
         $this->lineno = $lineno;
-
         $this->updateRepr();
     }
 
     public function getSourceContext(): ?Source
     {
-        return $this->name ? new Source($this->sourceCode, $this->name, $this->sourcePath) : null;
+        return $this->source;
     }
 
     public function setSourceContext(?Source $source = null): void
     {
-        if (null === $source) {
-            $this->sourceCode = $this->name = $this->sourcePath = null;
-        } else {
-            $this->sourceCode = $source->getCode();
-            $this->name = $source->getName();
-            $this->sourcePath = $source->getPath();
-        }
-
+        $this->source = $source;
         $this->updateRepr();
     }
 
@@ -122,8 +104,8 @@ class Error extends \Exception
     {
         $this->message = $this->rawMessage;
 
-        if ($this->sourcePath && $this->lineno > 0) {
-            $this->file = $this->sourcePath;
+        if ($this->source && $this->source->getPath() && $this->lineno > 0) {
+            $this->file = $this->source->getPath();
             $this->line = $this->lineno;
 
             return;
@@ -141,8 +123,8 @@ class Error extends \Exception
             $questionMark = true;
         }
 
-        if ($this->name) {
-            $this->message .= \sprintf(' in "%s"', $this->name);
+        if ($this->source && $this->source->getName()) {
+            $this->message .= \sprintf(' in %s', $this->source->getName());
         }
 
         if ($this->lineno && $this->lineno >= 0) {
@@ -160,34 +142,25 @@ class Error extends \Exception
 
     private function guessTemplateInfo(): void
     {
+        // $this->source is never null here (see guess() usage in Template)
+
         $template = null;
         $templateClass = null;
-
         $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Template) {
                 $currentClass = $trace['object']::class;
                 $isEmbedContainer = null === $templateClass ? false : str_starts_with($templateClass, $currentClass);
-                if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
+                if ($this->source->getName() === $trace['object']->getTemplateName() && !$isEmbedContainer) {
                     $template = $trace['object'];
                     $templateClass = $trace['object']::class;
                 }
             }
         }
 
-        // update template name
-        if (null !== $template && null === $this->name) {
-            $this->name = $template->getTemplateName();
-        }
-
-        // update template path if any
-        if (null !== $template && null === $this->sourcePath) {
-            $src = $template->getSourceContext();
-            $this->sourceCode = $src->getCode();
-            $this->sourcePath = $src->getPath();
-        }
-
-        if (null === $template || $this->lineno > -1) {
+        if ($template) {
+            $this->source = $template->getSourceContext();
+        } elseif ($this->lineno > -1) {
             return;
         }
 

@@ -17,8 +17,11 @@ use Twig\Extension\SandboxExtension;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Template;
 
-class GetAttrExpression extends AbstractExpression
+class GetAttrExpression extends AbstractExpression implements SupportDefinedTestInterface
 {
+    use SupportDefinedTestDeprecationTrait;
+    use SupportDefinedTestTrait;
+
     public function __construct(AbstractExpression $node, AbstractExpression $attribute, ArrayExpression|ContextVariable|null $arguments, string $type, int $lineno)
     {
         $nodes = ['node' => $node, 'attribute' => $attribute];
@@ -26,7 +29,13 @@ class GetAttrExpression extends AbstractExpression
             $nodes['arguments'] = $arguments;
         }
 
-        parent::__construct($nodes, ['type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false, 'optimizable' => true], $lineno);
+        parent::__construct($nodes, ['type' => $type, 'ignore_strict_check' => false, 'optimizable' => true], $lineno);
+    }
+
+    public function enableDefinedTest(): void
+    {
+        $this->definedTest = true;
+        $this->changeIgnoreStrictCheck($this);
     }
 
     public function compile(Compiler $compiler): void
@@ -38,7 +47,7 @@ class GetAttrExpression extends AbstractExpression
         if (
             $this->getAttribute('optimizable')
             && (!$env->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
-            && !$this->getAttribute('is_defined_test')
+            && !$this->definedTest
             && Template::ARRAY_CALL === $this->getAttribute('type')
         ) {
             $var = '$'.$compiler->getVarName();
@@ -97,7 +106,7 @@ class GetAttrExpression extends AbstractExpression
             $compiler->raw(', type: ')->repr($type);
         }
 
-        if ($this->getAttribute('is_defined_test')) {
+        if ($this->definedTest) {
             $compiler->raw(', isDefinedTest: true');
         }
 
@@ -116,6 +125,16 @@ class GetAttrExpression extends AbstractExpression
 
         if ($arrayAccessSandbox) {
             $compiler->raw(')');
+        }
+    }
+
+    private function changeIgnoreStrictCheck(GetAttrExpression $node): void
+    {
+        $node->setAttribute('optimizable', false);
+        $node->setAttribute('ignore_strict_check', true);
+
+        if ($node->getNode('node') instanceof GetAttrExpression) {
+            $this->changeIgnoreStrictCheck($node->getNode('node'));
         }
     }
 }

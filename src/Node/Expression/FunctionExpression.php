@@ -16,17 +16,27 @@ use Twig\Compiler;
 use Twig\Node\Node;
 use Twig\TwigFunction;
 
-class FunctionExpression extends CallExpression
+class FunctionExpression extends CallExpression implements SupportDefinedTestInterface
 {
+    use SupportDefinedTestDeprecationTrait;
+    use SupportDefinedTestTrait;
+
     #[FirstClassTwigCallableReady]
     public function __construct(TwigFunction $function, Node $arguments, int $lineno)
     {
-        parent::__construct(['arguments' => $arguments], ['name' => $function->getName(), 'type' => 'function', 'twig_callable' => $function, 'is_defined_test' => false], $lineno);
+        parent::__construct(['arguments' => $arguments], ['name' => $function->getName(), 'type' => 'function', 'twig_callable' => $function], $lineno);
+    }
+
+    public function enableDefinedTest(): void
+    {
+        if ('constant' === $this->getAttribute('name')) {
+            $this->definedTest = true;
+        }
     }
 
     public function compile(Compiler $compiler): void
     {
-        if ('constant' === $this->getAttribute('name') && $this->getAttribute('is_defined_test')) {
+        if ('constant' === $this->getAttribute('name') && $this->definedTest) {
             $this->getNode('arguments')->setNode('checkDefined', new ConstantExpression(true, $this->getTemplateLine()));
         }
 
