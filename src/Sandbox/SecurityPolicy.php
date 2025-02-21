@@ -67,7 +67,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
     public function checkSecurity($tags, $filters, $functions): void
     {
         foreach ($tags as $tag) {
-            if (!\in_array($tag, $this->allowedTags)) {
+            if (!\in_array($tag, $this->allowedTags, true)) {
                 if ('extends' === $tag) {
                     trigger_deprecation('twig/twig', '3.12', 'The "extends" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
                 } elseif ('use' === $tag) {
@@ -79,13 +79,13 @@ final class SecurityPolicy implements SecurityPolicyInterface
         }
 
         foreach ($filters as $filter) {
-            if (!\in_array($filter, $this->allowedFilters)) {
+            if (!\in_array($filter, $this->allowedFilters, true)) {
                 throw new SecurityNotAllowedFilterError(\sprintf('Filter "%s" is not allowed.', $filter), $filter);
             }
         }
 
         foreach ($functions as $function) {
-            if (!\in_array($function, $this->allowedFunctions)) {
+            if (!\in_array($function, $this->allowedFunctions, true)) {
                 throw new SecurityNotAllowedFunctionError(\sprintf('Function "%s" is not allowed.', $function), $function);
             }
         }
@@ -100,7 +100,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $allowed = false;
         $method = strtolower($method);
         foreach ($this->allowedMethods as $class => $methods) {
-            if ($obj instanceof $class && \in_array($method, $methods)) {
+            if ($obj instanceof $class && \in_array($method, $methods, true)) {
                 $allowed = true;
                 break;
             }
@@ -116,7 +116,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
     {
         $allowed = false;
         foreach ($this->allowedProperties as $class => $properties) {
-            if ($obj instanceof $class && \in_array($property, \is_array($properties) ? $properties : [$properties])) {
+            if ($obj instanceof $class && \in_array($property, \is_array($properties) ? $properties : [$properties], true)) {
                 $allowed = true;
                 break;
             }

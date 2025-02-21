@@ -337,7 +337,7 @@ class Lexer
         // operators
         if (preg_match($this->regexes['operator'], $this->code, $match, 0, $this->cursor)) {
             $operator = preg_replace('/\s+/', ' ', $match[0]);
-            if (\in_array($operator, $this->openingBrackets)) {
+            if (\in_array($operator, $this->openingBrackets, true)) {
                 $this->checkBrackets($operator);
             }
             $this->pushToken(Token::OPERATOR_TYPE, $operator);
@@ -574,9 +574,9 @@ class Lexer
     private function checkBrackets(string $code): void
     {
         // opening bracket
-        if (\in_array($code, $this->openingBrackets)) {
+        if (\in_array($code, $this->openingBrackets, true)) {
             $this->brackets[] = [$code, $this->lineno];
-        } elseif (\in_array($code, $this->closingBrackets)) {
+        } elseif (\in_array($code, $this->closingBrackets, true)) {
             // closing bracket
             if (!$this->brackets) {
                 throw new SyntaxError(\sprintf('Unexpected "%s".', $code), $this->lineno, $this->source);

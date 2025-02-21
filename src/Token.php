@@ -87,9 +87,9 @@ final class Token
         }
 
         $typeMatches = $this->type === $type;
-        if ($typeMatches && self::PUNCTUATION_TYPE === $type && \in_array($this->value, ['(', '[', '|', '.', '?', '?:']) && $values) {
+        if ($typeMatches && self::PUNCTUATION_TYPE === $type && \in_array($this->value, ['(', '[', '|', '.', '?', '?:'], true) && $values) {
             foreach ((array) $values as $value) {
-                if (\in_array($value, ['(', '[', '|', '.', '?', '?:'])) {
+                if (\in_array($value, ['(', '[', '|', '.', '?', '?:'], true)) {
                     trigger_deprecation('twig/twig', '3.21', 'The "%s" token is now an "%s" token instead of a "%s" one.', $this->value, self::typeToEnglish(self::OPERATOR_TYPE), $this->toEnglish());
 
                     break;
@@ -100,7 +100,7 @@ final class Token
             if (self::OPERATOR_TYPE === $type && self::PUNCTUATION_TYPE === $this->type) {
                 if ($values) {
                     foreach ((array) $values as $value) {
-                        if (\in_array($value, ['(', '[', '|', '.', '?', '?:'])) {
+                        if (\in_array($value, ['(', '[', '|', '.', '?', '?:'], true)) {
                             $typeMatches = true;
 
                             break;
@@ -114,7 +114,7 @@ final class Token
 
         return $typeMatches && (
             null === $values
-            || (\is_array($values) && \in_array($this->value, $values))
+            || (\is_array($values) && \in_array($this->value, $values, true))
             || $this->value == $values
         );
     }

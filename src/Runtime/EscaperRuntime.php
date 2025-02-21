@@ -124,7 +124,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
                 }
 
                 $string = (string) $string;
-            } elseif (\in_array($strategy, ['html', 'js', 'css', 'html_attr', 'url'])) {
+            } elseif (\in_array($strategy, ['html', 'js', 'css', 'html_attr', 'url'], true)) {
                 // we return the input as is (which can be of any type)
                 return $string;
             }

@@ -119,7 +119,7 @@ final class Cva
             if ('class' === $compoundName) {
                 continue;
             }
-            if (!isset($recipes[$compoundName]) || !\in_array($recipes[$compoundName], (array) $compoundValues)) {
+            if (!isset($recipes[$compoundName]) || !\in_array($recipes[$compoundName], (array) $compoundValues, true)) {
                 return [];
             }
         }
