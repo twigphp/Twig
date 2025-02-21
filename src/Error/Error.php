@@ -124,7 +124,7 @@ class Error extends \Exception
         }
 
         if ($this->source && $this->source->getName()) {
-            $this->message .= \sprintf(' in %s', $this->source->getName());
+            $this->message .= \sprintf(' in "%s"', $this->source->getName());
         }
 
         if ($this->lineno && $this->lineno >= 0) {
