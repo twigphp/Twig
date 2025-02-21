@@ -16,8 +16,10 @@ use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Unary\StringCastUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 
-class ArrayExpression extends AbstractExpression
+class ArrayExpression extends AbstractExpression implements SupportDefinedTestInterface
 {
+    use SupportDefinedTestTrait;
+
     private $index;
 
     public function __construct(array $elements, int $lineno)
@@ -69,6 +71,12 @@ class ArrayExpression extends AbstractExpression
 
     public function compile(Compiler $compiler): void
     {
+        if ($this->definedTest) {
+            $compiler->repr(true);
+
+            return;
+        }
+
         $compiler->raw('[');
         $first = true;
         $nextIndex = 0;

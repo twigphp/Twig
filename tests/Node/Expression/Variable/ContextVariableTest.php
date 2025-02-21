@@ -32,7 +32,7 @@ class ContextVariableTest extends NodeTestCase
             $node = new ContextVariable($special, 1);
             yield $special => [$node, "// line 1\n$compiled"];
             $node = new ContextVariable($special, 1);
-            $node->setAttribute('is_defined_test', true);
+            $node->enableDefinedTest();
             yield $special.'_defined_test' => [$node, "// line 1\ntrue"];
         }
 
@@ -59,13 +59,13 @@ class ContextVariableTest extends NodeTestCase
 
         // is defined test
         $node = new ContextVariable('foo', 1);
-        $node->setAttribute('is_defined_test', true);
+        $node->enableDefinedTest();
         yield 'is_defined_test_strict' => [$node, "// line 1\narray_key_exists(\"foo\", \$context)", $envStrict];
         yield 'is_defined_test_non_strict' => [$node, "// line 1\narray_key_exists(\"foo\", \$context)", $env];
 
         // is defined test // always defined
         $node = new ContextVariable('foo', 1);
-        $node->setAttribute('is_defined_test', true);
+        $node->enableDefinedTest();
         $node->setAttribute('always_defined', true);
         yield 'is_defined_test_always_defined_strict' => [$node, "// line 1\ntrue", $envStrict];
         yield 'is_defined_test_always_defined_non_strict' => [$node, "// line 1\ntrue", $env];
