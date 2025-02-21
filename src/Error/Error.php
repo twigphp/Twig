@@ -90,6 +90,10 @@ class Error extends \Exception
 
     public function guess(): void
     {
+        if ($this->lineno > -1) {
+            return;
+        }
+
         $this->guessTemplateInfo();
         $this->updateRepr();
     }
@@ -162,12 +166,6 @@ class Error extends \Exception
                     $templateClass = \get_class($trace['object']);
                 }
             }
-        }
-
-        if ($template) {
-            $this->source = $template->getSourceContext();
-        } elseif ($this->lineno > -1) {
-            return;
         }
 
         $r = new \ReflectionObject($template);
