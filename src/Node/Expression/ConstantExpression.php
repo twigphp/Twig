@@ -17,7 +17,7 @@ use Twig\Compiler;
 /**
  * @final
  */
-class ConstantExpression extends AbstractExpression implements SupportDefinedTestInterface
+class ConstantExpression extends AbstractExpression implements SupportDefinedTestInterface, ReturnPrimitiveTypeInterface
 {
     use SupportDefinedTestTrait;
 

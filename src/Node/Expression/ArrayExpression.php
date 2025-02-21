@@ -16,7 +16,7 @@ use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Unary\StringCastUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 
-class ArrayExpression extends AbstractExpression implements SupportDefinedTestInterface
+class ArrayExpression extends AbstractExpression implements SupportDefinedTestInterface, ReturnArrayInterface
 {
     use SupportDefinedTestTrait;
 

@@ -1,5 +1,7 @@
 # 3.21.0 (2025-XX-XX)
 
+ * Fix testing and expression when it evaluates to an instance of `Markup`
+ * Add `ReturnPrimitiveTypeInterface` (and sub-interfaces for number, boolean, string, and array)
  * Add `SupportDefinedTestInterface` for expression nodes supporting the `defined` test
  * Deprecate using the `|` operator in an expression with `+` or `-` without using parentheses to clarify precedence
  * Deprecate operator precedence outside of the [0, 512] range

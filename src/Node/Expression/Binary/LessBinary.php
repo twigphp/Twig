@@ -12,8 +12,9 @@
 namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
+use Twig\Node\Expression\ReturnBoolInterface;
 
-class LessBinary extends AbstractBinary
+class LessBinary extends AbstractBinary implements ReturnBoolInterface
 {
     public function compile(Compiler $compiler): void
     {
