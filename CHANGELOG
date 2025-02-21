@@ -1,5 +1,6 @@
 # 3.21.0 (2025-XX-XX)
 
+ * Add `SupportDefinedTestInterface` for expression nodes supporting the `defined` test
  * Deprecate using the `|` operator in an expression with `+` or `-` without using parentheses to clarify precedence
  * Deprecate operator precedence outside of the [0, 512] range
  * Introduce expression parser classes to describe operators and operands provided by extensions

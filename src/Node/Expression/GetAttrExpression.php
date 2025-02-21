@@ -17,8 +17,11 @@ use Twig\Extension\SandboxExtension;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Template;
 
-class GetAttrExpression extends AbstractExpression
+class GetAttrExpression extends AbstractExpression implements SupportDefinedTestInterface
 {
+    use SupportDefinedTestDeprecationTrait;
+    use SupportDefinedTestTrait;
+
     /**
      * @param ArrayExpression|NameExpression|null $arguments
      */
@@ -33,7 +36,13 @@ class GetAttrExpression extends AbstractExpression
             trigger_deprecation('twig/twig', '3.15', \sprintf('Not passing a "%s" instance as the "arguments" argument of the "%s" constructor is deprecated ("%s" given).', ArrayExpression::class, static::class, $arguments::class));
         }
 
-        parent::__construct($nodes, ['type' => $type, 'is_defined_test' => false, 'ignore_strict_check' => false, 'optimizable' => true], $lineno);
+        parent::__construct($nodes, ['type' => $type, 'ignore_strict_check' => false, 'optimizable' => true], $lineno);
+    }
+
+    public function enableDefinedTest(): void
+    {
+        $this->definedTest = true;
+        $this->changeIgnoreStrictCheck($this);
     }
 
     public function compile(Compiler $compiler): void
@@ -45,7 +54,7 @@ class GetAttrExpression extends AbstractExpression
         if (
             $this->getAttribute('optimizable')
             && (!$env->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
-            && !$this->getAttribute('is_defined_test')
+            && !$this->definedTest
             && Template::ARRAY_CALL === $this->getAttribute('type')
         ) {
             $var = '$'.$compiler->getVarName();
@@ -104,7 +113,7 @@ class GetAttrExpression extends AbstractExpression
 
         $compiler->raw(', ')
             ->repr($this->getAttribute('type'))
-            ->raw(', ')->repr($this->getAttribute('is_defined_test'))
+            ->raw(', ')->repr($this->definedTest)
             ->raw(', ')->repr($this->getAttribute('ignore_strict_check'))
             ->raw(', ')->repr($env->hasExtension(SandboxExtension::class))
             ->raw(', ')->repr($this->getNode('node')->getTemplateLine())
@@ -113,6 +122,16 @@ class GetAttrExpression extends AbstractExpression
 
         if ($arrayAccessSandbox) {
             $compiler->raw(')');
+        }
+    }
+
+    private function changeIgnoreStrictCheck(GetAttrExpression $node): void
+    {
+        $node->setAttribute('optimizable', false);
+        $node->setAttribute('ignore_strict_check', true);
+
+        if ($node->getNode('node') instanceof GetAttrExpression) {
+            $this->changeIgnoreStrictCheck($node->getNode('node'));
         }
     }
 }

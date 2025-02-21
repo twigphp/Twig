@@ -14,13 +14,16 @@ namespace Twig\Node\Expression;
 use Twig\Compiler;
 use Twig\Node\Expression\Variable\ContextVariable;
 
-class MethodCallExpression extends AbstractExpression
+class MethodCallExpression extends AbstractExpression implements SupportDefinedTestInterface
 {
+    use SupportDefinedTestDeprecationTrait;
+    use SupportDefinedTestTrait;
+
     public function __construct(AbstractExpression $node, string $method, ArrayExpression $arguments, int $lineno)
     {
         trigger_deprecation('twig/twig', '3.15', 'The "%s" class is deprecated, use "%s" instead.', __CLASS__, MacroReferenceExpression::class);
 
-        parent::__construct(['node' => $node, 'arguments' => $arguments], ['method' => $method, 'safe' => false, 'is_defined_test' => false], $lineno);
+        parent::__construct(['node' => $node, 'arguments' => $arguments], ['method' => $method, 'safe' => false], $lineno);
 
         if ($node instanceof ContextVariable) {
             $node->setAttribute('always_defined', true);
@@ -29,7 +32,7 @@ class MethodCallExpression extends AbstractExpression
 
     public function compile(Compiler $compiler): void
     {
-        if ($this->getAttribute('is_defined_test')) {
+        if ($this->definedTest) {
             $compiler
                 ->raw('method_exists($macros[')
                 ->repr($this->getNode('node')->getAttribute('name'))

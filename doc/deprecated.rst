@@ -196,6 +196,9 @@ Nodes
  * The ``Twig\Node\Expression\ConditionalExpression`` class is deprecated as of
    Twig 3.17, use ``Twig\Node\Expression\Ternary\ConditionalTernary`` instead.
 
+ * The ``is_defined_test`` attribute is deprecated as of Twig 3.21, use
+   ``Twig\Node\Expression\SupportDefinedTestInterface`` instead.
+
 Node Visitors
 -------------
 
