@@ -63,7 +63,7 @@ final class Token
 
         return $this->type === $type && (
             null === $values
-            || (\is_array($values) && \in_array($this->value, $values))
+            || (\is_array($values) && \in_array($this->value, $values, true))
             || $this->value == $values
         );
     }

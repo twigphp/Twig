@@ -30,7 +30,7 @@ class CacheTokenParser extends AbstractTokenParser
         $tags = null;
         while ($stream->test(Token::NAME_TYPE)) {
             $k = $stream->getCurrent()->getValue();
-            if (!\in_array($k, ['ttl', 'tags'])) {
+            if (!\in_array($k, ['ttl', 'tags'], true)) {
                 throw new SyntaxError(\sprintf('Unknown "%s" configuration.', $k), $stream->getCurrent()->getLine(), $stream->getSourceContext());
             }
 

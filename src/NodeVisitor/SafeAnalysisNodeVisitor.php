@@ -51,7 +51,7 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
                 continue;
             }
 
-            if (\in_array('html_attr', $bucket['value'])) {
+            if (\in_array('html_attr', $bucket['value'], true)) {
                 $bucket['value'][] = 'html';
             }
 
@@ -124,7 +124,7 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
             $this->setSafe($node, ['all']);
         } elseif ($node instanceof GetAttrExpression && $node->getNode('node') instanceof ContextVariable) {
             $name = $node->getNode('node')->getAttribute('name');
-            if (\in_array($name, $this->safeVars)) {
+            if (\in_array($name, $this->safeVars, true)) {
                 $this->setSafe($node, ['all']);
             }
         }
@@ -138,11 +138,11 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
             return [];
         }
 
-        if (\in_array('all', $a)) {
+        if (\in_array('all', $a, true)) {
             return $b;
         }
 
-        if (\in_array('all', $b)) {
+        if (\in_array('all', $b, true)) {
             return $a;
         }
 

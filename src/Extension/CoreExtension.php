@@ -1771,7 +1771,7 @@ final class CoreExtension extends AbstractExtension
                 } elseif ('h' === $lcName[0] && str_starts_with($lcName, 'has')) {
                     $name = substr($method, 3);
                     $lcName = substr($lcName, 3);
-                    if (\in_array('is'.$lcName, $lcMethods)) {
+                    if (\in_array('is'.$lcName, $lcMethods, true)) {
                         continue;
                     }
                 } else {

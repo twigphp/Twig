@@ -33,7 +33,7 @@ class FileExtensionEscapingStrategy
      */
     public static function guess(string $name)
     {
-        if (\in_array(substr($name, -1), ['/', '\\'])) {
+        if (\in_array(substr($name, -1), ['/', '\\'], true)) {
             return 'html'; // return html for directories
         }
 
