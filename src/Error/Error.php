@@ -106,41 +106,26 @@ class Error extends \Exception
 
     private function updateRepr(): void
     {
-        $this->message = $this->rawMessage;
-
-        if ($this->source && $this->source->getPath() && $this->lineno > 0) {
-            $this->file = $this->source->getPath();
+        if ($this->lineno > 0) {
             $this->line = $this->lineno;
-
-            return;
+        }
+        if ($this->source && $this->source->getPath()) {
+            $this->file = $this->source->getPath();
         }
 
-        $dot = false;
-        if (str_ends_with($this->message, '.')) {
+        $this->message = $this->rawMessage;
+        $last = substr($this->message, -1);
+        if ($punctuation = '.' === $last || '?' === $last ? $last : '') {
             $this->message = substr($this->message, 0, -1);
-            $dot = true;
         }
-
-        $questionMark = false;
-        if (str_ends_with($this->message, '?')) {
-            $this->message = substr($this->message, 0, -1);
-            $questionMark = true;
-        }
-
         if ($this->source && $this->source->getName()) {
             $this->message .= \sprintf(' in "%s"', $this->source->getName());
         }
-
         if ($this->lineno > 0) {
             $this->message .= \sprintf(' at line %d', $this->lineno);
         }
-
-        if ($dot) {
-            $this->message .= '.';
-        }
-
-        if ($questionMark) {
-            $this->message .= '?';
+        if ($punctuation) {
+            $this->message .= $punctuation;
         }
     }
 
