@@ -38,7 +38,6 @@ use Twig\Template;
  */
 class Error extends \Exception
 {
-    private $lineno;
     private $rawMessage;
     private ?Source $source;
 
@@ -55,7 +54,7 @@ class Error extends \Exception
     {
         parent::__construct('', 0, $previous);
 
-        $this->lineno = $lineno;
+        $this->line = $lineno;
         $this->source = $source;
         $this->rawMessage = $message;
         $this->updateRepr();
@@ -68,12 +67,12 @@ class Error extends \Exception
 
     public function getTemplateLine(): int
     {
-        return $this->lineno;
+        return $this->line;
     }
 
     public function setTemplateLine(int $lineno): void
     {
-        $this->lineno = $lineno;
+        $this->line = $lineno;
         $this->updateRepr();
     }
 
@@ -90,7 +89,7 @@ class Error extends \Exception
 
     public function guess(): void
     {
-        if ($this->lineno > -1) {
+        if ($this->line > -1) {
             return;
         }
 
@@ -106,9 +105,6 @@ class Error extends \Exception
 
     private function updateRepr(): void
     {
-        if ($this->lineno > 0) {
-            $this->line = $this->lineno;
-        }
         if ($this->source && $this->source->getPath()) {
             $this->file = $this->source->getPath();
         }
@@ -121,8 +117,8 @@ class Error extends \Exception
         if ($this->source && $this->source->getName()) {
             $this->message .= \sprintf(' in "%s"', $this->source->getName());
         }
-        if ($this->lineno > 0) {
-            $this->message .= \sprintf(' at line %d', $this->lineno);
+        if ($this->line > 0) {
+            $this->message .= \sprintf(' at line %d', $this->line);
         }
         if ($punctuation) {
             $this->message .= $punctuation;
@@ -167,7 +163,7 @@ class Error extends \Exception
                 foreach ($template->getDebugInfo() as $codeLine => $templateLine) {
                     if ($codeLine <= $trace['line']) {
                         // update template line
-                        $this->lineno = $templateLine;
+                        $this->line = $templateLine;
 
                         return;
                     }
