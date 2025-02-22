@@ -124,16 +124,10 @@ class Error extends \Exception
         }
 
         if ($this->source && $this->source->getName()) {
-            $name = $this->source->getName();
-            if (\is_string($name) || $name instanceof \Stringable) {
-                $name = \sprintf('"%s"', $name);
-            } else {
-                $name = json_encode($name);
-            }
-            $this->message .= \sprintf(' in %s', $name);
+            $this->message .= \sprintf(' in "%s"', $this->source->getName());
         }
 
-        if ($this->lineno && $this->lineno >= 0) {
+        if ($this->lineno > 0) {
             $this->message .= \sprintf(' at line %d', $this->lineno);
         }
 
