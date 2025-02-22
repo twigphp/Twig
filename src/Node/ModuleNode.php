@@ -134,10 +134,8 @@ final class ModuleNode extends Node
             $compiler->subcompile($parent);
         } else {
             $compiler
-                ->raw('$this->loadTemplate(')
+                ->raw('$this->load(')
                 ->subcompile($parent)
-                ->raw(', ')
-                ->repr($this->getSourceContext()->getName())
                 ->raw(', ')
                 ->repr($parent->getTemplateLine())
                 ->raw(')')
@@ -218,10 +216,8 @@ final class ModuleNode extends Node
 
                 $compiler
                     ->addDebugInfo($node)
-                    ->write(\sprintf('$_trait_%s = $this->loadTemplate(', $i))
+                    ->write(\sprintf('$_trait_%s = $this->load(', $i))
                     ->subcompile($node)
-                    ->raw(', ')
-                    ->repr($node->getTemplateName())
                     ->raw(', ')
                     ->repr($node->getTemplateLine())
                     ->raw(");\n")
@@ -353,10 +349,8 @@ final class ModuleNode extends Node
             $compiler->addDebugInfo($parent);
             if ($parent instanceof ConstantExpression) {
                 $compiler
-                    ->write('$this->parent = $this->loadTemplate(')
+                    ->write('$this->parent = $this->load(')
                     ->subcompile($parent)
-                    ->raw(', ')
-                    ->repr($this->getSourceContext()->getName())
                     ->raw(', ')
                     ->repr($parent->getTemplateLine())
                     ->raw(");\n")

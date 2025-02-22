@@ -36,10 +36,8 @@ class EmbedNode extends IncludeNode
     protected function addGetTemplate(Compiler $compiler, string $template = ''): void
     {
         $compiler
-            ->raw('$this->loadTemplate(')
+            ->raw('$this->load(')
             ->string($this->getAttribute('name'))
-            ->raw(', ')
-            ->repr($this->getTemplateName())
             ->raw(', ')
             ->repr($this->getTemplateLine())
             ->raw(', ')

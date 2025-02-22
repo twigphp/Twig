@@ -48,10 +48,8 @@ class ImportNode extends Node
             $compiler->raw('$this');
         } else {
             $compiler
-                ->raw('$this->loadTemplate(')
+                ->raw('$this->load(')
                 ->subcompile($this->getNode('expr'))
-                ->raw(', ')
-                ->repr($this->getTemplateName())
                 ->raw(', ')
                 ->repr($this->getTemplateLine())
                 ->raw(')->unwrap()')

@@ -37,7 +37,7 @@ class ImportTest extends NodeTestCase
 
         $tests[] = [$node, <<<EOF
 // line 1
-\$macros["macro"] = \$this->macros["macro"] = \$this->loadTemplate("foo.twig", null, 1)->unwrap();
+\$macros["macro"] = \$this->macros["macro"] = \$this->load("foo.twig", 1)->unwrap();
 EOF
         ];
 
