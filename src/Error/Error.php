@@ -90,6 +90,10 @@ class Error extends \Exception
 
     public function guess(): void
     {
+        if ($this->lineno > -1) {
+            return;
+        }
+
         $this->guessTemplateInfo();
         $this->updateRepr();
     }
@@ -127,7 +131,7 @@ class Error extends \Exception
             $this->message .= \sprintf(' in "%s"', $this->source->getName());
         }
 
-        if ($this->lineno && $this->lineno >= 0) {
+        if ($this->lineno > 0) {
             $this->message .= \sprintf(' at line %d', $this->lineno);
         }
 
@@ -156,12 +160,6 @@ class Error extends \Exception
                     $templateClass = $trace['object']::class;
                 }
             }
-        }
-
-        if ($template) {
-            $this->source = $template->getSourceContext();
-        } elseif ($this->lineno > -1) {
-            return;
         }
 
         $r = new \ReflectionObject($template);
