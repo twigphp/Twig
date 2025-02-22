@@ -183,9 +183,9 @@ class __TwigTemplate_%x extends Template
     {
         \$macros = \$this->macros;
         // line 2
-        \$macros["macro"] = \$this->macros["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2)->unwrap();
+        \$macros["macro"] = \$this->macros["macro"] = \$this->load("foo.twig", 2)->unwrap();
         // line 1
-        \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
+        \$this->parent = \$this->load("layout.twig", 1);
         yield from \$this->parent->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
@@ -271,7 +271,7 @@ class __TwigTemplate_%x extends Template
     protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper
     {
         // line 2
-        return \$this->loadTemplate(((true) ? ("foo") : ("foo")), "foo.twig", 2);
+        return \$this->load(((true) ? ("foo") : ("foo")), 2);
     }
 
     protected function doDisplay(array \$context, array \$blocks = []): iterable
