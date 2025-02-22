@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by stof at 2025-02-14T16:41:01Z
+
+The test does not ensure the issue is solved as it asserts only the exception message, not the exception location.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-02-14T16:47:42Z
+
+> The test does not ensure the issue is solved as it asserts only the exception message, not the exception location.
+
+Yes, I know, I will update it.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-02-21T15:38:41Z
+
+@stof Should be good now.
