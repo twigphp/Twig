@@ -17,6 +17,7 @@ use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
@@ -413,6 +414,44 @@ EOHTML,
                 'index', 3,
             ],
         ];
+    }
+
+    public function testErrorFromArrayLoader()
+    {
+        $templates = [
+            'index.twig' => '{% include "include.twig" %}',
+            'include.twig' => $include = <<<EOF
+
+
+
+            {% extends 'invalid.twig' %}
+            EOF,
+        ];
+        $twig = new Environment(new ArrayLoader($templates), ['debug' => true, 'cache' => false]);
+        try {
+            $twig->render('index.twig');
+            $this->fail('Expected LoaderError to be thrown');
+        } catch (LoaderError $e) {
+            $this->assertSame('Template "invalid.twig" is not defined.', $e->getRawMessage());
+            $this->assertSame(4, $e->getTemplateLine());
+            $this->assertSame('include.twig', $e->getSourceContext()->getName());
+            $this->assertSame($include, $e->getSourceContext()->getCode());
+        }
+    }
+
+    public function testErrorFromFilesystemLoader()
+    {
+        $twig = new Environment(new FilesystemLoader([$dir = __DIR__.'/Fixtures/errors/extends']), ['debug' => true, 'cache' => false]);
+        $include = file_get_contents($dir.'/include.twig');
+        try {
+            $twig->render('index.twig');
+            $this->fail('Expected LoaderError to be thrown');
+        } catch (LoaderError $e) {
+            $this->assertStringContainsString('Unable to find template "invalid.twig"', $e->getRawMessage());
+            $this->assertSame(4, $e->getTemplateLine());
+            $this->assertSame('include.twig', $e->getSourceContext()->getName());
+            $this->assertSame($include, $e->getSourceContext()->getCode());
+        }
     }
 }
 
