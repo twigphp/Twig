@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by stof at 2025-02-26T14:22:25Z
+
+is it possible to write a test avoiding regression on that case, as it seems not to be an obvious case given it has been missed previously ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-26T14:50:28Z
+
+This does fix my scenario 👍
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-02-26T18:30:32Z
+
+> is it possible to write a test avoiding regression on that case, as it seems not to be an obvious case given it has been missed previously ?
+
+I've added many tests to ensure we're covering a lot of different scenarios.
