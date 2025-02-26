@@ -41,6 +41,8 @@ class Error extends \Exception
     private $lineno;
     private $rawMessage;
     private ?Source $source;
+    private string $phpFile;
+    private int $phpLine;
 
     /**
      * Constructor.
@@ -55,6 +57,8 @@ class Error extends \Exception
     {
         parent::__construct('', 0, $previous);
 
+        $this->phpFile = $this->getFile();
+        $this->phpLine = $this->getLine();
         $this->lineno = $lineno;
         $this->source = $source;
         $this->rawMessage = $message;
@@ -111,6 +115,8 @@ class Error extends \Exception
             $this->file = $this->source->getPath();
             if ($this->lineno > 0) {
                 $this->line = $this->lineno;
+            } else {
+                $this->line = -1;
             }
         }
 
@@ -134,6 +140,7 @@ class Error extends \Exception
     {
         // $this->source is never null here (see guess() usage in Template)
 
+        $this->lineno = 0;
         $template = null;
         $templateClass = null;
         $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
@@ -144,6 +151,8 @@ class Error extends \Exception
                 if ($this->source->getName() === $trace['object']->getTemplateName() && !$isEmbedContainer) {
                     $template = $trace['object'];
                     $templateClass = \get_class($trace['object']);
+
+                    break;
                 }
             }
         }
@@ -158,8 +167,7 @@ class Error extends \Exception
 
         while ($e = array_pop($exceptions)) {
             $traces = $e->getTrace();
-            array_unshift($traces, ['file' => $e->getFile(), 'line' => $e->getLine()]);
-
+            array_unshift($traces, ['file' => $e instanceof Error ? $e->phpFile : $e->getFile(), 'line' => $e instanceof Error ? $e->phpLine : $e->getLine()]);
             while ($trace = array_shift($traces)) {
                 if (!isset($trace['file']) || !isset($trace['line']) || $file != $trace['file']) {
                     continue;
