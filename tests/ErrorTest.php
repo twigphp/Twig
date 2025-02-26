@@ -12,13 +12,19 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
+use Twig\Attribute\YieldReady;
+use Twig\Compiler;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
+use Twig\Loader\LoaderInterface;
+use Twig\Node\Node;
 use Twig\Source;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 
 class ErrorTest extends TestCase
 {
@@ -250,6 +256,116 @@ EOHTML,
             // but the line of the error in the Parser.php file
             $this->assertStringContainsString('Parser.php', $e->getFile());
             $this->assertNotSame(5, $e->getLine());
+        }
+    }
+
+    /**
+     * @dataProvider getErrorWithoutLineAndContextData
+     */
+    public function testErrorWithoutLineAndContext(LoaderInterface $loader, bool $debug, bool $addDebugInfo, bool $exceptionWithLineAndContext, int $errorLine)
+    {
+        $twig = new Environment($loader, ['debug' => $debug, 'cache' => false]);
+        $twig->removeCache('no_line_and_context_exception.twig');
+        $twig->removeCache('no_line_and_context_exception_include_line_5.twig');
+        $twig->removeCache('no_line_and_context_exception_include_line_1.twig');
+        $twig->addTokenParser(new class($addDebugInfo, $exceptionWithLineAndContext) extends AbstractTokenParser {
+            public function __construct(private bool $addDebugInfo, private bool $exceptionWithLineAndContext)
+            {
+            }
+
+            public function parse(Token $token)
+            {
+                $stream = $this->parser->getStream();
+                $lineno = $stream->getCurrent()->getLine();
+                $stream->expect(Token::BLOCK_END_TYPE);
+
+                return new #[YieldReady]class($lineno, $this->addDebugInfo, $this->exceptionWithLineAndContext) extends Node
+                {
+                    public function __construct(int $lineno, private bool $addDebugInfo, private bool $exceptionWithLineAndContext)
+                    {
+                        parent::__construct([], [], $lineno);
+                    }
+
+                    public function compile(Compiler $compiler): void
+                    {
+                        if ($this->addDebugInfo) {
+                            $compiler->addDebugInfo($this);
+                        }
+                        if ($this->exceptionWithLineAndContext) {
+                            $compiler
+                                ->write('throw new \Twig\Error\RuntimeError("Runtime error.", ')
+                                ->repr($this->lineno)->raw(", \$this->getSourceContext()")
+                                ->raw(");\n")
+                            ;
+                        } else {
+                            $compiler->write('throw new \Twig\Error\RuntimeError("Runtime error.");');
+                        }
+                    }
+                };
+            }
+
+            public function getTag()
+            {
+                return 'foo';
+            }
+        });
+
+        try {
+            $twig->render('no_line_and_context_exception.twig', ['line' => $errorLine]);
+            $this->fail();
+        } catch (RuntimeError $e) {
+            if (1 === $errorLine && !$addDebugInfo && !$exceptionWithLineAndContext) {
+                // When the template only has the custom node that throws the error, we cannot find the line of the error
+                // as we have no debug info and no line and context in the exception
+                $this->assertSame(\sprintf('Runtime error in "no_line_and_context_exception_include_line_%d.twig".', $errorLine), $e->getMessage());
+                $this->assertSame(0, $e->getTemplateLine());
+            } else {
+                // When the template has some space before the custom node, the associated TextNode outputs some debug info at line 1
+                // that's why the line is 1 when we have no debug info and no line and context in the exception
+                $line = $addDebugInfo || $exceptionWithLineAndContext ? $errorLine : 1;
+                $this->assertSame(\sprintf('Runtime error in "no_line_and_context_exception_include_line_%d.twig" at line %d.', $errorLine, $line), $e->getMessage());
+                $this->assertSame($line, $e->getTemplateLine());
+            }
+
+            $line = $addDebugInfo || $exceptionWithLineAndContext ? $errorLine : 1;
+            if ($loader instanceof FilesystemLoader) {
+                $this->assertStringContainsString(\sprintf('errors/no_line_and_context_exception_include_line_%d.twig', $errorLine), $e->getFile());
+                $line = $addDebugInfo || $exceptionWithLineAndContext ? $errorLine : (1 === $errorLine ? -1 : 1);
+                $this->assertSame($line, $e->getLine());
+            } else {
+                $this->assertStringContainsString('Environment.php', $e->getFile());
+                $this->assertNotSame($line, $e->getLine());
+            }
+        }
+    }
+
+    public static function getErrorWithoutLineAndContextData(): iterable
+    {
+        $fileLoaders = [
+            new ArrayLoader([
+                'no_line_and_context_exception.twig' => "\n\n{{ include('no_line_and_context_exception_include_line_' ~ line ~ '.twig') }}",
+                'no_line_and_context_exception_include_line_5.twig' => "\n\n\n\n{% foo %}",
+                'no_line_and_context_exception_include_line_1.twig' => '{% foo %}',
+            ]),
+            new FilesystemLoader(__DIR__.'/Fixtures/errors'),
+        ];
+
+        foreach ($fileLoaders as $loader) {
+            foreach ([false, true] as $exceptionWithLineAndContext) {
+                foreach ([false, true] as $addDebugInfo) {
+                    foreach ([false, true] as $debug) {
+                        foreach ([5, 1] as $line) {
+                            $name = ($loader instanceof FilesystemLoader ? 'filesystem' : 'array')
+                                .($debug ? '_with_debug' : '_without_debug')
+                                .($addDebugInfo ? '_with_debug_info' : '_without_debug_info')
+                                .($exceptionWithLineAndContext ? '_with_context' : '_without_context')
+                                .('_line_'.$line)
+                            ;
+                            yield $name => [$loader, $debug, $addDebugInfo, $exceptionWithLineAndContext, $line];
+                        }
+                    }
+                }
+            }
         }
     }
 
