@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
@@ -231,6 +232,24 @@ EOHTML,
         } catch (RuntimeError $e) {
             $this->assertEquals(2, $e->getTemplateLine());
             $this->assertEquals('reduce-null.html', $e->getSourceContext()->getName());
+        }
+    }
+
+    public function testTwigExceptionUpdateFileAndLineTogether()
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => "\n\n\n\n{{ foo() }}",
+        ]), ['debug' => true, 'cache' => false]);
+
+        try {
+            $twig->load('index')->render([]);
+        } catch (SyntaxError $e) {
+            $this->assertSame('Unknown "foo" function in "index" at line 5.', $e->getMessage());
+            $this->assertSame(5, $e->getTemplateLine());
+            // as we are using an ArrayLoader, we don't have a file, so the line should not be the template line,
+            // but the line of the error in the Parser.php file
+            $this->assertStringContainsString('Parser.php', $e->getFile());
+            $this->assertNotSame(5, $e->getLine());
         }
     }
 
