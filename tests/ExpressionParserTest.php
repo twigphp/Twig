@@ -468,9 +468,7 @@ class ExpressionParserTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    /**
-     * @dataProvider getBindingPowerTests
-     */
+    #[DataProvider('getBindingPowerTests')]
     public function testBindingPower(string $expression, string $expectedExpression, mixed $expectedResult, array $context = [])
     {
         $env = new Environment(new ArrayLoader([

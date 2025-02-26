@@ -563,9 +563,7 @@ bar
         #}'];
     }
 
-    /**
-     * @dataProvider getTemplateForUnclosedBracketInExpression
-     */
+    #[DataProvider('getTemplateForUnclosedBracketInExpression')]
     public function testUnclosedBracketInExpression(string $template, string $bracket)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -584,9 +582,7 @@ bar
         yield ['{{ (([1]) + 3 }}', '('];
     }
 
-    /**
-     * @dataProvider getTemplateForUnexpectedBracketInExpression
-     */
+    #[DataProvider('getTemplateForUnexpectedBracketInExpression')]
     public function testUnexpectedBracketInExpression(string $template, string $bracket)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));

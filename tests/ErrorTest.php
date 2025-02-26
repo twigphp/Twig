@@ -258,9 +258,7 @@ EOHTML,
         }
     }
 
-    /**
-     * @dataProvider getErrorWithoutLineAndContextData
-     */
+    #[DataProvider('getErrorWithoutLineAndContextData')]
     public function testErrorWithoutLineAndContext(LoaderInterface $loader, bool $debug, bool $addDebugInfo, bool $exceptionWithLineAndContext, int $errorLine)
     {
         $twig = new Environment($loader, ['debug' => $debug, 'cache' => false]);
