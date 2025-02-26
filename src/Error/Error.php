@@ -29,10 +29,7 @@ use Twig\Template;
  * Whenever possible, you must set these information (original template name
  * and line number) yourself by passing them to the constructor. If some or all
  * these information are not available from where you throw the exception, then
- * this class will guess them automatically (when the line number is set to -1
- * and/or the name is set to null). As this is a costly operation, this
- * can be disabled by passing false for both the name and the line number
- * when creating a new instance of this class.
+ * this class will guess them automatically.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
