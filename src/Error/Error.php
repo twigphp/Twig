@@ -106,11 +106,12 @@ class Error extends \Exception
 
     private function updateRepr(): void
     {
-        if ($this->lineno > 0) {
-            $this->line = $this->lineno;
-        }
         if ($this->source && $this->source->getPath()) {
+            // we only update the file and the line together
             $this->file = $this->source->getPath();
+            if ($this->lineno > 0) {
+                $this->line = $this->lineno;
+            }
         }
 
         $this->message = $this->rawMessage;
