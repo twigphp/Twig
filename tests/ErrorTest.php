@@ -272,7 +272,7 @@ EOHTML,
             {
             }
 
-            public function parse(Token $token)
+            public function parse(Token $token): Node
             {
                 $stream = $this->parser->getStream();
                 $lineno = $stream->getCurrent()->getLine();
@@ -303,7 +303,7 @@ EOHTML,
                 };
             }
 
-            public function getTag()
+            public function getTag(): string
             {
                 return 'foo';
             }
