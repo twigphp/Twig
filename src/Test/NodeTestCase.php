@@ -36,6 +36,8 @@ abstract class NodeTestCase extends TestCase
     abstract public static function provideTests(): iterable;
 
     /**
+     * @dataProvider provideTests
+     *
      * @return void
      */
     #[DataProvider('provideTests')]
