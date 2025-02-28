@@ -313,21 +313,17 @@ abstract class Template
     /**
      * @param string|TemplateWrapper|array<string|TemplateWrapper> $template
      *
-     * @deprecated since 3.21 and will be removed in 4.0. Use Template::load() instead.
+     * @deprecated since Twig 3.21 and will be removed in 4.0. Use Template::load() instead.
      */
     protected function loadTemplate($template, $templateName = null, int|null $line = null, int|null $index = null): self|TemplateWrapper
     {
         trigger_deprecation('twig/twig', '3.21', 'The "%s" method is deprecated.', __METHOD__);
 
         if (null === $line) {
-            trigger_deprecation('twig/twig', '3.21', 'Passing a "null" line number to "%s" is deprecated.', __METHOD__);
-
             $line = -1;
         }
 
         if ($template instanceof self) {
-            trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', self::class, __METHOD__);
-
             return $template;
         }
 

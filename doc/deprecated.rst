@@ -259,10 +259,10 @@ Token
 Templates
 ---------
 
+* The method ``Template::loadTemplate()`` is deprecated.
 * Passing ``Twig\Template`` instances to Twig public API is deprecated (like
-  in ``Environment::resolveTemplate()``, ``Environment::load()``, and
-  ``Template::loadTemplate()``); pass instances of ``Twig\TemplateWrapper``
-  instead.
+  in ``Environment::resolveTemplate()`` and ``Environment::load()``); pass
+  instances of ``Twig\TemplateWrapper`` instead.
 
 Filters
 -------
