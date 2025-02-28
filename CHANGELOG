@@ -1,5 +1,6 @@
 # 3.21.0 (2025-XX-XX)
 
+ * Deprecate `Template::loadTemplate()`
  * Fix testing and expression when it evaluates to an instance of `Markup`
  * Add `ReturnPrimitiveTypeInterface` (and sub-interfaces for number, boolean, string, and array)
  * Add `SupportDefinedTestInterface` for expression nodes supporting the `defined` test
