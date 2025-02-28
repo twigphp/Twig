@@ -199,6 +199,24 @@ Nodes
  * The ``is_defined_test`` attribute is deprecated as of Twig 3.21, use
    ``Twig\Node\Expression\SupportDefinedTestInterface`` instead.
 
+* Instantiating ``Twig\Node\Node`` directly is deprecated as of Twig 3.15. Use
+  ``EmptyNode`` or ``Nodes`` instead depending on the use case. The
+  ``Twig\Node\Node`` class will be abstract in Twig 4.0.
+
+* Not passing ``AbstractExpression`` arguments to the following ``Node`` class
+  constructors is deprecated as of Twig 3.15:
+
+  * ``AbstractBinary``
+  * ``AbstractUnary``
+  * ``BlockReferenceExpression``
+  * ``TestExpression``
+  * ``DefinedTest``
+  * ``FilterExpression``
+  * ``RawFilter``
+  * ``DefaultFilter``
+  * ``InlinePrint``
+  * ``NullCoalesceExpression``
+
 Node Visitors
 -------------
 
@@ -356,27 +374,6 @@ Functions/Filters/Tests
 * Returning ``null`` from ``TwigFilter::getSafe()`` and
   ``TwigFunction::getSafe()`` is deprecated as of Twig 3.16; return ``[]``
   instead.
-
-Node
-----
-
-* Instantiating ``Twig\Node\Node`` directly is deprecated as of Twig 3.15. Use
-  ``EmptyNode`` or ``Nodes`` instead depending on the use case. The
-  ``Twig\Node\Node`` class will be abstract in Twig 4.0.
-
-* Not passing ``AbstractExpression`` arguments to the following ``Node`` class
-  constructors is deprecated as of Twig 3.15:
-
-  * ``AbstractBinary``
-  * ``AbstractUnary``
-  * ``BlockReferenceExpression``
-  * ``TestExpression``
-  * ``DefinedTest``
-  * ``FilterExpression``
-  * ``RawFilter``
-  * ``DefaultFilter``
-  * ``InlinePrint``
-  * ``NullCoalesceExpression``
 
 Operators
 ---------
