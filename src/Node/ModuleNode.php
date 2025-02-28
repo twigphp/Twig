@@ -38,6 +38,11 @@ final class ModuleNode extends Node
         if (!$body instanceof BodyNode) {
             trigger_deprecation('twig/twig', '3.12', \sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, static::class));
         }
+        if (!$embeddedTemplates instanceof Node) {
+            trigger_deprecation('twig/twig', '3.21', \sprintf('Not passing a "%s" instance as the "embedded_templates" argument of the "%s" constructor is deprecated.', Node::class, static::class));
+
+            $embeddedTemplates = new Nodes($embeddedTemplates);
+        }
 
         $nodes = [
             'body' => $body,

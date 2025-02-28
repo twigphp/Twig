@@ -117,7 +117,15 @@ class Parser
             $this->expressionRefs = null;
         }
 
-        $node = new ModuleNode(new BodyNode([$body]), $this->parent, new Nodes($this->blocks), new Nodes($this->macros), new Nodes($this->traits), $this->embeddedTemplates, $stream->getSourceContext());
+        $node = new ModuleNode(
+            new BodyNode([$body]),
+            $this->parent,
+            $this->blocks ? new Nodes($this->blocks) : new EmptyNode(),
+            $this->macros ? new Nodes($this->macros) : new EmptyNode(),
+            $this->traits ? new Nodes($this->traits) : new EmptyNode(),
+            $this->embeddedTemplates ? new Nodes($this->embeddedTemplates) : new EmptyNode(),
+            $stream->getSourceContext(),
+        );
 
         $traverser = new NodeTraverser($this->env, $this->visitors);
 
