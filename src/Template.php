@@ -312,6 +312,8 @@ abstract class Template
 
     /**
      * @param string|TemplateWrapper|array<string|TemplateWrapper> $template
+     *
+     * @deprecated since 3.21 and will be removed in 4.0. Use Template::load() instead.
      */
     protected function loadTemplate($template, $templateName = null, int|null $line = null, int|null $index = null): self|TemplateWrapper
     {
