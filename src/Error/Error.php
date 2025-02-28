@@ -141,12 +141,10 @@ class Error extends \Exception
         $template = null;
         $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                if ($this->source->getName() === $trace['object']->getTemplateName()) {
-                    $template = $trace['object'];
+            if (isset($trace['object']) && $trace['object'] instanceof Template && $this->source->getName() === $trace['object']->getTemplateName()) {
+                $template = $trace['object'];
 
-                    break;
-                }
+                break;
             }
         }
 
