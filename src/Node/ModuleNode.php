@@ -32,6 +32,12 @@ final class ModuleNode extends Node
 {
     public function __construct(BodyNode $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
     {
+        if (!$embeddedTemplates instanceof Node) {
+            trigger_deprecation('twig/twig', '3.21', \sprintf('Not passing a "%s" instance as the "embedded_templates" argument of the "%s" constructor is deprecated.', Node::class, static::class));
+
+            $embeddedTemplates = new Nodes($embeddedTemplates);
+        }
+
         $nodes = [
             'body' => $body,
             'blocks' => $blocks,

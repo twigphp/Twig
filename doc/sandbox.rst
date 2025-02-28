@@ -17,7 +17,7 @@ The sandbox security is managed by a policy instance, which must be passed to
 the ``SandboxExtension`` constructor.
 
 By default, Twig comes with one policy class: ``\Twig\Sandbox\SecurityPolicy``.
-This class allows you to allow-list some tags, filters, functions, but also
+This class allows you to allow-list some tags, filters, functions, and
 properties and methods on objects::
 
     $tags = ['if'];
@@ -31,11 +31,11 @@ properties and methods on objects::
     $functions = ['range'];
     $policy = new \Twig\Sandbox\SecurityPolicy($tags, $filters, $methods, $properties, $functions);
 
-With the previous configuration, the security policy will only allow usage of
-the ``if`` tag, and the ``upper`` filter. Moreover, the templates will only be
-able to call the ``getTitle()`` and ``getBody()`` methods on ``Article``
-objects, and the ``title`` and ``body`` public properties. Everything else
-won't be allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
+With the above configuration, the security policy will only allow usage of the
+``if`` tag, and the ``upper`` filter. Moreover, the templates will only be able
+to call the ``getTitle()`` and ``getBody()`` methods on ``Article`` objects,
+and the ``title`` and ``body`` public properties. Everything else won't be
+allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
 
 .. note::
 
@@ -60,7 +60,7 @@ function:
 You can sandbox all templates by passing ``true`` as the second argument of
 the extension constructor::
 
-    $sandbox = new \Twig\Extension\SandboxExtension($policy, true);
+    $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
 
 Accepting Callables Arguments
 -----------------------------

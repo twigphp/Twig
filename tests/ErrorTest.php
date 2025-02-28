@@ -413,6 +413,31 @@ EOHTML,
                 ],
                 'index', 3,
             ],
+
+            // error occurs in an embed tag
+            [
+                [
+                    'index' => "
+                    {% embed 'base' %}
+                    {% endembed %}",
+                    'base' => '{% block foo %}{{ foo.bar }}{% endblock %}',
+                ],
+                'base', 1,
+            ],
+
+            // error occurs in an overridden block from an embed tag
+            [
+                [
+                    'index' => "
+                    {% embed 'base' %}
+                        {% block foo %}
+                            {{ foo.bar }}
+                        {% endblock %}
+                    {% endembed %}",
+                    'base' => '{% block foo %}{% endblock %}',
+                ],
+                'index', 4,
+            ],
         ];
     }
 

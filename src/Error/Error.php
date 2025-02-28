@@ -29,10 +29,7 @@ use Twig\Template;
  * Whenever possible, you must set these information (original template name
  * and line number) yourself by passing them to the constructor. If some or all
  * these information are not available from where you throw the exception, then
- * this class will guess them automatically (when the line number is set to -1
- * and/or the name is set to null). As this is a costly operation, this
- * can be disabled by passing false for both the name and the line number
- * when creating a new instance of this class.
+ * this class will guess them automatically.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -142,18 +139,12 @@ class Error extends \Exception
 
         $this->lineno = 0;
         $template = null;
-        $templateClass = null;
         $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                $currentClass = $trace['object']::class;
-                $isEmbedContainer = null === $templateClass ? false : str_starts_with($templateClass, $currentClass);
-                if ($this->source->getName() === $trace['object']->getTemplateName() && !$isEmbedContainer) {
-                    $template = $trace['object'];
-                    $templateClass = $trace['object']::class;
+            if (isset($trace['object']) && $trace['object'] instanceof Template && $this->source->getName() === $trace['object']->getTemplateName()) {
+                $template = $trace['object'];
 
-                    break;
-                }
+                break;
             }
         }
 

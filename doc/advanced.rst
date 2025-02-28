@@ -478,6 +478,7 @@ Now, let's see the actual code of this class::
         public function parse(\Twig\Token $token): Node
         {
             $parser = $this->parser;
+            $lineno = $token->getLine();
             $stream = $parser->getStream();
 
             $name = $stream->expect(\Twig\Token::NAME_TYPE)->getValue();
@@ -485,7 +486,7 @@ Now, let's see the actual code of this class::
             $value = $parser->getExpressionParser()->parseExpression();
             $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
-            return new CustomSetNode($name, $value, $token->getLine());
+            return new CustomSetNode($name, $value, $lineno);
         }
 
         public function getTag(): string
@@ -519,6 +520,18 @@ from the token stream (``$this->parser->getStream()``):
 
 Parsing expressions is done by calling the ``parseExpression()`` like we did for
 the ``set`` tag.
+
+When encountering a syntax error during parsing, throw an exception::
+
+    throw new SyntaxError('Some error message.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+
+For better error reporting to the user, follow these recommendations:
+
+ * Use ``\Twig\Error\SyntaxError``;
+
+ * **Always** pass the line number of the node and the source context;
+
+ * End the exception message with a dot.
 
 .. tip::
 
@@ -564,13 +577,18 @@ developer generate beautiful and readable PHP code:
   ``\Twig\Node\ForNode`` for a usage example).
 
 * ``addDebugInfo()``: Adds the line of the original template file related to
-  the current node as a comment.
+  the current node as a comment. It's highly recommended to call this method
+  when implementing custom nodes.
 
 * ``indent()``: Indents the generated code (see ``\Twig\Node\BlockNode`` for a
   usage example).
 
 * ``outdent()``: Outdents the generated code (see ``\Twig\Node\BlockNode`` for a
   usage example).
+
+For structural nodes, always call ``addDebugInfo()`` early on in the
+compilation process to improve error reporting to the user in case the code
+would throw an exception.
 
 .. _creating_extensions:
 
