@@ -139,18 +139,12 @@ class Error extends \Exception
 
         $this->lineno = 0;
         $template = null;
-        $templateClass = null;
         $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
         foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                $currentClass = \get_class($trace['object']);
-                $isEmbedContainer = null === $templateClass ? false : str_starts_with($templateClass, $currentClass);
-                if ($this->source->getName() === $trace['object']->getTemplateName() && !$isEmbedContainer) {
-                    $template = $trace['object'];
-                    $templateClass = \get_class($trace['object']);
+            if (isset($trace['object']) && $trace['object'] instanceof Template && $this->source->getName() === $trace['object']->getTemplateName()) {
+                $template = $trace['object'];
 
-                    break;
-                }
+                break;
             }
         }
 
