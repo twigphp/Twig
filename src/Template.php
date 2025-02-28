@@ -286,28 +286,6 @@ abstract class Template
     }
 
     /**
-     * @param string|TemplateWrapper|array<string|TemplateWrapper> $template
-     */
-    protected function loadTemplate($template, $templateName = null, int|null $line = null, int|null $index = null): self|TemplateWrapper
-    {
-        trigger_deprecation('twig/twig', '3.21', 'The "%s" method is deprecated.', __METHOD__);
-
-        if (null === $line) {
-            trigger_deprecation('twig/twig', '3.21', 'Passing a "null" line number to "%s" is deprecated.', __METHOD__);
-
-            $line = -1;
-        }
-
-        if ($template instanceof self) {
-            trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', self::class, __METHOD__);
-
-            return $template;
-        }
-
-        return $this->load($template, $line, $index);
-    }
-
-    /**
      * @internal
      *
      * @return $this
