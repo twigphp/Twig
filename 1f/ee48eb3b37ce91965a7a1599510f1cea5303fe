@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2025-02-27T08:42:55Z
+
+I looked at the errors reported by PHPStan. But I am not sure if the code really should be simplified like this or if adding the `break` in #4599 wasn't a mistake instead.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-02-28T07:53:11Z
+
+I've just added some more tests to this PR to ensure error reporting works well for `embed`.
