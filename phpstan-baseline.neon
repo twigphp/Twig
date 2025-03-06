@@ -23,3 +23,8 @@ parameters:
 			identifier: binaryOp.invalid
 			count: 1
 			path: src/Lexer.php
+
+		- # phpstan is right that a child class might override the protected properties with hooks but that's not a case we want to support
+			identifier: unset.possiblyHookedProperty
+			count: 2
+			path: src/Node/Node.php
