@@ -48,7 +48,7 @@ the template does not exist:
 
 .. code-block:: twig
 
-    {{ include('sidebar.html.twig', ignore_missing = true) }}
+    {{ include('sidebar.html.twig', ignore_missing: true) }}
 
 You can also provide a list of templates that are checked for existence before
 inclusion. The first template that exists will be rendered:
