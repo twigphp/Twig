@@ -455,7 +455,7 @@ Operators
   as of Twig 3.21, use ``Twig\Extension\ExtensionInterface::getExpressionParsers()``
   instead:
 
-    Before:
+  Before::
 
       public function getOperators(): array {
           return [
@@ -466,7 +466,7 @@ Operators
           ];
       }
 
-    After:
+  After::
 
       public function getExpressionParsers(): array {
           return [
