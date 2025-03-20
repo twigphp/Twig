@@ -22,37 +22,37 @@ The list of supported options:
 * ``grouping_used``: Specifies whether to use grouping separator for thousands::
 
         {# 1,234,567.89 #}
-        {{ 1234567.89|format_number({grouping_used:true}, locale='en') }}
+        {{ 1234567.89|format_number({grouping_used:true}, locale: 'en') }}
 
 * ``decimal_always_shown``: Specifies whether to always show the decimal part, even if it's zero::
 
         {# 123. #}
-        {{ 123|format_number({decimal_always_shown:true}, locale='en') }}
+        {{ 123|format_number({decimal_always_shown:true}, locale: 'en') }}
 
 * ``max_integer_digit``:
 * ``min_integer_digit``:
 * ``integer_digit``: Define constraints on the integer part::
 
         {# 345.679 #}
-        {{ 12345.6789|format_number({max_integer_digit:3, min_integer_digit:2}, locale='en') }}
+        {{ 12345.6789|format_number({max_integer_digit:3, min_integer_digit:2}, locale: 'en') }}
 
 * ``max_fraction_digit``:
 * ``min_fraction_digit``:
 * ``fraction_digit``: Define constraints on the fraction part::
 
         {# 123.46 #}
-        {{ 123.456789|format_number({max_fraction_digit:2, min_fraction_digit:1}, locale='en') }}
+        {{ 123.456789|format_number({max_fraction_digit:2, min_fraction_digit:1}, locale: 'en') }}
 
 * ``multiplier``: Multiplies the value before formatting::
 
         {# 123,000 #}
-        {{ 123|format_number({multiplier:1000}, locale='en') }}
+        {{ 123|format_number({multiplier:1000}, locale: 'en') }}
 
 * ``grouping_size``:
 * ``secondary_grouping_size``: Set the size of the primary and secondary grouping separators::
 
         {# 1,23,45,678 #}
-        {{ 12345678|format_number({grouping_size:3, secondary_grouping_size:2}, locale='en') }}
+        {{ 12345678|format_number({grouping_size:3, secondary_grouping_size:2}, locale: 'en') }}
 
 * ``rounding_mode``:
 * ``rounding_increment``: Control rounding behavior, here is a list of all rounding_mode available:
@@ -67,7 +67,7 @@ The list of supported options:
     .. code-block:: twig
 
         {# 123.5 #}
-        {{ 123.456|format_number({rounding_mode:'ceiling', rounding_increment:0.05}, locale='en') }}
+        {{ 123.456|format_number({rounding_mode:'ceiling', rounding_increment:0.05}, locale: 'en') }}
 
 * ``format_width``:
 * ``padding_position``: Set width and padding for the formatted number, here is a list of all padding_position available:
@@ -79,19 +79,19 @@ The list of supported options:
     .. code-block:: twig
 
         {# 123 #}
-        {{ 123|format_number({format_width:10, padding_position:'before_suffix'}, locale='en') }}
+        {{ 123|format_number({format_width:10, padding_position:'before_suffix'}, locale: 'en') }}
 
 * ``significant_digits_used``:
 * ``min_significant_digits_used``:
 * ``max_significant_digits_used``: Control significant digits in formatting::
 
         {# 123.4568 #}
-        {{ 123.456789|format_number({significant_digits_used:true, min_significant_digits_used:4, max_significant_digits_used:7}, locale='en') }}
+        {{ 123.456789|format_number({significant_digits_used:true, min_significant_digits_used:4, max_significant_digits_used:7}, locale: 'en') }}
 
 * ``lenient_parse``: If true, allows lenient parsing of the input::
 
         {# 123 #}
-        {{ 123|format_number({lenient_parse:true}, locale='en') }}
+        {{ 123|format_number({lenient_parse:true}, locale: 'en') }}
 
 Besides plain numbers, the filter can also format numbers in various styles::
 
@@ -109,37 +109,37 @@ The list of supported styles:
 * ``decimal``::
 
         {# 1,234.568 #}
-        {{ 1234.56789 | format_number(style='decimal', locale='en') }}
+        {{ 1234.56789 | format_number(style: 'decimal', locale: 'en') }}
 
 * ``currency``::
 
         {# $1,234.56 #}
-        {{ 1234.56 | format_number(style='currency', locale='en') }}
+        {{ 1234.56 | format_number(style: 'currency', locale: 'en') }}
 
 * ``percent``::
 
         {# 12% #}
-        {{ 0.1234 | format_number(style='percent', locale='en') }}
+        {{ 0.1234 | format_number(style: 'percent', locale: 'en') }}
 
 * ``scientific``::
 
         {# 1.23456789e+3 #}
-        {{ 1234.56789 | format_number(style='scientific', locale='en') }}
+        {{ 1234.56789 | format_number(style: 'scientific', locale: 'en') }}
 
 * ``spellout``::
 
         {# one thousand two hundred thirty-four point five six seven eight nine #}
-        {{ 1234.56789 | format_number(style='spellout', locale='en') }}
+        {{ 1234.56789 | format_number(style: 'spellout', locale: 'en') }}
 
 * ``ordinal``::
 
         {# 1st #}
-        {{ 1 | format_number(style='ordinal', locale='en') }}
+        {{ 1 | format_number(style: 'ordinal', locale: 'en') }}
 
 * ``duration``::
 
         {# 2:30:00 #}
-        {{ 9000 | format_number(style='duration', locale='en') }}
+        {{ 9000 | format_number(style: 'duration', locale: 'en') }}
 
 As a shortcut, you can use the ``format_*_number`` filters by replacing ``*``
 with a style::
