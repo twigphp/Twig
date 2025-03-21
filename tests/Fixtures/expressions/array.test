@@ -55,6 +55,9 @@ Twig supports array notation
 {% set trad = {194:'ABC',141:'DEF',100:'GHI',170:'JKL',110:'MNO',111:'PQR'} %}
 {% set trad2 = {'194':'ABC','141':'DEF','100':'GHI','170':'JKL','110':'MNO','111':'PQR'} %}
 {{ trad == trad2 ? 'OK' : 'KO' }}
+{% set trad = {11: 'ABC', 2: 'DEF', 4: 'GHI', 3: 'JKL'} %}
+{% set trad2 = {'11': 'ABC', '2': 'DEF', '4': 'GHI', '3': 'JKL'} %}
+{{ trad == trad2 ? 'OK' : 'KO' }}
 
 {# indexes are kept #}
 {{ { 1: "first", 0: "second" } == { '1': "first", '0': "second" } ? 'OK' : 'KO' }}
@@ -105,6 +108,7 @@ ok
 ok
 
 OK
+OK
 
 OK
 OK
@@ -151,6 +155,7 @@ ok
 ok
 ok
 
+OK
 OK
 
 OK
