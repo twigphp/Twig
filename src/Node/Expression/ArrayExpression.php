@@ -79,33 +79,32 @@ class ArrayExpression extends AbstractExpression implements SupportDefinedTestIn
         }
 
         $compiler->raw('[');
-        $first = true;
-        $nextIndex = 0;
-        foreach ($this->getKeyValuePairs() as $pair) {
-            if (!$first) {
+        $isSequence = true;
+        foreach ($this->getKeyValuePairs() as $i => $pair) {
+            if (0 !== $i) {
                 $compiler->raw(', ');
             }
-            $first = false;
 
             $key = null;
             if ($pair['key'] instanceof ContextVariable) {
                 $pair['key'] = new StringCastUnary($pair['key'], $pair['key']->getTemplateLine());
-            }
-            if ($pair['key'] instanceof LocalVariable) {
+            } elseif ($pair['key'] instanceof LocalVariable) {
                 $key = $pair['key']->getAttribute('name');
                 $pair['key'] = new ConstantExpression($key, $pair['key']->getTemplateLine());
-            }
-            if ($pair['key'] instanceof ConstantExpression) {
+            } elseif ($pair['key'] instanceof ConstantExpression) {
                 $key = $pair['key']->getAttribute('value');
             }
 
-            if ($nextIndex !== $key && !$pair['value'] instanceof SpreadUnary) {
+            if ($key !== $i) {
+                $isSequence = false;
+            }
+
+            if (!$isSequence && !$pair['value'] instanceof SpreadUnary) {
                 $compiler
                     ->subcompile($pair['key'])
                     ->raw(' => ')
                 ;
             }
-            ++$nextIndex;
 
             $compiler->subcompile($pair['value']);
         }

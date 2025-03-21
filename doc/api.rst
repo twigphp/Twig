@@ -325,23 +325,23 @@ extension via the ``addExtension()`` method::
 
 Twig comes bundled with the following extensions:
 
-* *Twig\Extension\CoreExtension*: Defines all the core features of Twig.
+* ``\Twig\Extension\CoreExtension``: Defines all the core features of Twig.
 
-* *Twig\Extension\DebugExtension*: Defines the ``dump`` function to help debug
+* ``\Twig\Extension\DebugExtension``: Defines the ``dump`` function to help debug
   template variables.
 
-* *Twig\Extension\EscaperExtension*: Adds automatic output-escaping and the
+* ``\Twig\Extension\EscaperExtension``: Adds automatic output-escaping and the
   possibility to escape/unescape blocks of code.
 
-* *Twig\Extension\SandboxExtension*: Adds a sandbox mode to the default Twig
+* ``\Twig\Extension\SandboxExtension``: Adds a sandbox mode to the default Twig
   environment, making it safe to evaluate untrusted code.
 
-* *Twig\Extension\ProfilerExtension*: Enables the built-in Twig profiler.
+* ``\Twig\Extension\ProfilerExtension``: Enables the built-in Twig profiler.
 
-* *Twig\Extension\OptimizerExtension*: Optimizes the node tree before
+* ``\Twig\Extension\OptimizerExtension``: Optimizes the node tree before
   compilation.
 
-* *Twig\Extension\StringLoaderExtension*: Defines the ``template_from_string``
+* ``\Twig\Extension\StringLoaderExtension``: Defines the ``template_from_string``
    function to allow loading templates from string in a template.
 
 The Core, Escaper, and Optimizer extensions are registered by default.

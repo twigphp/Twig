@@ -27,12 +27,12 @@ You can disable access to the context by setting ``with_context`` to
 .. code-block:: twig
 
     {# only the name variable will be accessible #}
-    {{ include('template.html.twig', {name: 'Fabien'}, with_context = false) }}
+    {{ include('template.html.twig', {name: 'Fabien'}, with_context: false) }}
 
 .. code-block:: twig
 
     {# no variables will be accessible #}
-    {{ include('template.html.twig', with_context = false) }}
+    {{ include('template.html.twig', with_context: false) }}
 
 And if the expression evaluates to a ``\Twig\Template`` or a
 ``\Twig\TemplateWrapper`` instance, Twig will use it directly::
@@ -48,7 +48,7 @@ the template does not exist:
 
 .. code-block:: twig
 
-    {{ include('sidebar.html.twig', ignore_missing = true) }}
+    {{ include('sidebar.html.twig', ignore_missing: true) }}
 
 You can also provide a list of templates that are checked for existence before
 inclusion. The first template that exists will be rendered:

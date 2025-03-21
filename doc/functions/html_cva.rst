@@ -56,7 +56,7 @@ To "merge" conflicting classes together and keep only the ones you need, use the
 ``tailwind_merge()`` filter from `tales-from-a-dev/twig-tailwind-extra`_
 with the ``html_cva()`` function:
 
-.. code-block:: terminal
+.. code-block:: bash
 
     $ composer require tales-from-a-dev/twig-tailwind-extra
 
