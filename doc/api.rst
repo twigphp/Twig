@@ -71,8 +71,6 @@ If a template defines blocks, they can be rendered individually via the
 Streaming Templates
 -------------------
 
-.. versionadded:: 3.18
-
 To stream a template, call the ``stream()`` method::
 
     $template->stream(['the' => 'variables', 'go' => 'here']);
