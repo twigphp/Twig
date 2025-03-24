@@ -19,7 +19,7 @@ additional variables:
 .. code-block:: twig
 
     {# template.html.twig will have access to the variables from the current context and the additional ones provided #}
-    {{ include('template.html.twig', {name: 'Fabien'}) }}
+    {{ include('template.html.twig', {name= 'Fabien'}) }}
 
 You can disable access to the context by setting ``with_context`` to
 ``false``:
@@ -27,12 +27,12 @@ You can disable access to the context by setting ``with_context`` to
 .. code-block:: twig
 
     {# only the name variable will be accessible #}
-    {{ include('template.html.twig', {name: 'Fabien'}, with_context: false) }}
+    {{ include('template.html.twig', {name: 'Fabien'}, with_context= false) }}
 
 .. code-block:: twig
 
     {# no variables will be accessible #}
-    {{ include('template.html.twig', with_context: false) }}
+    {{ include('template.html.twig', with_context= false) }}
 
 And if the expression evaluates to a ``\Twig\Template`` or a
 ``\Twig\TemplateWrapper`` instance, Twig will use it directly::
