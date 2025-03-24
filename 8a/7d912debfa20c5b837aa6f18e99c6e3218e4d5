@@ -1,0 +1,46 @@
+---------------------------------------------------------------------------
+
+by GromNaN at 2023-11-26T09:36:45Z
+
+I'll rework the implementation after reading discussions on symfony/symfony#50016
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2024-01-03T09:04:27Z
+
+In all honesty, I'm not totally convinced by this implementation. The fact that extensions have to be registered in 2 places (as a runtime extension and for definition in AttributeExtension) makes them difficult to use with Twig standalone, this is totally hidden for Symfony users with the TwigBundle.
+
+I would like to add a new `Environment::add(object $extension)` method that would accept any class with attributes. Invocable classes could be used to define filters and functions.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-01-03T09:21:43Z
+
+What is a bit strange is having one single instance of AttributeExtension be responsible for registering many runtimes.
+Maybe we should instead have one AttributeExtension per runtime?
+Then it might be easier to use this standalone : `addExtension(new AttributeExtension(new AttributeBasedRuntime)))` (and such runtimes could have a static factory to make this even easier to create).
+Note that this suggestion might be wrong as I didn't think of how runtimes should be made lazy-instantiated.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-03T16:13:53Z
+
+For reference, this is my attempt/experiment to solve the problem of apps having to create a bunch of twig extensions for things: https://github.com/zenstruck/twig-service-bundle
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2025-01-03T19:03:55Z
+
+> What is a bit strange is having one single instance of AttributeExtension be responsible for registering many runtimes. Maybe we should instead have one AttributeExtension per runtime? Then it might be easier to use this standalone : `addExtension(new AttributeExtension(new AttributeBasedRuntime)))` (and such runtimes could have a static factory to make this even easier to create). Note that this suggestion might be wrong as I didn't think of how runtimes should be made lazy-instantiated.
+
+I refactored once again to get 1 instance of `AttributeExtension` for each class. This allows to list the encapsulated class in the `ExtensionSet::getSignature` to invalidate the cache when an extension class is removed.
+
+Also, I removed the ability to pass an instance of an object to `AttributeExtension`, this would require proxying calls to `ExtensionSet::getExtension('MyClass')->functionCall()` to the wrapped object. This can be implemented in a follow-up PR.
+
+The doc is up-to-date on how to use it standalone. The Symfony implementation need to be updated.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2025-03-02T19:19:51Z
+
+git rebase FTW ;)
