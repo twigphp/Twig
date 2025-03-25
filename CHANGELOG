@@ -11,6 +11,7 @@
    instead of arrays (it comes with many deprecations that are documented in
    the ``deprecated`` documentation chapter)
  * Deprecate the `Twig\ExpressionParser`, and `Twig\OperatorPrecedenceChange` classes
+ * Add attributes `AsTwigFilter`, `AsTwigFunction`, and `AsTwigTest` to ease extension development
 
 # 3.20.0 (2025-02-13)
 
