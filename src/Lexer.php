@@ -61,6 +61,9 @@ class Lexer
     public const REGEX_INLINE_COMMENT = '/#[^\n]*/A';
     public const PUNCTUATION = '()[]{}?:.,|';
 
+    const TOKEN_OPTIONAL_CHAIN = 17;
+    private const REGEX_OPTIONAL_CHAIN = '/\?\./A';
+
     private const SPECIAL_CHARS = [
         'f' => "\f",
         'n' => "\n",

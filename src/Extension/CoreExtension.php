@@ -24,6 +24,7 @@ use Twig\ExpressionParser\Infix\FilterExpressionParser;
 use Twig\ExpressionParser\Infix\FunctionExpressionParser;
 use Twig\ExpressionParser\Infix\IsExpressionParser;
 use Twig\ExpressionParser\Infix\IsNotExpressionParser;
+use Twig\ExpressionParser\Infix\OptionalChainExpressionParser;
 use Twig\ExpressionParser\Infix\SquareBracketExpressionParser;
 use Twig\ExpressionParser\InfixAssociativity;
 use Twig\ExpressionParser\PrecedenceChange;
@@ -391,6 +392,7 @@ final class CoreExtension extends AbstractExtension
 
             // all literals
             new LiteralExpressionParser(),
+            new OptionalChainExpressionParser(),
         ];
     }
 
