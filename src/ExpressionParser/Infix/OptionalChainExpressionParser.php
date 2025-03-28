@@ -97,7 +97,7 @@ final class OptionalChainExpressionParser extends AbstractExpressionParser imple
 
     public function getPrecedence(): int
     {
-        return 512; // Тот же приоритет, что и у оператора "."
+        return 512;
     }
 
     public function getAssociativity(): InfixAssociativity

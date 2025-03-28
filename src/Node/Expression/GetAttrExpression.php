@@ -50,16 +50,13 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
         $env = $compiler->getEnvironment();
         $arrayAccessSandbox = false;
 
-        // Если используется optional chaining
         if ($this->getAttribute('is_optional_chain')) {
             $var = '$'.$compiler->getVarName();
 
-            // Проверяем, является ли node NameExpression с флагом optional_chain
             $isOptionalName = $this->getNode('node') instanceof NameExpression &&
                 $this->getNode('node')->getAttribute('optional_chain', false);
 
             if ($isOptionalName) {
-                // Безопасный доступ к переменным контекста без выброса исключения
                 $compiler
                     ->raw('(array_key_exists(')
                     ->string($this->getNode('node')->getAttribute('name'))
@@ -72,21 +69,17 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
                     ->string($this->getNode('node')->getAttribute('name'))
                     ->raw(']) ? ');
             } else {
-                // Обычная проверка null для нормальных выражений
                 $compiler
                     ->raw('(null !== (')
                     ->raw($var)
                     ->raw(' = ');
 
-                // Обращение к полю через ->subcompile может вызвать исключение
                 $this->getNode('node')->setAttribute('ignore_strict_check', true);
                 $compiler->subcompile($this->getNode('node'));
                 $compiler->raw(') ? ');
             }
 
-            // Генерируем код для доступа к атрибуту в зависимости от типа
             if ($this->getAttribute('type') === Template::METHOD_CALL) {
-                // Вызов метода
                 $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ');
                 $compiler
                     ->raw($var)
@@ -107,7 +100,6 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
                     ->raw(', ')->repr($this->getNode('node')->getTemplateLine())
                     ->raw(')');
             } elseif ($this->getAttribute('type') === Template::ARRAY_CALL) {
-                // Доступ к массиву
                 $compiler->raw('(is_array(')
                     ->raw($var)
                     ->raw(') || ')
@@ -118,7 +110,6 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
                     ->subcompile($this->getNode('attribute'))
                     ->raw('] ?? null) : null)');
             } else {
-                // Доступ к свойству
                 $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ');
                 $compiler
                     ->raw($var)
@@ -149,8 +140,6 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
             return;
         }
 
-        // Оригинальный код для обычного доступа к атрибутам
-        // optimize array calls
         if (
             $this->getAttribute('optimizable')
             && (!$env->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
@@ -231,68 +220,6 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
 
         if ($node->getNode('node') instanceof GetAttrExpression) {
             $this->changeIgnoreStrictCheck($node->getNode('node'));
-        }
-    }
-    private function compileGetAttr(Compiler $compiler, string $varName): void
-    {
-        $env = $compiler->getEnvironment();
-
-        if (\PHP_VERSION_ID >= 80000) {
-            $compiler->raw($varName);
-            if ($this->getAttribute('type') === Template::METHOD_CALL) {
-                $compiler->raw('?->');
-                if ($this->getNode('attribute') instanceof ConstantExpression) {
-                    $compiler->raw($this->getNode('attribute')->getAttribute('value'));
-                } else {
-                    $compiler->raw('{');
-                    $compiler->subcompile($this->getNode('attribute'));
-                    $compiler->raw('}');
-                }
-
-                $compiler->raw('(');
-
-                if ($this->hasNode('arguments')) {
-                    $first = true;
-                    foreach ($this->getNode('arguments') as $argNode) {
-                        if (!$first) {
-                            $compiler->raw(', ');
-                        }
-                        $compiler->subcompile($argNode);
-                        $first = false;
-                    }
-                }
-
-                $compiler->raw(')');
-            } else {
-                $compiler->raw('?->');
-
-                if ($this->getNode('attribute') instanceof ConstantExpression) {
-                    $compiler->raw($this->getNode('attribute')->getAttribute('value'));
-                } else {
-                    $compiler->raw('{');
-                    $compiler->subcompile($this->getNode('attribute'));
-                    $compiler->raw('}');
-                }
-            }
-        } else {
-            $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ');
-            $compiler
-                ->raw($varName)
-                ->raw(', ')
-                ->subcompile($this->getNode('attribute'));
-
-            if ($this->hasNode('arguments')) {
-                $compiler->raw(', ')->subcompile($this->getNode('arguments'));
-            } else {
-                $compiler->raw(', []');
-            }
-            $compiler->raw(', ')
-                ->repr($this->getAttribute('type'))
-                ->raw(', ')->repr($this->definedTest ?? false)
-                ->raw(', ')->repr($this->getAttribute('ignore_strict_check'))
-                ->raw(', ')->repr($env->hasExtension(SandboxExtension::class))
-                ->raw(', ')->repr($this->getNode('node')->getTemplateLine())
-                ->raw(')');
         }
     }
 }
