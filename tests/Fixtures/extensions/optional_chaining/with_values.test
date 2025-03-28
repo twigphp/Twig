@@ -1,0 +1,9 @@
+--TEST--
+Optional chaining with values
+--TEMPLATE--
+{{ foo?.bar }}
+{{ foo?.bar?.baz }}
+--DATA--
+return ['foo' => ['bar' => 'value', 'baz' => ['qux' => 'nested']]]
+--EXPECT--
+value

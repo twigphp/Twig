@@ -1,0 +1,20 @@
+--TEST--
+Optional chaining with method calls
+--TEMPLATE--
+{{ foo?.getBar() }}
+{{ foo_with_nested?.bar?.getBaz() }}
+--DATA--
+class TestObject {
+    public function getBar() { return 'bar_value'; }
+}
+class NestedObject {
+    public function getBaz() { return 'baz_value'; }
+}
+return [
+    'foo' => new TestObject(),
+    'null_foo' => null,
+    'foo_with_nested' => ['bar' => new NestedObject()]
+]
+--EXPECT--
+bar_value
+baz_value

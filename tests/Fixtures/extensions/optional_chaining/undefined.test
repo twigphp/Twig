@@ -1,0 +1,7 @@
+--TEST--
+Optional chaining with undefined variables
+--TEMPLATE--
+{{ undefinedVar?.bar }}
+--DATA--
+return []
+--EXPECT--

@@ -1,0 +1,12 @@
+--TEST--
+Optional chaining with array access
+--TEMPLATE--
+{{ foo?.bar }}
+{{ foo?.[0] }}
+--DATA--
+return [
+    'foo' => ['bar' => 'value', 0 => 'zero']
+]
+--EXPECT--
+value
+zero

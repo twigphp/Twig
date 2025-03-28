@@ -1,0 +1,12 @@
+--TEST--
+Mixed optional and normal chaining
+--TEMPLATE--
+{{ foo?.bar.baz }}
+{{ foo.bar?.baz }}
+--DATA--
+return [
+    'foo' => ['bar' => ['baz' => 'value']],
+]
+--EXPECT--
+value
+value

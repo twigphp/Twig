@@ -1,0 +1,8 @@
+--TEST--
+Basic optional chaining
+--TEMPLATE--
+{{ foo?.bar }}
+{{ foo?.bar?.baz }}
+--DATA--
+return ['foo' => null]
+--EXPECT--
