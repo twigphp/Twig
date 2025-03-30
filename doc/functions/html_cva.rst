@@ -97,7 +97,7 @@ when multiple other variant conditions are met:
                 lg: 'text-lg',
             }
         },
-        compoundVariants: [{
+        compound_variants: [{
             // if color = red AND size = (md or lg), add the `font-bold` class
             color: ['red'],
             size: ['md', 'lg'],
