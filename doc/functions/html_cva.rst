@@ -5,7 +5,6 @@
 
     The ``html_cva`` function was added in Twig 3.12.
 
-
 `CVA (Class Variant Authority)`_ is a concept from the JavaScript world and used
 by the well-known `shadcn/ui`_ library.
 The CVA concept is used to render multiple variations of components, applying
@@ -45,13 +44,13 @@ Then use the ``color`` and ``size`` variants to select the needed classes:
 
     {# index.html.twig #}
     {{ include('alert.html.twig', {'color': 'blue', 'size': 'md'}) }}
-    // class="alert bg-blue text-md"
+    {# class="alert bg-blue text-md" #}
 
     {{ include('alert.html.twig', {'color': 'green', 'size': 'sm'}) }}
-    // class="alert bg-green text-sm"
+    {# class="alert bg-green text-sm" #}
 
     {{ include('alert.html.twig', {'color': 'red', 'class': 'flex items-center justify-center'}) }}
-    // class="alert bg-red flex items-center justify-center"
+    {# class="alert bg-red flex items-center justify-center" #}
 
 CVA and Tailwind CSS
 --------------------
@@ -68,11 +67,11 @@ with the ``html_cva()`` function:
 .. code-block:: html+twig
 
     {% set alert = html_cva(
-       // ...
+        ...
     ) %}
 
     <div class="{{ alert.apply({color, size}, class)|tailwind_merge }}">
-         ...
+        ...
     </div>
 
 Compound Variants
@@ -98,27 +97,27 @@ when multiple other variant conditions are met:
             }
         },
         compound_variants: [{
-            // if color = red AND size = (md or lg), add the `font-bold` class
+            # if color = red AND size = (md or lg), add the `font-bold` class
             color: ['red'],
             size: ['md', 'lg'],
-            class: 'font-bold'
+            class: 'font-bold',
         }]
     ) %}
 
     <div class="{{ alert.apply({color, size}) }}">
-         ...
+        ...
     </div>
 
     {# index.html.twig #}
 
     {{ include('alert.html.twig', {color: 'red', size: 'lg'}) }}
-    // class="alert bg-red text-lg font-bold"
+    {# class="alert bg-red text-lg font-bold" #}
 
     {{ include('alert.html.twig', {color: 'green', size: 'sm'}) }}
-    // class="alert bg-green text-sm"
+    {# class="alert bg-green text-sm" #}
 
     {{ include('alert.html.twig', {color: 'red', size: 'md'}) }}
-    // class="alert bg-green text-md font-bold"
+    {# class="alert bg-green text-md font-bold" #}
 
 Default Variants
 ----------------
@@ -146,7 +145,7 @@ If no variants match, you can define a default set of classes to apply:
                 lg: 'rounded-lg',
             }
         },
-        defaultVariant: {
+        default_variant: {
             rounded: 'md',
         }
     ) %}
@@ -158,7 +157,7 @@ If no variants match, you can define a default set of classes to apply:
     {# index.html.twig #}
 
     {{ include('alert.html.twig', {color: 'red', size: 'lg'}) }}
-    // class="alert bg-red text-lg rounded-md"
+    {# class="alert bg-red text-lg rounded-md" #}
 
 .. note::
 
