@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-03-12T17:56:07Z
+
+defaultVariant should also be updated to `default_variant`
+
+and some context might help to review this PR:
+Twig coding standard ask for snake case named parameters but the doc was using pascal case for html_cva.
