@@ -35,11 +35,7 @@ final class OptionalChainExpressionParser extends AbstractExpressionParser imple
         $arguments = new ArrayExpression([], $lineno);
         $type = Template::ANY_CALL;
         $isOptionalChain = true;
-
-        // Проверка, является ли левое выражение переменной
         $isVariable = $expr instanceof NameExpression;
-
-        // Для обработки квадратных скобок
         if ($stream->test(Token::OPERATOR_TYPE, '[')) {
             $token = $stream->next();
             $attribute = $parser->parseExpression();
@@ -73,11 +69,11 @@ final class OptionalChainExpressionParser extends AbstractExpressionParser imple
                 || '_self' === $expr->getAttribute('name') && $attribute instanceof ConstantExpression
             )
         ) {
-            // Для макросов не используем optional chaining
+   
             return new MacroReferenceExpression(new TemplateVariable($expr->getAttribute('name'), $expr->getTemplateLine()), 'macro_'.$attribute->getAttribute('value'), $arguments, $expr->getTemplateLine());
         }
 
-        // Создаем специальный флаг для проверки существования переменной
+  
         if ($isVariable && $expr instanceof NameExpression) {
             $expr->setAttribute('optional_chain', true);
         }
