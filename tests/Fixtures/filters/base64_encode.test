@@ -1,0 +1,10 @@
+--TEST--
+"base64_encode" filter
+--TEMPLATE--
+{{ "foo"|base64_encode|raw }}
+{{ foo|base64_encode|raw }}
+--DATA--
+return ['foo' => new \Twig\Markup('foo', 'UTF-8')]
+--EXPECT--
+Zm9v
+Zm9v

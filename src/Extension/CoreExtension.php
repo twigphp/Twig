@@ -246,6 +246,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('url_encode', [self::class, 'urlencode']),
             new TwigFilter('json_encode', 'json_encode'),
             new TwigFilter('convert_encoding', [self::class, 'convertEncoding']),
+            new TwigFilter('base64_encode', 'base64_encode'),
 
             // string filters
             new TwigFilter('title', [self::class, 'titleCase'], ['needs_charset' => true]),
