@@ -507,10 +507,10 @@ final class ExtensionSet
                 default => throw new \InvalidArgumentException(\sprintf('Invalid associativity "%s" for operator "%s".', $op['associativity'], $operator)),
             };
 
-            if ($op['callable']) {
+            if (isset($op['callable'])) {
                 $expressionParsers[] = $this->convertInfixExpressionParser($op['class'], $operator, $op['precedence'], $op['associativity'], $op['precedence_change'] ?? null, $op['aliases'] ?? [], $op['callable']);
             } else {
-                $expressionParsers[] = new BinaryOperatorExpressionParser($op['class'], $operator, $op['precedence'], $op['associativity'], $op['precedence_change'] ?? null, $op['aliases'] ?? []);
+                $expressionParsers[] = new BinaryOperatorExpressionParser($op['class'], $operator, $op['precedence'], $op['associativity'], $op['precedence_change'] ?? null, '', $op['aliases'] ?? []);
             }
         }
 
