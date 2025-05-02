@@ -791,10 +791,6 @@ The ``getTests()`` method lets you add new test functions::
 Using PHP Attributes to define Extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 3.21
-
-    The attribute classes were added in Twig 3.21.
-
 You can add the ``#[AsTwigFilter]``, ``#[AsTwigFunction]``, and ``#[AsTwigTest]``
 attributes to public methods of any class to define filters, functions, and tests.
 
