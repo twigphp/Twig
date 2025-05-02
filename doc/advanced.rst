@@ -788,6 +788,107 @@ The ``getTests()`` method lets you add new test functions::
         // ...
     }
 
+Using PHP Attributes to define Extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.21
+
+    The attribute classes were added in Twig 3.21.
+
+You can add the ``#[AsTwigFilter]``, ``#[AsTwigFunction]``, and ``#[AsTwigTest]``
+attributes to public methods of any class to define filters, functions, and tests.
+
+Create a class using these attributes::
+
+    use Twig\Attribute\AsTwigFilter;
+    use Twig\Attribute\AsTwigFunction;
+    use Twig\Attribute\AsTwigTest;
+
+    class ProjectExtension
+    {
+        #[AsTwigFilter('rot13')]
+        public static function rot13(string $string): string
+        {
+            // ...
+        }
+
+        #[AsTwigFunction('lipsum')]
+        public static function lipsum(int $count): string
+        {
+            // ...
+        }
+
+        #[AsTwigTest('even')]
+        public static function isEven(int $number): bool
+        {
+            // ...
+        }
+    }
+
+Then register the ``Twig\Extension\AttributeExtension`` with the class name::
+
+    $twig = new \Twig\Environment($loader);
+    $twig->addExtension(new \Twig\Extension\AttributeExtension(ProjectExtension::class));
+
+If all the methods are static, you are done. The ``ProjectExtension`` class will
+never be instantiated and the class attributes will be scanned only when a template
+is compiled.
+
+Otherwise, if some methods are not static, you need to register the class as
+a runtime extension using one of the runtime loaders::
+
+    use Twig\Attribute\AsTwigFunction;
+
+    class ProjectExtension
+    {
+        // Inject hypothetical dependencies
+        public function __construct(private LipsumProvider $lipsumProvider) {}
+
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(int $count): string
+        {
+            return $this->lipsumProvider->lipsum($count);
+        }
+    }
+
+    $twig = new \Twig\Environment($loader);
+    $twig->addExtension(new \Twig\Extension\AttributeExtension(ProjectExtension::class);
+    $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryLoader([
+        ProjectExtension::class => function () use ($lipsumProvider) {
+            return new ProjectExtension($lipsumProvider);
+        },
+    ]));
+
+If you want to access the current environment instance in your filter or function,
+add the ``Twig\Environment`` type to the first argument of the method::
+
+    class ProjectExtension
+    {
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(\Twig\Environment $env, int $count): string
+        {
+            // ...
+        }
+    }
+
+``#[AsTwigFilter]`` and ``#[AsTwigFunction]`` support variadic arguments
+automatically when applied to variadic methods::
+
+    class ProjectExtension
+    {
+        #[AsTwigFilter('thumbnail')]
+        public function thumbnail(string $file, mixed ...$options): string
+        {
+            // ...
+        }
+    }
+
+The attributes support other options used to configure the Twig Callables:
+
+ * ``AsTwigFilter``: ``needsCharset``, ``needsEnvironment``, ``needsContext``, ``isSafe``, ``isSafeCallback``, ``preEscape``, ``preservesSafety``, ``deprecationInfo``
+ * ``AsTwigFunction``: ``needsCharset``, ``needsEnvironment``, ``needsContext``, ``isSafe``, ``isSafeCallback``, ``deprecationInfo``
+ * ``AsTwigTest``: ``needsCharset``, ``needsEnvironment``, ``needsContext``, ``deprecationInfo``
+
 Definition vs Runtime
 ~~~~~~~~~~~~~~~~~~~~~
 
