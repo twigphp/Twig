@@ -1,6 +1,6 @@
 # 3.21.1 (2025-XX-XX)
 
- * n/a
+ * Fix ExtensionSet usage of BinaryOperatorExpressionParser
 
 # 3.21.0 (2025-05-02)
 
