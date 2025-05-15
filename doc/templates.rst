@@ -68,11 +68,10 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 
 You might also be interested in:
 
+* `Twig CS Fixer`_: a tool to check/fix your templates code style
 * `Twig Language Server`_: provides some language features like syntax
   highlighting, diagnostics, auto complete, ...
-
 * `TwigQI`_: an extension which analyzes your templates for common bugs during compilation
-
 * `TwigStan`_: a static analyzer for Twig templates powered by PHPStan
 
 Variables
@@ -1105,6 +1104,7 @@ Twig can be extended. If you want to create your own extensions, read the
 .. _`TwigStan`:                             https://github.com/twigstan/twigstan
 .. _`Twig pack`:                            https://marketplace.visualstudio.com/items?itemName=bajdzis.vscode-twig-pack
 .. _`Modern Twig`:                          https://marketplace.visualstudio.com/items?itemName=Stanislav.vscode-twig
+.. _`Twig CS Fixer`:                        https://github.com/VincentLanglet/Twig-CS-Fixer
 .. _`Twig Language Server`:                 https://github.com/kaermorchen/twig-language-server/tree/master/packages/language-server
 .. _`Twiggy`:                               https://marketplace.visualstudio.com/items?itemName=moetelo.twiggy
 .. _`PHP spaceship operator documentation`: https://www.php.net/manual/en/language.operators.comparison.php
