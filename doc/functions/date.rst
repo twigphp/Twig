@@ -9,7 +9,7 @@ Converts an argument to a date to allow date comparison:
         {# do something #}
     {% endif %}
 
-The argument must be in one of PHP’s supported `date and time formats`_.
+The argument must be in one of PHP's supported `date and time formats`_.
 
 You can pass a timezone as the second argument:
 
