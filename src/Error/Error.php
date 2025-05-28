@@ -122,8 +122,12 @@ class Error extends \Exception
         if ($punctuation = '.' === $last || '?' === $last ? $last : '') {
             $this->message = substr($this->message, 0, -1);
         }
-        if ($this->source && $this->source->getName()) {
-            $this->message .= \sprintf(' in "%s"', $this->source->getName());
+        if ($this->source) {
+            if ($this->source->getPath()) {
+                $this->message .= \sprintf(' in "%s"', $this->source->getPath());
+            } else if ($this->source->getName()) {
+                $this->message .= \sprintf(' in "%s"', $this->source->getName());
+            }
         }
         if ($this->lineno > 0) {
             $this->message .= \sprintf(' at line %d', $this->lineno);
