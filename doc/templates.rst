@@ -871,9 +871,6 @@ The following operators don't fit into any of the other categories:
 
       {{ user.name }}
 
-      Twig supports a specific syntax via the ``[]`` operator for accessing items
-      on sequences and mappings, like in ``user['name']``:
-
   After the ``.``, you can use any expression by wrapping it with parenthesis
   ``()``.
 
