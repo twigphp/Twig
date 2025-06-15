@@ -11,12 +11,13 @@ When writing Twig templates, we recommend you to follow these official coding
 standards:
 
 * Put exactly one space after the start of a delimiter (``{{``, ``{%``,
-  and ``{#``) and before the end of a delimiter (``}}``, ``%}``, and ``#}``):
+  and ``{#``) and before the end of a delimiter (``}}``, ``%}``, and ``#}``)
+  if the content is non empty:
 
   .. code-block:: twig
 
     {{ user }}
-    {# comment #}
+    {# comment #} {##}
     {% if user %}{% endif %}
 
   When using the whitespace control character, do not put any spaces between
@@ -25,7 +26,7 @@ standards:
   .. code-block:: twig
 
     {{- user -}}
-    {#- comment -#}
+    {#- comment -#} {#--#}
     {%- if user -%}{%- endif -%}
 
 * Put exactly one space before and after the following operators:
