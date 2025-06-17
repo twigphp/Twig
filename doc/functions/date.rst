@@ -19,7 +19,7 @@ You can pass a timezone as the second argument:
         {# do something #}
     {% endif %}
 
-If no argument is passed, the function returns the current date:
+If no argument is passed, the ``date`` function returns ``null``:
 
 .. code-block:: html+twig
 
