@@ -241,6 +241,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('number_format', [$this, 'formatNumber']),
             new TwigFilter('abs', 'abs'),
             new TwigFilter('round', [self::class, 'round']),
+            new TwigFilter('int_cast', [$this, 'castInt']),
 
             // encoding
             new TwigFilter('url_encode', [self::class, 'urlencode']),
@@ -690,6 +691,22 @@ final class CoreExtension extends AbstractExtension
         }
 
         return number_format((float) $number, $decimal, $decimalPoint, $thousandSep);
+    }
+
+    /**
+     * Cast a value to an integer.
+     *
+     * @param mixed $value
+     * @return int
+     * @throws RuntimeError
+     */
+    public function castInt($value): int
+    {
+        if (!is_numeric($value)) {
+            throw new RuntimeError(\sprintf('The "cast integer" filter expects a numeric value, got "%s".', get_debug_type($value)));
+        }
+
+        return (int) $value;
     }
 
     /**
