@@ -140,6 +140,10 @@ final class EscaperRuntime implements RuntimeExtensionInterface
             case 'html':
                 // see https://www.php.net/htmlspecialchars
 
+                if ('UTF-8' === $charset) {
+                    return htmlspecialchars($string, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+                }
+
                 // Using a static variable to avoid initializing the array
                 // each time the function is called. Moving the declaration on the
                 // top of the function slow downs other escaping strategies.
@@ -195,7 +199,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
                     * Escape sequences supported only by JavaScript, not JSON, are omitted.
                     * \" is also supported but omitted, because the resulting string is not HTML safe.
                     */
-                    static $shortMap = [
+                    $short = match ($char) {
                         '\\' => '\\\\',
                         '/' => '\\/',
                         "\x08" => '\b',
@@ -203,10 +207,11 @@ final class EscaperRuntime implements RuntimeExtensionInterface
                         "\x0A" => '\n',
                         "\x0D" => '\r',
                         "\x09" => '\t',
-                    ];
+                        default => false,
+                    };
 
-                    if (isset($shortMap[$char])) {
-                        return $shortMap[$char];
+                    if ($short) {
+                        return $short;
                     }
 
                     $codepoint = mb_ord($char, 'UTF-8');
@@ -288,18 +293,13 @@ final class EscaperRuntime implements RuntimeExtensionInterface
                         * entities that XML supports. Using HTML entities would result in this error:
                         *     XML Parsing Error: undefined entity
                         */
-                        static $entityMap = [
+                        return match ($ord) {
                             34 => '&quot;', /* quotation mark */
                             38 => '&amp;',  /* ampersand */
                             60 => '&lt;',   /* less-than sign */
                             62 => '&gt;',   /* greater-than sign */
-                        ];
-
-                        if (isset($entityMap[$ord])) {
-                            return $entityMap[$ord];
-                        }
-
-                        return \sprintf('&#x%02X;', $ord);
+                            default => \sprintf('&#x%02X;', $ord),
+                        };
                     }
 
                     /*
