@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Twig.
+ *
+ * (c) Fabien Potencier
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Twig\Tests;
 
 /*
@@ -280,8 +289,7 @@ EOHTML,
                 $lineno = $stream->getCurrent()->getLine();
                 $stream->expect(Token::BLOCK_END_TYPE);
 
-                return new #[YieldReady]class($lineno, $this->addDebugInfo, $this->exceptionWithLineAndContext) extends Node
-                {
+                return new #[YieldReady] class($lineno, $this->addDebugInfo, $this->exceptionWithLineAndContext) extends Node {
                     public function __construct(int $lineno, private bool $addDebugInfo, private bool $exceptionWithLineAndContext)
                     {
                         parent::__construct([], [], $lineno);
@@ -295,7 +303,7 @@ EOHTML,
                         if ($this->exceptionWithLineAndContext) {
                             $compiler
                                 ->write('throw new \Twig\Error\RuntimeError("Runtime error.", ')
-                                ->repr($this->lineno)->raw(", \$this->getSourceContext()")
+                                ->repr($this->lineno)->raw(', $this->getSourceContext()')
                                 ->raw(");\n")
                             ;
                         } else {
