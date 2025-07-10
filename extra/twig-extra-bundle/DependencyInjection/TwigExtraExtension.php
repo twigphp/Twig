@@ -18,13 +18,36 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Twig\Extra\TwigExtraBundle\Extensions;
 
+if (!method_exists(ContainerBuilder::class, 'getAutoconfiguredAttributes')) {
+    /** @internal */
+    trait TwigExtraExtensionTrait
+    {
+        public function load(array $configs, ContainerBuilder $container): void
+        {
+            $this->doLoad($configs, $container);
+        }
+    }
+} else {
+    /** @internal */
+    trait TwigExtraExtensionTrait
+    {
+        /** @return void */
+        public function load(array $configs, ContainerBuilder $container)
+        {
+            $this->doLoad($configs, $container);
+        }
+    }
+
+}
+
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class TwigExtraExtension extends Extension
 {
-    /** @return void */
-    public function load(array $configs, ContainerBuilder $container)
+    use TwigExtraExtensionTrait;
+
+    private function doLoad(array $configs, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config'));
         $configuration = $this->getConfiguration($configs, $container);
