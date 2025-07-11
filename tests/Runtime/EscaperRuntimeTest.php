@@ -38,6 +38,7 @@ class EscaperRuntimeTest extends TestCase
         '.' => '.',
         '-' => '-',
         '_' => '_',
+        ':' => ':',
         /* Basic alnums excluded */
         'a' => 'a',
         'A' => 'A',
@@ -300,7 +301,7 @@ class EscaperRuntimeTest extends TestCase
 
     public function testHtmlAttributeEscapingEscapesOwaspRecommendedRanges()
     {
-        $immune = [',', '.', '-', '_']; // Exceptions to escaping ranges
+        $immune = [',', '.', '-', '_', ':']; // Exceptions to escaping ranges
         for ($chr = 0; $chr < 0xFF; ++$chr) {
             if ($chr >= 0x30 && $chr <= 0x39
             || $chr >= 0x41 && $chr <= 0x5A
