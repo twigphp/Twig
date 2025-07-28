@@ -327,6 +327,7 @@ class Environment
      * @throws LoaderError  When the template cannot be found
      * @throws SyntaxError  When an error occurred during compilation
      * @throws RuntimeError When an error occurred during rendering
+     * @throws \ErrorException When there syntax/php error, i.e. array to string
      */
     public function render($name, array $context = []): string
     {
