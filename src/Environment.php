@@ -57,7 +57,9 @@ class Environment
     private ?Lexer $lexer = null;
     private ?Parser $parser = null;
     private ?Compiler $compiler = null;
-    /** @var array<string, mixed> */
+    /**
+     * @var array<string, mixed>
+     */
     private array $globals = [];
     /**
      * @var array<string, mixed>|null

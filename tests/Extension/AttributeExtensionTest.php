@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Twig.
+ *
+ * (c) Fabien Potencier
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Twig\Tests\Extension;
 
 use PHPUnit\Framework\TestCase;
@@ -7,9 +16,9 @@ use Twig\DeprecatedCallableInfo;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AttributeExtension;
 use Twig\ExtensionSet;
+use Twig\Tests\Extension\Fixtures\ExtensionWithAttributes;
 use Twig\Tests\Extension\Fixtures\FilterWithoutValue;
 use Twig\Tests\Extension\Fixtures\TestWithoutValue;
-use Twig\Tests\Extension\Fixtures\ExtensionWithAttributes;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -30,7 +39,7 @@ class AttributeExtensionTest extends TestCase
             }
         }
 
-        $this->fail(sprintf('Filter "%s" is not registered.', $name));
+        $this->fail(\sprintf('Filter "%s" is not registered.', $name));
     }
 
     public static function provideFilters()
@@ -58,7 +67,7 @@ class AttributeExtensionTest extends TestCase
             }
         }
 
-        $this->fail(sprintf('Function "%s" is not registered.', $name));
+        $this->fail(\sprintf('Function "%s" is not registered.', $name));
     }
 
     public static function provideFunctions()
@@ -86,7 +95,7 @@ class AttributeExtensionTest extends TestCase
             }
         }
 
-        $this->fail(sprintf('Test "%s" is not registered.', $name));
+        $this->fail(\sprintf('Test "%s" is not registered.', $name));
     }
 
     public static function provideTests()

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Twig.
+ *
+ * (c) Fabien Potencier
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Twig\Tests;
 
 /*
@@ -539,9 +548,9 @@ class ExpressionParserTest extends TestCase
         yield '+ vs |' => ['{{ 10 + 2|length }}', '{{ 10 + (2|length) }}', eval('return 10 + strlen(2);'), $context];
 
         // - unary stronger than |
-        yield '- vs |' => ['{{ -1|abs }}', '{{ (-1)|abs }}', eval("return abs(-1);"), $context];
+        yield '- vs |' => ['{{ -1|abs }}', '{{ (-1)|abs }}', eval('return abs(-1);'), $context];
 
         // ?? stronger than ()
-        yield '?? vs ()' => ['{{ (1 ?? "a") }}', '{{ ((1 ?? "a")) }}', eval("return 1;")];
+        yield '?? vs ()' => ['{{ (1 ?? "a") }}', '{{ ((1 ?? "a")) }}', eval('return 1;')];
     }
 }
