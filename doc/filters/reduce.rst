@@ -10,14 +10,14 @@ value and key of the sequence or mapping:
 
     {% set numbers = [1, 2, 3] %}
 
-    {{ numbers|reduce((carry, v, k) => carry + v * k) }}
+    {{ numbers|reduce((carry, value, key) => carry + value * key) }}
     {# output 8 #}
 
 The ``reduce`` filter takes an ``initial`` value as a second argument:
 
 .. code-block:: twig
 
-    {{ numbers|reduce((carry, v, k) => carry + v * k, 10) }}
+    {{ numbers|reduce((carry, value, key) => carry + value * key, 10) }}
     {# output 18 #}
 
 Note that the arrow function has access to the current context.
@@ -27,9 +27,3 @@ Arguments
 
 * ``arrow``: The arrow function
 * ``initial``: The initial value
-
-.. note::
-
-    Internally, Twig uses the PHP `array_reduce`_ function.
-
-.. _`array_reduce`: https://www.php.net/array_reduce

@@ -19,13 +19,14 @@ class MissingExtensionSuggestorPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if ($container->getParameter('kernel.debug')) {
-            $twigDefinition = $container->getDefinition('twig');
-            $twigDefinition
-                ->addMethodCall('registerUndefinedFilterCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestFilter']])
-                ->addMethodCall('registerUndefinedFunctionCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestFunction']])
-                ->addMethodCall('registerUndefinedTokenParserCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestTag']])
-            ;
+        if (!$container->getParameter('kernel.debug')) {
+            return;
         }
+        $twigDefinition = $container->getDefinition('twig');
+        $twigDefinition
+            ->addMethodCall('registerUndefinedFilterCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestFilter']])
+            ->addMethodCall('registerUndefinedFunctionCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestFunction']])
+            ->addMethodCall('registerUndefinedTokenParserCallback', [[new Reference('twig.missing_extension_suggestor'), 'suggestTag']])
+        ;
     }
 }

@@ -143,6 +143,17 @@ The following options are available:
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
   disable).
 
+* ``use_yield`` *boolean*
+
+  ``true``: forces templates to exclusively use ``yield`` instead of ``echo``
+  (all extensions must be yield ready)
+
+  ``false`` (default): allows templates to use a mix of ``yield`` and ``echo``
+  calls to allow for a progressive migration.
+  
+  Switch to ``true`` when possible as this will be the only supported mode in
+  Twig 4.0.
+
 Loaders
 -------
 
