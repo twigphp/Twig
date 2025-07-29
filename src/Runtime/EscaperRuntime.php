@@ -17,7 +17,7 @@ use Twig\Markup;
 
 final class EscaperRuntime implements RuntimeExtensionInterface
 {
-    /** @var array<string, callable(string $string, string $charset): string> */
+    /** @var array<string, callable(string, string): string> */
     private $escapers = [];
 
     /** @internal */

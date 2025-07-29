@@ -16,9 +16,9 @@ use Twig\ExpressionParser\InfixAssociativity;
 use Twig\ExpressionParser\InfixExpressionParserInterface;
 use Twig\Loader\ArrayLoader;
 
-require_once \dirname(__DIR__).'/vendor/autoload.php';
+require_once dirname(__DIR__).'/vendor/autoload.php';
 
-$output = fopen(\dirname(__DIR__).'/doc/operators_precedence.rst', 'w');
+$output = fopen(dirname(__DIR__).'/doc/operators_precedence.rst', 'w');
 
 $twig = new Environment(new ArrayLoader([]));
 $descriptionLength = 11;
@@ -29,7 +29,7 @@ foreach ($twig->getExpressionParsers() as $expressionParser) {
 }
 
 fwrite($output, "\n+------------+------------------+---------+---------------+".str_repeat('-', $descriptionLength + 2)."+\n");
-fwrite($output, "| Precedence | Operator         | Type    | Associativity | Description".str_repeat(' ', $descriptionLength - 11)." |\n");
+fwrite($output, '| Precedence | Operator         | Type    | Associativity | Description'.str_repeat(' ', $descriptionLength - 11)." |\n");
 fwrite($output, '+============+==================+=========+===============+'.str_repeat('=', $descriptionLength + 2).'+');
 
 usort($expressionParsers, fn ($a, $b) => $b->getPrecedence() <=> $a->getPrecedence());
@@ -46,7 +46,7 @@ foreach ($expressionParsers as $expressionParser) {
     if ($previousPrecedence !== $precedence) {
         $previous = null;
     }
-    fwrite($output, rtrim(\sprintf("\n| %-10s | %-16s | %-7s | %-13s | %-{$descriptionLength}s |\n",
+    fwrite($output, rtrim(sprintf("\n| %-10s | %-16s | %-7s | %-13s | %-{$descriptionLength}s |\n",
         (!$previous || $previousPrecedence !== $precedence ? $precedence : '').($expressionParser->getPrecedenceChange() ? ' => '.$expressionParser->getPrecedenceChange()->getNewPrecedence() : ''),
         '``'.$expressionParser->getName().'``',
         !$previous || ExpressionParserType::getType($previous) !== ExpressionParserType::getType($expressionParser) ? ExpressionParserType::getType($expressionParser)->value : '',
@@ -61,7 +61,7 @@ fwrite($output, "\nWhen a precedence will change in 4.0, the new precedence is i
 fwrite($output, "\nHere is the same table for Twig 4.0 with adjusted precedences:\n");
 
 fwrite($output, "\n+------------+------------------+---------+---------------+".str_repeat('-', $descriptionLength + 2)."+\n");
-fwrite($output, "| Precedence | Operator         | Type    | Associativity | Description".str_repeat(' ', $descriptionLength - 11)." |\n");
+fwrite($output, '| Precedence | Operator         | Type    | Associativity | Description'.str_repeat(' ', $descriptionLength - 11)." |\n");
 fwrite($output, '+============+==================+=========+===============+'.str_repeat('=', $descriptionLength + 2).'+');
 
 usort($expressionParsers, function ($a, $b) {
@@ -83,7 +83,7 @@ foreach ($expressionParsers as $expressionParser) {
     if ($previousPrecedence !== $precedence) {
         $previous = null;
     }
-    fwrite($output, rtrim(\sprintf("\n| %-10s | %-16s | %-7s | %-13s | %-{$descriptionLength}s |\n",
+    fwrite($output, rtrim(sprintf("\n| %-10s | %-16s | %-7s | %-13s | %-{$descriptionLength}s |\n",
         !$previous || $previousPrecedence !== $precedence ? $precedence : '',
         '``'.$expressionParser->getName().'``',
         !$previous || ExpressionParserType::getType($previous) !== ExpressionParserType::getType($expressionParser) ? ExpressionParserType::getType($expressionParser)->value : '',
