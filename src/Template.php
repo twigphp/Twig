@@ -392,6 +392,8 @@ abstract class Template
 
     /**
      * @return iterable<scalar|\Stringable|null>
+     *
+     * @throws RuntimeError When an error occurred during rendering
      */
     public function yield(array $context, array $blocks = []): iterable
     {

@@ -181,6 +181,9 @@ class Lexer
         $this->isInitialized = true;
     }
 
+    /**
+     * @throws SyntaxError When the code is syntactically wrong
+     */
     public function tokenize(Source $source): TokenStream
     {
         $this->initialize();

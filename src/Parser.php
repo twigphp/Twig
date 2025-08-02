@@ -76,6 +76,9 @@ class Parser
         return \sprintf('__internal_parse_%d', $this->varNameSalt++);
     }
 
+    /**
+     * @throws SyntaxError When the token stream is syntactically or semantically wrong
+     */
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
         $vars = get_object_vars($this);

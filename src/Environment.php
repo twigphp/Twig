@@ -323,10 +323,6 @@ class Environment
      * Renders a template.
      *
      * @param string|TemplateWrapper $name The template name
-     *
-     * @throws LoaderError  When the template cannot be found
-     * @throws SyntaxError  When an error occurred during compilation
-     * @throws RuntimeError When an error occurred during rendering
      */
     public function render($name, array $context = []): string
     {
@@ -337,10 +333,6 @@ class Environment
      * Displays a template.
      *
      * @param string|TemplateWrapper $name The template name
-     *
-     * @throws LoaderError  When the template cannot be found
-     * @throws SyntaxError  When an error occurred during compilation
-     * @throws RuntimeError When an error occurred during rendering
      */
     public function display($name, array $context = []): void
     {
@@ -351,10 +343,6 @@ class Environment
      * Loads a template.
      *
      * @param string|TemplateWrapper $name The template name
-     *
-     * @throws LoaderError  When the template cannot be found
-     * @throws RuntimeError When a previously generated cache is corrupted
-     * @throws SyntaxError  When an error occurred during compilation
      */
     public function load($name): TemplateWrapper
     {
@@ -379,9 +367,7 @@ class Environment
      * @param string   $name  The template name
      * @param int|null $index The index if it is an embedded template
      *
-     * @throws LoaderError  When the template cannot be found
      * @throws RuntimeError When a previously generated cache is corrupted
-     * @throws SyntaxError  When an error occurred during compilation
      *
      * @internal
      */
@@ -438,9 +424,6 @@ class Environment
      *
      * @param string      $template The template source
      * @param string|null $name     An optional name of the template to be used in error messages
-     *
-     * @throws LoaderError When the template cannot be found
-     * @throws SyntaxError When an error occurred during compilation
      */
     public function createTemplate(string $template, ?string $name = null): TemplateWrapper
     {
@@ -487,7 +470,6 @@ class Environment
      * @param string|TemplateWrapper|array<string|TemplateWrapper> $names A template or an array of templates to try consecutively
      *
      * @throws LoaderError When none of the templates can be found
-     * @throws SyntaxError When an error occurred during compilation
      */
     public function resolveTemplate($names): TemplateWrapper
     {
@@ -524,9 +506,6 @@ class Environment
         $this->lexer = $lexer;
     }
 
-    /**
-     * @throws SyntaxError When the code is syntactically wrong
-     */
     public function tokenize(Source $source): TokenStream
     {
         if (null === $this->lexer) {
@@ -546,8 +525,6 @@ class Environment
 
     /**
      * Converts a token stream to a node tree.
-     *
-     * @throws SyntaxError When the token stream is syntactically or semantically wrong
      */
     public function parse(TokenStream $stream): ModuleNode
     {
