@@ -60,9 +60,9 @@ The list of supported options:
     * ``floor``: Floor rounding
     * ``down``: Rounding towards zero
     * ``up``: Rounding away from zero
-    * ``half_even``: Round halves to the nearest even integer
-    * ``half_up``: Round halves up
-    * ``half_down``: Round halves down
+    * ``halfeven``: Round halves to the nearest even integer
+    * ``halfup``: Round halves up
+    * ``halfdown``: Round halves down
 
     .. code-block:: twig
 
