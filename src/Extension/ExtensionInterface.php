@@ -11,8 +11,11 @@
 
 namespace Twig\Extension;
 
+use Twig\ExpressionParser;
 use Twig\ExpressionParser\ExpressionParserInterface;
 use Twig\ExpressionParser\PrecedenceChange;
+use Twig\Node\Expression\Binary\AbstractBinary;
+use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
