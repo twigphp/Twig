@@ -8,6 +8,29 @@ The ``format_datetime`` filter formats a date time:
     {# Aug 7, 2019, 11:39:12 PM #}
     {{ '2019-08-07 23:39:12'|format_datetime() }}
 
+.. note::
+
+    The ``format_datetime`` filter is part of the ``IntlExtension`` which is not
+    installed by default. Install it first:
+
+    .. code-block:: bash
+
+        $ composer require twig/intl-extra
+
+    Then, on Symfony projects, install the ``twig/extra-bundle``:
+
+    .. code-block:: bash
+
+        $ composer require twig/extra-bundle
+
+    Otherwise, add the extension explicitly on the Twig environment::
+
+        use Twig\Extra\Intl\IntlExtension;
+
+        $twig = new \Twig\Environment(...);
+        $twig->addExtension(new IntlExtension());
+
+
 Format
 ------
 
