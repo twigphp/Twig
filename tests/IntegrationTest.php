@@ -72,7 +72,28 @@ class IntegrationTest extends IntegrationTestCase
         ];
     }
 
-    protected function getUndefinedTokenParserCallbacks(): array
+    protected function getUndefinedTestCallbacks(): array
+    {
+        return [
+            static function (string $name) {
+                if ('throwing_undefined_test' === $name) {
+                    throw new SyntaxError('This test is undefined in the tests.');
+                }
+                if ('throwing_undefined_two words_test' === $name) {
+                    throw new SyntaxError('This test is undefined in the tests.');
+                }
+
+                // Ensure this does not conflict with `divisible by` and `same as`.
+                if (\in_array($name, ['divisible', 'same'], true)) {
+                    return new TwigTest($name, fn () => '');
+                }
+
+                return false;
+            },
+        ];
+    }
+
+    protected function getUndefinedFilterCallbacks(): array
     {
         return [
             static function (string $name) {

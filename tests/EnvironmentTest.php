@@ -425,6 +425,22 @@ class EnvironmentTest extends TestCase
         $this->assertSame('dynamic', $filter->getName());
     }
 
+    public function testUndefinedTestCallback()
+    {
+        $twig = new Environment(new ArrayLoader());
+        $twig->registerUndefinedTestCallback(function (string $name) {
+            if ('dynamic' === $name) {
+                return new TwigTest('dynamic', function () { return 'dynamic'; });
+            }
+
+            return false;
+        });
+
+        $this->assertNull($twig->getTest('does_not_exist'));
+        $this->assertInstanceOf(TwigTest::class, $test = $twig->getTest('dynamic'));
+        $this->assertSame('dynamic', $test->getName());
+    }
+
     public function testUndefinedTokenParserCallback()
     {
         $twig = new Environment(new ArrayLoader());

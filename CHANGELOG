@@ -1,6 +1,7 @@
 # 3.22.0 (2025-XX-XX)
 
  * Add support for two words test in guard tag
+ * Add `Environment::registerUndefinedTestCallback()`
 
 # 3.21.1 (2025-05-03)
 

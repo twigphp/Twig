@@ -14,9 +14,27 @@
 {% else -%}
     The throwing_undefined_function function doesn't exist
 {% endguard %}
+
+{% guard test throwing_undefined_test -%}
+    NEVER
+    {% if 'a' is throwing_undefined_test('b') %}{% endif %}
+{% else -%}
+    The throwing_undefined_test test doesn't exist
+{% endguard %}
+
+{% guard test throwing_undefined_two words_test -%}
+    NEVER
+    {% if 'a' is throwing_undefined_test words_test('b') %}{% endif %}
+{% else -%}
+    The throwing_undefined_two words_test test doesn't exist
+{% endguard %}
 --DATA--
 return []
 --EXPECT--
 The throwing_undefined_filter filter doesn't exist
 
 The throwing_undefined_function function doesn't exist
+
+The throwing_undefined_test test doesn't exist
+
+The throwing_undefined_two words_test test doesn't exist
