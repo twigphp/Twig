@@ -148,6 +148,10 @@ class Error extends \Exception
             }
         }
 
+        if (null === $template) {
+            return; // Impossible to guess the info as the template was not found in the backtrace
+        }
+
         $r = new \ReflectionObject($template);
         $file = $r->getFileName();
 
