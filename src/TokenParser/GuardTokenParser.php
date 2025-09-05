@@ -32,9 +32,15 @@ final class GuardTokenParser extends AbstractTokenParser
         $method = 'get'.$typeToken->getValue();
 
         $nameToken = $stream->expect(Token::NAME_TYPE);
+        $name = $nameToken->getValue();
+        if ('test' === $typeToken->getValue() && $stream->test(Token::NAME_TYPE)) {
+            // try 2-words tests
+            $name .= ' '.$stream->getCurrent()->getValue();
+            $stream->next();
+        }
 
         try {
-            $exists = null !== $this->parser->getEnvironment()->$method($nameToken->getValue());
+            $exists = null !== $this->parser->getEnvironment()->$method($name);
         } catch (SyntaxError) {
             $exists = false;
         }
