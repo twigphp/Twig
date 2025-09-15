@@ -13,9 +13,26 @@
 {% else %}
     NEVER
 {% endguard %}
+
+{% guard test foobar %}
+    NEVER
+    {{ 'a'|foobar }}
+{% else -%}
+    The foobar test doesn't exist
+{% endguard %}
+
+{% guard test divisible by -%}
+    The divisible by function does exist
+{% else %}
+    NEVER
+{% endguard %}
 --DATA--
 return []
 --EXPECT--
 The foobar filter doesn't exist
 
 The constant function does exist
+
+The foobar test doesn't exist
+
+The divisible by function does exist
