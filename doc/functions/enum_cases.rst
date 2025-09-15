@@ -9,9 +9,10 @@
 
 .. code-block:: twig
 
-    {% for case in enum_cases('App\\MyEnum') %}
+    {% for case in enum_cases('App\\CardSuite') %}
         {{ case.value }}
     {% endfor %}
+    {# "clubs", "spades", "hearts", "diamonds" #}
 
 When using a string literal for the ``enum`` argument, it will be validated during compile time to be a valid enum name.
 
