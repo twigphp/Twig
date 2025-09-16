@@ -1,0 +1,114 @@
+---------------------------------------------------------------------------
+
+by stof at 2025-09-04T09:20:36Z
+
+How does this behave regarding the fact that test names can be either 1 identifier or 2 identifiers ? Will this call the undefined test callback for the first identifier _before_ trying to find a known test named in 2 words ?
+
+And doesn't this require a special handling for guard nodes for the case where the callback is throwing its own SyntaxError to provide a custom error message ?
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-09-04T09:40:15Z
+
+> How does this behave regarding the fact that test names can be either 1 identifier or 2 identifiers ? Will this call the undefined test callback for the first identifier _before_ trying to find a known test named in 2 words ?
+
+Yes, the same way `getTest` already works.
+
+Currently, if I define a `divisible` test, the `divisible by` test won't work anymore.
+I think it could be better to only use single-word tests or to reserve some words, but that another debate.
+
+Here, when implementing registerUndefinedTestCallback, I'll have to return false for `divisible` and `same` ; and a mock for others.
+
+> And doesn't this require a special handling for guard nodes for the case where the callback is throwing its own SyntaxError to provide a custom error message ?
+
+I copied the implementation of registerUndefinedTokenParserCallback, registerUndefinedFunctionCallback and registerUndefinedFilterCallback ; why would I need a special handling here ?
+
+---------------------------------------------------------------------------
+
+by stof at 2025-09-04T12:28:19Z
+
+> Yes, the same way `getTest` already works.
+
+The difference is that currently, there is nothing special being run when the first identifier does not correspond to an undefined test. The fact that the parser checks 2 different test names is not an observable behavior currently.
+Calling the undefined handler callback for `starts` when parsing `{% if foo starts with('bar') %}` looks wrong to me as `starts with` is a defined test.
+
+> I copied the implementation of registerUndefinedTokenParserCallback, registerUndefinedFunctionCallback and registerUndefinedFilterCallback ; why would I need a special handling here ?
+
+Because those undefined callbacks *also* required special handling to account for the case where the callback is throwing. See https://github.com/twigphp/Twig/pull/4575 where this was implemented to fix https://github.com/twigphp/Twig/issues/4505
+
+---------------------------------------------------------------------------
+
+by stof at 2025-09-04T12:29:43Z
+
+> Here, when implementing registerUndefinedTestCallback, I'll have to return false for `divisible` and `same` ; and a mock for others.
+
+This makes it possible for an undefined test callback to break core tests. This looks very fragile to me, and is not something I would like to see being shipped in Twig (it will be a maintenance nightmare, especially to preserve BC on it).
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-09-05T07:24:07Z
+
+> The difference is that currently, there is nothing special being run when the first identifier does not correspond to an undefined test. The fact that the parser checks 2 different test names is not an observable behavior currently. Calling the undefined handler callback for `starts` when parsing `{% if foo starts with('bar') %}` looks wrong to me as `starts with` is a defined test.
+
+After a new look @stof, this issue doesn't exist since the Twig Parser is doing the right check (2 word or 1 word) based on the number of name token.
+https://github.com/twigphp/Twig/blob/98b664a0ca0a76149ac9306b23d5e827f2bcb761/src/Parser.php#L493-L502
+
+So you can mock the tests without expecting issue with one/two words tests. I tried on my project.
+
+BTW, `starts with` is an operaor.
+
+I think tests are used in the format `{% if foo is myTest('bar') %}`
+
+> > I copied the implementation of registerUndefinedTokenParserCallback, registerUndefinedFunctionCallback and registerUndefinedFilterCallback ; why would I need a special handling here ?
+>
+> Because those undefined callbacks _also_ required special handling to account for the case where the callback is throwing. See #4575 where this was implemented to fix #4505
+
+Should be updated
+
+---------------------------------------------------------------------------
+
+by stof at 2025-09-05T07:50:10Z
+
+Indeed, I used the wrong example when using `starts with`. I should have used `same as` or `divisible by`
+
+> So you can mock the tests without expecting issue with one/two words tests. I tried on my project.
+
+would be great to add tests covering this to prevent regressions (add a undefined test handler doing something for `divisible` for instance)
+
+---------------------------------------------------------------------------
+
+by stof at 2025-09-05T07:51:31Z
+
+And I suggest also adding a test guarding a 2-word test name to ensure it works.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-09-05T08:37:38Z
+
+> And I suggest also adding a test guarding a 2-word test name to ensure it works.
+
+GuardTokenParser didn't have support for 2-word test in the first place. I had to add it.
+
+All tests are added.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-09-05T09:16:58Z
+
+If preferred @fabpot @stof I extracted the support for two words test in guard tag in a PR https://github.com/twigphp/Twig/pull/4689 which can be reviewed/merged first.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-09-15T07:40:41Z
+
+Rebased @fabpot @stof
+
+Ci failure seems unrelated.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2025-09-15T09:35:24Z
+
+> I think you also need to update the docs for that new feature.
+
+Indeed, I updated the doc
