@@ -41,7 +41,7 @@ class EmbedNode extends IncludeNode
             ->raw(', ')
             ->repr($this->getTemplateLine())
             ->raw(', ')
-            ->string($this->getAttribute('index'))
+            ->repr($this->getAttribute('index'))
             ->raw(')')
         ;
         if ($this->getAttribute('ignore_missing')) {
