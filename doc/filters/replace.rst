@@ -6,6 +6,8 @@ format is free-form):
 
 .. code-block:: twig
 
+    {% set fruit = 'apples' %}
+
     {{ "I like %this% and %that%."|replace({'%this%': fruit, '%that%': "oranges"}) }}
     {# if the "fruit" variable is set to "apples", #}
     {# it outputs "I like apples and oranges" #}
