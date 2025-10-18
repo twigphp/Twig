@@ -76,6 +76,9 @@ class Parser
         return \sprintf('__internal_parse_%d', $this->varNameSalt++);
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
         $vars = get_object_vars($this);
@@ -158,6 +161,9 @@ class Parser
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function subparse($test, bool $dropNeedle = false): Node
     {
         $lineno = $this->getCurrentToken()->getLine();
