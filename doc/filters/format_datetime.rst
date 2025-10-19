@@ -30,6 +30,10 @@ The ``format_datetime`` filter formats a date time:
         $twig = new \Twig\Environment(...);
         $twig->addExtension(new IntlExtension());
 
+.. note::
+
+    To format a date/time like "5 minutes ago" or "in 3 days", use
+    [https://github.com/KnpLabs/KnpTimeBundle](`knplabs/knp-time-bundle`)
 
 Format
 ------
