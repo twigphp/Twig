@@ -2,7 +2,7 @@
 ================
 
 The ``inky_to_html`` filter processes an `inky email template
-<https://github.com/zurb/inky>`_:
+<https://github.com/foundation/inky>`_:
 
 .. code-block:: html+twig
 
