@@ -1,0 +1,21 @@
+--TEST--
+#4701 Accessing arrays with stringable objects as key
+--TEMPLATE--
+{% set hash = {
+  'foo': 'FOO',
+  'bar': 'BAR',
+} %}
+
+{{ hash[key] }}
+--DATA--
+class MyObj {
+    public function __toString() {
+        return 'foo';
+    }
+}
+
+return [
+    'key' => new MyObj(),
+];
+--EXPECT--
+FOO
