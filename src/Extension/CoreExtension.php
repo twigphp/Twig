@@ -1694,7 +1694,7 @@ final class CoreExtension extends AbstractExtension
             }
 
             if (match (true) {
-                \is_array($object) => \array_key_exists($arrayItem, $object),
+                \is_array($object) => \array_key_exists($arrayItem = (string) $arrayItem, $object),
                 $object instanceof \ArrayAccess => $object->offsetExists($arrayItem),
                 default => false,
             }) {
@@ -1715,9 +1715,13 @@ final class CoreExtension extends AbstractExtension
                 }
 
                 if ($object instanceof \ArrayAccess) {
-                    $message = \sprintf('Key "%s" in object with ArrayAccess of class "%s" does not exist.', $arrayItem, $object::class);
+                    if (\is_object($arrayItem) || \is_array($arrayItem)) {
+                        $message = \sprintf('Key of type "%s" does not exist in ArrayAccess-able object of class "%s".', get_debug_type($arrayItem), get_debug_type($object));
+                    } else {
+                        $message = \sprintf('Key "%s" does not exist in ArrayAccess-able object of class "%s".', $arrayItem, get_debug_type($object));
+                    }
                 } elseif (\is_object($object)) {
-                    $message = \sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, $object::class);
+                    $message = \sprintf('Impossible to access a key "%s" on an object of class "%s" that does not implement ArrayAccess interface.', $item, get_debug_type($object));
                 } elseif (\is_array($object)) {
                     if (!$object) {
                         $message = \sprintf('Key "%s" does not exist as the sequence/mapping is empty.', $arrayItem);
