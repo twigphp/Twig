@@ -2,6 +2,13 @@
 
  * Add support for two words test in guard tag
  * Add `Environment::registerUndefinedTestCallback()`
+ * Fix compatibility with Symfony 8
+ * Fix accessing arrays with stringable objects as key
+ * Avoid errors when failing to guess the template info for an error
+ * Fix expression parser compatibility layer
+ * Fix compiling 'index' with repr (not string) in EmbedNode
+ * Update configuration keys + allow extra keys for CommonMark extensions
+ * Allow usage of other Markdown converters than CommonMark in LeagueMarkdown
 
 # 3.21.1 (2025-05-03)
 
