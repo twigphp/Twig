@@ -226,13 +226,14 @@ thanks to the magic ``__get()`` method; you need to also implement the
 Defining undefined Functions, Filters, and Tags on the Fly
 ----------------------------------------------------------
 
-When a function/filter/tag is not defined, Twig defaults to throw a
+When a function/filter/test/tag is not defined, Twig defaults to throw a
 ``\Twig\Error\SyntaxError`` exception. However, it can also call a `callback`_
-(any valid PHP callable) which should return a function/filter/tag.
+(any valid PHP callable) which should return a function/filter/test/tag.
 
 For tags, register callbacks with ``registerUndefinedTokenParserCallback()``.
 For filters, register callbacks with ``registerUndefinedFilterCallback()``.
-For functions, use ``registerUndefinedFunctionCallback()``::
+For functions, use ``registerUndefinedFunctionCallback()``.
+For tests, use ``registerUndefinedTestCallback()``::
 
     // auto-register all native PHP functions as Twig functions
     // NEVER do this in a project as it's NOT secure
@@ -244,7 +245,7 @@ For functions, use ``registerUndefinedFunctionCallback()``::
         return false;
     });
 
-If the callable is not able to return a valid function/filter/tag, it must
+If the callable is not able to return a valid function/filter/test/tag, it must
 return ``false``.
 
 If you register more than one callback, Twig will call them in turn until one
@@ -252,7 +253,7 @@ does not return ``false``.
 
 .. tip::
 
-    As the resolution of functions/filters/tags is done during compilation,
+    As the resolution of functions/filters/tests/tags is done during compilation,
     there is no overhead when registering these callbacks.
 
 .. warning::

@@ -53,8 +53,9 @@ documents:
 * ``url``: escapes a string for the **URI or parameter** contexts. This should
   not be used to escape an entire URI; only a subcomponent being inserted.
 
-* ``html_attr``: escapes a string for the **HTML attribute** context,
-  **without quotes** around HTML attribute values.
+* ``html_attr``: escapes a string when used as an **HTML attribute** name, and
+  also when used as the value of an HTML attribute **without quotes**
+  (e.g. ``data-attribute={{ some_value }}``).
 
 Note that doing contextual escaping in HTML documents is hard and choosing the
 right escaping strategy depends on a lot of factors. Please, read related
@@ -96,23 +97,22 @@ to learn more about this topic.
 
 .. tip::
 
-    The ``html_attr`` escaping strategy can be useful when you need to 
-    escape a **dynamic HTML attribute name**:
+    The ``html_attr`` escaping strategy can be useful when you need to escape a
+    **dynamic HTML attribute name**:
 
     .. code-block:: html+twig
 
         <p {{ your_html_attr|e('html_attr') }}="attribute value">
     
-    It can also be used for escaping a **dynamic HTML attribute value** 
-    if it is not quoted, but this is **less performant**. 
-    Instead, it is recommended to quote the HTML attribute value and use 
-    the ``html`` escaping strategy:
+    It can also be used for escaping a **dynamic HTML attribute value** if it is
+    not quoted, but this is **less performant**. Instead, it is recommended to
+    quote the HTML attribute value and use the ``html`` escaping strategy:
 
     .. code-block:: html+twig
 
         <p data-content="{{ content|e('html') }}">
 
-        {# is equivalent to, but is less performant #}
+        {# this is equivalent, but less performant #}
         <p data-content={{ content|e('html_attr') }}>
 
 Custom Escapers

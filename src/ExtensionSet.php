@@ -57,6 +57,8 @@ final class ExtensionSet
     private array $functionCallbacks = [];
     /** @var array<callable(string): (TwigFilter|false)> */
     private array $filterCallbacks = [];
+    /** @var array<callable(string): (TwigTest|false)> */
+    private array $testCallbacks = [];
     /** @var array<callable(string): (TokenParserInterface|false)> */
     private array $parserCallbacks = [];
     private int $lastModified = 0;
@@ -408,7 +410,21 @@ final class ExtensionSet
             }
         }
 
+        foreach ($this->testCallbacks as $callback) {
+            if (false !== $test = $callback($name)) {
+                return $test;
+            }
+        }
+
         return null;
+    }
+
+    /**
+     * @param callable(string): (TwigTest|false) $callable
+     */
+    public function registerUndefinedTestCallback(callable $callable): void
+    {
+        $this->testCallbacks[] = $callable;
     }
 
     public function getExpressionParsers(): ExpressionParsers

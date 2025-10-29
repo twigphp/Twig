@@ -76,7 +76,7 @@ class TemplateTest extends TestCase
             ['{{ null["a"] }}', 'Impossible to access a key ("a") on a null variable in "%s" at line 1.'],
             ['{{ empty_array["a"] }}', 'Key "a" does not exist as the sequence/mapping is empty in "%s" at line 1.'],
             ['{{ array["a"] }}', 'Key "a" for sequence/mapping with keys "foo" does not exist in "%s" at line 1.'],
-            ['{{ array_access["a"] }}', 'Key "a" in object with ArrayAccess of class "Twig\Tests\TemplateArrayAccessObject" does not exist in "%s" at line 1.'],
+            ['{{ array_access["a"] }}', 'Key "a" does not exist in ArrayAccess-able object of class "Twig\Tests\TemplateArrayAccessObject" in "%s" at line 1.'],
             ['{{ string.a }}', 'Impossible to access an attribute ("a") on a string variable ("foo") in "%s" at line 1.'],
             ['{{ string.a() }}', 'Impossible to invoke a method ("a") on a string variable ("foo") in "%s" at line 1.'],
             ['{{ null.a }}', 'Impossible to access an attribute ("a") on a null variable in "%s" at line 1.'],

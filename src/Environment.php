@@ -810,6 +810,14 @@ class Environment
     }
 
     /**
+     * @param callable(string): (TwigTest|false) $callable
+     */
+    public function registerUndefinedTestCallback(callable $callable): void
+    {
+        $this->extensionSet->registerUndefinedTestCallback($callable);
+    }
+
+    /**
      * @return void
      */
     public function addFunction(TwigFunction $function)
