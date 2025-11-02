@@ -115,7 +115,7 @@ final class HtmlExtension extends AbstractExtension
 
     /**
      * @param string|list<string|null> $base
-     * @param array<string, array<string, string|array<string>> $variants
+     * @param array<string, array<string, string|array<string>>> $variants
      * @param array<array<string, string|array<string>>> $compoundVariants
      * @param array<string, string>                      $defaultVariant
      *
