@@ -10,6 +10,11 @@ parameter type:
 * a random integer between the integer parameter (when negative) and 0 (inclusive).
 * a random integer between the first integer and the second integer parameter (inclusive).
 
+.. caution::
+
+    The ``random`` function does not produce cryptographically secure random numbers.
+    Do not use them for purposes that require returned values to be unguessable. 
+
 .. code-block:: twig
 
     {{ random(['apple', 'orange', 'citrus']) }} {# example output: orange #}
