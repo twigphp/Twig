@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by GromNaN at 2025-11-11T23:19:35Z
+
+Well spotted!
+You have to update the expected message in tests:
+https://github.com/twigphp/Twig/blob/d58c8be15ddbda8532df7ba5de283b51dd8939d2/tests/TemplateTest.php#L89-L90
