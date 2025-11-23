@@ -417,10 +417,8 @@ final class CoreExtension extends AbstractExtension
 
                 trigger_deprecation('twig/twig', '3.12', 'Passing a non-countable sequence of values to "%s()" is deprecated.', __METHOD__);
 
-                return $values;
+                $values = self::toArray($values, false);
             }
-
-            $values = self::toArray($values, false);
         }
 
         if (!$count = \count($values)) {
