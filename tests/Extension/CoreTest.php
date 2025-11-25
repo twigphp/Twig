@@ -21,6 +21,7 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
@@ -31,6 +32,8 @@ use Twig\Sandbox\SecurityPolicy;
 
 class CoreTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @dataProvider provideCycleCases
      */
@@ -406,6 +409,44 @@ class CoreTest extends TestCase
     public function testLastModified()
     {
         $this->assertGreaterThan(1000000000, (new CoreExtension())->getLastModified());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testCycleWithArrayAccessAndTraversableButNotCountable()
+    {
+        $this->expectDeprecation('Since twig/twig 3.12: Passing a non-countable sequence of values to "Twig\Extension\CoreExtension::cycle()" is deprecated.');
+
+        $seq = new class implements \ArrayAccess, \IteratorAggregate {
+            public function offsetExists($offset): bool
+            {
+                return true;
+            }
+
+            public function offsetGet($offset): mixed
+            {
+                return 'val';
+            }
+
+            public function offsetSet($offset, $value): void
+            {
+            }
+
+            public function offsetUnset($offset): void
+            {
+            }
+
+            public function getIterator(): \Traversable
+            {
+                yield 'odd';
+                yield 'even';
+            }
+        };
+
+        $result = CoreExtension::cycle($seq, 0);
+
+        $this->assertEquals('odd', $result, 'cycle should return the first item from the traversable sequence, not the sequence itself.');
     }
 }
 
