@@ -13,9 +13,10 @@ namespace Twig\Extra\TwigExtraBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Extra\TwigExtraBundle\DependencyInjection\Compiler\MissingExtensionSuggestorPass;
 
-if (!method_exists(ContainerBuilder::class, 'getAutoconfiguredAttributes')) {
+if (method_exists(KernelInterface::class, 'getShareDir')) {
     class TwigExtraBundle extends Bundle
     {
         public function build(ContainerBuilder $container): void
