@@ -15,13 +15,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Twig\Extra\TwigExtraBundle\DependencyInjection\Compiler\MissingExtensionSuggestorPass;
 
-if (!method_exists(ContainerBuilder::class, 'getAutoconfiguredAttributes')) {
+$refMethod = new \ReflectionMethod(\Symfony\Component\HttpKernel\Bundle\Bundle::class, 'build');
+
+if ($refMethod->hasReturnType()) {
     class TwigExtraBundle extends Bundle
     {
         public function build(ContainerBuilder $container): void
         {
             parent::build($container);
-
             $container->addCompilerPass(new MissingExtensionSuggestorPass());
         }
     }
@@ -32,8 +33,8 @@ if (!method_exists(ContainerBuilder::class, 'getAutoconfiguredAttributes')) {
         public function build(ContainerBuilder $container)
         {
             parent::build($container);
-
             $container->addCompilerPass(new MissingExtensionSuggestorPass());
         }
     }
 }
+
