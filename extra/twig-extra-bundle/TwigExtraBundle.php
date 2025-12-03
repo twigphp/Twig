@@ -13,6 +13,7 @@ namespace Twig\Extra\TwigExtraBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Kernel;
 use Twig\Extra\TwigExtraBundle\DependencyInjection\Compiler\MissingExtensionSuggestorPass;
 
 $refMethod = new \ReflectionMethod(\Symfony\Component\HttpKernel\Bundle\Bundle::class, 'build');
