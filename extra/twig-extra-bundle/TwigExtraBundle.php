@@ -17,7 +17,7 @@ use Twig\Extra\TwigExtraBundle\DependencyInjection\Compiler\MissingExtensionSugg
 
 $refMethod = new \ReflectionMethod(\Symfony\Component\HttpKernel\Bundle\Bundle::class, 'build');
 
-if ($refMethod->hasReturnType()) {
+if (Kernel::MAJOR_VERSION >= 8) {
     class TwigExtraBundle extends Bundle
     {
         public function build(ContainerBuilder $container): void
