@@ -29,6 +29,7 @@ Filters
     html_to_markdown
     inline_css
     inky_to_html
+    invoke
     join
     json_encode
     keys

@@ -415,9 +415,9 @@ final class CoreExtension extends AbstractExtension
 
             if (!is_countable($values)) {
                 throw new RuntimeError('The "cycle" function expects a countable sequence as first argument.');
-            }
 
-            $values = self::toArray($values, false);
+                $values = self::toArray($values, false);
+            }
         }
 
         if (!$count = \count($values)) {
@@ -1817,7 +1817,7 @@ final class CoreExtension extends AbstractExtension
                 return;
             }
 
-            throw new RuntimeError(\sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()"/"has%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), $lineno, $source);
+            throw new RuntimeError(\sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()", "is%1$s()", "has%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), $lineno, $source);
         }
 
         if ($sandboxed) {

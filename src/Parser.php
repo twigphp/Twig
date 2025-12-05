@@ -86,6 +86,9 @@ class Parser
         return $this->env;
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
         $vars = get_object_vars($this);
@@ -170,6 +173,8 @@ class Parser
 
     /**
      * @phpstan-impure
+     *
+     * @throws SyntaxError
      */
     public function subparse($test, bool $dropNeedle = false): Node
     {
