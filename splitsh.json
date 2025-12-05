@@ -1,0 +1,15 @@
+{
+    "subtrees": {
+        "twig-extra-bundle": "extra/twig-extra-bundle",
+        "cache-extra": "extra/cache-extra",
+        "cssinliner-extra": "extra/cssinliner-extra",
+        "html-extra": "extra/html-extra",
+        "inky-extra": "extra/inky-extra",
+        "intl-extra": "extra/intl-extra",
+        "markdown-extra": "extra/markdown-extra",
+        "string-extra": "extra/string-extra"
+    },
+    "defaults": {
+        "git_constraint": "<1.8.2"
+    }
+}
