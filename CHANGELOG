@@ -2,6 +2,7 @@
 
  * Fix "cycle" with non-countable ArrayAccess + Traversable objects
  * Use "getShareDir" as an indicator of Symfony version in Symfony bundle
+ * Fix escaper compatibility with PHP 8.5
 
 # 3.22.1 (2025-11-16)
 
