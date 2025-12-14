@@ -1,6 +1,7 @@
 # 3.22.2 (2025-XX-XX)
 
- * n/a
+ * Fix "cycle" with non-countable ArrayAccess + Traversable objects
+ * Use "getShareDir" as an indicator of Symfony version in Symfony bundle
 
 # 3.22.1 (2025-11-16)
 
