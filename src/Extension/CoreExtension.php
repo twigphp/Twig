@@ -1869,6 +1869,10 @@ final class CoreExtension extends AbstractExtension
         } elseif (isset($cache[$class]['__call'])) {
             $method = $item;
             $call = true;
+        } elseif (isset($cache[$class]['__get'])) {
+            $method = '__get';
+            $arguments = [$item];
+            $call = true;
         } else {
             if ($isDefinedTest) {
                 return false;
