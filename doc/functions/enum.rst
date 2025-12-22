@@ -12,6 +12,10 @@
     {# display one specific case of a backed enum #}
     {{ enum('App\\CardSuite').Clubs.value }} {# "clubs" #}
 
+    {# display one specific case of a backed enum, with a dynamic name #}
+    {% set case_name = 'Spades' %}
+    {{ enum('App\\CardSuite').(case_name).name }} {# "Spades" #}
+
     {# get all cases of an enum #}
     {% for case in enum('App\\CardSuite').cases %}
         {{ case.value }}
