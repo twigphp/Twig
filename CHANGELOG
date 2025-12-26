@@ -70,6 +70,7 @@
 
 # 3.18.0 (2024-12-29)
 
+ * Support for invoking closures
  * Fix unary operator precedence change
  * Ignore `SyntaxError` exceptions from undefined handlers when using the `guard` tag
  * Add a way to stream template rendering (`TemplateWrapper::stream()` and `TemplateWrapper::streamBlock()`)
@@ -78,7 +79,6 @@
 
  * Fix the null coalescing operator when the test returns null
  * Fix the Elvis operator when used as '? :' instead of '?:'
- * Support for invoking closures
 
 # 3.17.0 (2024-12-10)
 
