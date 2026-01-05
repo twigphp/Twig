@@ -27,6 +27,10 @@ use Twig\Node\Expression\AbstractExpression;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
 
+// Help opcache.preload discover always-needed symbols
+// @see https://github.com/php/php-src/issues/10131
+class_exists(BinaryOperatorExpressionParser::class);
+
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
