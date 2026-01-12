@@ -19,7 +19,7 @@ namespace Twig\Cache;
  *
  * @author Quentin Devos <quentin@devos.pm>
  */
-final class ChainCache implements CacheInterface, RemovableCacheInterface
+final class ChainCache implements CacheInterface, DirectoryCacheInterface, RemovableCacheInterface
 {
     /**
      * @param iterable<CacheInterface> $caches The ordered list of caches used to store and fetch cached items
@@ -76,6 +76,18 @@ final class ChainCache implements CacheInterface, RemovableCacheInterface
                 $cache->remove($name, $cls);
             }
         }
+    }
+
+    public function getDirectories(): array
+    {
+        $directories = [];
+        foreach ($this->caches as $cache) {
+            if ($cache instanceof DirectoryCacheInterface) {
+                $directories[] = $cache->getDirectories();
+            }
+        }
+
+        return array_merge(...$directories);
     }
 
     /**

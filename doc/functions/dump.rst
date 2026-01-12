@@ -36,9 +36,9 @@ read:
 
 .. tip::
 
-    Using a ``pre`` tag is not needed when `XDebug`_ is enabled and
+    Using a ``pre`` tag is not needed when `Xdebug`_ is enabled and
     ``html_errors`` is ``on``; as a bonus, the output is also nicer with
-    XDebug enabled.
+    Xdebug enabled.
 
 You can debug several variables by passing them as additional arguments:
 
@@ -62,5 +62,5 @@ Arguments
 
 * ``context``: The context to dump
 
-.. _`XDebug`:   https://xdebug.org/docs/display
+.. _`Xdebug`:   https://xdebug.org/docs/display
 .. _`var_dump`: https://www.php.net/var_dump

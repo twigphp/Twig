@@ -574,6 +574,94 @@ EOF
             FilesystemHelper::removeDir($dir);
         }
     }
+
+    /**
+     * @requires function xdebug_set_source_map
+     */
+    public function testXdebugSourceMapEnabledByDefault()
+    {
+        $dir = sys_get_temp_dir().'/twig-xdebug-map-test-'.bin2hex(random_bytes(8));
+        @mkdir($dir);
+        @mkdir($dir.'/templates');
+        file_put_contents($dir.'/templates/index.twig', '{{ foo }}');
+
+        try {
+            // xdebug_source_map defaults to the value of debug
+            $twig = new Environment(new FilesystemLoader($dir.'/templates'), [
+                'debug' => true,
+                'cache' => $dir.'/cache',
+            ]);
+
+            $twig->render('index.twig', ['foo' => 'bar']);
+
+            // Check that the .xdebug directory was created inside the cache directory
+            $this->assertDirectoryExists($dir.'/cache/.xdebug');
+            $mapFiles = glob($dir.'/cache/.xdebug/*.map');
+            $this->assertCount(1, $mapFiles);
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
+    }
+
+    /**
+     * @requires function xdebug_set_source_map
+     */
+    public function testXdebugSourceMapCanBeDisabled()
+    {
+        $dir = sys_get_temp_dir().'/twig-xdebug-map-test-'.bin2hex(random_bytes(8));
+        @mkdir($dir);
+        @mkdir($dir.'/templates');
+        file_put_contents($dir.'/templates/index.twig', '{{ foo }}');
+
+        try {
+            $twig = new Environment(new FilesystemLoader($dir.'/templates'), [
+                'debug' => true,
+                'cache' => $dir.'/cache',
+                'xdebug_source_map' => false,
+            ]);
+
+            $twig->render('index.twig', ['foo' => 'bar']);
+
+            // Map directory should not exist since xdebug_source_map is false
+            $this->assertDirectoryDoesNotExist($dir.'/cache/.xdebug');
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
+    }
+
+    /**
+     * @requires function xdebug_set_source_map
+     */
+    public function testXdebugSourceMapFilesRemovedWhenCacheRemoved()
+    {
+        $dir = sys_get_temp_dir().'/twig-xdebug-map-test-'.bin2hex(random_bytes(8));
+        @mkdir($dir);
+        @mkdir($dir.'/templates');
+        file_put_contents($dir.'/templates/index.twig', '{{ foo }}');
+
+        try {
+            $twig = new Environment(new FilesystemLoader($dir.'/templates'), [
+                'debug' => true,
+                'cache' => $dir.'/cache',
+            ]);
+
+            $twig->render('index.twig', ['foo' => 'bar']);
+
+            // Verify map file exists
+            $mapFiles = glob($dir.'/cache/.xdebug/*.map');
+            $this->assertCount(1, $mapFiles);
+            $mapFile = $mapFiles[0];
+            $this->assertFileExists($mapFile);
+
+            // Remove cache
+            $twig->removeCache('index.twig');
+
+            // Map file should be removed
+            $this->assertFileDoesNotExist($mapFile);
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
+    }
 }
 
 class EnvironmentTest_Extension_WithGlobals extends AbstractExtension

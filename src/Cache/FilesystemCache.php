@@ -16,7 +16,7 @@ namespace Twig\Cache;
  *
  * @author Andrew Tch <andrew@noop.lv>
  */
-class FilesystemCache implements CacheInterface, RemovableCacheInterface
+class FilesystemCache implements CacheInterface, DirectoryCacheInterface, RemovableCacheInterface
 {
     public const FORCE_BYTECODE_INVALIDATION = 1;
 
@@ -27,6 +27,11 @@ class FilesystemCache implements CacheInterface, RemovableCacheInterface
     {
         $this->directory = rtrim($directory, '\/').'/';
         $this->options = $options;
+    }
+
+    public function getDirectories(): array
+    {
+        return [$this->directory];
     }
 
     public function generateKey(string $name, string $className): string

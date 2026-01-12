@@ -152,9 +152,19 @@ The following options are available:
 
   ``false`` (default): allows templates to use a mix of ``yield`` and ``echo``
   calls to allow for a progressive migration.
-  
+
   Switch to ``true`` when possible as this will be the only supported mode in
   Twig 4.0.
+
+* ``xdebug_source_map`` *boolean*
+
+  Enables generation of Xdebug source map files for debugging Twig templates.
+  Xdebug 3.5+ can use these maps to set breakpoints directly in ``.twig`` files.
+
+  Defaults to the value of ``debug``. Set to ``false`` to disable even when
+  debugging is enabled. Requires a filesystem-based cache.
+
+  See :ref:`debugging-templates` for setup instructions.
 
 Loaders
 -------

@@ -553,4 +553,61 @@ safe to avoid any escaping. You can do so by wrapping your expression with a
 
     $safeExpr = new RawFilter(new YourSafeNode());
 
+.. _debugging-templates:
+
+Debugging Twig Templates with Xdebug
+------------------------------------
+
+Xdebug 3.5+ supports native path mapping, which allows setting breakpoints
+directly in ``.twig`` files and having Xdebug map them to the correct lines
+in the compiled PHP files.
+
+When ``debug`` is enabled and a filesystem-based cache is configured, Twig
+automatically generates Xdebug source map files in the ``.xdebug`` subdirectory
+of the cache directory::
+
+    $twig = new \Twig\Environment($loader, [
+        'debug' => true,
+        'cache' => '/path/to/cache',
+    ]);
+
+To disable source map generation while keeping debug enabled, set
+``xdebug_source_map`` to ``false``.
+
+Configure Xdebug in ``php.ini``::
+
+    xdebug.mode=debug
+    xdebug.start_with_request=yes
+    xdebug.path_mapping=1
+
+You can then set breakpoints in ``.twig`` files. When debugging, template
+variables are available in the ``$context`` array (e.g., ``$context['name']``).
+
+Twig automatically registers source map files with Xdebug.
+
+VSCode-based IDE Setup
+~~~~~~~~~~~~~~~~~~~~~~
+
+1. Enable breakpoints in Twig files by adding to ``.vscode/settings.json``:
+
+.. code-block:: json
+
+       {
+           "debug.allowBreakpointsEverywhere": true
+       }
+
+2. Create a ``.vscode/launch.json`` with a basic configuration in your project:
+
+.. code-block:: json
+
+       {
+           "version": "0.2.0",
+           "configurations": [{
+               "name": "Listen for Xdebug",
+               "type": "php",
+               "request": "launch",
+               "port": 9003
+           }]
+       }
+
 .. _callback: https://www.php.net/manual/en/function.is-callable.php
