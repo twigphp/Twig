@@ -156,7 +156,6 @@ class ParserTest extends TestCase
         ], new Source('', '')));
 
         $p = new \ReflectionProperty($parser, 'parent');
-        $p->setAccessible(true);
         $this->assertNull($p->getValue($parser));
     }
 

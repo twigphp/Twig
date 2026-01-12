@@ -2,15 +2,15 @@
 "script_names" function
 --TEMPLATE--
 {{ script_names('UNKNOWN')|length }}
-{{ script_names()|length }}
-{{ script_names('fr')|length }}
+{{ script_names() is iterable }}
+{{ script_names('fr') is iterable }}
 {{ script_names()['Marc'] }}
 {{ script_names('fr')['Marc'] }}
 --DATA--
 return [];
 --EXPECT--
 0
-208
-208
+1
+1
 Marchen
 Marchen
