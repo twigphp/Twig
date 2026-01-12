@@ -203,7 +203,7 @@ class TemplateTest extends TestCase
         }
         $this->assertSame('FloatButString', $array['1.5']);
         $this->assertSame('IntegerButStringWithLeadingZeros', $array['01']);
-        $this->assertSame('EmptyString', $array[null]);
+        $this->assertSame('EmptyString', $array['']);
 
         $this->assertSame('Zero', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, false), 'false is treated as 0 when accessing a sequence/mapping (equals PHP behavior)');
         $this->assertSame('One', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, true), 'true is treated as 1 when accessing a sequence/mapping (equals PHP behavior)');

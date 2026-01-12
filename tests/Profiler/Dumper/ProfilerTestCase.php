@@ -48,7 +48,6 @@ abstract class ProfilerTestCase extends TestCase
         ];
 
         $p = new \ReflectionProperty($profile, 'profiles');
-        $p->setAccessible(true);
         $p->setValue($profile, $subProfiles);
 
         return $profile;
@@ -92,18 +91,15 @@ abstract class ProfilerTestCase extends TestCase
         $profile = new Profile($templateName, $type, $name);
 
         $p = new \ReflectionProperty($profile, 'profiles');
-        $p->setAccessible(true);
         $p->setValue($profile, $subProfiles);
 
         $starts = new \ReflectionProperty($profile, 'starts');
-        $starts->setAccessible(true);
         $starts->setValue($profile, [
             'wt' => 0,
             'mu' => 0,
             'pmu' => 0,
         ]);
         $ends = new \ReflectionProperty($profile, 'ends');
-        $ends->setAccessible(true);
         $ends->setValue($profile, [
             'wt' => $duration,
             'mu' => 0,
