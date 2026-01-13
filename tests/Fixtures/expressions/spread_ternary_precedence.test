@@ -1,0 +1,14 @@
+--TEST--
+Twig spread operator precedence with ternary operator
+--TEMPLATE--
+{{ [...true ? ['a'] : ['b']]|join }}
+{{ [...false ? ['a'] : ['b']]|join }}
+{{ [...(true ? ['a'] : ['b'])]|join }}
+{{ {a: 1, ...true ? {b: 2} : {c: 3}}|keys|join(',') }}
+--DATA--
+return []
+--EXPECT--
+a
+b
+a
+a,b
