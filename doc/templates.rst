@@ -722,6 +722,9 @@ Comparisons
 The following mathematical comparison operators are supported in any
 expression: ``==``, ``!=``, ``<``, ``>``, ``>=``, and ``<=``.
 
+In addition, the ``===`` and ``!==`` strict comparison operators are supported
+(they are equivalent to the ``same as`` and ``not same as`` tests).
+
 Spaceship Operator
 ~~~~~~~~~~~~~~~~~~
 
