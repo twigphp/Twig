@@ -23,12 +23,12 @@ skeleton document:
             {% endblock %}
         </head>
         <body>
-            <div id="content">{% block content %}{% endblock %}</div>
-            <div id="footer">
+            <main id="content">{% block content %}{% endblock %}</main>
+            <footer id="footer">
                 {% block footer %}
                     &copy; Copyright 2011 by <a href="https://example.com/">you</a>.
                 {% endblock %}
-            </div>
+            </footer>
         </body>
     </html>
 
