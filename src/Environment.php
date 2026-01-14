@@ -12,9 +12,11 @@
 namespace Twig;
 
 use Twig\Cache\CacheInterface;
+use Twig\Cache\DirectoryCacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Cache\NullCache;
 use Twig\Cache\RemovableCacheInterface;
+use Twig\Cache\XdebugSourceMapCache;
 use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -107,6 +109,10 @@ class Environment
      *  * use_yield: true: forces templates to exclusively use "yield" instead of "echo" (all extensions must be yield ready)
      *               false (default): allows templates to use a mix of "yield" and "echo" calls to allow for a progressive migration
      *               Switch to "true" when possible as this will be the only supported mode in Twig 4.0
+     *
+     *  * xdebug_source_map: Whether to generate Xdebug source map files for debugging Twig templates.
+     *                       Xdebug 3.5+ can use these maps to set breakpoints in Twig templates.
+     *                       Defaults to the value of the debug option.
      */
     public function __construct(LoaderInterface $loader, array $options = [])
     {
@@ -121,6 +127,7 @@ class Environment
             'auto_reload' => null,
             'optimizations' => -1,
             'use_yield' => false,
+            'xdebug_source_map' => null,
         ], $options);
 
         $this->useYield = (bool) $options['use_yield'];
@@ -129,6 +136,7 @@ class Environment
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->strictVariables = (bool) $options['strict_variables'];
         $this->setCache($options['cache']);
+        $this->initializeXdebugSourceMap($options['xdebug_source_map']);
         $this->extensionSet = new ExtensionSet();
         $this->defaultRuntimeLoader = new FactoryRuntimeLoader([
             EscaperRuntime::class => function () { return new EscaperRuntime($this->charset); },
@@ -407,6 +415,9 @@ class Environment
                 $source = $this->getLoader()->getSourceContext($name);
                 $content = $this->compileSource($source);
                 if (!isset($this->hotCache[$name])) {
+                    if ($this->cache instanceof XdebugSourceMapCache && $source->getPath()) {
+                        $this->cache->setSourceMapData($source->getPath(), $this->compiler->getDebugInfo());
+                    }
                     $this->cache->write($key, $content);
                     $this->cache->load($key);
                 }
@@ -949,5 +960,16 @@ class Environment
             (int) $this->strictVariables,
             $this->useYield ? '1' : '0',
         ]);
+    }
+
+    private function initializeXdebugSourceMap(?bool $enabled): void
+    {
+        $enabled ??= $this->debug;
+
+        if (!$enabled || !$this->cache instanceof DirectoryCacheInterface || !\function_exists('xdebug_set_source_map')) {
+            return;
+        }
+
+        $this->cache = new XdebugSourceMapCache($this->cache);
     }
 }

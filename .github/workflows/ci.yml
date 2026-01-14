@@ -153,6 +153,40 @@ jobs:
             - run: bash ./tests/drupal_test.sh
               shell: "bash"
 
+    xdebug-tests:
+        needs:
+            - 'tests'
+
+        name: "XDebug source map tests"
+
+        runs-on: 'ubuntu-latest'
+
+        continue-on-error: true
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v4
+
+            - name: "Install PHP with XDebug"
+              uses: shivammathur/setup-php@v2
+              with:
+                  coverage: "xdebug"
+                  php-version: '8.4'
+                  ini-values: memory_limit=-1, xdebug.mode=debug
+
+            - name: "Check XDebug version and functions"
+              run: |
+                  php -v
+                  php -r "echo 'xdebug_set_source_map exists: '.(function_exists('xdebug_set_source_map') ? 'yes' : 'no').PHP_EOL;"
+
+            - run: composer install
+
+            - name: "Install PHPUnit"
+              run: vendor/bin/simple-phpunit install
+
+            - name: "Run XDebug source map tests"
+              run: vendor/bin/simple-phpunit tests/Cache/XdebugSourceMapCacheTest.php tests/EnvironmentTest.php --filter "Xdebug"
+
     phpstan:
         name: "PHPStan"
 
