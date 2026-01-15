@@ -31,7 +31,7 @@ Truncating a string:
     {{ 'Lorem ipsum'|u.truncate(8, '...') }}
     Lorem...
 
-The ``truncate`` method also accepts a third argument to preserve whole words:
+By default, ``truncate`` cuts text at the exact length. Pass ``false`` as the third argument to preserve whole words:
 
 .. code-block:: twig
 
