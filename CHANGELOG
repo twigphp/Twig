@@ -1,4 +1,4 @@
-# 3.22.2 (2026-XX-XX)
+# 3.23.0 (2026-XX-XX)
 
  * Add `===` and `!==` operators (equivalent to the `same as` and `not same as` tests)
 
