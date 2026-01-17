@@ -72,7 +72,7 @@ Nodes
   deprecated.
 
 * The ``Twig\Node\Expression\NameExpression::isSimple()`` and
-  ``Twig\Node\Expression\NameExpression::isSpecial()`` methods are deprecated as 
+  ``Twig\Node\Expression\NameExpression::isSpecial()`` methods are deprecated as
   of Twig 3.11 and will be removed in Twig 4.0.
 
 * The ``filter`` node of ``Twig\Node\Expression\FilterExpression`` is

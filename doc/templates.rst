@@ -342,7 +342,7 @@ Inline comments can also be on the same line as the expression:
     }}
 
 As inline comments continue until the end of the current line, the following
-code does not work as ``}}``would be part of the comment:
+code does not work as ``}}`` would be part of the comment:
 
 .. code-block:: twig
 
@@ -591,7 +591,7 @@ exist:
 
 * ``42`` / ``42.23``: Integers and floating point numbers are created by
   writing the number down. If a dot is present the number is a float,
-  otherwise an integer. Underscores can be used as digits separator to 
+  otherwise an integer. Underscores can be used as digits separator to
   improve readability (``-3_141.592_65`` is equivalent to ``-3141.59265``).
 
 * ``["first_name", "last_name"]``: Sequences are defined by a sequence of expressions
@@ -933,7 +933,7 @@ The following operators don't fit into any of the other categories:
       To resolve ``user.name`` to a PHP call, Twig uses the following algorithm
       at runtime:
 
-      * check if ``user`` is a PHP array or a ArrayObject/ArrayAccess object and
+      * check if ``user`` is a PHP array or an ArrayObject/ArrayAccess object and
         ``name`` a valid element;
       * if not, and if ``user`` is a PHP object, check that ``name`` is a valid property;
       * if not, and if ``user`` is a PHP object, check that ``name`` is a class constant;
@@ -959,7 +959,7 @@ The following operators don't fit into any of the other categories:
       Twig supports a specific syntax via the ``()`` operator for calling methods
       on objects, like in ``user.name()``:
 
-      * check if ``user`` is a object and has the ``name()``, ``getName()``,
+      * check if ``user`` is an object and has the ``name()``, ``getName()``,
         ``isName()``, or ``hasName()`` method;
       * if not, and if ``strict_variables`` is ``false``, return ``null``;
       * if not, throw an exception.

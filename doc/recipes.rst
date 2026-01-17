@@ -31,7 +31,7 @@ catches deprecation notices, and return them.
     template names as keys and template contents as values (as done by
     ``\Twig\Util\TemplateDirIterator``).
 
-However, this code won't find all deprecations (like using deprecated some Twig
+However, this code won't find all deprecations (like using some deprecated Twig
 classes). To catch all notices, register a custom error handler like the one
 below::
 
