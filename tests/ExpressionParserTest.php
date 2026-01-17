@@ -288,6 +288,62 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider getTestsForNullSafeOperator
+     */
+    public function testNullSafeOperator($template, $data, $expected)
+    {
+        $env = new Environment(new ArrayLoader(['template' => $template]));
+
+        $this->assertSame($expected, $env->render('template', $data));
+    }
+
+    public static function getTestsForNullSafeOperator()
+    {
+        return [
+            [
+                '{{ foo?.bar }}',
+                ['foo' => (object) ['bar' => 'baz']],
+                'baz',
+            ],
+            [
+                '{{ foo?.bar }}',
+                ['foo' => null],
+                '',
+            ],
+            [
+                '{{ foo?.bar?.baz }}',
+                ['foo' => (object) ['bar' => (object) ['baz' => 'qux']]],
+                'qux',
+            ],
+            [
+                '{{ foo?.bar?.baz }}',
+                ['foo' => (object) ['bar' => null]],
+                '',
+            ],
+            [
+                '{{ foo?.bar?.baz }}',
+                ['foo' => null],
+                '',
+            ],
+            [
+                '{{ foo?.bar?.baz ?? "qux" }}',
+                ['foo' => null],
+                'qux',
+            ],
+            [
+                '{{ foo?.bar ?? "qux" }}',
+                ['foo' => (object) ['bar' => 0]],
+                '0',
+            ],
+            [
+                '{{ foo?.bar ?? "qux" }}',
+                ['foo' => (object) ['bar' => false]],
+                '',
+            ],
+        ];
+    }
+
     public function testMacroDefinitionDoesNotSupportNonNameVariableName()
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
