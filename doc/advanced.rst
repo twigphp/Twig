@@ -648,11 +648,11 @@ An extension is a class that implements the following interface::
         public function getFunctions(): array
 
         /**
-         * Returns a list of operators to add to the existing list.
+         * Returns a list of expression parsers to add to the existing list.
          *
-         * @return array<array> First array of unary operators, second array of binary operators
+         * @return \Twig\ExpressionParser\ExpressionParserInterface[]
          */
-        public function getOperators(): array
+        public function getExpressionParsers(): array;
     }
 
 To keep your extension class clean and lean, inherit from the built-in
@@ -767,8 +767,15 @@ responsible for parsing the tag and compiling it to PHP.
 Operators
 ~~~~~~~~~
 
-The ``getOperators()`` method lets you add new operators. To implement a new
-one, have a look at the default operators provided by
+.. versionadded:: 3.21
+
+    The ``getExpressionParsers()`` method was added in Twig 3.21 to replace the
+    deprecated ``getOperators()`` method. See the :doc:`deprecated
+    <deprecated>` page for details on how to upgrade from ``getOperators()`` to
+    ``getExpressionParsers()``.
+
+The ``getExpressionParsers()`` method lets you add new operators. To implement
+a new one, have a look at the default operators provided by
 ``Twig\Extension\CoreExtension``.
 
 Tests

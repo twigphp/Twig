@@ -96,10 +96,6 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
                     return new ContextVariable($token->getValue(), $token->getLine());
                 }
 
-                if ('=' === $token->getValue() && ('==' === $stream->look(-1)->getValue() || '!=' === $stream->look(-1)->getValue())) {
-                    throw new SyntaxError(\sprintf('Unexpected operator of value "%s". Did you try to use "===" or "!==" for strict comparison? Use "is same as(value)" instead.', $token->getValue()), $token->getLine(), $stream->getSourceContext());
-                }
-
                 // no break
             default:
                 throw new SyntaxError(\sprintf('Unexpected token "%s" of value "%s".', $token->toEnglish(), $token->getValue()), $token->getLine(), $stream->getSourceContext());
