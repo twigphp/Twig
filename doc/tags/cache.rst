@@ -42,7 +42,7 @@ version of the template code, ``post.id`` represent the id of the blog post,
 and ``post.updated_at`` returns a timestamp that represents the time where the
 blog post was last modified.
 
-Using such a strategy for naming cache keys allows to avoid using a ``ttl``.
+Using such a strategy for naming cache keys allows you to avoid using a ``ttl``.
 It's like using a "validation" strategy instead of an "expiration" strategy as
 we do for HTTP caches.
 
