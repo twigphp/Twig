@@ -37,6 +37,7 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
 
     public function parse(Parser $parser, AbstractExpression $expr, Token $token): AbstractExpression
     {
+        $nullSafe = '?.' === $token->getValue();
         $stream = $parser->getStream();
         $token = $stream->getCurrent();
         $lineno = $token->getLine();
@@ -55,7 +56,7 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
             ) {
                 $attribute = new ConstantExpression($token->getValue(), $token->getLine());
             } else {
-                throw new SyntaxError(\sprintf('Expected name or number, got value "%s" of type %s.', $token->getValue(), $token->toEnglish()), $token->getLine(), $stream->getSourceContext());
+                throw new SyntaxError(\sprintf('Expected name or number, got value "%s" of type "%s".', $token->getValue(), $token->toEnglish()), $token->getLine(), $stream->getSourceContext());
             }
         }
 
@@ -74,12 +75,17 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
             return new MacroReferenceExpression(new TemplateVariable($expr->getAttribute('name'), $expr->getTemplateLine()), 'macro_'.$attribute->getAttribute('value'), $arguments, $expr->getTemplateLine());
         }
 
-        return new GetAttrExpression($expr, $attribute, $arguments, $type, $lineno);
+        return new GetAttrExpression($expr, $attribute, $arguments, $type, $lineno, $nullSafe);
     }
 
     public function getName(): string
     {
         return '.';
+    }
+
+    public function getAliases(): array
+    {
+        return ['?.'];
     }
 
     public function getDescription(): string

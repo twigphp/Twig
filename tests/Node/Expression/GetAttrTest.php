@@ -42,6 +42,7 @@ class GetAttrTest extends NodeTestCase
         $this->assertEquals($attr, $node->getNode('attribute'));
         $this->assertEquals($args, $node->getNode('arguments'));
         $this->assertEquals(Template::ARRAY_CALL, $node->getAttribute('type'));
+        $this->assertFalse($node->getAttribute('null_safe'));
     }
 
     public static function provideTests(): iterable
@@ -51,8 +52,12 @@ class GetAttrTest extends NodeTestCase
         $expr = new ContextVariable('foo', 1);
         $attr = new ConstantExpression('bar', 1);
         $args = new ArrayExpression([], 1);
+
         $node = new GetAttrExpression($expr, $attr, $args, Template::ANY_CALL, 1);
         $tests[] = [$node, \sprintf('%s%s, "bar", arguments: [], lineno: 1)', self::createAttributeGetter(), self::createVariableGetter('foo', 1))];
+
+        $node = new GetAttrExpression($expr, $attr, $args, Template::ANY_CALL, 1, true);
+        $tests[] = [$node, '((null === ($_v%s = // line 1'."\n".'($context["foo"] ?? null))) ? null : '.self::createAttributeGetter().'$_v%s, "bar", [], "any", false, false, false, 1))', null, true];
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ARRAY_CALL, 1);
         $tests[] = [$node, '(($_v%s = // line 1'."\n".

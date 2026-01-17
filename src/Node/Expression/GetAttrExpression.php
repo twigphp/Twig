@@ -21,14 +21,14 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
 {
     use SupportDefinedTestTrait;
 
-    public function __construct(AbstractExpression $node, AbstractExpression $attribute, ArrayExpression|ContextVariable|null $arguments, string $type, int $lineno)
+    public function __construct(AbstractExpression $node, AbstractExpression $attribute, ArrayExpression|ContextVariable|null $arguments, string $type, int $lineno, bool $nullSafe = false)
     {
         $nodes = ['node' => $node, 'attribute' => $attribute];
         if (null !== $arguments) {
             $nodes['arguments'] = $arguments;
         }
 
-        parent::__construct($nodes, ['type' => $type, 'ignore_strict_check' => false, 'optimizable' => true], $lineno);
+        parent::__construct($nodes, ['type' => $type, 'ignore_strict_check' => false, 'optimizable' => !$nullSafe, 'null_safe' => $nullSafe], $lineno);
     }
 
     public function enableDefinedTest(): void
@@ -41,6 +41,8 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
     {
         $env = $compiler->getEnvironment();
         $arrayAccessSandbox = false;
+        $nullSafe = $this->getAttribute('null_safe');
+        $objectVar = null;
 
         // optimize array calls
         if (
@@ -85,14 +87,27 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
             ;
         }
 
-        $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ');
-
         if ($this->getAttribute('ignore_strict_check')) {
             $this->getNode('node')->setAttribute('ignore_strict_check', true);
         }
 
+        if ($nullSafe) {
+            $objectVar = '$'.$compiler->getVarName();
+            $compiler
+                ->raw('((null === ('.$objectVar.' = ')
+                ->subcompile($this->getNode('node'))
+                ->raw(')) ? null : ');
+        }
+
+        $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ');
+
+        if ($nullSafe) {
+            $compiler->raw($objectVar);
+        } else {
+            $compiler->subcompile($this->getNode('node'));
+        }
+
         $compiler
-            ->subcompile($this->getNode('node'))
             ->raw(', ')
             ->subcompile($this->getNode('attribute'))
         ;
@@ -123,6 +138,10 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
         ;
 
         if ($arrayAccessSandbox) {
+            $compiler->raw(')');
+        }
+
+        if ($nullSafe) {
             $compiler->raw(')');
         }
     }
