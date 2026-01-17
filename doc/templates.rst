@@ -865,7 +865,7 @@ The following operators don't fit into any of the other categories:
 
 .. _dot_operator:
 
-* ``.``, ``[]``: Gets an attribute of a variable.
+* ``.``, ``?.``, ``[]``: Gets an attribute of a variable.
 
   The (``.``) operator abstracts getting an attribute of a variable (methods,
   properties or constants of a PHP object, or items of a PHP array):
@@ -874,8 +874,23 @@ The following operators don't fit into any of the other categories:
 
       {{ user.name }}
 
-  After the ``.``, you can use any expression by wrapping it with parenthesis
-  ``()``.
+  The null-safe operator (``?.``) works like the dot operator but returns
+  ``null`` instead of throwing an exception when the left operand is ``null``:
+
+  .. code-block:: twig
+
+      {{ user?.name }}
+      {# returns null if user is null, otherwise returns user.name #}
+
+      {{ user?.address?.city }}
+      {# can be chained for safe navigation through potentially null values #}
+
+  .. versionadded:: 3.23
+
+      The null-safe operator was added in Twig 3.23.
+
+  After the ``.`` or ``?.``, you can use any expression by wrapping it with
+  parenthesis ``()``.
 
   One use case is when the attribute contains special characters (like ``-``
   that would be interpreted as the minus operator):
@@ -884,6 +899,7 @@ The following operators don't fit into any of the other categories:
 
       {# equivalent to the non-working user.first-name #}
       {{ user.('first-name') }}
+      {{ user?.('first-name') }}
 
   Another use case is when the attribute is "dynamic" (defined via a variable):
 
@@ -891,6 +907,7 @@ The following operators don't fit into any of the other categories:
 
       {{ user.(name) }}
       {{ user.('get' ~ name) }}
+      {{ user?.(name) }}
 
   Before Twig 3.15, use the :doc:`attribute <functions/attribute>` function
   instead for the two previous use cases.
@@ -925,6 +942,12 @@ The following operators don't fit into any of the other categories:
         ``hasName()``;
       * if not, and if ``strict_variables`` is ``false``, return ``null``;
       * if not, throw an exception.
+
+      To resolve ``user?.name`` to a PHP call, Twig checks if ``user`` is
+      ``null`` first:
+
+      * if ``user`` is ``null``, return ``null``;
+      * otherwise, use the same algorithm as for ``user.name``.
 
       To resolve ``user['name']`` to a PHP call, Twig uses the following algorithm
       at runtime:

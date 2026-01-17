@@ -23,9 +23,13 @@ $output = fopen(dirname(__DIR__).'/doc/operators_precedence.rst', 'w');
 $twig = new Environment(new ArrayLoader([]));
 $descriptionLength = 11;
 $expressionParsers = [];
+$seen = new SplObjectStorage();
 foreach ($twig->getExpressionParsers() as $expressionParser) {
-    $expressionParsers[] = $expressionParser;
-    $descriptionLength = max($descriptionLength, $expressionParser instanceof ExpressionParserDescriptionInterface ? strlen($expressionParser->getDescription()) : '');
+    if (!$seen->offsetExists($expressionParser)) {
+        $expressionParsers[] = $expressionParser;
+        $seen->offsetSet($expressionParser, true);
+        $descriptionLength = max($descriptionLength, $expressionParser instanceof ExpressionParserDescriptionInterface ? strlen($expressionParser->getDescription()) : '');
+    }
 }
 
 fwrite($output, "\n+------------+------------------+---------+---------------+".str_repeat('-', $descriptionLength + 2)."+\n");
@@ -46,9 +50,13 @@ foreach ($expressionParsers as $expressionParser) {
     if ($previousPrecedence !== $precedence) {
         $previous = null;
     }
+    $operatorName = '``'.$expressionParser->getName().'``';
+    if ($expressionParser->getAliases()) {
+        $operatorName .= ', ``'.implode('``, ``', $expressionParser->getAliases()).'``';
+    }
     fwrite($output, rtrim(sprintf("\n| %-10s | %-16s | %-7s | %-13s | %-{$descriptionLength}s |\n",
         (!$previous || $previousPrecedence !== $precedence ? $precedence : '').($expressionParser->getPrecedenceChange() ? ' => '.$expressionParser->getPrecedenceChange()->getNewPrecedence() : ''),
-        '``'.$expressionParser->getName().'``',
+        $operatorName,
         !$previous || ExpressionParserType::getType($previous) !== ExpressionParserType::getType($expressionParser) ? ExpressionParserType::getType($expressionParser)->value : '',
         !$previous || $previousAssociativity !== $associativity ? $associativity : '',
         $expressionParser instanceof ExpressionParserDescriptionInterface ? $expressionParser->getDescription() : '',
@@ -83,9 +91,13 @@ foreach ($expressionParsers as $expressionParser) {
     if ($previousPrecedence !== $precedence) {
         $previous = null;
     }
+    $operatorName = '``'.$expressionParser->getName().'``';
+    if ($expressionParser->getAliases()) {
+        $operatorName .= ', ``'.implode('``, ``', $expressionParser->getAliases()).'``';
+    }
     fwrite($output, rtrim(sprintf("\n| %-10s | %-16s | %-7s | %-13s | %-{$descriptionLength}s |\n",
         !$previous || $previousPrecedence !== $precedence ? $precedence : '',
-        '``'.$expressionParser->getName().'``',
+        $operatorName,
         !$previous || ExpressionParserType::getType($previous) !== ExpressionParserType::getType($expressionParser) ? ExpressionParserType::getType($expressionParser)->value : '',
         !$previous || $previousAssociativity !== $associativity ? $associativity : '',
         $expressionParser instanceof ExpressionParserDescriptionInterface ? $expressionParser->getDescription() : '',
