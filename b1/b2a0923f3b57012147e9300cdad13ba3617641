@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by felds at 2025-12-01T19:09:27Z
+
+This should fix issue #3260
+
+---------------------------------------------------------------------------
+
+by felds at 2025-12-01T20:10:41Z
+
+The failing tests are already present in [twigphp:3.x](https://github.com/twigphp/Twig/tree/3.x). I have no idea what they refer to, and I don't think they are related to the changes in this PR.
+
+---------------------------------------------------------------------------
+
+by felds at 2025-12-01T20:35:52Z
+
+I've found the bug.
+
+It was not in this repo, but it appeared when `symfony/intl` had some data updated.
+
+I think testing for exact results from dependencies is not a good idea, since it would require updating the tests in this lib every time the depended package was updated, so I changed the test to expect at least N results instead of exactly N results.
+
+---------------------------------------------------------------------------
+
+by willrowe at 2025-12-01T22:43:03Z
+
+This is a duplicate of #4623
+
+---------------------------------------------------------------------------
+
+by felds at 2025-12-02T20:06:30Z
+
+@willrowe thanks for pointing that out. I wonder why that PR is stuck. It looks pretty good too...
+
+---------------------------------------------------------------------------
+
+by johndodev at 2025-12-14T19:10:47Z
+
+up
