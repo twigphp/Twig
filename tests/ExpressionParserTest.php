@@ -231,6 +231,15 @@ class ExpressionParserTest extends TestCase
         $parser->parse($stream);
     }
 
+    public function testSequenceCompilationError()
+    {
+        $env = new Environment(new ArrayLoader(['index' => '{{ [1,,2] }}']), ['cache' => false, 'autoescape' => false]);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Empty array elements are only allowed in destructuring assignments');
+        $env->compileSource(new Source('{{ [1,,2] }}', 'index'));
+    }
+
     /**
      * @dataProvider getTestsForString
      */
