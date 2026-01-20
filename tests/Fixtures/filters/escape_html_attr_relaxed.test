@@ -1,0 +1,15 @@
+--TEST--
+"escape" filter does not additionally apply the html strategy when the html_attr_relaxed strategy has been applied
+"escape" filter does not additionally apply the html_attr_relaxed strategy when the html_attr strategy has been applied
+--TEMPLATE--
+{% autoescape 'html' %}
+{{ 'v:bind@click="foo"'|escape('html_attr_relaxed') }}
+{% endautoescape %}
+{% autoescape 'html_attr_relaxed' %}
+{{ 'v:bind@click="foo"' | escape('html_attr') }}
+{% endautoescape %}
+--DATA--
+return []
+--EXPECT--
+v:bind@click&#x3D;&quot;foo&quot;
+v&#x3A;bind&#x40;click&#x3D;&quot;foo&quot;

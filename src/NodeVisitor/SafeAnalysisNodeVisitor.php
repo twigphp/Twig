@@ -54,6 +54,11 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
 
             if (\in_array('html_attr', $bucket['value'], true)) {
                 $bucket['value'][] = 'html';
+                $bucket['value'][] = 'html_attr_relaxed';
+            }
+
+            if (\in_array('html_attr_relaxed', $bucket['value'], true)) {
+                $bucket['value'][] = 'html';
             }
 
             return $bucket['value'];
