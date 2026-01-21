@@ -132,30 +132,24 @@ Setting Variables
 ~~~~~~~~~~~~~~~~~
 
 You can assign values to variables inside code blocks using either the
-:doc:`set<tags/set>` tag or the :ref:`= operator <assignment-operator>`:
+:doc:`set<tags/set>` tag or the :ref:`= operator <templates-assignment-operator>`:
 
 .. code-block:: twig
 
     {% set name = 'Fabien' %}
     {% set numbers = [1, 2] %}
     {% set map = {'city': 'Paris'} %}
+    {% set first, last = 'Fabien', 'Potencier' %}
 
     {# or #}
 
     {% do name = 'Fabien' %}
     {% do numbers = [1, 2] %}
     {% do map = {'city': 'Paris'} %}
+    {% do [first, last] = ['Fabien', 'Potencier'] %}
 
-For simple assignments, both are equivalent. However, the ``set`` tag provides
-additional features:
-
-* **Multi-target assignment**: Assign multiple variables at once:
-
-  .. code-block:: twig
-
-      {% set first, last = 'Fabien', 'Potencier' %}
-
-* **Block capture**: Capture chunks of template content into a variable:
+The ``set`` tag can also be used to capture template content into
+a variable:
 
   .. code-block:: html+twig
 
@@ -1019,7 +1013,7 @@ The following operators don't fit into any of the other categories:
     Support for expanding the arguments of a function call was introduced in
     Twig 3.15.
 
-.. _assignment-operator:
+.. _templates-assignment-operator:
 
 * ``=``: The assignment operator assigns a value to a variable within an
   expression:
@@ -1037,6 +1031,9 @@ The following operators don't fit into any of the other categories:
 
       {# assignment can be used inside other expressions #}
       {% do a = (b = 4) + 5 %}
+
+  The assignment operator also supports :ref:`destructuring
+  <templates-destructuring>`.
 
   .. versionadded:: 3.23
 
@@ -1108,6 +1105,46 @@ parentheses:
 
     {# use parenthesis to change precedence #}
     {{ (greeting ~ name)|lower }} {# hello fabien #}
+
+.. _templates-destructuring:
+
+Destructuring
+-------------
+
+Destructuring allows you to extract values from arrays and assign them to
+variables in a single operation using the ``=`` :ref:`assignment operator
+<templates-assignment-operator>`.
+
+.. versionadded:: 3.23
+
+    Destructuring was added in Twig 3.23.
+
+Array Destructuring
+~~~~~~~~~~~~~~~~~~~
+
+Use square brackets on the left side of an assignment to destructure an array:
+
+.. code-block:: twig
+
+    {% do [first, last] = ['Fabien', 'Potencier'] %}
+
+    {{ first }} {# Fabien #}
+    {{ last }}  {# Potencier #}
+
+If there are more variables than values, the extra variables are set to
+``null``:
+
+.. code-block:: twig
+
+    {# extra will be null #}
+    {% do [first, last, extra] = ['Fabien', 'Potencier'] %}
+
+You can skip values by leaving a slot empty:
+
+.. code-block:: twig
+
+    {# only assign the second value #}
+    {% do [, last] = ['Fabien', 'Potencier'] %}
 
 .. _templates-whitespace-control:
 

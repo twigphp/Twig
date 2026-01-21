@@ -30,7 +30,7 @@ The assigned value can be any valid :ref:`Twig expression
 .. tip::
 
     To assign a value within an expression, use the :ref:`= operator
-    <assignment-operator>`:
+    <templates-assignment-operator>`:
 
     .. code-block:: twig
 

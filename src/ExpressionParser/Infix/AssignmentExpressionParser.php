@@ -14,7 +14,9 @@ namespace Twig\ExpressionParser\Infix;
 use Twig\Error\SyntaxError;
 use Twig\ExpressionParser\InfixAssociativity;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\AbstractBinary;
+use Twig\Node\Expression\Binary\DestructuringSetBinary;
 use Twig\Node\Expression\Binary\SetBinary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Parser;
@@ -36,7 +38,7 @@ class AssignmentExpressionParser extends BinaryOperatorExpressionParser
      */
     public function parse(Parser $parser, AbstractExpression $left, Token $token): AbstractExpression
     {
-        if (!$left instanceof ContextVariable) {
+        if (!$left instanceof ContextVariable && !$left instanceof ArrayExpression) {
             throw new SyntaxError(\sprintf('Cannot assign to "%s", only variables can be assigned.', $left::class), $token->getLine(), $parser->getStream()->getSourceContext());
         }
         $right = $parser->parseExpression(InfixAssociativity::Left === $this->getAssociativity() ? $this->getPrecedence() + 1 : $this->getPrecedence());
@@ -45,7 +47,11 @@ class AssignmentExpressionParser extends BinaryOperatorExpressionParser
             default => throw new \LogicException(\sprintf('Unknown operator: %s.', $this->getName())),
         };
 
-        return new SetBinary($left, $right, $token->getLine());
+        if ($left instanceof ArrayExpression) {
+            return new DestructuringSetBinary($left, $right, $token->getLine());
+        } else {
+            return new SetBinary($left, $right, $token->getLine());
+        }
     }
 
     public function getDescription(): string

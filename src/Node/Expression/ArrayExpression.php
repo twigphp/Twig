@@ -12,6 +12,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
+use Twig\Error\SyntaxError;
 use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Unary\StringCastUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
@@ -75,6 +76,13 @@ class ArrayExpression extends AbstractExpression implements SupportDefinedTestIn
             $compiler->repr(true);
 
             return;
+        }
+
+        // Check for empty expressions which are only allowed in destructuring
+        foreach ($this->getKeyValuePairs() as $pair) {
+            if ($pair['value'] instanceof EmptyExpression) {
+                throw new SyntaxError('Empty array elements are only allowed in destructuring assignments.', $pair['value']->getTemplateLine(), $this->getSourceContext());
+            }
         }
 
         $compiler->raw('[');

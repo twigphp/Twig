@@ -10,6 +10,12 @@ Twig supports the "=" operator (assignment)
 {# = can be chained #}
 {% do c = d = "a" %}{{ c }}{{ d }}
 {% do a = (b = 4) + 5 %}{{ a }}{{ b }}
+
+# Array destructuring
+{% do [first, last] = ['Fabien', 'Potencier'] %}{{ first }} {{ last }}
+{% do [a, b] = [b, a] %}{{ a }}{{ b }}
+{% do [, second] = ['first', 'second'] %}{{ second }}
+{% do [x, y, z] = ['one', 'two'] %}{{ x }} {{ y }} {{ z is same as(null) ? 'null' : z }}
 --DATA--
 return []
 --EXPECT--
@@ -18,3 +24,9 @@ return []
 4
 aa
 94
+
+# Array destructuring
+Fabien Potencier
+49
+second
+one two null
