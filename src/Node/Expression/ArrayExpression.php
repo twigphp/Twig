@@ -61,6 +61,31 @@ class ArrayExpression extends AbstractExpression implements SupportDefinedTestIn
         return false;
     }
 
+    /**
+     * Checks if the array is a sequence (keys are sequential integers starting from 0).
+     *
+     * @internal
+     */
+    public function isSequence(): bool
+    {
+        foreach ($this->getKeyValuePairs() as $i => $pair) {
+            $key = $pair['key'];
+            if ($key instanceof TempNameExpression) {
+                $keyValue = $key->getAttribute('name');
+            } elseif ($key instanceof ConstantExpression) {
+                $keyValue = $key->getAttribute('value');
+            } else {
+                return false;
+            }
+
+            if ($keyValue !== $i) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function addElement(AbstractExpression $value, ?AbstractExpression $key = null): void
     {
         if (null === $key) {
