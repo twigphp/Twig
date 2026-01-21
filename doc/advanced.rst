@@ -795,13 +795,14 @@ Operators
 
 .. versionadded:: 3.21
 
-    The ``getExpressionParsers()`` method was added in Twig 3.21 to replace the
-    deprecated ``getOperators()`` method.
+    The ``getExpressionParsers()`` method was added in Twig 3.21.
 
 .. deprecated:: 3.21
 
-    See the :doc:`deprecated <deprecated>` page for details on how to upgrade
-    from ``getOperators()`` to ``getExpressionParsers()``.
+    The ``getExpressionParsers()`` method replaces the now deprecated
+    ``getOperators()`` method. See the :doc:`deprecated <deprecated>` page for
+    details on how to upgrade from ``getOperators()`` to
+    ``getExpressionParsers()``.
 
 The ``getExpressionParsers()`` method lets you add new operators. To implement
 a new one, have a look at the default operators provided by
