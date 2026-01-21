@@ -1111,7 +1111,7 @@ parentheses:
 Destructuring
 -------------
 
-Destructuring allows you to extract values from arrays and assign them to
+Destructuring allows you to extract values from sequences and assign them to
 variables in a single operation using the ``=`` :ref:`assignment operator
 <templates-assignment-operator>`.
 
@@ -1119,10 +1119,11 @@ variables in a single operation using the ``=`` :ref:`assignment operator
 
     Destructuring was added in Twig 3.23.
 
-Array Destructuring
-~~~~~~~~~~~~~~~~~~~
+Sequence Destructuring
+~~~~~~~~~~~~~~~~~~~~~~
 
-Use square brackets on the left side of an assignment to destructure an array:
+Use square brackets on the left side of an assignment to destructure a
+sequence:
 
 .. code-block:: twig
 

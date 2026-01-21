@@ -1,7 +1,7 @@
 # 3.23.0 (2026-XX-XX)
 
  * Add `=` assignment operator (allows to set variables in expression or to replace the short-form of the set tag)
- * Add array destructuring
+ * Add sequence destructuring
  * Add `?.` null-safe operator
  * Add `===` and `!==` operators (equivalent to the `same as` and `not same as` tests)
 

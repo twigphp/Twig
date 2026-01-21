@@ -16,7 +16,7 @@ use Twig\ExpressionParser\InfixAssociativity;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\AbstractBinary;
-use Twig\Node\Expression\Binary\DestructuringSetBinary;
+use Twig\Node\Expression\Binary\SequenceDestructuringSetBinary;
 use Twig\Node\Expression\Binary\SetBinary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Parser;
@@ -48,7 +48,7 @@ class AssignmentExpressionParser extends BinaryOperatorExpressionParser
         };
 
         if ($left instanceof ArrayExpression) {
-            return new DestructuringSetBinary($left, $right, $token->getLine());
+            return new SequenceDestructuringSetBinary($left, $right, $token->getLine());
         } else {
             return new SetBinary($left, $right, $token->getLine());
         }

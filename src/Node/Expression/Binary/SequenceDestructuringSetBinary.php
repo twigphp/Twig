@@ -22,7 +22,7 @@ use Twig\Node\Node;
 /**
  * @internal
  */
-class DestructuringSetBinary extends AbstractBinary
+class SequenceDestructuringSetBinary extends AbstractBinary
 {
     private array $variables = [];
 
@@ -38,7 +38,7 @@ class DestructuringSetBinary extends AbstractBinary
             } elseif ($pair['value'] instanceof ContextVariable) {
                 $this->variables[] = $pair['value']->getAttribute('name');
             } else {
-                throw new SyntaxError(\sprintf('Cannot assign to "%s", only variables can be assigned in destructuring.', $pair['value']::class), $lineno);
+                throw new SyntaxError(\sprintf('Cannot assign to "%s", only variables can be assigned in sequence destructuring.', $pair['value']::class), $lineno);
             }
         }
 
