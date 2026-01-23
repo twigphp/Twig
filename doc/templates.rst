@@ -1147,6 +1147,25 @@ You can skip values by leaving a slot empty:
     {# only assign the second value #}
     {% do [, last] = ['Fabien', 'Potencier'] %}
 
+Object Destructuring
+~~~~~~~~~~~~~~~~~~~~
+
+Use curly braces on the left side of an assignment to destructure an object
+or mapping by extracting values based on property/key names:
+
+.. code-block:: twig
+
+    {% do {name, email} = user %}
+
+    {{ name }}  {# user.name #}
+    {{ email }} {# user.email #}
+
+.. note::
+
+    Object destructuring uses the :ref:`dot operator <dot_operator>` to access
+    values, so ``{name} = user`` is equivalent to ``name = user.name`` or
+    ``name = user["name"]`` depending on the type of the variable.
+
 .. _templates-whitespace-control:
 
 Whitespace Control

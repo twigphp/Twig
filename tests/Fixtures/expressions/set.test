@@ -16,8 +16,20 @@ Twig supports the "=" operator (assignment)
 {% do [a, b] = [b, a] %}{{ a }}{{ b }}
 {% do [, second] = ['first', 'second'] %}{{ second }}
 {% do [x, y, z] = ['one', 'two'] %}{{ x }} {{ y }} {{ z is same as(null) ? 'null' : z }}
+
+# Object destructuring
+{% do {name, email} = user %}{{ name }} {{ email }}
+{% do {first_name, last_name} = user_map %}{{ first_name }} {{ last_name }}
+{% do {name} = user_obj %}{{ name }}
 --DATA--
-return []
+return [
+    'user' => (object)['name' => 'Fabien', 'email' => 'fabien@example.com'],
+    'user_map' => ['first_name' => 'Fabien', 'last_name' => 'Potencier'],
+    'user_obj' => new class {
+        public function getName() { return 'Fabien'; }
+    },
+    'null_obj' => null
+]
 --EXPECT--
 4
 44
@@ -30,3 +42,8 @@ Fabien Potencier
 49
 second
 one two null
+
+# Object destructuring
+Fabien fabien@example.com
+Fabien Potencier
+Fabien
