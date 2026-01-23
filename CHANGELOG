@@ -4,6 +4,8 @@
  * Add sequence, mapping, and object destructuring
  * Add `?.` null-safe operator
  * Add `===` and `!==` operators (equivalent to the `same as` and `not same as` tests)
+ * Fix opcache preload warning for unlinked anonymous class
+ * Fix spread operator behavior
 
 # 3.22.2 (2025-12-14)
 
