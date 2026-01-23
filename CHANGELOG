@@ -1,4 +1,4 @@
-# 3.23.0 (2026-XX-XX)
+# 3.23.0 (2026-01-23)
 
  * Add `=` assignment operator (allows to set variables in expression or to replace the short-form of the set tag)
  * Add sequence, mapping, and object destructuring
