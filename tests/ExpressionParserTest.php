@@ -302,7 +302,7 @@ class ExpressionParserTest extends TestCase
      */
     public function testNullSafeOperator($template, $data, $expected)
     {
-        $env = new Environment(new ArrayLoader(['template' => $template]));
+        $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);
 
         $this->assertSame($expected, $env->render('template', $data));
     }
