@@ -1111,13 +1111,21 @@ parentheses:
 Destructuring
 -------------
 
+.. versionadded:: 3.23
+
+    Destructuring was added in Twig 3.23.
+
 Destructuring allows you to extract values from sequences and assign them to
 variables in a single operation using the ``=`` :ref:`assignment operator
 <templates-assignment-operator>`.
 
-.. versionadded:: 3.23
+Like in PHP, destructuring expressions return the right-hand side value, not
+the extracted values:
 
-    Destructuring was added in Twig 3.23.
+.. code-block:: twig
+
+    {# returns the full user object, allowing chained access #}
+    {{ ({name} = user).email }}
 
 Sequence Destructuring
 ~~~~~~~~~~~~~~~~~~~~~~
