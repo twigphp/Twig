@@ -1,6 +1,6 @@
 # 3.24.0 (2026-XX-XX)
 
- * n/a
+ * Add support for renaming variables in object destructuring (`{name: userName} = user`)
 
 # 3.23.0 (2026-01-23)
 

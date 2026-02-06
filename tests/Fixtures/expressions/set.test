@@ -21,6 +21,12 @@ Twig supports the "=" operator (assignment)
 {% do {name, email} = user %}{{ name }} {{ email }}
 {% do {first_name, last_name} = user_map %}{{ first_name }} {{ last_name }}
 {% do {name} = user_obj %}{{ name }}
+
+# Object destructuring with renaming
+{% do {name: userName, email: userEmail} = user %}{{ userName }} {{ userEmail }}
+{% do {first_name: first, last_name: last} = user_map %}{{ first }} {{ last }}
+{% do {name: objName} = user_obj %}{{ objName }}
+{% do {name: n1} = user %}{% do {name: n2} = user_obj %}{{ n1 }} {{ n2 }}
 --DATA--
 return [
     'user' => (object)['name' => 'Fabien', 'email' => 'fabien@example.com'],
@@ -47,3 +53,9 @@ one two null
 Fabien fabien@example.com
 Fabien Potencier
 Fabien
+
+# Object destructuring with renaming
+Fabien fabien@example.com
+Fabien Potencier
+Fabien
+Fabien Fabien
