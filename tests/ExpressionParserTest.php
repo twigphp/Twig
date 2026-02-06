@@ -218,6 +218,15 @@ class ExpressionParserTest extends TestCase
         $parser->parse($stream);
     }
 
+    public function testSequenceCompilationError()
+    {
+        $env = new Environment(new ArrayLoader(['index' => '{{ [1,,2] }}']), ['cache' => false, 'autoescape' => false]);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Empty array elements are only allowed in destructuring assignments');
+        $env->compileSource(new Source('{{ [1,,2] }}', 'index'));
+    }
+
     #[DataProvider('getTestsForString')]
     public function testStringExpression($template, $expected)
     {
@@ -273,12 +282,10 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestsForNullSafeOperator
-     */
+    #[DataProvider('getTestsForNullSafeOperator')]
     public function testNullSafeOperator($template, $data, $expected)
     {
-        $env = new Environment(new ArrayLoader(['template' => $template]));
+        $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);
 
         $this->assertSame($expected, $env->render('template', $data));
     }
@@ -608,5 +615,12 @@ class ExpressionParserTest extends TestCase
 
         // ?? stronger than ()
         yield '?? vs ()' => ['{{ (1 ?? "a") }}', '{{ ((1 ?? "a")) }}', eval('return 1;')];
+
+        // = stronger than anything else
+        yield '= same as literal' => ['{% do c = "a" %}{{ c }}', '{% do c = ("a") %}{{ c }}', eval("return 'a';")];
+        yield '= stronger than .' => ['{% do c = a.b %}{{ c }}', '{% do c = (a.b) %}{{ c }}', eval("\$a = ['b' => 1]; return \$a['b'];"), $context];
+        yield '= stronger than math' => ['{% do a = 1 + 3 %}{{ a }}', '{% do a = (1 + 3) %}{{ a }}', eval('$a = 1 + 3; return $a;')];
+        yield '= stronger than logical' => ['{% do a = false or true %}{{ a }}', '{% do a = (false or true) %}{{ a }}', eval('$a = false || true; return $a;')];
+        yield '= stronger than ternary' => ['{% do c = 4 ? 0 : -1 %}{{ c }}', '{% do c = (4 ? 0 : -1) %}{{ c }}', eval('return 4 ? 0 : -1;')];
     }
 }

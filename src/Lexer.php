@@ -533,7 +533,7 @@ class Lexer
 
     private function getOperatorRegex(): string
     {
-        $expressionParsers = ['='];
+        $expressionParsers = [];
         foreach ($this->env->getExpressionParsers() as $expressionParser) {
             $expressionParsers = array_merge($expressionParsers, [$expressionParser->getName()], $expressionParser->getAliases());
         }

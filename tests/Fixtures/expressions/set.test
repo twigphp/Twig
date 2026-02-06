@@ -1,0 +1,49 @@
+--TEST--
+Twig supports the "=" operator (assignment)
+--TEMPLATE--
+{# stores #}
+{% do b = 1 + 3 %}{{ b }}
+{# stores and displays #}
+{{ b = 1 + 3 }}{{ b }}
+{# stores and returns #}
+{% do (c = 4) ? 0 : -1 %}{{ c }}
+{# = can be chained #}
+{% do c = d = "a" %}{{ c }}{{ d }}
+{% do a = (b = 4) + 5 %}{{ a }}{{ b }}
+
+# Array destructuring
+{% do [first, last] = ['Fabien', 'Potencier'] %}{{ first }} {{ last }}
+{% do [a, b] = [b, a] %}{{ a }}{{ b }}
+{% do [, second] = ['first', 'second'] %}{{ second }}
+{% do [x, y, z] = ['one', 'two'] %}{{ x }} {{ y }} {{ z is same as(null) ? 'null' : z }}
+
+# Object destructuring
+{% do {name, email} = user %}{{ name }} {{ email }}
+{% do {first_name, last_name} = user_map %}{{ first_name }} {{ last_name }}
+{% do {name} = user_obj %}{{ name }}
+--DATA--
+return [
+    'user' => (object)['name' => 'Fabien', 'email' => 'fabien@example.com'],
+    'user_map' => ['first_name' => 'Fabien', 'last_name' => 'Potencier'],
+    'user_obj' => new class {
+        public function getName() { return 'Fabien'; }
+    },
+    'null_obj' => null
+]
+--EXPECT--
+4
+44
+4
+aa
+94
+
+# Array destructuring
+Fabien Potencier
+49
+second
+one two null
+
+# Object destructuring
+Fabien fabien@example.com
+Fabien Potencier
+Fabien

@@ -39,11 +39,11 @@ And here is how to escape variables included in JavaScript code:
 The ``escape`` filter supports the following escaping strategies for HTML
 documents:
 
-* ``html``: escapes a string for the **HTML body** context, 
+* ``html``: escapes a string for the **HTML body** context,
   or for HTML attributes values **inside quotes**.
 
-* ``js``: escapes a string for the **JavaScript** context. This is intended for 
-  use in JavaScript or JSON strings, and encodes values using backslash escape 
+* ``js``: escapes a string for the **JavaScript** context. This is intended for
+  use in JavaScript or JSON strings, and encodes values using backslash escape
   sequences.
 
 * ``css``: escapes a string for the **CSS** context. CSS escaping can be

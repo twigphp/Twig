@@ -2,7 +2,7 @@
 ========
 
 The ``slug`` filter transforms a given string into another string that
-only includes safe ASCII characters. 
+only includes safe ASCII characters.
 
 Here is an example:
 
@@ -11,8 +11,8 @@ Here is an example:
     {{ 'Wôrķšƥáçè ~~sèťtïñğš~~'|slug }}
     Workspace-settings
 
-The default separator between words is a dash (``-``), but you can 
-define a selector of your choice by passing it as an argument:
+The default separator between words is a dash (``-``), but you can
+define a separator of your choice by passing it as an argument:
 
 .. code-block:: twig
 
@@ -27,8 +27,8 @@ argument:
 
     {{ '...'|slug('-', 'ko') }}
 
-The ``slug`` filter uses the method by the same name in Symfony's 
-`AsciiSlugger <https://symfony.com/doc/current/components/string.html#slugger>`_. 
+The ``slug`` filter uses the method by the same name in Symfony's
+`AsciiSlugger <https://symfony.com/doc/current/components/string.html#slugger>`_.
 
 .. note::
 

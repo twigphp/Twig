@@ -2,14 +2,14 @@
 =====================
 
 The ``country_timezones`` function returns the names of the timezones associated
-with a given country its ISO-3166 code:
+with a given country code (ISO-3166):
 
 .. code-block:: twig
 
     {# Europe/Paris #}
     {{ country_timezones('FR')|join(', ') }}
 
-If the specified country were to be unknown, it will return an empty array
+If the specified country is unknown, it will return an empty array.
 
 .. note::
 

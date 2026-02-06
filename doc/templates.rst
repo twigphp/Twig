@@ -131,14 +131,33 @@ The following variables are always available in templates:
 Setting Variables
 ~~~~~~~~~~~~~~~~~
 
-You can assign values to variables inside code blocks. Assignments use the
-:doc:`set<tags/set>` tag:
+You can assign values to variables inside code blocks using either the
+:doc:`set<tags/set>` tag or the :ref:`= operator <templates-assignment-operator>`:
 
 .. code-block:: twig
 
     {% set name = 'Fabien' %}
     {% set numbers = [1, 2] %}
     {% set map = {'city': 'Paris'} %}
+    {% set first, last = 'Fabien', 'Potencier' %}
+
+    {# or #}
+
+    {% do name = 'Fabien' %}
+    {% do numbers = [1, 2] %}
+    {% do map = {'city': 'Paris'} %}
+    {% do [first, last] = ['Fabien', 'Potencier'] %}
+
+The ``set`` tag can also be used to capture template content into
+a variable:
+
+  .. code-block:: html+twig
+
+      {% set content %}
+          <div id="pagination">...</div>
+      {% endset %}
+
+See the :doc:`set<tags/set>` tag documentation for more details.
 
 Filters
 -------
@@ -328,7 +347,7 @@ Inline comments can also be on the same line as the expression:
     }}
 
 As inline comments continue until the end of the current line, the following
-code does not work as ``}}``would be part of the comment:
+code does not work as ``}}`` would be part of the comment:
 
 .. code-block:: twig
 
@@ -577,7 +596,7 @@ exist:
 
 * ``42`` / ``42.23``: Integers and floating point numbers are created by
   writing the number down. If a dot is present the number is a float,
-  otherwise an integer. Underscores can be used as digits separator to 
+  otherwise an integer. Underscores can be used as digits separator to
   improve readability (``-3_141.592_65`` is equivalent to ``-3141.59265``).
 
 * ``["first_name", "last_name"]``: Sequences are defined by a sequence of expressions
@@ -919,7 +938,7 @@ The following operators don't fit into any of the other categories:
       To resolve ``user.name`` to a PHP call, Twig uses the following algorithm
       at runtime:
 
-      * check if ``user`` is a PHP array or a ArrayObject/ArrayAccess object and
+      * check if ``user`` is a PHP array or an ArrayObject/ArrayAccess object and
         ``name`` a valid element;
       * if not, and if ``user`` is a PHP object, check that ``name`` is a valid property;
       * if not, and if ``user`` is a PHP object, check that ``name`` is a class constant;
@@ -945,7 +964,7 @@ The following operators don't fit into any of the other categories:
       Twig supports a specific syntax via the ``()`` operator for calling methods
       on objects, like in ``user.name()``:
 
-      * check if ``user`` is a object and has the ``name()``, ``getName()``,
+      * check if ``user`` is an object and has the ``name()``, ``getName()``,
         ``isName()``, or ``hasName()`` method;
       * if not, and if ``strict_variables`` is ``false``, return ``null``;
       * if not, throw an exception.
@@ -974,6 +993,32 @@ The following operators don't fit into any of the other categories:
       {% set ratings = {'q1': 10, 'q2': 5, ...moreRatings} %}
 
       {{ 'Hello %s %s!'|format(...['Fabien', 'Potencier']) }}
+
+.. _templates-assignment-operator:
+
+* ``=``: The assignment operator assigns a value to a variable within an
+  expression:
+
+  .. code-block:: twig
+
+      {# assign #}
+      {% do b = 1 + 3 %}
+
+      {# assign and output the result #}
+      {{ b = 1 + 3 }}
+
+      {# assignments can be chained #}
+      {% do a = b = 'foo' %}
+
+      {# assignment can be used inside other expressions #}
+      {% do a = (b = 4) + 5 %}
+
+  The assignment operator also supports :ref:`destructuring
+  <templates-destructuring>`.
+
+  .. versionadded:: 3.23
+
+      The ``=`` assignment operator was added in Twig 3.23.
 
 * ``=>``: The arrow operator allows the creation of functions. A function is
   made of arguments (use parentheses for multiple arguments) and an arrow
@@ -1032,6 +1077,74 @@ parentheses:
 
     {# use parenthesis to change precedence #}
     {{ (greeting ~ name)|lower }} {# hello fabien #}
+
+.. _templates-destructuring:
+
+Destructuring
+-------------
+
+.. versionadded:: 3.23
+
+    Destructuring was added in Twig 3.23.
+
+Destructuring allows you to extract values from sequences and assign them to
+variables in a single operation using the ``=`` :ref:`assignment operator
+<templates-assignment-operator>`.
+
+Like in PHP, destructuring expressions return the right-hand side value, not
+the extracted values:
+
+.. code-block:: twig
+
+    {# returns the full user object, allowing chained access #}
+    {{ ({name} = user).email }}
+
+Sequence Destructuring
+~~~~~~~~~~~~~~~~~~~~~~
+
+Use square brackets on the left side of an assignment to destructure a
+sequence:
+
+.. code-block:: twig
+
+    {% do [first, last] = ['Fabien', 'Potencier'] %}
+
+    {{ first }} {# Fabien #}
+    {{ last }}  {# Potencier #}
+
+If there are more variables than values, the extra variables are set to
+``null``:
+
+.. code-block:: twig
+
+    {# extra will be null #}
+    {% do [first, last, extra] = ['Fabien', 'Potencier'] %}
+
+You can skip values by leaving a slot empty:
+
+.. code-block:: twig
+
+    {# only assign the second value #}
+    {% do [, last] = ['Fabien', 'Potencier'] %}
+
+Object Destructuring
+~~~~~~~~~~~~~~~~~~~~
+
+Use curly braces on the left side of an assignment to destructure an object
+or mapping by extracting values based on property/key names:
+
+.. code-block:: twig
+
+    {% do {name, email} = user %}
+
+    {{ name }}  {# user.name #}
+    {{ email }} {# user.email #}
+
+.. note::
+
+    Object destructuring uses the :ref:`dot operator <dot_operator>` to access
+    values, so ``{name} = user`` is equivalent to ``name = user.name`` or
+    ``name = user["name"]`` depending on the type of the variable.
 
 .. _templates-whitespace-control:
 

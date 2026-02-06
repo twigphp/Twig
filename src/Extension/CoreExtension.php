@@ -16,6 +16,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\ExpressionParser\Infix\ArrowExpressionParser;
+use Twig\ExpressionParser\Infix\AssignmentExpressionParser;
 use Twig\ExpressionParser\Infix\BinaryOperatorExpressionParser;
 use Twig\ExpressionParser\Infix\ConditionalTernaryExpressionParser;
 use Twig\ExpressionParser\Infix\DotExpressionParser;
@@ -378,6 +379,9 @@ final class CoreExtension extends AbstractExtension
 
             // ternary operator
             new ConditionalTernaryExpressionParser(),
+
+            // assignment operator
+            new AssignmentExpressionParser('='),
 
             // Twig callables
             new IsExpressionParser(),
