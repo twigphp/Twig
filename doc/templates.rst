@@ -890,10 +890,6 @@ The following operators don't fit into any of the other categories:
       {{ user?.address?.city }}
       {# can be chained for safe navigation through potentially null values #}
 
-  .. versionadded:: 3.23
-
-      The null-safe operator was added in Twig 3.23.
-
   After the ``.`` or ``?.``, you can use any expression by wrapping it with
   parenthesis ``()``.
 
@@ -1016,10 +1012,6 @@ The following operators don't fit into any of the other categories:
   The assignment operator also supports :ref:`destructuring
   <templates-destructuring>`.
 
-  .. versionadded:: 3.23
-
-      The ``=`` assignment operator was added in Twig 3.23.
-
 * ``=>``: The arrow operator allows the creation of functions. A function is
   made of arguments (use parentheses for multiple arguments) and an arrow
   (``=>``) followed by an expression to execute. The expression has access to
@@ -1082,10 +1074,6 @@ parentheses:
 
 Destructuring
 -------------
-
-.. versionadded:: 3.23
-
-    Destructuring was added in Twig 3.23.
 
 Destructuring allows you to extract values from sequences and assign them to
 variables in a single operation using the ``=`` :ref:`assignment operator
