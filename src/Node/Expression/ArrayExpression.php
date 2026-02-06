@@ -71,7 +71,7 @@ class ArrayExpression extends AbstractExpression implements SupportDefinedTestIn
     {
         foreach ($this->getKeyValuePairs() as $i => $pair) {
             $key = $pair['key'];
-            if ($key instanceof TempNameExpression) {
+            if ($key instanceof LocalVariable) {
                 $keyValue = $key->getAttribute('name');
             } elseif ($key instanceof ConstantExpression) {
                 $keyValue = $key->getAttribute('value');
