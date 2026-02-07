@@ -1079,7 +1079,7 @@ Twig uses operators to perform various operations within templates.
 Understanding the precedence of these operators is crucial for writing correct
 and efficient Twig templates.
 
-The operator precedence rules are as follows, with the lowest-precedence
+The operator precedence rules are as follows, with the highest-precedence
 operators listed first.
 
 .. include:: operators_precedence.rst
