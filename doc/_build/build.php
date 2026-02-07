@@ -23,7 +23,7 @@ use SymfonyDocsBuilder\DocBuilder;
 (new Application('Twig docs Builder', '1.0'))
     ->register('build-docs')
     ->addOption('disable-cache', null, InputOption::VALUE_NONE, 'Use this option to force a full regeneration of all doc contents')
-    ->setCode(function (InputInterface $input, OutputInterface $output) {
+    ->setCode(static function (InputInterface $input, OutputInterface $output) {
         $io = new SymfonyStyle($input, $output);
         $io->text('Building all Twig docs...');
 

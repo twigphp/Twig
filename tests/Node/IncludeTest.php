@@ -96,8 +96,7 @@ try {
 if (\$_v%s) {
     yield from \$_v%s->unwrap()->yield(CoreExtension::toArray(["foo" => true]));
 }
-EOF
-            , null, true];
+EOF, null, true];
 
         return $tests;
     }

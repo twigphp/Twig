@@ -25,7 +25,7 @@ class GuardTokenParserTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
-        $env->registerUndefinedFunctionCallback(fn ($name) => throw new SyntaxError('boom.'));
+        $env->registerUndefinedFunctionCallback(static fn ($name) => throw new SyntaxError('boom.'));
         (new Parser($env))->parse($env->tokenize(new Source('{% guard function boom %}{% endguard %}', '')));
     }
 }

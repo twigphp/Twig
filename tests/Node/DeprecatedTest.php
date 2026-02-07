@@ -93,8 +93,7 @@ EOF
 // line 1
 \$$varName = Twig\Tests\Node\\foo();
 trigger_deprecation("twig/twig", "1.1", \$$varName." in \"foo.twig\" at line 1.");
-EOF
-            , $environment];
+EOF, $environment];
 
         return $tests;
     }

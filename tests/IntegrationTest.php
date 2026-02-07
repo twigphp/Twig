@@ -85,7 +85,7 @@ class IntegrationTest extends IntegrationTestCase
 
                 // Ensure this does not conflict with `divisible by` and `same as`.
                 if (\in_array($name, ['divisible', 'same'], true)) {
-                    return new TwigTest($name, fn () => '');
+                    return new TwigTest($name, static fn () => '');
                 }
 
                 return false;
@@ -238,7 +238,7 @@ class TwigTestExtension extends AbstractExtension
             new TwigFilter('*_path', [$this, 'dynamic_path']),
             new TwigFilter('*_foo_*_bar', [$this, 'dynamic_foo']),
             new TwigFilter('not', [$this, 'notFilter']),
-            new TwigFilter('anon_foo', function ($name) { return '*'.$name.'*'; }),
+            new TwigFilter('anon_foo', static function ($name) { return '*'.$name.'*'; }),
         ];
     }
 
@@ -252,8 +252,8 @@ class TwigTestExtension extends AbstractExtension
             new TwigFunction('static_call_array', ['Twig\Tests\TwigTestExtension', 'staticCall']),
             new TwigFunction('*_path', [$this, 'dynamic_path']),
             new TwigFunction('*_foo_*_bar', [$this, 'dynamic_foo']),
-            new TwigFunction('anon_foo', function ($name) { return '*'.$name.'*'; }),
-            new TwigFunction('deprecated_function', function () { return 'foo'; }, ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.1', 'not_deprecated_function')]),
+            new TwigFunction('anon_foo', static function ($name) { return '*'.$name.'*'; }),
+            new TwigFunction('deprecated_function', static function () { return 'foo'; }, ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.1', 'not_deprecated_function')]),
         ];
     }
 

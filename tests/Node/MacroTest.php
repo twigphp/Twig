@@ -77,8 +77,7 @@ public function macro_foo(\$foo = null, \$bar = "Foo", \$_underscore = null, ...
         yield from [];
     })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }
-EOF
-            , new Environment(new ArrayLoader(), ['use_yield' => true]),
+EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
         ];
 
         yield 'with use_yield = false' => [$node, <<<EOF
@@ -100,8 +99,7 @@ public function macro_foo(\$foo = null, \$bar = "Foo", \$_underscore = null, ...
         yield from [];
     })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }
-EOF
-            , new Environment(new ArrayLoader(), ['use_yield' => false]),
+EOF, new Environment(new ArrayLoader(), ['use_yield' => false]),
         ];
     }
 }

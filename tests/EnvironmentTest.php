@@ -398,9 +398,9 @@ class EnvironmentTest extends TestCase
     public function testUndefinedFunctionCallback()
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->registerUndefinedFunctionCallback(function (string $name) {
+        $twig->registerUndefinedFunctionCallback(static function (string $name) {
             if ('dynamic' === $name) {
-                return new TwigFunction('dynamic', function () { return 'dynamic'; });
+                return new TwigFunction('dynamic', static function () { return 'dynamic'; });
             }
 
             return false;
@@ -414,9 +414,9 @@ class EnvironmentTest extends TestCase
     public function testUndefinedFilterCallback()
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->registerUndefinedFilterCallback(function (string $name) {
+        $twig->registerUndefinedFilterCallback(static function (string $name) {
             if ('dynamic' === $name) {
-                return new TwigFilter('dynamic', function () { return 'dynamic'; });
+                return new TwigFilter('dynamic', static function () { return 'dynamic'; });
             }
 
             return false;
@@ -430,9 +430,9 @@ class EnvironmentTest extends TestCase
     public function testUndefinedTestCallback()
     {
         $twig = new Environment(new ArrayLoader());
-        $twig->registerUndefinedTestCallback(function (string $name) {
+        $twig->registerUndefinedTestCallback(static function (string $name) {
             if ('dynamic' === $name) {
-                return new TwigTest('dynamic', function () { return 'dynamic'; });
+                return new TwigTest('dynamic', static function () { return 'dynamic'; });
             }
 
             return false;

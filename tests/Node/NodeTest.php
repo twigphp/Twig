@@ -33,14 +33,13 @@ class NodeTest extends TestCase
     public function testToString()
     {
         // callable is not a supported type for a Node attribute, but Drupal uses some apparently
-        $node = new NodeForTest([], ['value' => function () { return '1'; }], 1);
+        $node = new NodeForTest([], ['value' => static function () { return '1'; }], 1);
 
         $this->assertEquals(<<<EOF
 Twig\Tests\Node\NodeForTest
   attributes:
     value: \Closure
-EOF
-            , (string) $node
+EOF, (string) $node
         );
     }
 
@@ -58,8 +57,7 @@ Twig\Tests\Node\NodeForTest
     function: Twig\TwigFunction(a_function)
     filter: Twig\TwigFilter(a_filter)
     test: Twig\TwigTest(a_test)
-EOF
-            , (string) $node);
+EOF, (string) $node);
     }
 
     public function testToStringWithTag()
@@ -70,8 +68,7 @@ EOF
         $this->assertEquals(<<<EOF
 Twig\Tests\Node\NodeForTest
   tag: tag
-EOF
-            , (string) $node);
+EOF, (string) $node);
     }
 
     public function testAttributeDeprecationIgnore()

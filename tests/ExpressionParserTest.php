@@ -467,7 +467,7 @@ class ExpressionParserTest extends TestCase
             public function getTests(): array
             {
                 return [
-                    new TwigTest('*_foo_*_bar', function ($foo, $bar, $a) {}),
+                    new TwigTest('*_foo_*_bar', static function ($foo, $bar, $a) {}),
                 ];
             }
         });
@@ -482,7 +482,7 @@ class ExpressionParserTest extends TestCase
             public function getFunctions(): array
             {
                 return [
-                    new TwigFunction('*_foo_*_bar', function ($foo, $bar, $a) {}),
+                    new TwigFunction('*_foo_*_bar', static function ($foo, $bar, $a) {}),
                 ];
             }
         });
@@ -497,7 +497,7 @@ class ExpressionParserTest extends TestCase
             public function getFilters(): array
             {
                 return [
-                    new TwigFilter('*_foo_*_bar', function ($foo, $bar, $a) {}),
+                    new TwigFilter('*_foo_*_bar', static function ($foo, $bar, $a) {}),
                 ];
             }
         });

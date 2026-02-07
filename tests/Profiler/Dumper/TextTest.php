@@ -37,7 +37,6 @@ main %d.%dms/%d%
   └ embedded.twig
     └ included.twig
 
-EOF
-            , $dumper->dump($this->getProfile()));
+EOF, $dumper->dump($this->getProfile()));
     }
 }
