@@ -51,12 +51,12 @@ class AssignmentExpressionParser extends BinaryOperatorExpressionParser
         if ($left instanceof ArrayExpression) {
             if ($left->isSequence()) {
                 return new SequenceDestructuringSetBinary($left, $right, $token->getLine());
-            } else {
-                return new ObjectDestructuringSetBinary($left, $right, $token->getLine());
             }
-        } else {
-            return new SetBinary($left, $right, $token->getLine());
+
+            return new ObjectDestructuringSetBinary($left, $right, $token->getLine());
         }
+
+        return new SetBinary($left, $right, $token->getLine());
     }
 
     public function getDescription(): string

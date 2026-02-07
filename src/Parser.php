@@ -447,7 +447,7 @@ class Parser
 
         if (!$function) {
             if ($this->shouldIgnoreUnknownTwigCallables()) {
-                return new TwigFunction($name, fn () => '');
+                return new TwigFunction($name, static fn () => '');
             }
             $e = new SyntaxError(\sprintf('Unknown "%s" function.', $name), $line, $this->stream->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFunctions()));
@@ -476,7 +476,7 @@ class Parser
         }
         if (!$filter) {
             if ($this->shouldIgnoreUnknownTwigCallables()) {
-                return new TwigFilter($name, fn () => '');
+                return new TwigFilter($name, static fn () => '');
             }
             $e = new SyntaxError(\sprintf('Unknown "%s" filter.', $name), $line, $this->stream->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFilters()));
@@ -524,7 +524,7 @@ class Parser
 
         if (!$test) {
             if ($this->shouldIgnoreUnknownTwigCallables()) {
-                return new TwigTest($name, fn () => '');
+                return new TwigTest($name, static fn () => '');
             }
             $e = new SyntaxError(\sprintf('Unknown "%s" test.', $name), $line, $this->stream->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getTests()));

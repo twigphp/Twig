@@ -35,7 +35,7 @@ class DeprecatedCallableInfoTest extends TestCase
 
         $deprecations = [];
         try {
-            set_error_handler(function ($type, $msg) use (&$deprecations) {
+            set_error_handler(static function ($type, $msg) use (&$deprecations) {
                 if (\E_USER_DEPRECATED === $type) {
                     $deprecations[] = $msg;
                 }
@@ -67,7 +67,7 @@ class DeprecatedCallableInfoTest extends TestCase
 
         $deprecations = [];
         try {
-            set_error_handler(function ($type, $msg) use (&$deprecations) {
+            set_error_handler(static function ($type, $msg) use (&$deprecations) {
                 if (\E_USER_DEPRECATED === $type) {
                     $deprecations[] = $msg;
                 }

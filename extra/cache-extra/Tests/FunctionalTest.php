@@ -29,7 +29,7 @@ class FunctionalTest extends TestCase
         $twig = $this->createEnvironment(['index' => '{% cache "city;v1" %}{{- city -}}{% endcache %}'], $cache);
 
         $this->assertSame('Paris', $twig->render('index', ['city' => 'Paris']));
-        $value = $cache->get('city;v1', function () { throw new \RuntimeException('Key should be in the cache'); });
+        $value = $cache->get('city;v1', static function () { throw new \RuntimeException('Key should be in the cache'); });
         $this->assertSame('Paris', $value);
     }
 

@@ -134,7 +134,7 @@ final class CoreExtension extends AbstractExtension
 
     private $dateFormats = ['F j, Y H:i', '%d days'];
     private $numberFormat = [0, '.', ','];
-    private $timezone = null;
+    private $timezone;
 
     /**
      * Sets the default format to be used by the date filter.
@@ -1128,9 +1128,9 @@ final class CoreExtension extends AbstractExtension
             }
             if ((int) $bTrim == $bTrim) {
                 return $a <=> (int) $bTrim;
-            } else {
-                return (float) $a <=> (float) $bTrim;
             }
+
+            return (float) $a <=> (float) $bTrim;
         }
         if (\is_string($a) && \is_int($b)) {
             $aTrim = trim($a, " \t\n\r\v\f");
@@ -1139,9 +1139,9 @@ final class CoreExtension extends AbstractExtension
             }
             if ((int) $aTrim == $aTrim) {
                 return (int) $aTrim <=> $b;
-            } else {
-                return (float) $aTrim <=> (float) $b;
             }
+
+            return (float) $aTrim <=> (float) $b;
         }
 
         // float <=> string
@@ -1179,7 +1179,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function matches(string $regexp, ?string $str): int
     {
-        set_error_handler(function ($t, $m) use ($regexp) {
+        set_error_handler(static function ($t, $m) use ($regexp) {
             throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" is not valid', $regexp).substr($m, 12));
         });
         try {
@@ -2148,7 +2148,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function parseBlockFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
-        $fakeFunction = new TwigFunction('block', fn ($name, $template = null) => null);
+        $fakeFunction = new TwigFunction('block', static fn ($name, $template = null) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
         return new BlockReferenceExpression($args[0], $args[1] ?? null, $line);
@@ -2159,7 +2159,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function parseAttributeFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
-        $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = null) => null);
+        $fakeFunction = new TwigFunction('attribute', static fn ($variable, $attribute, $arguments = null) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
         /*
