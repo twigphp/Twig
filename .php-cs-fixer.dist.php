@@ -16,6 +16,7 @@ return (new Config())
         'braces' => ['allow_single_line_closure' => true],
         'heredoc_to_nowdoc' => false,
         'single_line_throw' => false,
+        'phpdoc_to_comment' => ['ignored_tags' => ['var']],
         'ordered_imports' => true,
         'phpdoc_types_order' => ['null_adjustment' => 'always_last', 'sort_algorithm' => 'none'],
     ])

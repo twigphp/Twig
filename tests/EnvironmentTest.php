@@ -360,7 +360,7 @@ class EnvironmentTest extends TestCase
     public function testAddRuntimeLoader()
     {
         $runtimeLoader = new FactoryRuntimeLoader([
-            EnvironmentTest_Runtime::class => function () { return new EnvironmentTest_Runtime(); },
+            EnvironmentTest_Runtime::class => static function () { return new EnvironmentTest_Runtime(); },
         ]);
 
         $loader = new ArrayLoader([

@@ -423,7 +423,6 @@ final class CoreExtension extends AbstractExtension
 
             if (!is_countable($values)) {
                 throw new RuntimeError('The "cycle" function expects a countable sequence as first argument.');
-
                 $values = self::toArray($values, false);
             }
         }
@@ -1116,9 +1115,9 @@ final class CoreExtension extends AbstractExtension
             }
             if ((int) $bTrim == $bTrim) {
                 return $a <=> (int) $bTrim;
-            } else {
-                return (float) $a <=> (float) $bTrim;
             }
+
+            return (float) $a <=> (float) $bTrim;
         }
         if (\is_string($a) && \is_int($b)) {
             $aTrim = trim($a, " \t\n\r\v\f");
@@ -1127,9 +1126,9 @@ final class CoreExtension extends AbstractExtension
             }
             if ((int) $aTrim == $aTrim) {
                 return (int) $aTrim <=> $b;
-            } else {
-                return (float) $aTrim <=> (float) $b;
             }
+
+            return (float) $aTrim <=> (float) $b;
         }
 
         // float <=> string
@@ -1167,7 +1166,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function matches(string $regexp, ?string $str): int
     {
-        set_error_handler(function ($t, $m) use ($regexp) {
+        set_error_handler(static function ($t, $m) use ($regexp) {
             throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" is not valid', $regexp).substr($m, 12));
         });
         try {
@@ -2020,7 +2019,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function parseBlockFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
-        $fakeFunction = new TwigFunction('block', fn ($name, $template = null) => null);
+        $fakeFunction = new TwigFunction('block', static fn ($name, $template = null) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
         return new BlockReferenceExpression($args[0], $args[1] ?? null, $line);
@@ -2031,7 +2030,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function parseAttributeFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
-        $fakeFunction = new TwigFunction('attribute', fn ($variable, $attribute, $arguments = null) => null);
+        $fakeFunction = new TwigFunction('attribute', static fn ($variable, $attribute, $arguments = null) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
         /*
@@ -2051,7 +2050,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function parseLoopFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
     {
-        $fakeFunction = new TwigFunction('loop', fn ($iterator) => null);
+        $fakeFunction = new TwigFunction('loop', static fn ($iterator) => null);
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
         $recurseArgs = new ArrayExpression([new ConstantExpression(0, $line), $args[0]], $line);

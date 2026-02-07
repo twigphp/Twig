@@ -67,8 +67,7 @@ EOF
     yield "foo";
     yield from [];
 })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
-EOF
-            , new Environment(new ArrayLoader()),
+EOF, new Environment(new ArrayLoader()),
         ];
 
         $names = new Nodes([new AssignContextVariable('foo', 1)], 1);
