@@ -65,8 +65,7 @@ public function block_foo(array \$context, array \$blocks = []): iterable
     \$macros = \$this->macros;
     yield from [];
 }
-EOF
-            , new Environment(new ArrayLoader()),
+EOF, new Environment(new ArrayLoader()),
         ];
 
         return $tests;

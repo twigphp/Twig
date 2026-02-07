@@ -36,7 +36,7 @@ fwrite($output, "\n+------------+------------------+---------+---------------+".
 fwrite($output, '| Precedence | Operator         | Type    | Associativity | Description'.str_repeat(' ', $descriptionLength - 11)." |\n");
 fwrite($output, '+============+==================+=========+===============+'.str_repeat('=', $descriptionLength + 2).'+');
 
-usort($expressionParsers, fn ($a, $b) => $b->getPrecedence() <=> $a->getPrecedence());
+usort($expressionParsers, static fn ($a, $b) => $b->getPrecedence() <=> $a->getPrecedence());
 
 $previous = null;
 foreach ($expressionParsers as $expressionParser) {

@@ -22,7 +22,6 @@ namespace Twig\Tests\Extension;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;

@@ -192,8 +192,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
     yield from [];
 })(\$_v0, \$context, \$blocks, \$_v1, 0);
-EOF
-            , $env];
+EOF, $env];
 
         return $tests;
     }
