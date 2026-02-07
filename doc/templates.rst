@@ -1168,6 +1168,30 @@ or mapping by extracting values based on property/key names:
     {{ name }}  {# user.name #}
     {{ email }} {# user.email #}
 
+You can rename variables during destructuring by using the ``key: variable``
+syntax, where the key is the property to extract and the variable is the name
+to assign to:
+
+.. code-block:: twig
+
+    {% do {name: userName, email: userEmail} = user %}
+
+    {{ userName }}  {# user.name #}
+    {{ userEmail }} {# user.email #}
+
+This is especially useful when you need to destructure multiple objects that
+share the same property names:
+
+.. code-block:: twig
+
+    {% do {data: product, error: productError} = loadProduct() %}
+    {% do {data: stock, error: stockError} = loadStock() %}
+
+    {{ product }}      {# loadProduct().data #}
+    {{ productError }} {# loadProduct().error #}
+    {{ stock }}        {# loadStock().data #}
+    {{ stockError }}   {# loadStock().error #}
+
 .. note::
 
     Object destructuring uses the :ref:`dot operator <dot_operator>` to access
