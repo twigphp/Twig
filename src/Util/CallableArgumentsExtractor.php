@@ -12,6 +12,7 @@
 namespace Twig\Util;
 
 use Twig\Error\SyntaxError;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\VariadicExpression;
@@ -35,15 +36,16 @@ final class CallableArgumentsExtractor
     }
 
     /**
-     * @return array<Node>
+     * @return array<AbstractExpression>
      */
     public function extractArguments(Node $arguments): array
     {
-        /** @var array<int|string, Node> $extractedArguments */
+        /** @var array<int|string, AbstractExpression> $extractedArguments */
         $extractedArguments = [];
         $extractedArgumentNameMap = [];
         $named = false;
         foreach ($arguments as $name => $node) {
+            /** @var AbstractExpression $node */
             if (!\is_int($name)) {
                 $named = true;
             } elseif ($named) {
@@ -74,6 +76,7 @@ final class CallableArgumentsExtractor
         }
 
         [$callableParameters, $isPhpVariadic] = $this->getCallableParameters();
+        /** @var list<AbstractExpression> $arguments */
         $arguments = [];
         $callableParameterNames = [];
         $missingArguments = [];

@@ -2041,7 +2041,10 @@ final class CoreExtension extends AbstractExtension
         $dep->triggerDeprecation($src->getPath() ?: $src->getName(), $line);
         */
 
-        return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
+        /** @var ArrayExpression|ContextVariable|null $arguments */
+        $arguments = $args[2] ?? null;
+
+        return new GetAttrExpression($args[0], $args[1], $arguments, Template::ANY_CALL, $line);
     }
 
     /**

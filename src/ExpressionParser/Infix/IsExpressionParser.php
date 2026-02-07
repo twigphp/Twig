@@ -19,6 +19,7 @@ use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\TemplateVariable;
 use Twig\Node\Nodes;
 use Twig\Parser;
 use Twig\Token;
@@ -43,7 +44,9 @@ class IsExpressionParser extends AbstractExpressionParser implements InfixExpres
         }
 
         if ('defined' === $test->getName() && $expr instanceof ContextVariable && null !== $alias = $parser->getImportedSymbol('function', $expr->getAttribute('name'))) {
-            $expr = new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], new ArrayExpression([], $expr->getTemplateLine()), $expr->getTemplateLine());
+            /** @var TemplateVariable $var */
+            $var = $alias['node']->getNode('var');
+            $expr = new MacroReferenceExpression($var, $alias['name'], new ArrayExpression([], $expr->getTemplateLine()), $expr->getTemplateLine());
         }
 
         return new ($test->getNodeClass())($expr, $test, $arguments, $stream->getCurrent()->getLine());

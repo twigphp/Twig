@@ -12,6 +12,7 @@
 namespace Twig\ExpressionParser\Infix;
 
 use Twig\Error\SyntaxError;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\SetBinary;
 use Twig\Node\Expression\Unary\SpreadUnary;
@@ -27,6 +28,7 @@ trait ArgumentsTrait
     {
         $arguments = new ArrayExpression([], $line);
         foreach ($this->parseNamedArguments($parser, $parseOpenParenthesis) as $k => $n) {
+            /** @var AbstractExpression $n */
             $arguments->addElement($n, new LocalVariable($k, $line));
         }
 

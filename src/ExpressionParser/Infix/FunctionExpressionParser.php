@@ -20,6 +20,7 @@ use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\TemplateVariable;
 use Twig\Parser;
 use Twig\Token;
 
@@ -40,7 +41,10 @@ final class FunctionExpressionParser extends AbstractExpressionParser implements
         $name = $expr->getAttribute('name');
 
         if (null !== $alias = $parser->getImportedSymbol('function', $name)) {
-            return new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], $this->parseCallableArguments($parser, $line, false), $line);
+            /** @var TemplateVariable $var */
+            $var = $alias['node']->getNode('var');
+
+            return new MacroReferenceExpression($var, $alias['name'], $this->parseCallableArguments($parser, $line, false), $line);
         }
 
         $args = $this->parseNamedArguments($parser, false);
