@@ -37,7 +37,6 @@ if (!method_exists(ContainerBuilder::class, 'getAutoconfiguredAttributes')) {
             $this->doLoad($configs, $container);
         }
     }
-
 }
 
 /**

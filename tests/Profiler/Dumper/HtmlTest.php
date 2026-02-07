@@ -37,7 +37,6 @@ class HtmlTest extends ProfilerTestCase
   └ <span style="background-color: #ffd">embedded.twig</span>
     └ <span style="background-color: #ffd">included.twig</span>
 </pre>
-EOF
-            , $dumper->dump($this->getProfile()));
+EOF, $dumper->dump($this->getProfile()));
     }
 }

@@ -51,8 +51,7 @@ public function block_foo(array \$context, array \$blocks = []): iterable
     yield "foo";
     yield from [];
 }
-EOF
-            , new Environment(new ArrayLoader()),
+EOF, new Environment(new ArrayLoader()),
         ];
 
         return $tests;

@@ -88,7 +88,7 @@ class TestTest extends NodeTestCase
     protected static function createEnvironment(): Environment
     {
         $env = new Environment(new ArrayLoader());
-        $env->addTest(new TwigTest('anonymous', function () {}));
+        $env->addTest(new TwigTest('anonymous', static function () {}));
         $env->addTest(new TwigTest('barbar', 'Twig\Tests\Node\Expression\twig_tests_test_barbar', ['is_variadic' => true, 'need_context' => true]));
 
         return $env;

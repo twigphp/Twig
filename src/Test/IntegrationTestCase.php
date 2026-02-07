@@ -273,7 +273,7 @@ abstract class IntegrationTestCase extends TestCase
 
             $deprecations = [];
             try {
-                $prevHandler = set_error_handler(function ($type, $msg, $file, $line, $context = []) use (&$deprecations, &$prevHandler) {
+                $prevHandler = set_error_handler(static function ($type, $msg, $file, $line, $context = []) use (&$deprecations, &$prevHandler) {
                     if (\E_USER_DEPRECATED === $type) {
                         $deprecations[] = $msg;
 

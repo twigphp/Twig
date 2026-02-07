@@ -404,8 +404,8 @@ class TemplateTest extends TestCase
         ]);
 
         // test for Closure::__invoke()
-        $tests[] = [true, 'closure called', fn (): string => 'closure called', '__invoke', [], $anyType];
-        $tests[] = [true, 'closure called', fn (): string => 'closure called', '__invoke', [], $methodType];
+        $tests[] = [true, 'closure called', static fn (): string => 'closure called', '__invoke', [], $anyType];
+        $tests[] = [true, 'closure called', static fn (): string => 'closure called', '__invoke', [], $methodType];
 
         // tests when input is not an array or object
         $tests = array_merge($tests, [
@@ -567,7 +567,7 @@ class TemplatePropertyObject
 {
     public $defined = 'defined';
     public $zero = 0;
-    public $null = null;
+    public $null;
     public $bar = true;
     public $foo = true;
     public $baz = 'baz';
