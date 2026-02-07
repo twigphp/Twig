@@ -57,7 +57,7 @@ class GetAttrTest extends NodeTestCase
         $tests[] = [$node, \sprintf('%s%s, "bar", arguments: [], lineno: 1)', self::createAttributeGetter(), self::createVariableGetter('foo', 1))];
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ANY_CALL, 1, true);
-        $tests[] = [$node, '((null === ($_v%s = // line 1'."\n".'($context["foo"] ?? null))) ? null : '.self::createAttributeGetter().'$_v%s, "bar", [], "any", false, false, false, 1))', null, true];
+        $tests[] = [$node, '((null === ($_v%s = // line 1'."\n".'($context["foo"] ?? null))) ? null : '.self::createAttributeGetter().'$_v%s, "bar", arguments: [], lineno: 1))', null, true];
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ARRAY_CALL, 1);
         $tests[] = [$node, '(($_v%s = // line 1'."\n".
