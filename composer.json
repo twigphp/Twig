@@ -32,8 +32,8 @@
     "require-dev": {
         "symfony/phpunit-bridge": "^5.4.9|^6.4|^7.0",
         "psr/container": "^1.0|^2.0",
-        "phpstan/phpstan": "^2.0",
-        "php-cs-fixer/shim": "^3.0"
+        "phpstan/phpstan": "^2.0@stable",
+        "php-cs-fixer/shim": "^3.0@stable"
     },
     "autoload": {
         "files": [
