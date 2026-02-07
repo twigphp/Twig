@@ -423,7 +423,6 @@ final class CoreExtension extends AbstractExtension
 
             if (!is_countable($values)) {
                 throw new RuntimeError('The "cycle" function expects a countable sequence as first argument.');
-                $values = self::toArray($values, false);
             }
         }
 
