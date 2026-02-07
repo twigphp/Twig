@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2026-02-07T12:12:33Z
+
+Isn't it somehing that should be fixed in Symfony instead?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2026-02-07T12:15:49Z
+
+I think the CS fixer is wrong here. Not having a docblock from what I understand is equivalent to having `void` as the return type not `mixed`.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-02-07T12:37:53Z
+
+> I think the CS fixer is wrong here. Not having a docblock from what I understand is equivalent to having `void` as the return type not `mixed`.
+
+I would need to double-check, but I'm pretty sure that `mixed` is the default.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-02-07T12:38:40Z
+
+Apparently, we can do `'no_superfluous_phpdoc_tags' => ['allow_mixed' => true]`
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2026-02-07T12:44:44Z
+
+> Apparently, we can do `'no_superfluous_phpdoc_tags' => ['allow_mixed' => true]`
+
+:+1: added
