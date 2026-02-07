@@ -33,7 +33,7 @@
         "psr/container": "^1.0|^2.0",
         "phpstan/phpstan": "^2.0@stable",
         "phpunit/phpunit": "^11.4@stable",
-        "php-cs-fixer/shim": "^3.0"
+        "php-cs-fixer/shim": "^3.0@stable"
     },
     "autoload": {
         "psr-4" : {
