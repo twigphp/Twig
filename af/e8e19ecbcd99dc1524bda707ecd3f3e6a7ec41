@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-30T14:12:40Z
+
+@fabpot WDYT, would you endorse such an additional strategy?
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-02-08T16:12:08Z
+
+Feedback addressed. Thank you!
+
+When this gets merged, I'd like to use it as the escaping strategy for attribute names in #3930.
