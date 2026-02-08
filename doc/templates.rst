@@ -894,7 +894,8 @@ The following operators don't fit into any of the other categories:
       {{ user.name }}
 
   The null-safe operator (``?.``) works like the dot operator but returns
-  ``null`` instead of throwing an exception when the left operand is ``null``:
+  ``null`` instead of throwing an exception when the left operand is ``null``.
+  If the operand is part of a chain, the rest of the chain is skipped:
 
   .. code-block:: twig
 
@@ -903,6 +904,9 @@ The following operators don't fit into any of the other categories:
 
       {{ user?.address?.city }}
       {# can be chained for safe navigation through potentially null values #}
+
+      {{ user?.address.city }}
+      {# returns null if user is null, the rest of the chain is skipped (address.city is not evaluated) #}
 
   .. versionadded:: 3.23
 

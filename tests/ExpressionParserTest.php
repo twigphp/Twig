@@ -25,6 +25,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
 use Twig\Extension\AbstractExtension;
@@ -350,6 +351,49 @@ class ExpressionParserTest extends TestCase
                 ['foo' => (object) ['bar' => false]],
                 '',
             ],
+            // short-circuiting
+            [
+                '{{ foo?.bar.baz }}',
+                ['foo' => null],
+                '',
+            ],
+            [
+                '{{ foo?.bar.baz?.qux.corge }}',
+                ['foo' => null],
+                '',
+            ],
+            [
+                '{{ foo?.bar.baz?.qux.corge }}',
+                ['foo' => (object) ['bar' => (object) ['baz' => null]]],
+                '',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getTestForInvalidNullSafeOperatorShortCircuiting
+     */
+    public function testInvalidNullSafeOperatorShortCircuiting(string $template, array $data, string $expectedMessage)
+    {
+        $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $env->render('template', $data);
+    }
+
+    public static function getTestForInvalidNullSafeOperatorShortCircuiting()
+    {
+        yield [
+            '{{ foo?.bar.baz }}',
+            ['foo' => (object) ['bar' => null]],
+            'Impossible to access an attribute ("baz") on a null variable in "template" at line 1.',
+        ];
+        yield [
+            '{{ foo?.bar.baz?.qux.corge }}',
+            ['foo' => (object) ['bar' => (object) ['baz' => (object) ['qux' => null]]]],
+            'Impossible to access an attribute ("corge") on a null variable in "template" at line 1.',
         ];
     }
 
