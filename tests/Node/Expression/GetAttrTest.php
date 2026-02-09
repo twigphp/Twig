@@ -64,13 +64,13 @@ class GetAttrTest extends NodeTestCase
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ANY_CALL, 1, true);
         $node = new GetAttrExpression($node, $attr2, $args, Template::METHOD_CALL, 1);
-        $tests[] = [$node, '((null === ($_v%s = // line 1'."\n".'($context["foo"] ?? null))) ? null : '.self::createAttributeGetter().self::createAttributeGetter().'$_v%s, "bar", [], "any", false, false, false, 1), "baz", [], "method", false, false, false, 1))', null, true];
+        $tests[] = [$node, '((null === ($_v%s = // line 1'."\n".'($context["foo"] ?? null))) ? null : '.self::createAttributeGetter().self::createAttributeGetter().'$_v%s, "bar", arguments: [], lineno: 1), "baz", arguments: [], type: "method", lineno: 1))', null, true];
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ANY_CALL, 1, true);
         $node = new GetAttrExpression($node, $attr2, $args, Template::ANY_CALL, 1);
         $node = new GetAttrExpression($node, $attr3, $args, Template::METHOD_CALL, 1, true);
         $node = new GetAttrExpression($node, $attr4, $args, Template::ANY_CALL, 1);
-        $tests[] = [$node, '((null === ($_v0 = ((null === ($_v1 = // line 1'."\n".'($context["foo"] ?? null))) ? null : '.self::createAttributeGetter().self::createAttributeGetter().'$_v1, "bar", [], "any", false, false, false, 1), "baz", [], "any", false, false, false, 1)))) ? null : '.self::createAttributeGetter().self::createAttributeGetter().'$_v0, "qux", [], "method", false, false, false, 1), "corge", [], "any", false, false, false, 1))', null];
+        $tests[] = [$node, '((null === ($_v0 = ((null === ($_v1 = // line 1'."\n".'($context["foo"] ?? null))) ? null : '.self::createAttributeGetter().self::createAttributeGetter().'$_v1, "bar", arguments: [], lineno: 1), "baz", arguments: [], lineno: 1)))) ? null : '.self::createAttributeGetter().self::createAttributeGetter().'$_v0, "qux", arguments: [], type: "method", lineno: 1), "corge", arguments: [], lineno: 1))', null];
 
         $node = new GetAttrExpression($expr, $attr, $args, Template::ARRAY_CALL, 1);
         $tests[] = [$node, '(($_v%s = // line 1'."\n".
