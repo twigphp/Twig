@@ -128,8 +128,8 @@ The following options are available:
 
 * ``autoescape`` *string*
 
-  Sets the default auto-escaping strategy (``name``, ``html``, ``js``, ``css``,
-  ``url``, ``html_attr``, or a PHP callback that takes the template "filename"
+  Sets the default auto-escaping strategy (``name``, ``html``, ``js``, ``css``, ``url``,
+  ``html_attr``, ``html_attr_relaxed``, or a PHP callback that takes the template "filename"
   and returns the escaping strategy to use -- the callback cannot be a function
   name to avoid collision with built-in escaping strategies); set it to
   ``false`` to disable auto-escaping. The ``name`` escaping strategy determines

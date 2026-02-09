@@ -180,6 +180,13 @@ class EscaperRuntimeTest extends TestCase
         }
     }
 
+    public function testHtmlAttributeRelaxedEscapingConvertsSpecialChars()
+    {
+        foreach ($this->htmlAttrSpecialChars as $key => $value) {
+            $this->assertEquals($value, (new EscaperRuntime())->escape($key, 'html_attr_relaxed'), 'Failed to escape: '.$key);
+        }
+    }
+
     public function testJavascriptEscapingConvertsSpecialChars()
     {
         foreach ($this->jsSpecialChars as $key => $value) {
@@ -326,6 +333,26 @@ class EscaperRuntimeTest extends TestCase
                         $literal,
                         (new EscaperRuntime())->escape($literal, 'html_attr'),
                         "$literal should be escaped!");
+                }
+            }
+        }
+    }
+
+    public function testHtmlAttributeRelaxedEscapingEscapesOwaspRecommendedRanges()
+    {
+        $immune = [',', '.', '-', '_', ':', '@', '[', ']']; // Exceptions to escaping ranges
+        for ($chr = 0; $chr < 0xFF; ++$chr) {
+            if ($chr >= 0x30 && $chr <= 0x39
+            || $chr >= 0x41 && $chr <= 0x5A
+            || $chr >= 0x61 && $chr <= 0x7A) {
+                $literal = $this->codepointToUtf8($chr);
+                $this->assertEquals($literal, (new EscaperRuntime())->escape($literal, 'html_attr_relaxed'));
+            } else {
+                $literal = $this->codepointToUtf8($chr);
+                if (\in_array($literal, $immune)) {
+                    $this->assertEquals($literal, (new EscaperRuntime())->escape($literal, 'html_attr_relaxed'));
+                } else {
+                    $this->assertNotEquals($literal, (new EscaperRuntime())->escape($literal, 'html_attr_relaxed'), "$literal should be escaped!");
                 }
             }
         }

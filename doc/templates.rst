@@ -880,7 +880,8 @@ The following operators don't fit into any of the other categories:
       {{ user.name }}
 
   The null-safe operator (``?.``) works like the dot operator but returns
-  ``null`` instead of throwing an exception when the left operand is ``null``:
+  ``null`` instead of throwing an exception when the left operand is ``null``.
+  If the operand is part of a chain, the rest of the chain is skipped:
 
   .. code-block:: twig
 
@@ -889,6 +890,9 @@ The following operators don't fit into any of the other categories:
 
       {{ user?.address?.city }}
       {# can be chained for safe navigation through potentially null values #}
+
+      {{ user?.address.city }}
+      {# returns null if user is null, the rest of the chain is skipped (address.city is not evaluated) #}
 
   After the ``.`` or ``?.``, you can use any expression by wrapping it with
   parenthesis ``()``.
@@ -1043,7 +1047,7 @@ Twig uses operators to perform various operations within templates.
 Understanding the precedence of these operators is crucial for writing correct
 and efficient Twig templates.
 
-The operator precedence rules are as follows, with the lowest-precedence
+The operator precedence rules are as follows, with the highest-precedence
 operators listed first.
 
 .. include:: operators_precedence.rst
@@ -1127,6 +1131,30 @@ or mapping by extracting values based on property/key names:
 
     {{ name }}  {# user.name #}
     {{ email }} {# user.email #}
+
+You can rename variables during destructuring by using the ``key: variable``
+syntax, where the key is the property to extract and the variable is the name
+to assign to:
+
+.. code-block:: twig
+
+    {% do {name: userName, email: userEmail} = user %}
+
+    {{ userName }}  {# user.name #}
+    {{ userEmail }} {# user.email #}
+
+This is especially useful when you need to destructure multiple objects that
+share the same property names:
+
+.. code-block:: twig
+
+    {% do {data: product, error: productError} = loadProduct() %}
+    {% do {data: stock, error: stockError} = loadStock() %}
+
+    {{ product }}      {# loadProduct().data #}
+    {{ productError }} {# loadProduct().error #}
+    {{ stock }}        {# loadStock().data #}
+    {{ stockError }}   {# loadStock().error #}
 
 .. note::
 

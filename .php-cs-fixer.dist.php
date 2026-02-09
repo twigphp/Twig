@@ -19,6 +19,7 @@ return (new Config())
         'phpdoc_to_comment' => ['ignored_tags' => ['var']],
         'ordered_imports' => true,
         'phpdoc_types_order' => ['null_adjustment' => 'always_last', 'sort_algorithm' => 'none'],
+        'no_superfluous_phpdoc_tags' => ['allow_mixed' => true],
     ])
     ->setRiskyAllowed(true)
     ->setParallelConfig(ParallelConfigFactory::detect())
