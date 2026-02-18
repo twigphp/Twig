@@ -304,6 +304,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
             new TwigFunction('enum_cases', [self::class, 'enumCases'], ['node_class' => EnumCasesFunction::class]),
             new TwigFunction('enum', [self::class, 'enum'], ['node_class' => EnumFunction::class]),
+            new TwigFunction('json_validate', 'json_validate'),
         ];
     }
 
