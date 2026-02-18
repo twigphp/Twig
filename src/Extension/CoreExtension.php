@@ -2189,7 +2189,7 @@ final class CoreExtension extends AbstractExtension
      */
     public static function testValidJson($value): bool
     {
-        if (!$value instanceof \Stringable) {
+        if (false === is_string($value) && !$value instanceof \Stringable) {
             return false;
         }
 
