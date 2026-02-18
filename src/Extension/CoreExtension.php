@@ -304,7 +304,6 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
             new TwigFunction('enum_cases', [self::class, 'enumCases'], ['node_class' => EnumCasesFunction::class]),
             new TwigFunction('enum', [self::class, 'enum'], ['node_class' => EnumFunction::class]),
-            new TwigFunction('json_validate', 'json_validate'),
         ];
     }
 
@@ -324,6 +323,7 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('sequence', [self::class, 'testSequence']),
             new TwigTest('mapping', [self::class, 'testMapping']),
             new TwigTest('true', null, ['node_class' => TrueTest::class]),
+            new TwigTest('valid_json', [self::class, 'testValidJson']),
         ];
     }
 
@@ -2173,6 +2173,27 @@ final class CoreExtension extends AbstractExtension
         */
 
         return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
+    }
+
+    /**
+     * Checks if a variable is a valid json.
+     *
+     *    {# evaluates to false if the foo variable is null, true if foo is a valid json, false otherwise #}
+     *    {% if foo is valid_json %}
+     *        {# ... #}
+     *    {% endif %}
+     *
+     * @param mixed $value A variable
+     *
+     * @internal
+     */
+    public static function testValidJson($value): bool
+    {
+        if (!$value instanceof \Stringable) {
+            return false;
+        }
+
+        return json_validate((string) $value);
     }
 
     private static function getPropertyChecker(string $class, string $property): \Closure

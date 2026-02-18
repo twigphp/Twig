@@ -1,0 +1,28 @@
+--TEST--
+"valid_json" test
+--TEMPLATE--
+{{ stringable_valid is valid_json ? 'ok' : 'ko' }}
+{{ stringable_invalid is valid_json ? 'ko' : 'ok' }}
+{{ markup_valid is valid_json ? 'ok' : 'ko' }}
+{{ plain_string_valid is valid_json ? 'ko' : 'ok' }}
+{{ null_value is valid_json ? 'ko' : 'ok' }}
+{{ array_value is valid_json ? 'ko' : 'ok' }}
+{{ int_value is valid_json ? 'ko' : 'ok' }}
+--DATA--
+return [
+    'stringable_valid' => new \Twig\Tests\ToStringStub('{"foo": "bar", "baz": [1, 2, 3]}'),
+    'stringable_invalid' => new \Twig\Tests\ToStringStub('{foo: "bar"}'),
+    'markup_valid' => new \Twig\Markup('["a", 1, true, null]', 'UTF-8'),
+    'plain_string_valid' => '{"a": 1}',
+    'null_value' => null,
+    'array_value' => ['a' => 1],
+    'int_value' => 42,
+]
+--EXPECT--
+ok
+ok
+ok
+ok
+ok
+ok
+ok
