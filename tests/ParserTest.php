@@ -26,6 +26,7 @@ use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\EmptyNode;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
 use Twig\Node\SetNode;
@@ -208,7 +209,7 @@ EOF, 'index')));
     protected function getParser()
     {
         $parser = new Parser(new Environment(new ArrayLoader()));
-        $parser->setParent(new EmptyNode());
+        $parser->setParent(new ConstantExpression('base.html', 1));
 
         $p = new \ReflectionProperty($parser, 'stream');
         $p->setValue($parser, new TokenStream([], new Source('', '')));
