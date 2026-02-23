@@ -357,7 +357,7 @@ class Parser
         return $this->parent || 0 < \count($this->traits);
     }
 
-    public function setParent(Node $parent): void
+    public function setParent(AbstractExpression $parent): void
     {
         if (null !== $this->parent) {
             throw new SyntaxError('Multiple extends tags are forbidden.', $parent->getTemplateLine(), $parent->getSourceContext());
