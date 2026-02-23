@@ -242,6 +242,11 @@ Parser
   deprecated as of Twig 3.24; the method will require an ``AbstractExpression``
   instance in Twig 4.0.
 
+* Passing non-``AbstractExpression`` nodes to
+  ``Twig\Node\Expression\Binary\MatchesBinary`` constructor is deprecated as of
+  Twig 3.24; the constructor will require an ``AbstractExpression`` instance in Twig
+  4.0.
+
 * The ``Twig\Parser::getExpressionParser()`` method is deprecated as of Twig
   3.21, use ``Twig\Parser::parseExpression()`` instead.
 
