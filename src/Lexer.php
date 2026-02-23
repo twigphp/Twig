@@ -544,7 +544,7 @@ class Lexer
 
             // an operator that begins with a character must not have a dot or pipe before
             if (ctype_alpha($expressionParser[0])) {
-                $r = '(?<![\.\|])'.$r;
+                $r = '(?<![\.\|]\s|.[\.\|])'.$r;
             }
 
             // an operator with a space can be any amount of whitespaces
