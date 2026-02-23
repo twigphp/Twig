@@ -45,7 +45,7 @@ class Parser
     private array $stack = [];
     private ?\WeakMap $expressionRefs = null;
     private TokenStream $stream;
-    private ?Node $parent = null;
+    private ?AbstractExpression $parent = null;
     /**
      * @var NodeVisitorInterface[]|null
      */
