@@ -23,7 +23,7 @@ use Twig\Compiler;
 class TypesNode extends Node
 {
     /**
-     * @param array<string, array{type: string, optional: bool}> $types
+     * @param array<string, array{type: string, optional: bool, docs: ?string}> $types
      */
     public function __construct(array $types, int $lineno)
     {

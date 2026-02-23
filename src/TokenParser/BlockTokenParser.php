@@ -42,6 +42,14 @@ final class BlockTokenParser extends AbstractTokenParser
         $this->parser->pushLocalScope();
         $this->parser->pushBlockStack($name);
 
+        // Check for optional docs="..." attribute
+        $docs = null;
+        if ($stream->test(Token::NAME_TYPE, 'docs')) {
+            $stream->next();
+            $stream->expect(Token::OPERATOR_TYPE, '=');
+            $docs = $stream->expect(Token::STRING_TYPE)->getValue();
+        }
+
         if ($stream->nextIf(Token::BLOCK_END_TYPE)) {
             $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
             if ($token = $stream->nextIf(Token::NAME_TYPE)) {
@@ -59,6 +67,9 @@ final class BlockTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         $block->setNode('body', $body);
+        if (null !== $docs) {
+            $block->setAttribute('docs', $docs);
+        }
         $this->parser->popBlockStack();
         $this->parser->popLocalScope();
 

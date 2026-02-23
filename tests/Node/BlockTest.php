@@ -40,9 +40,48 @@ class BlockTest extends NodeTestCase
     public static function provideTests(): iterable
     {
         $tests = [];
+
+        // block without docs
         $tests[] = [new BlockNode('foo', new TextNode('foo', 1), 1), <<<EOF
 // line 1
 /**
+ * @return iterable<null|scalar|\Stringable>
+ */
+public function block_foo(array \$context, array \$blocks = []): iterable
+{
+    \$macros = \$this->macros;
+    yield "foo";
+    yield from [];
+}
+EOF, new Environment(new ArrayLoader()),
+        ];
+
+        // block with docs
+        $blockWithDocs = new BlockNode('foo', new TextNode('foo', 1), 1);
+        $blockWithDocs->setAttribute('docs', 'The foo block description');
+        $tests[] = [$blockWithDocs, <<<EOF
+// line 1
+/**
+ * The foo block description
+ * @return iterable<null|scalar|\Stringable>
+ */
+public function block_foo(array \$context, array \$blocks = []): iterable
+{
+    \$macros = \$this->macros;
+    yield "foo";
+    yield from [];
+}
+EOF, new Environment(new ArrayLoader()),
+        ];
+
+        // block with multiline docs
+        $blockWithMultilineDocs = new BlockNode('foo', new TextNode('foo', 1), 1);
+        $blockWithMultilineDocs->setAttribute('docs', "First line\nSecond line");
+        $tests[] = [$blockWithMultilineDocs, <<<EOF
+// line 1
+/**
+ * First line
+ * Second line
  * @return iterable<null|scalar|\Stringable>
  */
 public function block_foo(array \$context, array \$blocks = []): iterable

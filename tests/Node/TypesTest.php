@@ -23,10 +23,12 @@ class TypesTest extends NodeTestCase
             'foo' => [
                 'type' => 'string',
                 'optional' => false,
+                'docs' => null,
             ],
             'bar' => [
                 'type' => 'number',
                 'optional' => true,
+                'docs' => null,
             ],
         ];
     }

@@ -33,6 +33,7 @@ class BlockNode extends Node
         $compiler
             ->addDebugInfo($this)
             ->write("/**\n")
+            ->write($this->hasAttribute('docs') ? ' * '.str_replace("\n", "\n * ", $this->getAttribute('docs'))."\n" : '')
             ->write(" * @return iterable<null|scalar|\Stringable>\n")
             ->write(" */\n")
             ->write(\sprintf("public function block_%s(array \$context, array \$blocks = []): iterable\n", $this->getAttribute('name')), "{\n")

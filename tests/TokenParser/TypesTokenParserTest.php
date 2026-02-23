@@ -20,7 +20,7 @@ use Twig\Source;
 class TypesTokenParserTest extends TestCase
 {
     /** @dataProvider getMappingTests */
-    public function testMappingParsing(string $template, array $expected): void
+    public function testMappingParsing(string $template, array $expected)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $stream = $env->tokenize(new Source($template, ''));
@@ -44,7 +44,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo: "bar"} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => false],
+                    'foo' => ['type' => 'bar', 'optional' => false, 'docs' => null],
                 ],
             ],
 
@@ -52,7 +52,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo: "bar",} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => false],
+                    'foo' => ['type' => 'bar', 'optional' => false, 'docs' => null],
                 ],
             ],
 
@@ -60,7 +60,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo?: "bar"} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => true],
+                    'foo' => ['type' => 'bar', 'optional' => true, 'docs' => null],
                 ],
             ],
 
@@ -68,9 +68,9 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo: "foo", bar?: "foo", baz: "baz"} %}',
                 [
-                    'foo' => ['type' => 'foo', 'optional' => false],
-                    'bar' => ['type' => 'foo', 'optional' => true],
-                    'baz' => ['type' => 'baz', 'optional' => false],
+                    'foo' => ['type' => 'foo', 'optional' => false, 'docs' => null],
+                    'bar' => ['type' => 'foo', 'optional' => true, 'docs' => null],
+                    'baz' => ['type' => 'baz', 'optional' => false, 'docs' => null],
                 ],
             ],
 
@@ -78,8 +78,43 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types foo: "foo", bar: "bar" %}',
                 [
-                    'foo' => ['type' => 'foo', 'optional' => false],
-                    'bar' => ['type' => 'bar', 'optional' => false],
+                    'foo' => ['type' => 'foo', 'optional' => false, 'docs' => null],
+                    'bar' => ['type' => 'bar', 'optional' => false, 'docs' => null],
+                ],
+            ],
+
+            // with docs attribute
+            [
+                '{% types {foo: "string" docs="The foo description"} %}',
+                [
+                    'foo' => ['type' => 'string', 'optional' => false, 'docs' => 'The foo description'],
+                ],
+            ],
+
+            // with docs attribute and optional
+            [
+                '{% types {foo?: "string" docs="The foo description"} %}',
+                [
+                    'foo' => ['type' => 'string', 'optional' => true, 'docs' => 'The foo description'],
+                ],
+            ],
+
+            // multiple entries with docs
+            [
+                '{% types {id: "string" docs="Unique identifier", multiple?: "boolean" docs="Allow multiple", value: "mixed"} %}',
+                [
+                    'id' => ['type' => 'string', 'optional' => false, 'docs' => 'Unique identifier'],
+                    'multiple' => ['type' => 'boolean', 'optional' => true, 'docs' => 'Allow multiple'],
+                    'value' => ['type' => 'mixed', 'optional' => false, 'docs' => null],
+                ],
+            ],
+
+            // without {} enclosing with docs
+            [
+                '{% types foo: "foo" docs="Foo docs", bar: "bar" %}',
+                [
+                    'foo' => ['type' => 'foo', 'optional' => false, 'docs' => 'Foo docs'],
+                    'bar' => ['type' => 'bar', 'optional' => false, 'docs' => null],
                 ],
             ],
         ];

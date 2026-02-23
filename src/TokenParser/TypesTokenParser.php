@@ -38,7 +38,7 @@ final class TypesTokenParser extends AbstractTokenParser
     }
 
     /**
-     * @return array<string, array{type: string, optional: bool}>
+     * @return array<string, array{type: string, optional: bool, docs: ?string}>
      *
      * @throws SyntaxError
      */
@@ -69,9 +69,18 @@ final class TypesTokenParser extends AbstractTokenParser
 
             $valueToken = $stream->expect(Token::STRING_TYPE);
 
+            // Check for optional docs="..." attribute
+            $docs = null;
+            if ($stream->test(Token::NAME_TYPE, 'docs')) {
+                $stream->next();
+                $stream->expect(Token::OPERATOR_TYPE, '=');
+                $docs = $stream->expect(Token::STRING_TYPE)->getValue();
+            }
+
             $types[$nameToken->getValue()] = [
                 'type' => $valueToken->getValue(),
                 'optional' => $isOptional,
+                'docs' => $docs,
             ];
         }
 
