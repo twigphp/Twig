@@ -1,5 +1,6 @@
 # 3.24.0 (2026-XX-XX)
 
+ * Deprecate passing a non-`AbstractExpression` node to `ParserTwig\Node\Expression\Binary\MatchesBinary` constructor
  * Deprecate passing a non-`AbstractExpression` node to `Parser::setParent()`
  * Add support for renaming variables in object destructuring (`{name: userName} = user`)
  * Add `html_attr_relaxed` escaping strategy that preserves :, @, [, and ] for front-end framework attribute names
