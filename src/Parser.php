@@ -416,6 +416,10 @@ class Parser
             trigger_deprecation('twig/twig', '3.12', 'Passing "null" to "%s()" is deprecated.', __METHOD__);
         }
 
+        if (null !== $parent && !$parent instanceof AbstractExpression) {
+            trigger_deprecation('twig/twig', '3.24', 'Passing a "%s" instance to "%s()" is deprecated, pass an "AbstractExpression" instance instead.', $parent::class, __METHOD__);
+        }
+
         if (null !== $this->parent) {
             throw new SyntaxError('Multiple extends tags are forbidden.', $parent->getTemplateLine(), $parent->getSourceContext());
         }

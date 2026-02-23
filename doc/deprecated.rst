@@ -238,6 +238,10 @@ Parser
 * Passing ``null`` to ``Twig\Parser::setParent()`` is deprecated as of Twig
   3.12.
 
+* Passing a non-``AbstractExpression`` node to ``Twig\Parser::setParent()`` is
+  deprecated as of Twig 3.24; the method will require an ``AbstractExpression``
+  instance in Twig 4.0.
+
 * The ``Twig\Parser::getExpressionParser()`` method is deprecated as of Twig
   3.21, use ``Twig\Parser::parseExpression()`` instead.
 
