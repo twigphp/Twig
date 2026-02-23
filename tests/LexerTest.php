@@ -454,6 +454,19 @@ class LexerTest extends TestCase
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
         // can be executed without throwing any exceptions
+    }
+
+    public function testLiteralIsNotAnOperator()
+    {
+        // "literal" is the name of the LiteralExpressionParser but should not be treated as an operator token
+        $template = '{{ literal }}';
+
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::NAME_TYPE, 'literal');
+        $stream->expect(Token::VAR_END_TYPE);
+
         $this->addToAssertionCount(1);
     }
 

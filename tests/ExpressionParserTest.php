@@ -27,7 +27,10 @@ use Twig\Compiler;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use Twig\ExpressionParser\InfixExpressionParserInterface;
+use Twig\ExpressionParser\Prefix\LiteralExpressionParser;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
+use Twig\ExpressionParser\PrefixExpressionParserInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\ArrayExpression;
@@ -795,6 +798,36 @@ class ExpressionParserTest extends TestCase
         yield '= stronger than math' => ['{% do a = 1 + 3 %}{{ a }}', '{% do a = (1 + 3) %}{{ a }}', eval('$a = 1 + 3; return $a;')];
         yield '= stronger than logical' => ['{% do a = false or true %}{{ a }}', '{% do a = (false or true) %}{{ a }}', eval('$a = false || true; return $a;')];
         yield '= stronger than ternary' => ['{% do c = 4 ? 0 : -1 %}{{ c }}', '{% do c = (4 ? 0 : -1) %}{{ c }}', eval('return 4 ? 0 : -1;')];
+    }
+
+    public function testLiteralExpressionParserGetOperatorTokensReturnsEmptyArray()
+    {
+        $env = new Environment(new ArrayLoader());
+        $parser = $env->getExpressionParsers()->getByClass(LiteralExpressionParser::class);
+
+        $this->assertSame([], $parser->getOperatorTokens());
+        $this->assertSame('literal', $parser->getName());
+    }
+
+    public function testExpressionParserGetOperatorTokensDefaultBehavior()
+    {
+        $env = new Environment(new ArrayLoader());
+
+        foreach ($env->getExpressionParsers() as $parser) {
+            if ($parser instanceof LiteralExpressionParser) {
+                continue;
+            }
+            $expected = [$parser->getName(), ...$parser->getAliases()];
+            $this->assertSame($expected, $parser->getOperatorTokens(), \sprintf('getOperatorTokens() for %s should return name + aliases.', $parser::class));
+        }
+    }
+
+    public function testLiteralIsNotRegisteredAsOperator()
+    {
+        // Ensure "literal" is not in the operator registry
+        $env = new Environment(new ArrayLoader());
+        $this->assertNull($env->getExpressionParsers()->getByName(PrefixExpressionParserInterface::class, 'literal'));
+        $this->assertNull($env->getExpressionParsers()->getByName(InfixExpressionParserInterface::class, 'literal'));
     }
 }
 

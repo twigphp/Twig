@@ -485,3 +485,13 @@ Operators
 
 * The ``Twig\OperatorPrecedenceChange`` class is deprecated as of Twig 3.21,
   use ``Twig\ExpressionParser\PrecedenceChange`` instead.
+
+* Not implementing the ``getOperatorTokens()`` method in
+  ``Twig\ExpressionParser\ExpressionParserInterface`` implementations is
+  deprecated as of Twig 3.24. This method will be added to the interface in
+  Twig 4.0. It returns the operator token strings that the expression parser
+  handles (used by the Lexer and the parser registry). If your custom
+  expression parser extends ``Twig\ExpressionParser\AbstractExpressionParser``,
+  the default implementation returns ``[$this->getName(), ...$this->getAliases()]``.
+  Override it if your parser doesn't handle operator tokens (return ``[]``) or if
+  the operator tokens differ from the parser name.
