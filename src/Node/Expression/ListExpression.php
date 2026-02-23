@@ -12,12 +12,12 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
-use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\AssignContextVariable;
 
 class ListExpression extends AbstractExpression
 {
     /**
-     * @param array<ContextVariable> $items
+     * @param array<AssignContextVariable> $items
      */
     public function __construct(array $items, int $lineno)
     {
