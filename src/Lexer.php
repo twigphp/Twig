@@ -13,6 +13,7 @@
 namespace Twig;
 
 use Twig\Error\SyntaxError;
+use Twig\ExpressionParser\ExpressionParsers;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -535,7 +536,7 @@ class Lexer
     {
         $expressionParsers = [];
         foreach ($this->env->getExpressionParsers() as $expressionParser) {
-            $expressionParsers = array_merge($expressionParsers, [$expressionParser->getName()], $expressionParser->getAliases());
+            $expressionParsers = array_merge($expressionParsers, ExpressionParsers::getOperatorTokensFor($expressionParser));
         }
 
         $expressionParsers = array_combine($expressionParsers, array_map('strlen', $expressionParsers));
@@ -552,7 +553,7 @@ class Lexer
 
             // an operator that begins with a character must not have a dot or pipe before
             if (ctype_alpha($expressionParser[0])) {
-                $r = '(?<![\.\|])'.$r;
+                $r = '(?<![\.\|]\s|.[\.\|])'.$r;
             }
 
             // an operator with a space can be any amount of whitespaces

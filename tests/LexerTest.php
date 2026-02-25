@@ -370,6 +370,56 @@ class LexerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testFilterAndAttributeNamedAfterOperator()
+    {
+        // Ensure that filters/attributes aren't mistaken for operators when their names conflict
+        // (see https://github.com/twigphp/Twig/issues/4767)
+        $template = '{{ \'foo\'|and }}'
+            .'{{ \'bar\' | and }}'
+            .'{{ foo.and }}'
+            .'{{ bar . and }}'
+            .'{{ foo and bar }}';
+
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+        foreach (['foo', 'bar'] as $value) {
+            $stream->expect(Token::VAR_START_TYPE);
+            $stream->expect(Token::STRING_TYPE, $value);
+            $stream->expect(Token::OPERATOR_TYPE, '|');
+            $stream->expect(Token::NAME_TYPE, 'and');
+            $stream->expect(Token::VAR_END_TYPE);
+        }
+        foreach (['foo', 'bar'] as $value) {
+            $stream->expect(Token::VAR_START_TYPE);
+            $stream->expect(Token::NAME_TYPE, $value);
+            $stream->expect(Token::OPERATOR_TYPE, '.');
+            $stream->expect(Token::NAME_TYPE, 'and');
+            $stream->expect(Token::VAR_END_TYPE);
+        }
+        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::NAME_TYPE, 'foo');
+        $stream->expect(Token::OPERATOR_TYPE, 'and');
+        $stream->expect(Token::NAME_TYPE, 'bar');
+        $stream->expect(Token::VAR_END_TYPE);
+
+        // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
+        // can be executed without throwing any exceptions
+    }
+
+    public function testLiteralIsNotAnOperator()
+    {
+        // "literal" is the name of the LiteralExpressionParser but should not be treated as an operator token
+        $template = '{{ literal }}';
+
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+        $stream->expect(Token::VAR_START_TYPE);
+        $stream->expect(Token::NAME_TYPE, 'literal');
+        $stream->expect(Token::VAR_END_TYPE);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testUnterminatedVariable()
     {
         $template = '
