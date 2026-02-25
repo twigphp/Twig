@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2026-02-24T10:35:35Z
+
+@fabpot I'm not sure this replaces #4774 (the test being added uses `and` as reproducer, which will still be an operator token)
