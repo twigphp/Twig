@@ -145,6 +145,43 @@ class TemplateTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider getNullCoalesceWithImportedMacroData
+     */
+    public function testNullCoalesceWithImportedMacro(array $templates, string $expected)
+    {
+        $twig = new Environment(new ArrayLoader($templates));
+
+        $this->assertSame($expected, trim($twig->render('index.twig')));
+    }
+
+    public static function getNullCoalesceWithImportedMacroData(): array
+    {
+        return [
+            'from import' => [
+                [
+                    'index.twig' => '{% from "helper.twig" import foo %}{{ foo("bar") ?? "" }}',
+                    'helper.twig' => '{% macro foo(param) %}{{ param }}{% endmacro %}',
+                ],
+                'bar',
+            ],
+            'from import with undefined macro falls back' => [
+                [
+                    'index.twig' => '{% from "helper.twig" import foo, nonexistent %}{{ nonexistent("bar") ?? "fallback" }}',
+                    'helper.twig' => '{% macro foo(param) %}{{ param }}{% endmacro %}',
+                ],
+                'fallback',
+            ],
+            'from import used multiple times' => [
+                [
+                    'index.twig' => '{% from "helper.twig" import foo %}{{ foo("a") ?? "" }}-{{ foo("b") ?? "" }}',
+                    'helper.twig' => '{% macro foo(param) %}{{ param }}{% endmacro %}',
+                ],
+                'a-b',
+            ],
+        ];
+    }
+
     public function testRenderBlockWithUndefinedBlock()
     {
         $twig = new Environment(new ArrayLoader());
