@@ -29,6 +29,16 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
         parent::__construct(['template' => $template, 'arguments' => $arguments], ['name' => $name], $lineno);
     }
 
+    public function __clone()
+    {
+        // The template node must not be deep-cloned because its name is
+        // lazily generated during compilation and must stay in sync with
+        // the AssignTemplateVariable that populates the $macros array.
+        $template = $this->nodes['template'];
+        parent::__clone();
+        $this->nodes['template'] = $template;
+    }
+
     public function compile(Compiler $compiler): void
     {
         if ($this->definedTest) {
