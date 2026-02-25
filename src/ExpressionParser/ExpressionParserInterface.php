@@ -11,14 +11,6 @@
 
 namespace Twig\ExpressionParser;
 
-/**
- * @method list<string> getOperatorTokens() Returns the operator token strings that this expression parser handles.
- *                                           These are the strings that should be recognized as operator tokens by the Lexer,
- *                                           and used to look up the parser in the registry.
- *                                           For most parsers, this returns the name and aliases. Parsers that don't handle
- *                                           operator tokens (like LiteralExpressionParser) should return an empty array.
- *                                           This method will be added to the interface in Twig 4.0.
- */
 interface ExpressionParserInterface
 {
     public function __toString(): string;
@@ -33,4 +25,17 @@ interface ExpressionParserInterface
      * @return array<string>
      */
     public function getAliases(): array;
+
+    /**
+     * Returns the operator token strings that this expression parser handles.
+     *
+     * These are the strings that should be recognized as operator tokens by the Lexer,
+     * and used to look up the parser in the registry.
+     *
+     * For most parsers, this returns the name and aliases. Parsers that don't handle
+     * operator tokens should return an empty array.
+     *
+     * @return list<string>
+     */
+    public function getOperatorTokens(): array;
 }

@@ -536,7 +536,7 @@ class Lexer
     {
         $expressionParsers = [];
         foreach ($this->env->getExpressionParsers() as $expressionParser) {
-            $expressionParsers = array_merge($expressionParsers, ExpressionParsers::getOperatorTokensFor($expressionParser));
+            $expressionParsers = array_merge($expressionParsers, $expressionParser->getOperatorTokens());
         }
 
         $expressionParsers = array_combine($expressionParsers, array_map('strlen', $expressionParsers));

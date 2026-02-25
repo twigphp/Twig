@@ -54,7 +54,7 @@ final class ExpressionParsers implements \IteratorAggregate
             }
             $interface = $parser instanceof PrefixExpressionParserInterface ? PrefixExpressionParserInterface::class : InfixExpressionParserInterface::class;
             $this->parsersByClass[$parser::class] = $parser;
-            foreach (self::getOperatorTokensFor($parser) as $token) {
+            foreach ($parser->getOperatorTokens() as $token) {
                 $this->parsersByName[$interface][$token] = $parser;
             }
         }
@@ -134,21 +134,5 @@ final class ExpressionParsers implements \IteratorAggregate
         }
 
         return $this->precedenceChanges;
-    }
-
-    /**
-     * @internal
-     *
-     * @return array<string>
-     */
-    public static function getOperatorTokensFor(ExpressionParserInterface $parser): array
-    {
-        if (method_exists($parser, 'getOperatorTokens')) {
-            return $parser->getOperatorTokens();
-        }
-
-        trigger_deprecation('twig/twig', '3.24', 'Not implementing the "getOperatorTokens()" method in "%s" is deprecated. This method will be part of the "%s" interface in 4.0.', $parser::class, ExpressionParserInterface::class);
-
-        return [$parser->getName(), ...$parser->getAliases()];
     }
 }
