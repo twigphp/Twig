@@ -54,10 +54,9 @@ final class ExpressionParsers implements \IteratorAggregate
                 // throw new \InvalidArgumentException(\sprintf('Precedence for "%s" must be between 0 and 512, got %d.', $parser->getName(), $parser->getPrecedence()));
             }
             $interface = $parser instanceof PrefixExpressionParserInterface ? PrefixExpressionParserInterface::class : InfixExpressionParserInterface::class;
-            $this->parsersByName[$interface][$parser->getName()] = $parser;
             $this->parsersByClass[$parser::class] = $parser;
-            foreach ($parser->getAliases() as $alias) {
-                $this->parsersByName[$interface][$alias] = $parser;
+            foreach (self::getOperatorTokensFor($parser) as $token) {
+                $this->parsersByName[$interface][$token] = $parser;
             }
         }
 
@@ -90,9 +89,22 @@ final class ExpressionParsers implements \IteratorAggregate
 
     public function getIterator(): \Traversable
     {
+        $seen = [];
         foreach ($this->parsersByName as $parsers) {
-            // we don't yield the keys
-            yield from $parsers;
+            foreach ($parsers as $parser) {
+                $id = spl_object_id($parser);
+                if (!isset($seen[$id])) {
+                    $seen[$id] = true;
+                    yield $parser;
+                }
+            }
+        }
+        foreach ($this->parsersByClass as $parser) {
+            $id = spl_object_id($parser);
+            if (!isset($seen[$id])) {
+                $seen[$id] = true;
+                yield $parser;
+            }
         }
     }
 
@@ -123,5 +135,21 @@ final class ExpressionParsers implements \IteratorAggregate
         }
 
         return $this->precedenceChanges;
+    }
+
+    /**
+     * @internal
+     *
+     * @return array<string>
+     */
+    public static function getOperatorTokensFor(ExpressionParserInterface $parser): array
+    {
+        if (method_exists($parser, 'getOperatorTokens')) {
+            return $parser->getOperatorTokens();
+        }
+
+        trigger_deprecation('twig/twig', '3.24', 'Not implementing the "getOperatorTokens()" method in "%s" is deprecated. This method will be part of the "%s" interface in 4.0.', $parser::class, ExpressionParserInterface::class);
+
+        return [$parser->getName(), ...$parser->getAliases()];
     }
 }

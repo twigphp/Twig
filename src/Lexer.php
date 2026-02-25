@@ -13,6 +13,7 @@
 namespace Twig;
 
 use Twig\Error\SyntaxError;
+use Twig\ExpressionParser\ExpressionParsers;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -527,7 +528,7 @@ class Lexer
     {
         $expressionParsers = [];
         foreach ($this->env->getExpressionParsers() as $expressionParser) {
-            $expressionParsers = array_merge($expressionParsers, [$expressionParser->getName()], $expressionParser->getAliases());
+            $expressionParsers = array_merge($expressionParsers, ExpressionParsers::getOperatorTokensFor($expressionParser));
         }
 
         $expressionParsers = array_combine($expressionParsers, array_map('strlen', $expressionParsers));
