@@ -495,7 +495,7 @@ class Environment
             return $this->load($name);
         }
 
-        throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
+        throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "', array_map(fn ($name) => $name instanceof TemplateWrapper ? $name->getTemplateName() : $name, $names))));
     }
 
     /**

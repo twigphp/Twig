@@ -14,6 +14,7 @@ namespace Twig\Node;
 
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ReturnPrimitiveTypeInterface;
 use Twig\Node\Expression\Test\TrueTest;
 use Twig\TwigTest;
@@ -31,6 +32,7 @@ class IfNode extends Node
         for ($i = 0, $count = \count($tests); $i < $count; $i += 2) {
             $test = $tests->getNode((string) $i);
             if (!$test instanceof ReturnPrimitiveTypeInterface) {
+                /** @var AbstractExpression $test */
                 $tests->setNode($i, new TrueTest($test, new TwigTest('true'), null, $test->getTemplateLine()));
             }
         }

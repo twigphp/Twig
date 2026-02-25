@@ -80,8 +80,10 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
         } elseif ($node instanceof FilterExpression) {
             return $this->preEscapeFilterNode($node, $env);
         } elseif ($node instanceof PrintNode && false !== $type = $this->needEscaping()) {
+            /** @var AbstractExpression $expression */
             $expression = $node->getNode('expr');
             if ($expression instanceof OperatorEscapeInterface) {
+                /** @var AbstractExpression&OperatorEscapeInterface $expression */
                 $this->escapeConditional($expression, $env, $type);
             } else {
                 $node->setNode('expr', $this->escapeExpression($expression, $env, $type));
@@ -102,8 +104,10 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     private function escapeConditional(AbstractExpression&OperatorEscapeInterface $expression, Environment $env, string $type): void
     {
         foreach ($expression->getOperandNamesToEscape() as $name) {
+            /** @var AbstractExpression $operand */
             $operand = $expression->getNode($name);
             if ($operand instanceof OperatorEscapeInterface) {
+                /** @var AbstractExpression&OperatorEscapeInterface $operand */
                 $this->escapeConditional($operand, $env, $type);
             } else {
                 $expression->setNode($name, $this->escapeExpression($operand, $env, $type));
