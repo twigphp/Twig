@@ -43,11 +43,11 @@ Arguments
 ---------
 
 * ``locale``: The locale of the original string (limited to languages supported by the from Symfony `inflector`_, part of the String component)
-* ``all``: Whether to return all possible plurals as an array, default is ``false``
+* ``all``: Whether to return all possible singulars as an array, default is ``false``
 
 .. note::
 
     Internally, Twig uses the `singularize`_ method from the Symfony String component.
 
-.. _`inflector`: <https://symfony.com/doc/current/components/string.html#inflector>
-.. _`singularize`: <https://symfony.com/doc/current/components/string.html#inflector>
+.. _`inflector`: https://symfony.com/doc/current/components/string.html#inflector
+.. _`singularize`: https://symfony.com/doc/current/components/string.html#inflector
