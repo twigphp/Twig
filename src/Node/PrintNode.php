@@ -36,7 +36,7 @@ class PrintNode extends Node implements NodeOutputInterface
 
         $compiler
             ->addDebugInfo($this)
-            ->write($expr->isGenerator() ? 'yield from ' : 'yield ')
+            ->write($expr->isGenerator() ? 'yield from ' : 'yield (string) ')
             ->subcompile($expr)
             ->raw(";\n")
         ;
