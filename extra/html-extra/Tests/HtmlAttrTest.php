@@ -13,6 +13,7 @@ namespace Twig\Extra\Html\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 use Twig\Extra\Html\HtmlAttr\SeparatedTokenList;
 use Twig\Extra\Html\HtmlExtension;
@@ -268,6 +269,28 @@ class HtmlAttrTest extends TestCase
         $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), $object);
 
         self::assertSame('data-controller="dropdown tooltip" data-action="click-&gt;dropdown#toggle mouseover-&gt;tooltip#show"', $result);
+    }
+
+    public function testDataAttributeWithNonJsonEncodableValueThrowsRuntimeError()
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The "data-bad" attribute value cannot be JSON encoded.');
+
+        HtmlExtension::htmlAttr(
+            new Environment(new ArrayLoader()),
+            ['data-bad' => [\INF]]  // INF cannot be JSON-encoded
+        );
+    }
+
+    public function testNonStringableObjectAsAttributeValueThrowsRuntimeError()
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The "title" attribute value should be a scalar, an iterable, or an object implementing "Stringable"');
+
+        HtmlExtension::htmlAttr(
+            new Environment(new ArrayLoader()),
+            ['title' => new \stdClass()]
+        );
     }
 }
 
