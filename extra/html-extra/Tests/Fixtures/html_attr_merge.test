@@ -1,0 +1,10 @@
+--TEST--
+"html_attr_merge" filter
+--TEMPLATE--
+{% autoescape false %}
+{{ { foo: 'bar' } | html_attr_merge({ bar: 'baz', foo: 'qux' }, { foo: 'quux' }) | json_encode }}
+{% endautoescape %}
+--DATA--
+return []
+--EXPECT--
+{"foo":"quux","bar":"baz"}
