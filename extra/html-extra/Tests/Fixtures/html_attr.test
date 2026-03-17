@@ -1,0 +1,40 @@
+--TEST--
+"html_attr" function
+--TEMPLATE--
+Simple attributes: <tag {{ html_attr({ foo: 'bar' }, { bar: 'baz' }) }}/>
+Relaxed attribute name escaping: <tag {{ html_attr({ 'v-bind:href': 'url', ':[key]': 'url', '@click': 'doSomething' }) }} />
+Appropriate escaping: <tag {{ html_attr({ 'untrusted name': '<>&\'"' }) }}/>
+Empty attribute list: <tag {{ html_attr([], {}, null) }}/>
+Using a short ternary: <tag {{ html_attr({foo: 'bar'}, false ? {bar: 'baz'}) }}/>
+boolean true attribute: <tag {{ html_attr({ checked: true}) }}/>
+boolean false attribute: <tag {{ html_attr({ checked: false}) }}/>
+null attribute value: <tag {{ html_attr({ something: null}) }}/>
+empty string attribute value: <tag {{ html_attr({ title: '' }) }}/>
+ARIA attribute boolean conversion: <tag {{ html_attr({ 'aria-yes': true, 'aria-no': false, 'aria-nada': null, 'aria-empty': '' }) }}/>
+data-* attribute handling : <tag {{ html_attr({ 'data-array': { foo: 'bar' }, 'data-true': true, 'data-false': false, 'data-null': null }) }}/>
+array value concatenation ex. 1: <tag {{ html_attr({ class: ['foo', 'bar'] }, { class: [''] }, { class: [] }) }}/>
+array value concatenation ex. 2: <tag {{ html_attr({ 'aria-describedby': ['id1'] }, { 'aria-describedby': ['id2'] }) }}/>
+inline styles: <tag {{ html_attr({ style: { color: 'red' }}, { style: ['background-color: blue'] }, { style: { color: 'green', 'font-family': 'Arial' } }) }}/>
+style with a plain value: <tag {{ html_attr({ style: 'color: red;' }) }}/>
+using a "comma separated token list" attribute: <img {{ html_attr({ srcset: ['small.jpg 480w', 'medium.jpg 800w', 'large.jpg 1200w']|html_attr_type('cst') }) }} />
+merging a "comma separated token list" value with more array values: <img {{ html_attr({ srcset: ['small.jpg 480w']|html_attr_type('cst') }, { srcset: ['medium.jpg 800w', 'large.jpg 1200w'] }) }} />
+--DATA--
+return []
+--EXPECT--
+Simple attributes: <tag foo="bar" bar="baz"/>
+Relaxed attribute name escaping: <tag v-bind:href="url" :[key]="url" @click="doSomething" />
+Appropriate escaping: <tag untrusted&#x20;name="&lt;&gt;&amp;&#039;&quot;"/>
+Empty attribute list: <tag />
+Using a short ternary: <tag foo="bar"/>
+boolean true attribute: <tag checked=""/>
+boolean false attribute: <tag />
+null attribute value: <tag />
+empty string attribute value: <tag title=""/>
+ARIA attribute boolean conversion: <tag aria-yes="true" aria-no="false" aria-empty=""/>
+data-* attribute handling : <tag data-array="{&quot;foo&quot;:&quot;bar&quot;}" data-true="true"/>
+array value concatenation ex. 1: <tag class="foo bar"/>
+array value concatenation ex. 2: <tag aria-describedby="id1 id2"/>
+inline styles: <tag style="color: green; background-color: blue; font-family: Arial;"/>
+style with a plain value: <tag style="color: red;"/>
+using a "comma separated token list" attribute: <img srcset="small.jpg 480w, medium.jpg 800w, large.jpg 1200w" />
+merging a "comma separated token list" value with more array values: <img srcset="small.jpg 480w, medium.jpg 800w, large.jpg 1200w" />
