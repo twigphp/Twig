@@ -1,0 +1,410 @@
+---------------------------------------------------------------------------
+
+by mpdude at 2024-09-30T21:19:51Z
+
+@fabpot Regarding tests: I suppose the fixture-based tests (`*.test`) are necessary to do integration testing, e. g. including the escaping mechanism? Should I go for such tests or write plain PHPUnit tests instead?
+
+What's the best way to cover lots of scenarios in the fixture-style tests? It's easy to get lost when there are lots of cases but just one `--TEMPLATE--` and one `--EXPECT--` section.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-10-04T06:00:27Z
+
+> @fabpot Regarding tests: I suppose the fixture-based tests (`*.test`) are necessary to do integration testing, e. g. including the escaping mechanism? Should I go for such tests or write plain PHPUnit tests instead?
+
+You can write both, but `.test` tests are easier to write and read.
+
+> What's the best way to cover lots of scenarios in the fixture-style tests? It's easy to get lost when there are lots of cases but just one `--TEMPLATE--` and one `--EXPECT--` section.
+
+That's indeed a current limitation.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2024-10-07T17:23:30Z
+
+Added a first load of tests for the `html_attr_merge` function
+
+---------------------------------------------------------------------------
+
+by leevigraham at 2024-10-21T23:25:00Z
+
+For reference
+
+Yii2 has a similar function: https://github.com/yiisoft/yii2/blob/master/framework/helpers/BaseHtml.php#L1966-L2046
+
+The [renderTagAttributes](https://www.yiiframework.com/doc/api/2.0/yii-helpers-basehtml#renderTagAttributes()-detail) method has the following rules:
+
+* Attributes whose values are of boolean type will be treated as [boolean attributes](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes).
+* Attributes whose values are null will not be rendered.
+* aria and data attributes get special handling when they are set to an array value. In these cases, the array will be "expanded" and a list of ARIA/data attributes will be rendered. For example, 'aria' => ['role' => 'checkbox', 'value' => 'true'] would be rendered as aria-role="checkbox" aria-value="true".
+* If a nested data value is set to an array, it will be JSON-encoded. For example, 'data' => ['params' => ['id' => 1, 'name' => 'yii']] would be rendered as data-params='{"id":1,"name":"yii"}'.
+
+CraftCMS uses twig and provides an `attr()` twig method that implements `renderTagAttributes`. I've used this helper many times and the rules above are great. Especially the "Attributes whose values are null will not be rendered".
+
+Vuejs v2 -> v3 also went through some changes for `false` values https://v3-migration.vuejs.org/breaking-changes/attribute-coercion.html. This aligns with "Attributes whose values are null will not be rendered." above.
+
+---------------------------------------------------------------------------
+
+by leevigraham at 2024-10-22T08:32:28Z
+
+How will merging of attributes that support multiple values work? Eg [`aria-labelledby`](https://w3c.github.io/aria/#aria-labelledby) value is an [ID reference list](https://w3c.github.io/aria/#valuetype_idref_list).
+
+Example:
+
+```html
+<div {{ attr(
+        {'aria-labelledby': 'id1 id2'},
+        {'aria-labelledby': 'id3'},
+    ) }}></div>
+```
+
+Should the result be:
+
+* First value set: `{'aria-labelledby': 'id1 id2'}`
+* Last value set: `{'aria-labelledby': 'id3'}`
+* Concatenated (like class): `{'aria-labelledby': 'id1 id2 id3'}`
+
+This could also apply to `data-controller` which is used by stimulusjs and Symfony ux components.
+
+---------------------------------------------------------------------------
+
+by leevigraham at 2024-10-23T00:05:54Z
+
+@mpdude @fabpot @smnandre I've combined my comments above into a POC here: https://github.com/twigphp/Twig/pull/4405
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-02T18:55:31Z
+
+I had lost sight of this, but would like to see if I can get it finished with a bit of new year's energy ✨ .
+
+I see two areas where we'd need to reach consensus.
+
+#### Attribute merging
+
+The examples above show that there are more attributes than just `@class` where we'd need to concatenate multiple values to build lists.
+
+IMHO we need to design this in a way that we need not keep a list of "special" attributes in the code. There are too many standards/sources where these "special" attributes may come from, so we will never catch up. My suggestion would be to hand this problem to users in the following way:
+
+* As long as scalar values are used, `html_attr_merge` will have latter values override former ones.
+* For iterable values, perform `array_merge`-style merging, i. e. latter keys override former ones, numerical indices will be appended
+
+Examples of how it could be used in practice:
+
+* Plain `class` list: `html_attr_merge( { class: ['foo', 'bar'] }, { class: ['baz'] } )` => `{ class: ['foo', 'bar', 'baz'] }`
+* `class` with named keys for semantic merging: `html_attr_merge( { class: ['foo'] }, { class: { importance: 'low' } }, { class: { importance: 'high' } })` => `{ class: ['foo', importance: 'high'] }`
+
+Basically, it means that users need to know about the semantics of a given attribute and be disciplined about the values they use in attribute arrays.
+
+As long as they use arrays consistently for attributes like e. g. `aria-describedby` or `class`, the use cases outlined in the discussion above are possible. For attributes like `id`, `href`, `checked`... arrays should never be used.
+
+Regarding the case that non-scalar values meet with scalars, right now I'll cast both to array. We could also throw in that case.
+
+If you have any better ideas, I'd be interested to know.
+
+The following may lead to hard-to-spot errors:
+
+`html_attr_merge( { class: 'foo' }, { class: 'bar' }, { class: ['baz'] } )` => `{ class: ['bar', 'baz'] }`
+
+Keep in mind that the values for merging may come from different places (eg. passed as an argument to a macro), so you may not directly see that different value types are used.
+
+"Flattening" of arrays into dedicated attributes happens only for `data` and `aria` keys, and happens right away while merging:
+
+* `html_attr_merge( { data: { foo: 'bar', bar: 'baz' } } )` => `{ 'data-foo': 'bar', 'data-bar': 'baz' }`
+* `html_attr_merge( { aria: { labelledby: ['id1', 'id2'] } } )` => `{ 'aria-labelledby': ['id1', 'id2'] }`
+
+#### Printing attributes
+
+Major discussion item: Handling of `''`, `null`, `true`, `false` and non-scalar values.
+
+My suggestion:
+
+* For `aria-*`, convert `true` to `'true'` and `false` to `'false'`.
+* For `data-*`
+  * JSON-encode non-scalars
+  * otherwise, leave values alone
+  * print all `data-*` attributes _except_ those with `null` values
+* In general,
+  * print `{ attr: '' }` as `attr=""`. You can e.g. use `a[title]` as a CSS selector to match `a` tags with `title` attributes, and the only way to create `<a title="">` would be `<a {{html_attr({ title: '' })}}>`. An explicit empty `alt` as in `<img ... alt=""/>` may be necessary to mark an image as decorative for assistive software, so we should be able to support this case.
+  * omit attributes with `false` and `null` values
+  * print `name="name"` for `true` values
+  * for scalar values, use the space-separated concatenation of all values.
+
+For `style`, non-numeric keys are used to create inline CSS, but that is probably not debatable.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by stof at 2026-01-03T08:32:14Z
+
+The array flattening for data and aria makes the generic merging algorithm a lot more complex. Is it worth keeping this ?
+
+And regarding the json-encoding for data attributes, is it worth making such special case compared to the generic handling of arrays ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-01-04T18:47:50Z
+
+Hi all ...
+
+I've been thinking/working for some time about a different approach...  (starting from needs & features asked on UX)
+
+And it may be the perfect occasion to discuss them :)
+
+```twig
+{% set attrs = attributes()
+    .class('btn btn-primary')
+    .ariaLabel('Submit form')
+    .disabled(not post.isEnabled)
+%}
+
+<button{{ attrs }}>Submit</button>
+```
+
+I've open [a RFC on the Symfony UX repository](https://github.com/symfony/ux/issues/3269), so discussions could be interesting to read / participate in on both repos.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-05T15:09:25Z
+
+TIL that [space separated tokens](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#space-separated-tokens) may require uniqueness of tokens and/or attribute meaning to the ordering of its elements.
+
+[Comma-separated tokens](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#comma-separated-tokens) may apprear e. g. in `<img>` `@srcset` or `@sizes`, as well as in `@accept` for `<input type="file" />`.
+
+Would be nice (important?) to support this as well:
+
+```twig
+<img {{ html_attr({
+	srcset: ['small.jpg 480w', 'medium.jpg 800w', 'large.jpg 1200w'],
+    sizes: ['(max-width: 600px) 480px', '(max-width: 1000px) 800px', '1200px']
+}) }} />
+
+# has to give:
+<img srcset="small.jpg 480w, medium.jpg 800w, large.jpg 1200w" sizes="(max-width: 600px) 480px, (max-width: 1000px) 800px, 1200px" />
+```
+
+Again, if we don't want to put knowledge about every conceivable attribute in the code, there needs to be a way for users to express this.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-01-05T19:53:19Z
+
+> Again, if we don't want to put knowledge about every conceivable attribute in the code, there needs to be a way for users to express this.
+
+That was my initial need/idea (not related to my proposal, and _could_ be done here): a generic basic foundation, that can be extended with specific domain rules/specs...   aria is one of them, Stimulus another, but even Svelte, HTMLX, or even Google Tag Manager for instance could be.
+
+Because covering all HTML usage is irrelevant, especially with custom elements / attributes.
+
+My main concern here is to focus too much on "merging component attributes to deal with utility classes".. in detriment of all other legitimate cases. 🤷  (but I clearly am not objective on this matter 😅 )
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-01-07T04:58:25Z
+
+> * print `name="name"` for `true` values
+
+It's definitively not the most frequent cases, but these attributes would produce unepexcted results.
+
+| Attribute | `<tag attr>` (Empty) | `<tag attr="attr">` (Invalid) |
+| :--- | :--- | :--- |
+| **[popover](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover)** | **auto** (Light Dismiss) | **manual** (No Light Dismiss) |
+| **[contenteditable](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/contenteditable)** | **true** (Editable) | **inherit** (Depends on parent) |
+| **[translate](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/translate)** | **yes** (Translated) | **inherit** (Depends on parent) |
+| **[spellcheck](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/spellcheck)** | **true** (Enabled) | **default** (Browser default) |
+| **[preload](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/preload)** | **auto** (Load everything) | **metadata** (Load distinct parts) |
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-07T12:49:42Z
+
+You're referring to [enumerated attributes](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#enumerated-attribute) in HTML 5 where the _invalid value default_ is different from the _empty value default_.
+
+* `<tag attr>` will use the _empty value default_
+* `<tag attr="attr">` will use the _invalid value default_ if `attr` is not a valid value, or use `attr` if it is valid (example?).
+
+On the other hand, there may (still) be a requirement for users to produce valid XHTML, which means we cannot use the `<tag attr>` form.
+
+So, would `<tag attr="" />` (the empty string) be a way to support using the _empty value default_ in both HTML 5 and XHTML?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-01-07T18:38:26Z
+
+> there may (still) be a requirement for users to produce valid XHTML
+
+They can always use a custom helper like `xhtml_attr()`. 😅
+
+Hot take: XHTML has been abandoned for almost 20 years, so I am not sure it is worth optimizing for this.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-07T19:40:34Z
+
+An HTML 5 capable parser for the DOM extension has only been added in PHP 8.4, and I have not yet been able to verify how much it is API-compatible with the old XML parser 😅  but we're disgressing
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-07T20:19:00Z
+
+The HTML 5 spec says that `<tag attr>` and `<tag attr="">` are equivalent.
+
+https://html.spec.whatwg.org/multipage/syntax.html#attributes-2
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-07T21:17:10Z
+
+And from https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes:
+
+> 2.3.2 Boolean attributes
+
+> A number of attributes are boolean attributes. The presence of a boolean attribute on an element represents the true value, and the absence of the attribute represents the false value.
+
+> If the attribute is present, its value must either be the empty string or a value that is an [ASCII case-insensitive](https://infra.spec.whatwg.org/#ascii-case-insensitive) match for the attribute's canonical name, with no leading or trailing whitespace.
+
+That means for HTML 5 attributes (and note `aria-*` is another embedded standard and special), we can write `attr=""` for `true` and omit the attribute for `false`. It will be XML compliant, denote true/false appropriately for boolean attributes and use the _empty value default_ (like writing only `attr`) for other (enumerated) attribute types, so never be an invalid value.
+
+Agree?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-01-08T00:26:54Z
+
+> attr
+
+Again, with HTML, things are always a bit more complex that promised ..
+
+https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#keywords-and-enumerated-attributes
+https://html.spec.whatwg.org/multipage/syntax.html#attributes-2
+
+But again those are imho rare occurences.
+
+So we can decide to ignore them (and again... I'm don't think how we could so..)
+
+But better know if we have some minor edge / insuported cases and document them :)
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-08T17:06:50Z
+
+Various learnings from the discussion up to this point have been reflected in the code, initial description has been updated.
+
+Flattening of `aria` and `data` keys has been removed.
+
+An extension/flex point has been added to implement attribute types with alternative merge and/or printing behavior.
+
+Comma-separated as well as space-separated forms of "token list" attributes can be handled by this.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-09T18:42:23Z
+
+Thank you @stof for the great and thorough review!
+
+I hope I have adressed all of your points. Could you please mark those comments as resolved where you're ok? That would make it easier to follow up.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-09T19:30:12Z
+
+@fabpot WDYT?
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-12T08:31:54Z
+
+@smnandre and @Kocal thank you for your valueable feedback and questions as well! I hope I have addressed all of that appropriately.
+
+Please mark comments as resolved when you're happy, so we can keep the thread cleaned up. 💚
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-13T10:04:40Z
+
+One remaining issue regarding escaping:
+
+Since the `html_attr` escaping strategy is used for attribute names, users currently cannot pass attribute names like `v-on:click` or `@click`, which might be [needed by Vue.js](https://v2.vuejs.org/v2/guide/syntax.html#v-bind-Shorthand). #3614 is about this behavior as well.
+
+Currently I see only two options:
+
+* Ignore the problem.
+* Do not automatically escape attribute names, warn about that in the documentation. Users should probably not use untrusted attribute names in the first place. If they do, it would be their responsibility to `|e('html_attr')` escape the names before using them in attribute arrays.
+
+Any semi-magic stuff similar to the `Markup` object won't work, since we cannot use objects expressing the attribute name as keys in plain arrays.
+
+**Update**: I decided to go with the second option, b452159c.
+
+---------------------------------------------------------------------------
+
+by stof at 2026-01-13T10:24:05Z
+
+@mpdude I don't think this will be incompatible with Vue. AFAICT Vue works with the DOM API, not with the HTML source, and so it will get the *decoded* names anyway.
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-01-13T10:34:29Z
+
+@stof the DOM API seems to return different attribute names in this example: https://codepen.io/mpdude/pen/EayNZQp
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-02-09T09:25:37Z
+
+@fabpot Why is the `html_attr_relaxed` escaping strategy from #4743 not available in PHP 8.2 - PHP 8.4 tests (but in PHP 8.1), and what can I do about it?
+
+---------------------------------------------------------------------------
+
+by stof at 2026-02-09T09:33:12Z
+
+@mpdude those jobs are installing twig `4.x-dev` (apparently, `twig/html-extra` 3.x allows installing twig 4.x when the PHP requirement is satisfied), and the strategy is not yet available in 4.x-dev (it would be available after a merge up)
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-02-09T09:36:27Z
+
+:+1: thank you, I will apply the `wait` strategy in the meantime.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-02-09T11:33:11Z
+
+> 👍 thank you, I will apply the `wait` strategy in the meantime.
+
+I've just merged 3.x into 4.x.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-15T14:23:06Z
+
+Just a quick question, in UX Toolkit with use such `trigger_attrs` variable (see https://github.com/symfony/ux/blob/2.x/src/Toolkit/kits/shadcn/tooltip/templates/components/Tooltip/Trigger.html.twig & https://github.com/symfony/ux/blob/2.x/src/Toolkit/kits/shadcn/dialog/templates/components/Dialog/Trigger.html.twig) which both define a `data-action` html attribute.
+
+With the new Twig function and filters, is it possible to merge them and have `{ 'data-action': '<actions-from-tooltip-trigger> <actions-from-dialog-trigger>' }`?
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by mpdude at 2026-03-15T17:18:59Z
+
+Do I understand correctly that you have two `trigger_attrs`-like arrays coming from two different places and want to combine them?
+
+If you do the following:
+
+```twig
+{%- set trigger_attrs = {
+    id: _tooltip_trigger_id,
+    'aria-describedby': _tooltip_content_id,
+    'data-action': 'mouseenter->tooltip#show' |html_attr_type('sst')
+} -%}
+```
+
+This makes the `data-action` attribute value a "space separated token" (SST) value. That means when merging, the latter value shall not override the previous one, but both shall be merged with a space between.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-15T18:34:10Z
+
+Yes exactly!
+
+That's perfect, this will be **super useful** for UX Toolkit, thank you!
