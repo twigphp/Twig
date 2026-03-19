@@ -10,6 +10,8 @@ Tests
     empty
     even
     iterable
+    mapping
     null
     odd
     sameas
+    sequence
