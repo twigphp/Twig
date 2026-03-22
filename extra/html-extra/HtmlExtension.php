@@ -192,71 +192,11 @@ final class HtmlExtension extends AbstractExtension
     }
 
     /** @internal */
-    public static function htmlAttr(Environment $env, iterable|string|false|null ...$args): string
+    public static function htmlAttr(Environment $env, iterable|string|false|null ...$args): HtmlAttributes
     {
-        $attr = self::htmlAttrMerge(...$args);
-
-        $result = '';
-        $runtime = $env->getRuntime(EscaperRuntime::class);
-
-        foreach ($attr as $name => $value) {
-            if (str_starts_with($name, 'aria-')) {
-                // For aria-*, convert booleans to "true" and "false" strings
-                if (true === $value) {
-                    $value = 'true';
-                } elseif (false === $value) {
-                    $value = 'false';
-                }
-            }
-
-            if (str_starts_with($name, 'data-')) {
-                if (!$value instanceof AttributeValueInterface && null !== $value && !\is_scalar($value)) {
-                    // ... encode non-null non-scalars as JSON
-                    try {
-                        $value = json_encode($value, \JSON_THROW_ON_ERROR);
-                    } catch (\JsonException $e) {
-                        throw new RuntimeError(\sprintf('The "%s" attribute value cannot be JSON encoded.', $name), previous: $e);
-                    }
-                } elseif (true === $value) {
-                    // ... and convert boolean true to a 'true'  string.
-                    $value = 'true';
-                }
-            }
-
-            // Convert iterable values to token lists
-            if (!$value instanceof AttributeValueInterface && is_iterable($value)) {
-                if ('style' === $name) {
-                    $value = new InlineStyle($value);
-                } else {
-                    $value = new SeparatedTokenList($value);
-                }
-            }
-
-            if ($value instanceof AttributeValueInterface) {
-                $value = $value->getValue();
-            }
-
-            // In general, ...
-            if (true === $value) {
-                // ... use attribute="" for boolean true,
-                // which is XHTML compliant and indicates the "empty value default", see
-                // https://html.spec.whatwg.org/multipage/syntax.html#attributes-2 and
-                // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
-                $value = '';
-            }
-
-            if (null === $value || false === $value) {
-                // omit null-valued and false attributes completely (note aria-* has been processed before)
-                continue;
-            }
-
-            if (\is_object($value) && !$value instanceof \Stringable) {
-                throw new RuntimeError(\sprintf('The "%s" attribute value should be a scalar, an iterable, or an object implementing "%s", got "%s".', $name, \Stringable::class, get_debug_type($value)));
-            }
-
-            $result .= $runtime->escape($name, 'html_attr_relaxed').'="'.$runtime->escape((string) $value).'" ';
-        }
-
-        return trim($result);
+        return new HtmlAttributes(
+            self::htmlAttrMerge(...$args),
+            $env->getRuntime(EscaperRuntime::class),
+        );
     }
 }

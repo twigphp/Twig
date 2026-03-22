@@ -1,6 +1,6 @@
-# 3.24.1 (2026-XX-XX)
+# 3.25.0 (2026-XX-XX)
 
- * n/a
+ * Make `html_attr()` return an `HtmlAttributes` object that is both `Stringable` and `IteratorAggregate`, allowing spreading onto Twig Components via `{{ ...html_attr(merged) }}`
 
 # 3.24.0 (2026-03-17)
 

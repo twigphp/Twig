@@ -268,7 +268,7 @@ class HtmlAttrTest extends TestCase
 
         $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), $object);
 
-        self::assertSame('data-controller="dropdown tooltip" data-action="click-&gt;dropdown#toggle mouseover-&gt;tooltip#show"', $result);
+        self::assertSame('data-controller="dropdown tooltip" data-action="click-&gt;dropdown#toggle mouseover-&gt;tooltip#show"', (string) $result);
     }
 
     public function testDataAttributeWithNonJsonEncodableValueThrowsRuntimeError()
@@ -276,7 +276,7 @@ class HtmlAttrTest extends TestCase
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('The "data-bad" attribute value cannot be JSON encoded.');
 
-        HtmlExtension::htmlAttr(
+        (string) HtmlExtension::htmlAttr(
             new Environment(new ArrayLoader()),
             ['data-bad' => [\INF]]  // INF cannot be JSON-encoded
         );
@@ -287,10 +287,84 @@ class HtmlAttrTest extends TestCase
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('The "title" attribute value should be a scalar, an iterable, or an object implementing "Stringable"');
 
-        HtmlExtension::htmlAttr(
+        (string) HtmlExtension::htmlAttr(
             new Environment(new ArrayLoader()),
             ['title' => new \stdClass()]
         );
+    }
+
+    public function testHtmlAttributesIsStringable()
+    {
+        $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), ['class' => 'btn', 'id' => 'my-btn']);
+
+        self::assertSame('class="btn" id="my-btn"', (string) $result);
+    }
+
+    public function testHtmlAttributesIsIterable()
+    {
+        $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), ['class' => 'btn', 'id' => 'my-btn']);
+
+        self::assertSame(['class' => 'btn', 'id' => 'my-btn'], iterator_to_array($result));
+    }
+
+    public function testHtmlAttributesIsCountable()
+    {
+        $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), ['class' => 'btn', 'id' => 'my-btn']);
+
+        self::assertCount(2, $result);
+    }
+
+    public function testHtmlAttributesIterationReturnsScalarValues()
+    {
+        $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), [
+            'class' => ['btn', 'btn-primary'],
+            'data-action' => new SeparatedTokenList(['click->dialog#open', 'mouseover->tooltip#show']),
+            'style' => ['color' => 'red', 'font-size' => '16px'],
+            'required' => true,
+            'disabled' => false,
+            'aria-hidden' => true,
+        ]);
+
+        $attrs = iterator_to_array($result);
+
+        self::assertSame('btn btn-primary', $attrs['class']);
+        self::assertSame('click->dialog#open mouseover->tooltip#show', $attrs['data-action']);
+        self::assertSame('color: red; font-size: 16px;', $attrs['style']);
+        self::assertSame('', $attrs['required']);
+        self::assertArrayNotHasKey('disabled', $attrs);
+        self::assertSame('true', $attrs['aria-hidden']);
+    }
+
+    public function testHtmlAttributesSpreadAfterMerge()
+    {
+        $alertTrigger = [
+            'data-action' => new SeparatedTokenList('click->alert-dialog#open'),
+            'data-alert-dialog-target' => 'trigger',
+        ];
+
+        $tooltipTrigger = [
+            'data-action' => new SeparatedTokenList('mouseenter->tooltip#show mouseleave->tooltip#hide'),
+            'data-tooltip-target' => 'trigger',
+        ];
+
+        $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), $alertTrigger, $tooltipTrigger);
+
+        $attrs = iterator_to_array($result);
+
+        self::assertSame('click->alert-dialog#open mouseenter->tooltip#show mouseleave->tooltip#hide', $attrs['data-action']);
+        self::assertSame('trigger', $attrs['data-alert-dialog-target']);
+        self::assertSame('trigger', $attrs['data-tooltip-target']);
+    }
+
+    public function testHtmlAttributesCountWithOmittedAttributes()
+    {
+        $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), [
+            'class' => 'btn',
+            'disabled' => false,
+            'title' => null,
+        ]);
+
+        self::assertCount(1, $result);
     }
 }
 
