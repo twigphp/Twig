@@ -3,7 +3,7 @@
 
 .. _html_attr:
 
-.. versionadded:: 3.23
+.. versionadded:: 3.24
 
     The ``html_attr`` function was added in Twig 3.24.
 
