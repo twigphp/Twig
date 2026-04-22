@@ -1419,6 +1419,10 @@ final class CoreExtension extends AbstractExtension
      */
     public static function testEmpty($value): bool
     {
+        if ($value instanceof EmptyInterface) {
+            return $value->getIsEmpty();
+        }
+
         if ($value instanceof \Countable) {
             return 0 === \count($value);
         }
