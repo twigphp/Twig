@@ -423,6 +423,40 @@ class SandboxTest extends TestCase
         $this->assertEquals('bar', $twig->load('1_basic4')->render(self::$params), 'Sandbox allow some properties');
     }
 
+    public function testSandboxAllowDestructuring()
+    {
+        $template = '{% do {bar: x, foo: y} = obj %}{{ x }}-{{ y }}';
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['do'], [], ['Twig\Tests\Extension\FooObject' => 'foo'], ['Twig\Tests\Extension\FooObject' => 'bar']);
+        FooObject::reset();
+        $this->assertSame('bar-foo', $twig->load('index')->render(self::$params), 'Sandbox allows destructuring when properties and methods are allowed');
+    }
+
+    public function testSandboxUnallowedDestructuringProperty()
+    {
+        $template = '{% do {bar: x} = obj %}{{ x }}';
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['do']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed property is read via destructuring');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('bar', $e->getPropertyName());
+        }
+    }
+
+    public function testSandboxUnallowedDestructuringMethod()
+    {
+        $template = '{% do {foo: y} = obj %}{{ y }}';
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['do'], [], [], ['Twig\Tests\Extension\FooObject' => 'foo']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed method is called via destructuring');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('foo', $e->getMethodName());
+        }
+    }
+
     public function testSandboxAllowFunction()
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], ['cycle']);
