@@ -856,6 +856,64 @@ EOF
         $this->expectNotToPerformAssertions();
     }
 
+    public function testSandboxAllowsColumnFilterOnAllowedProperty()
+    {
+        $params = ['obj' => new ColumnObject()];
+        $twig = $this->getEnvironment(true, [], ['index' => "{{ [obj]|column('bar')|first }}"], [], ['column', 'first'], [], ['Twig\Tests\Extension\ColumnObject' => ['bar']]);
+
+        $this->assertSame('bar', $twig->load('index')->render($params));
+    }
+
+    public function testSandboxBlocksColumnFilterOnDisallowedProperty()
+    {
+        $params = ['obj' => new ColumnObject()];
+        $twig = $this->getEnvironment(true, [], ['index' => "{{ [obj]|column('bar')|first }}"], [], ['column', 'first']);
+
+        try {
+            $twig->load('index')->render($params);
+            $this->fail('Sandbox should reject the "column" filter when the requested property is not in allowedProperties');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertSame('Twig\Tests\Extension\ColumnObject', $e->getClassName());
+            $this->assertSame('bar', $e->getPropertyName());
+        }
+    }
+
+    public function testSandboxBlocksColumnFilterOnDisallowedIndex()
+    {
+        $params = ['obj' => new ColumnObject()];
+        $twig = $this->getEnvironment(true, [], ['index' => "{{ [obj]|column('bar', 'foo')|keys|first }}"], [], ['column', 'first', 'keys'], [], ['Twig\Tests\Extension\ColumnObject' => ['bar']]);
+
+        try {
+            $twig->load('index')->render($params);
+            $this->fail('Sandbox should reject the "column" filter when the index argument targets a disallowed property');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertSame('Twig\Tests\Extension\ColumnObject', $e->getClassName());
+            $this->assertSame('foo', $e->getPropertyName());
+        }
+    }
+
+    public function testSandboxBlocksColumnFilterOnMagicGetter()
+    {
+        $params = ['magic' => new MagicObject()];
+        $twig = $this->getEnvironment(true, [], ['index' => "{{ [magic]|column('anything')|first }}"], [], ['column', 'first']);
+
+        try {
+            $twig->load('index')->render($params);
+            $this->fail('Sandbox should reject the "column" filter before invoking __get on a non-allowlisted property');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertSame('Twig\Tests\Extension\MagicObject', $e->getClassName());
+            $this->assertSame('anything', $e->getPropertyName());
+        }
+    }
+
+    public function testColumnFilterUnaffectedOutsideSandbox()
+    {
+        $params = ['obj' => new ColumnObject()];
+        $twig = $this->getEnvironment(false, [], ['index' => "{{ [obj]|column('bar')|first }}"]);
+
+        $this->assertSame('bar', $twig->load('index')->render($params));
+    }
+
     protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [], $sourcePolicy = null)
     {
         $loader = new ArrayLoader($templates);
@@ -1209,11 +1267,19 @@ class MagicObject
 {
     public function __get($name): mixed
     {
-        throw new \BadMethodCallException('Should not be called.');
+        throw new \BadMethodCallException(\sprintf('__get(%s) should not be called inside the sandbox.', $name));
     }
 
     public function __isset($name): bool
     {
-        throw new \BadMethodCallException('Should not be called.');
+        throw new \BadMethodCallException(\sprintf('__isset(%s) should not be called inside the sandbox.', $name));
     }
+}
+
+// Plain object without __toString: column tests exercise property access, not
+// string coercion, so the array elements must not be Stringable to avoid
+// triggering the generic filter-input __toString sandbox check.
+class ColumnObject
+{
+    public $bar = 'bar';
 }
