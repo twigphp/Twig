@@ -794,6 +794,21 @@ operand is contained in the right:
     You can use this operator to perform a containment test on strings,
     sequences, mappings, or objects implementing the ``Traversable`` interface.
 
+.. note::
+
+    For sequences, mappings, and ``Traversable`` objects, ``in`` uses a loose
+    comparison (similar to ``==``); use :doc:`same as <tests/sameas>` for a
+    strict comparison. Like PHP's ``in_array()``, this can yield unexpected
+    results when the left operand is a boolean:
+
+    .. code-block:: twig
+
+        {# returns true because true == 'foo' under PHP loose comparison #}
+        {{ true in ['foo', 'bar'] }}
+
+    Containment on strings only accepts string, integer, and float operands on
+    the left; other types always return ``false``.
+
 To perform a negative test, use the ``not in`` operator:
 
 .. code-block:: twig
@@ -1221,7 +1236,7 @@ Twig supports two modifiers:
 
 * *Line whitespace trimming* via the ``~`` modifier: Removes all whitespace
   (excluding newlines). Using this modifier on the right disables the default
-  removal of the first newline inherited from PHP.
+  removal of the first newline mentioned above.
 
 The modifiers can be used on either side of the tags like in ``{%-`` or ``-%}``
 and they consume all whitespace for that side of the tag. It is possible to use

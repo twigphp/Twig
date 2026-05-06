@@ -1,6 +1,6 @@
-# 3.24.1 (2026-XX-XX)
+# 3.25.0 (2026-XX-XX)
 
- * n/a
+ * Use deterministic suffixes for generated embed classes
 
 # 3.24.0 (2026-03-17)
 

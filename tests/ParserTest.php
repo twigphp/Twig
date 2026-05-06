@@ -206,6 +206,20 @@ EOF, 'index')));
         $this->assertTrue($argumentNodes->getNode(3)->getAttribute('value'));
     }
 
+    public function testEmbeddedTemplatesHaveSequentialIndices(): void
+    {
+        $template = new Source('{% embed "first" %}{% endembed %}{% embed "second" %}{% endembed %}', 'index');
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize($template);
+
+        $embeds = $this->getParser()
+            ->parse($stream)
+            ->getAttribute('embedded_templates');
+
+        $this->assertSame(1, $embeds->getNode(0)->getAttribute('index'));
+        $this->assertSame(2, $embeds->getNode(1)->getAttribute('index'));
+    }
+
     protected function getParser()
     {
         $parser = new Parser(new Environment(new ArrayLoader()));
