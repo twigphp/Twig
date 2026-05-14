@@ -1221,7 +1221,7 @@ Twig supports two modifiers:
 
 * *Line whitespace trimming* via the ``~`` modifier: Removes all whitespace
   (excluding newlines). Using this modifier on the right disables the default
-  removal of the first newline inherited from PHP.
+  removal of the first newline mentioned above.
 
 The modifiers can be used on either side of the tags like in ``{%-`` or ``-%}``
 and they consume all whitespace for that side of the tag. It is possible to use
