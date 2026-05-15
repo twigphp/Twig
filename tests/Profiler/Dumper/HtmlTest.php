@@ -21,6 +21,7 @@ namespace Twig\Tests\Profiler\Dumper;
  */
 
 use Twig\Profiler\Dumper\HtmlDumper;
+use Twig\Profiler\Profile;
 
 class HtmlTest extends ProfilerTestCase
 {
@@ -38,5 +39,24 @@ class HtmlTest extends ProfilerTestCase
     └ <span style="background-color: #ffd">included.twig</span>
 </pre>
 EOF, $dumper->dump($this->getProfile()));
+    }
+
+    public function testDumpEscapesTemplateAndProfileNames()
+    {
+        $root = new Profile('main');
+        $child = new Profile('<img src=x onerror=alert(1)>', Profile::TEMPLATE);
+        $grandchild = new Profile('<img src=x onerror=alert(2)>', Profile::MACRO, '<img src=x onerror=alert(3)>');
+
+        (new \ReflectionProperty($child, 'profiles'))->setValue($child, [$grandchild]);
+        (new \ReflectionProperty($root, 'profiles'))->setValue($root, [$child]);
+
+        $output = (new HtmlDumper())->dump($root);
+
+        $this->assertStringNotContainsString('<img src=x onerror=alert(1)>', $output);
+        $this->assertStringNotContainsString('<img src=x onerror=alert(2)>', $output);
+        $this->assertStringNotContainsString('<img src=x onerror=alert(3)>', $output);
+        $this->assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $output);
+        $this->assertStringContainsString('&lt;img src=x onerror=alert(2)&gt;', $output);
+        $this->assertStringContainsString('&lt;img src=x onerror=alert(3)&gt;', $output);
     }
 }
