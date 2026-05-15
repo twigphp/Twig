@@ -31,4 +31,17 @@ class FunctionalTest extends TestCase
         $this->assertStringNotContainsString('</p>', $output);
         $this->assertMatchesRegularExpression('{\\\\u003[Cc]p\\\\u003[Ee]x\\\\u003[Cc]\\\\/p\\\\u003[Ee]}', $output);
     }
+
+    public function testInlineCssPreEscapesUnsafeInput()
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => '{{ payload|inline_css }}',
+        ]));
+        $twig->addExtension(new CssInlinerExtension());
+
+        $output = $twig->render('index', ['payload' => '<script>alert(1)</script>']);
+
+        $this->assertStringNotContainsString('<script>', $output);
+        $this->assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $output);
+    }
 }
