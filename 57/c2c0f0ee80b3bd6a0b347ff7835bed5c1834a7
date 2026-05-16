@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by stof at 2026-05-06T15:28:04Z
+
+AFAICT, reusing the index should not be an issue as long as you ensure that it is not reused for embeds belonging to the same template (the final generated class name uses both the template name and the index to generate the class name). The hard thing is that this would have to account for *nested* `embed` nodes, while the parser state is reset when re-entering `parse()` to parse the inner `{% embed %}` (otherwise, we could just count `$this->embeddedTemplates` as a way to get an index).
+
+And the index must indeed start at `1` for embedded templates due to the fact that falsy index values are treating the same than `null` in the compilation of `ModuleNode` currently: https://github.com/twigphp/Twig/blob/99d95dd6b8b0cc3c2397d15d45a4bb87eff89ddc/src/Node/ModuleNode.php#L98
+This restriction could probably be lifted by using proper `null` checks instead.
+
+The current solution with a static index is **not** reproducible either, as the compilation of a template depends on which templates have been parsed before it (or at least how many `{% embed %}` tag they contain)
+
+---------------------------------------------------------------------------
+
+by itsalmostchristmas at 2026-05-06T19:33:26Z
+
+Thanks for your feedback.
+
+> The current solution with a static index is **not** reproducible either, as the compilation of a template depends on which templates have been parsed before it (or at least how many `{% embed %}` tag they contain)
+
+Indeed, I had only considered a full rebuild (e.g. `bin/console cache:clear` in Symfony), and not compiling individual templates. I've updated the PR to add a counter that's only reset upon leaving the root module. To my knowledge, this will result in deterministic output regardless of parsing order.
+
+> This restriction could probably be lifted by using proper `null` checks instead.
+
+I've decided not to change this, as in my mind it makes more sense for numbering of the embed classes to start from 1 anyway.
