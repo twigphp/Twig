@@ -48,6 +48,7 @@ class AttributeExtensionTest extends TestCase
         yield 'with env' => ['with_env_filter', 'withEnvFilter', ['needs_environment' => true]];
         yield 'with context' => ['with_context_filter', 'withContextFilter', ['needs_context' => true]];
         yield 'with env and context' => ['with_env_and_context_filter', 'withEnvAndContextFilter', ['needs_environment' => true, 'needs_context' => true]];
+        yield 'with sandbox' => ['with_sandbox_filter', 'withSandboxFilter', ['needs_is_sandboxed' => true]];
         yield 'variadic' => ['variadic_filter', 'variadicFilter', ['is_variadic' => true]];
         yield 'deprecated' => ['deprecated_filter', 'deprecatedFilter', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
         yield 'pattern' => ['pattern_*_filter', 'patternFilter', []];
@@ -76,6 +77,7 @@ class AttributeExtensionTest extends TestCase
         yield 'with env' => ['with_env_function', 'withEnvFunction', ['needs_environment' => true]];
         yield 'with context' => ['with_context_function', 'withContextFunction', ['needs_context' => true]];
         yield 'with env and context' => ['with_env_and_context_function', 'withEnvAndContextFunction', ['needs_environment' => true, 'needs_context' => true]];
+        yield 'with sandbox' => ['with_sandbox_function', 'withSandboxFunction', ['needs_is_sandboxed' => true]];
         yield 'no argument' => ['no_arg_function', 'noArgFunction', []];
         yield 'variadic' => ['variadic_function', 'variadicFunction', ['is_variadic' => true]];
         yield 'deprecated' => ['deprecated_function', 'deprecatedFunction', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
@@ -104,6 +106,7 @@ class AttributeExtensionTest extends TestCase
         yield 'with env' => ['with_env_test', 'withEnvTest', ['needs_environment' => true]];
         yield 'with context' => ['with_context_test', 'withContextTest', ['needs_context' => true]];
         yield 'with env and context' => ['with_env_and_context_test', 'withEnvAndContextTest', ['needs_environment' => true, 'needs_context' => true]];
+        yield 'with sandbox' => ['with_sandbox_test', 'withSandboxTest', ['needs_is_sandboxed' => true]];
         yield 'variadic' => ['variadic_test', 'variadicTest', ['is_variadic' => true]];
         yield 'deprecated' => ['deprecated_test', 'deprecatedTest', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
     }

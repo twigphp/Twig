@@ -606,6 +606,176 @@ EOF
         $this->expectException(SecurityError::class);
         $twig->load('1_basic')->render([]);
     }
+
+    public function testNeedsIsSandboxedFilterReceivesTrueWhenSandboxed()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo"|sandbox_aware }}'], [], ['sandbox_aware']);
+        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $value.':'.($isSandboxed ? 'on' : 'off');
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('foo:on', $twig->load('index')->render([]));
+    }
+
+    public function testNeedsIsSandboxedFilterReceivesFalseWhenNotSandboxed()
+    {
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo"|sandbox_aware }}']);
+        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $value.':'.($isSandboxed ? 'on' : 'off');
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('foo:off', $twig->load('index')->render([]));
+    }
+
+    public function testNeedsIsSandboxedFilterFollowsSourcePolicy()
+    {
+        $twig = $this->getEnvironment(false, [], [
+            'in' => '{{ "foo"|sandbox_aware }}',
+            'out' => '{{ "foo"|sandbox_aware }}',
+        ], [], ['sandbox_aware'], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return 'in' === $source->getName();
+            }
+        });
+        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $value.':'.($isSandboxed ? 'on' : 'off');
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('foo:on', $twig->load('in')->render([]));
+        $this->assertSame('foo:off', $twig->load('out')->render([]));
+    }
+
+    public function testNeedsIsSandboxedFunctionWithoutSandboxExtension()
+    {
+        $loader = new ArrayLoader(['index' => '{{ sandbox_aware("foo") }}']);
+        $twig = new Environment($loader, ['debug' => true, 'cache' => false, 'autoescape' => false]);
+        $twig->addFunction(new \Twig\TwigFunction('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $value.':'.($isSandboxed ? 'on' : 'off');
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('foo:off', $twig->load('index')->render([]));
+    }
+
+    public function testNeedsIsSandboxedTestReceivesTrueWhenSandboxed()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
+        $twig->addTest(new \Twig\TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $isSandboxed && 'foo' === $value;
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('on', $twig->load('index')->render([]));
+    }
+
+    public function testNeedsIsSandboxedTestReceivesFalseWhenNotSandboxed()
+    {
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
+        $twig->addTest(new \Twig\TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return !$isSandboxed && 'foo' === $value;
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('on', $twig->load('index')->render([]));
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testNeedsIsSandboxedHelperTriggersDeprecationForCustomImplementation()
+    {
+        $callable = new LegacyTwigCallableWithoutNeedsIsSandboxed();
+
+        $this->expectDeprecation(\sprintf('Since twig/twig 3.25: Not implementing the "needsIsSandboxed()" method in "%s" is deprecated. This method will be part of the "Twig\TwigCallableInterface" interface in 4.0.', $callable::class));
+
+        $this->assertFalse(\Twig\Node\Expression\CallExpression::needsIsSandboxed($callable));
+    }
+}
+
+class LegacyTwigCallableWithoutNeedsIsSandboxed implements \Twig\TwigCallableInterface
+{
+    public function getName(): string
+    {
+        return 'foo';
+    }
+
+    public function getType(): string
+    {
+        return 'filter';
+    }
+
+    public function getDynamicName(): string
+    {
+        return 'foo';
+    }
+
+    public function getCallable()
+    {
+        return null;
+    }
+
+    public function getNodeClass(): string
+    {
+        return '';
+    }
+
+    public function needsCharset(): bool
+    {
+        return false;
+    }
+
+    public function needsEnvironment(): bool
+    {
+        return false;
+    }
+
+    public function needsContext(): bool
+    {
+        return false;
+    }
+
+    public function withDynamicArguments(string $name, string $dynamicName, array $arguments): \Twig\TwigCallableInterface
+    {
+        return $this;
+    }
+
+    public function getArguments(): array
+    {
+        return [];
+    }
+
+    public function isVariadic(): bool
+    {
+        return false;
+    }
+
+    public function isDeprecated(): bool
+    {
+        return false;
+    }
+
+    public function getDeprecatingPackage(): string
+    {
+        return '';
+    }
+
+    public function getDeprecatedVersion(): string
+    {
+        return '';
+    }
+
+    public function getAlternative(): ?string
+    {
+        return null;
+    }
+
+    public function getMinimalNumberOfRequiredArguments(): int
+    {
+        return 0;
+    }
+
+    public function __toString(): string
+    {
+        return 'foo';
+    }
 }
 
 class ParentClass
