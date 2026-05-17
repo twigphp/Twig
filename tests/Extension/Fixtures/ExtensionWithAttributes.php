@@ -39,6 +39,11 @@ class ExtensionWithAttributes
     {
     }
 
+    #[AsTwigFilter('with_sandbox_filter', needsIsSandboxed: true)]
+    public function withSandboxFilter(bool $isSandboxed, string $string)
+    {
+    }
+
     #[AsTwigFilter('variadic_filter')]
     public function variadicFilter(string ...$strings)
     {
@@ -71,6 +76,11 @@ class ExtensionWithAttributes
 
     #[AsTwigFunction('with_env_and_context_function', needsContext: true)]
     public function withEnvAndContextFunction(Environment $env, array $context, string $string)
+    {
+    }
+
+    #[AsTwigFunction('with_sandbox_function', needsIsSandboxed: true)]
+    public function withSandboxFunction(bool $isSandboxed, string $string)
     {
     }
 
@@ -111,6 +121,11 @@ class ExtensionWithAttributes
 
     #[AsTwigTest('with_env_and_context_test', needsContext: true)]
     public function withEnvAndContextTest(Environment $env, array $context, $argument)
+    {
+    }
+
+    #[AsTwigTest('with_sandbox_test', needsIsSandboxed: true)]
+    public function withSandboxTest(bool $isSandboxed, $argument)
     {
     }
 

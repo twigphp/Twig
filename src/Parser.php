@@ -71,6 +71,7 @@ class Parser
      * @var ModuleNode[]
      */
     private array $embeddedTemplates = [];
+    private int $lastEmbedIndex = 0;
     private int $varNameSalt = 0;
     private bool $ignoreUnknownTwigCallables = false;
     private ExpressionParsers $parsers;
@@ -91,8 +92,13 @@ class Parser
      */
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
+        // reset on root parse() calls only, so the counter spans nested/reentrant parses
+        if (!$this->stack) {
+            $this->lastEmbedIndex = 0;
+        }
+
         $vars = get_object_vars($this);
-        unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['reservedMacroNames'], $vars['varNameSalt']);
+        unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['reservedMacroNames'], $vars['lastEmbedIndex'], $vars['varNameSalt']);
         $this->stack[] = $vars;
 
         // node visitors
@@ -293,7 +299,7 @@ class Parser
      */
     public function embedTemplate(ModuleNode $template)
     {
-        $template->setIndex(mt_rand());
+        $template->setIndex(++$this->lastEmbedIndex);
 
         $this->embeddedTemplates[] = $template;
     }

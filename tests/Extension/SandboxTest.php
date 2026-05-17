@@ -548,6 +548,76 @@ EOF
         $this->expectException(SecurityError::class);
         $twig->load('1_basic')->render([]);
     }
+
+    public function testNeedsIsSandboxedFilterReceivesTrueWhenSandboxed()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo"|sandbox_aware }}'], [], ['sandbox_aware']);
+        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $value.':'.($isSandboxed ? 'on' : 'off');
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('foo:on', $twig->load('index')->render([]));
+    }
+
+    public function testNeedsIsSandboxedFilterReceivesFalseWhenNotSandboxed()
+    {
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo"|sandbox_aware }}']);
+        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $value.':'.($isSandboxed ? 'on' : 'off');
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('foo:off', $twig->load('index')->render([]));
+    }
+
+    public function testNeedsIsSandboxedFilterFollowsSourcePolicy()
+    {
+        $twig = $this->getEnvironment(false, [], [
+            'in' => '{{ "foo"|sandbox_aware }}',
+            'out' => '{{ "foo"|sandbox_aware }}',
+        ], [], ['sandbox_aware'], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return 'in' === $source->getName();
+            }
+        });
+        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $value.':'.($isSandboxed ? 'on' : 'off');
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('foo:on', $twig->load('in')->render([]));
+        $this->assertSame('foo:off', $twig->load('out')->render([]));
+    }
+
+    public function testNeedsIsSandboxedFunctionWithoutSandboxExtension()
+    {
+        $loader = new ArrayLoader(['index' => '{{ sandbox_aware("foo") }}']);
+        $twig = new Environment($loader, ['debug' => true, 'cache' => false, 'autoescape' => false]);
+        $twig->addFunction(new \Twig\TwigFunction('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $value.':'.($isSandboxed ? 'on' : 'off');
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('foo:off', $twig->load('index')->render([]));
+    }
+
+    public function testNeedsIsSandboxedTestReceivesTrueWhenSandboxed()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
+        $twig->addTest(new \Twig\TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return $isSandboxed && 'foo' === $value;
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('on', $twig->load('index')->render([]));
+    }
+
+    public function testNeedsIsSandboxedTestReceivesFalseWhenNotSandboxed()
+    {
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
+        $twig->addTest(new \Twig\TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
+            return !$isSandboxed && 'foo' === $value;
+        }, ['needs_is_sandboxed' => true]));
+
+        $this->assertSame('on', $twig->load('index')->render([]));
+    }
 }
 
 class ParentClass

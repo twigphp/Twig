@@ -93,6 +93,14 @@ abstract class CallExpression extends AbstractExpression
             $first = false;
         }
 
+        if ($twigCallable->needsIsSandboxed()) {
+            if (!$first) {
+                $compiler->raw(', ');
+            }
+            $compiler->raw('$this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->isSandboxed($this->source)');
+            $first = false;
+        }
+
         foreach ($twigCallable->getArguments() as $argument) {
             if (!$first) {
                 $compiler->raw(', ');

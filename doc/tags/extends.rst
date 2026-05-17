@@ -71,8 +71,8 @@ value from the parent template is used instead.
 
 You can't define multiple ``block`` tags with the same name in the same
 template. This limitation exists because a block tag works in "both"
-directions. That is, a block tag doesn't just provide a hole to fill - it also
-defines the content that fills the hole in the *parent*. If there were two
+directions. That is, a block tag doesn't just provide a slot to fill - it also
+defines the content that fills the slot in the *parent*. If there were two
 similarly-named ``block`` tags in a template, that template's parent wouldn't
 know which one of the blocks' content to use.
 

@@ -14,6 +14,7 @@ Twig
     deprecated
     recipes
     coding_standards
+    operators_precedence
     tags/index
     filters/index
     functions/index

@@ -216,6 +216,34 @@ the first argument to the filter call (or the second one if
         // ...
     }, ['needs_context' => true, 'needs_environment' => true]);
 
+Sandbox-aware Filters
+~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.25
+
+    The ``needs_is_sandboxed`` option was added in Twig 3.25.
+
+If you want to know whether the current template is sandboxed in your
+filter, set the ``needs_is_sandboxed`` option to ``true``; Twig will pass the
+current sandbox state as a boolean to the filter call (as the first
+argument, or after the charset, the environment, and the context if they
+are also requested)::
+
+    $filter = new \Twig\TwigFilter('rot13', function (bool $isSandboxed, $string) {
+        if ($isSandboxed) {
+            // adjust behavior when running in a sandboxed template
+        }
+
+        return str_rot13($string);
+    }, ['needs_is_sandboxed' => true]);
+
+The sandbox state is resolved against the current template source, which
+means it takes both the global sandbox state and any ``SourcePolicy`` into
+account.
+
+The same ``needs_is_sandboxed`` option is also available on functions and
+tests.
+
 Automatic Escaping
 ~~~~~~~~~~~~~~~~~~
 

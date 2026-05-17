@@ -35,6 +35,8 @@ interface TwigCallableInterface extends \Stringable
 
     public function needsContext(): bool;
 
+    public function needsIsSandboxed(): bool;
+
     public function withDynamicArguments(string $name, string $dynamicName, array $arguments): self;
 
     public function getArguments(): array;

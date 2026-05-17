@@ -87,6 +87,14 @@ class FilterTest extends NodeTestCase
         $node = self::createFilter($environment, new ConstantExpression('foo', 1), 'anonymous');
         $tests[] = [$node, '$this->env->getFilter(\'anonymous\')->getCallable()("foo")'];
 
+        // needs sandbox
+        $node = self::createFilter($environment, $string, 'bar_sandbox');
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_sandbox($this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->isSandboxed($this->source), "abc")', $environment];
+
+        // needs charset, environment, context, and sandbox
+        $node = self::createFilter($environment, $string, 'bar_all');
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_all($this->env->getCharset(), $this->env, $context, $this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->isSandboxed($this->source), "abc")', $environment];
+
         // needs environment
         $node = self::createFilter($environment, $string, 'bar');
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_dummy($this->env, "abc")', $environment];
@@ -176,6 +184,8 @@ class FilterTest extends NodeTestCase
         $env->addFilter(new TwigFilter('bar', 'Twig\Tests\Node\Expression\twig_tests_filter_dummy', ['needs_environment' => true]));
         $env->addFilter(new TwigFilter('bar_closure', \Closure::fromCallable(twig_tests_filter_dummy::class), ['needs_environment' => true]));
         $env->addFilter(new TwigFilter('barbar', twig_tests_filter_barbar(...), ['needs_context' => true, 'is_variadic' => true]));
+        $env->addFilter(new TwigFilter('bar_sandbox', twig_tests_filter_sandbox(...), ['needs_is_sandboxed' => true]));
+        $env->addFilter(new TwigFilter('bar_all', twig_tests_filter_all(...), ['needs_charset' => true, 'needs_environment' => true, 'needs_context' => true, 'needs_is_sandboxed' => true]));
         $env->addFilter(new TwigFilter('magic_static', __NAMESPACE__.'\ChildMagicCallStub::magicStaticCall'));
         $env->addExtension(new FilterTestExtension());
         $env->addExtension(self::createExtension());
@@ -210,6 +220,14 @@ function twig_tests_filter_dummy()
 }
 
 function twig_tests_filter_barbar($context, $string, $arg1 = null, $arg2 = null, array $args = [])
+{
+}
+
+function twig_tests_filter_sandbox(bool $isSandboxed, $string)
+{
+}
+
+function twig_tests_filter_all(string $charset, Environment $env, array $context, bool $isSandboxed, $string)
 {
 }
 
