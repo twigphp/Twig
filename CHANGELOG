@@ -1,4 +1,4 @@
-# 3.25.0 (2026-XX-XX)
+# 3.25.0 (2026-05-17)
 
  * Add a `needs_is_sandboxed` option for filters, functions, and tests
  * Use deterministic suffixes for generated embed classes
