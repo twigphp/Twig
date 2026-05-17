@@ -25,6 +25,7 @@ use Twig\Environment;
 use Twig\Extension\EscaperExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Runtime\EscaperRuntime;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class EscaperTest extends TestCase
 {
@@ -78,6 +79,24 @@ class EscaperTest extends TestCase
 
         $this->assertSame('foo**ISO-8859-1**UTF-8', $env1->getRuntime(EscaperRuntime::class)->escape('foo', 'foo', 'ISO-8859-1'));
         $this->assertSame('foo**ISO-8859-1**UTF-8**again', $env2->getRuntime(EscaperRuntime::class)->escape('foo', 'foo', 'ISO-8859-1'));
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSafeClassesUseCustomRuntimeLoader()
+    {
+        $runtime = new EscaperRuntime();
+        $twig = new Environment(new ArrayLoader());
+        $twig->addRuntimeLoader(new FactoryRuntimeLoader([
+            EscaperRuntime::class => static fn () => $runtime,
+        ]));
+
+        $escaperExt = $twig->getExtension(EscaperExtension::class);
+        $escaperExt->addSafeClass('ThisClassIsSafe', ['html']);
+
+        $this->assertSame($runtime, $twig->getRuntime(EscaperRuntime::class));
+        $this->assertArrayHasKey('ThisClassIsSafe', $runtime->safeClasses);
     }
 
     public function testLastModified()
