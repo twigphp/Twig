@@ -1,4 +1,4 @@
-# 4.0.0 (2024-XX-XX)
+# 4.0.0 alpha 1 (2026-05-17)
 
  * Make the `raw` filter sticky
  * Add back the `if` condition on `for` loops
