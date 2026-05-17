@@ -1,3 +1,7 @@
+# 3.25.1 (2026-XX-XX)
+
+ * n/a
+
 # 3.25.0 (2026-05-17)
 
  * Add a `needs_is_sandboxed` option for filters, functions, and tests
