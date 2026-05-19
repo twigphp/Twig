@@ -1,6 +1,6 @@
 # 3.26.0 (2026-XX-XX)
 
- * n/a
+ * Encode single quotes as `\x27` in `Compiler::string()` as a defense-in-depth measure
 
 # 3.25.0 (2026-05-17)
 
