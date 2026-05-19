@@ -684,8 +684,13 @@ EOF
         $this->assertSame('a,b', $twig->load('1_basic')->render([]));
     }
 
+    /**
+     * @group legacy
+     */
     public function testNonSandboxedSourcePolicyAllowsNonClosureCallable()
     {
+        $this->expectDeprecation('Since twig/twig 3.15: Passing a callable that is not a PHP \Closure as an argument to the "sort" filter is deprecated.');
+
         $sourcePolicy = new class implements \Twig\Sandbox\SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
