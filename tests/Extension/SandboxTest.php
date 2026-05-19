@@ -519,6 +519,73 @@ EOF
         $this->assertEquals('<p>username</p>', $twig->load('index')->render([]));
     }
 
+    public function testSelfMacroReferenceWithStringLiteralDoesNotInjectPhp()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ _self.(\'foo + 1; trigger_error("BAD-MACRO-REF") //\') }}']);
+
+        $compiled = $twig->compileSource($twig->getLoader()->getSourceContext('index'));
+        $this->assertStringNotContainsString('trigger_error("BAD-MACRO-REF")', $compiled, 'Attacker-controlled string must not appear raw in compiled PHP source.');
+        $this->assertStringNotContainsString('->macro_foo + 1;', $compiled, 'No raw injection should reach the generated method-call site.');
+
+        $triggered = false;
+        set_error_handler(static function ($severity, $message) use (&$triggered) {
+            if (str_contains($message, 'BAD-MACRO-REF')) {
+                $triggered = true;
+            }
+            return true;
+        }, \E_USER_NOTICE | \E_USER_WARNING);
+        try {
+            try {
+                $twig->load('index')->render([]);
+            } catch (\Throwable) {
+            }
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertFalse($triggered, 'No PHP from the template literal must execute.');
+    }
+
+    public function testImportedTemplateMacroReferenceWithBadIdentifierDoesNotInjectPhp()
+    {
+        $payload = '{% import "m" as m %}{{ m.(\'foo + 1; trigger_error("BAD-IMPORT-REF") //\') }}';
+        $twig = $this->getEnvironment(true, [], [
+            'index' => $payload,
+            'm' => '{% macro greet() %}hi{% endmacro %}',
+        ], ['import']);
+
+        $compiled = $twig->compileSource($twig->getLoader()->getSourceContext('index'));
+        $this->assertStringNotContainsString('trigger_error("BAD-IMPORT-REF")', $compiled, 'Attacker-controlled string must not appear raw in compiled PHP source.');
+
+        $triggered = false;
+        set_error_handler(static function ($severity, $message) use (&$triggered) {
+            if (str_contains($message, 'BAD-IMPORT-REF')) {
+                $triggered = true;
+            }
+            return true;
+        }, \E_USER_NOTICE | \E_USER_WARNING);
+        try {
+            try {
+                $twig->load('index')->render([]);
+            } catch (\Throwable) {
+            }
+        } finally {
+            restore_error_handler();
+        }
+        $this->assertFalse($triggered, 'No PHP from the template literal must execute.');
+    }
+
+    public function testSelfMacroReferenceWithValidIdentifierStillWorks()
+    {
+        $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
+            {%- macro greet(n) %}Hi {{ n }}{% endmacro %}
+            {{- _self.('greet')('World') }}
+            EOF
+        ], ['macro'], ['escape']);
+
+        $this->assertSame('Hi World', $twig->load('index')->render([]));
+    }
+
     public function testSandboxDisabledAfterIncludeFunctionError()
     {
         $twig = $this->getEnvironment(false, [], self::$templates);

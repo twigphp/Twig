@@ -26,6 +26,14 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
 
     public function __construct(TemplateVariable $template, string $name, AbstractExpression $arguments, int $lineno)
     {
+        // The name is emitted as raw PHP in compile() via "->{$name}(...)",
+        // so it must be a valid PHP method identifier. Reject anything else
+        // as a defense-in-depth against accidental PHP code injection from
+        // a caller that forgot to validate user-controlled input.
+        if (!preg_match('#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$#D', $name)) {
+            throw new \LogicException(\sprintf('Macro name "%s" is not a valid PHP identifier.', $name));
+        }
+
         parent::__construct(['template' => $template, 'arguments' => $arguments], ['name' => $name], $lineno);
     }
 
