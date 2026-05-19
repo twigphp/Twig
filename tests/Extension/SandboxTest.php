@@ -607,6 +607,62 @@ EOF
         $twig->load('1_basic')->render([]);
     }
 
+    /**
+     * @dataProvider provideSourcePolicyArrowBlockedTemplates
+     */
+    public function testSourcePolicyBlocksNonClosureCallableInArrow(string $template)
+    {
+        $sourcePolicy = new class implements \Twig\Sandbox\SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['1_basic' => $template], [], ['sort', 'filter', 'map', 'reduce', 'find', 'join'], [], [], [], $sourcePolicy);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessageMatches('/must be a Closure in sandbox mode/');
+        $twig->load('1_basic')->render([]);
+    }
+
+    public static function provideSourcePolicyArrowBlockedTemplates(): iterable
+    {
+        yield 'sort' => ['{{ ["a","b"]|sort("strnatcasecmp")|join }}'];
+        yield 'filter' => ['{{ ["a","b"]|filter("is_string")|join }}'];
+        yield 'map' => ['{{ ["a","b"]|map("strtoupper")|join }}'];
+        yield 'reduce' => ['{{ [1,2]|reduce("intval") }}'];
+        yield 'find' => ['{{ ["a","b"]|find("is_string") }}'];
+        yield 'has some' => ['{{ [1,2] has some "is_string" ? "yes" : "no" }}'];
+        yield 'has every' => ['{{ [1,2] has every "is_int" ? "yes" : "no" }}'];
+    }
+
+    public function testSourcePolicyAllowsClosureInArrow()
+    {
+        $sourcePolicy = new class implements \Twig\Sandbox\SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['1_basic' => '{{ ["b","a"]|sort((a, b) => a < b ? -1 : 1)|join(",") }}'], [], ['sort', 'join'], [], [], [], $sourcePolicy);
+        $this->assertSame('a,b', $twig->load('1_basic')->render([]));
+    }
+
+    public function testNonSandboxedSourcePolicyAllowsNonClosureCallable()
+    {
+        $sourcePolicy = new class implements \Twig\Sandbox\SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return false;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['1_basic' => '{{ ["b","a"]|sort("strnatcasecmp")|join(",") }}'], [], ['sort', 'join'], [], [], [], $sourcePolicy);
+        $this->assertSame('a,b', $twig->load('1_basic')->render([]));
+    }
+
     public function testNeedsIsSandboxedFilterReceivesTrueWhenSandboxed()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo"|sandbox_aware }}'], [], ['sandbox_aware']);
