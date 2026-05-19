@@ -535,6 +535,32 @@ EOF
         $this->assertFalse($twig->getExtension(SandboxExtension::class)->isSandboxed(), 'Sandboxed include() function call should not leave Sandbox enabled when an error occurs.');
     }
 
+    public function testSandboxTagIncludeWithPreloadedTemplate()
+    {
+        $twig = $this->getEnvironment(false, [], [
+            'index' => '{% sandbox %}{% include "included" %}{% endsandbox %}',
+            'included' => '{{ "hello"|upper }}',
+        ]);
+
+        $twig->load('included');
+
+        $this->expectException(SecurityNotAllowedFilterError::class);
+        $twig->load('index')->render([]);
+    }
+
+    public function testSandboxTagIncludeIgnoreMissingWithPreloadedTemplate()
+    {
+        $twig = $this->getEnvironment(false, [], [
+            'index' => '{% sandbox %}{% include "included" ignore missing %}{% endsandbox %}',
+            'included' => '{{ "hello"|upper }}',
+        ]);
+
+        $twig->load('included');
+
+        $this->expectException(SecurityNotAllowedFilterError::class);
+        $twig->load('index')->render([]);
+    }
+
     public function testSandboxWithNoClosureFilter()
     {
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
