@@ -96,4 +96,35 @@ class IntlExtensionTest extends TestCase
             $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00'), 'short', 'short', 'yyyy-MM-dd HH:mm:ss', 'UTC', 'gregorian', 'en_US')
         );
     }
+
+    public function testDateFormatterCacheIsBounded()
+    {
+        $ext = new IntlExtension();
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2020-02-20T13:37:00+00:00');
+
+        for ($i = 0; $i < 250; ++$i) {
+            $ext->formatDateTime($env, $date, 'medium', 'medium', 'yyyy-MM-dd-'.$i, 'UTC', 'gregorian', 'en_US');
+        }
+
+        $cache = (new \ReflectionProperty(IntlExtension::class, 'dateFormatters'))->getValue($ext);
+        $this->assertLessThanOrEqual(100, \count($cache));
+        $this->assertSame(
+            '2020-02-20-249',
+            $ext->formatDateTime($env, $date, 'medium', 'medium', 'yyyy-MM-dd-249', 'UTC', 'gregorian', 'en_US')
+        );
+    }
+
+    public function testNumberFormatterCacheIsBounded()
+    {
+        $ext = new IntlExtension();
+
+        for ($i = 0; $i < 250; ++$i) {
+            $ext->formatNumber(1, ['multiplier' => $i + 1], 'decimal', 'default', 'en_US');
+        }
+
+        $cache = (new \ReflectionProperty(IntlExtension::class, 'numberFormatters'))->getValue($ext);
+        $this->assertLessThanOrEqual(100, \count($cache));
+        $this->assertGreaterThan(1, \count($cache));
+    }
 }
