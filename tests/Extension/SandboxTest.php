@@ -535,6 +535,9 @@ EOF
         $this->assertFalse($twig->getExtension(SandboxExtension::class)->isSandboxed(), 'Sandboxed include() function call should not leave Sandbox enabled when an error occurs.');
     }
 
+    /**
+     * @group legacy
+     */
     public function testSandboxTagIncludeWithPreloadedTemplate()
     {
         $twig = $this->getEnvironment(false, [], [
@@ -544,10 +547,14 @@ EOF
 
         $twig->load('included');
 
+        $this->expectDeprecation('Since twig/twig 3.15: The "sandbox" tag is deprecated in "index" at line 1.');
         $this->expectException(SecurityNotAllowedFilterError::class);
         $twig->load('index')->render([]);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSandboxTagIncludeIgnoreMissingWithPreloadedTemplate()
     {
         $twig = $this->getEnvironment(false, [], [
@@ -557,6 +564,7 @@ EOF
 
         $twig->load('included');
 
+        $this->expectDeprecation('Since twig/twig 3.15: The "sandbox" tag is deprecated in "index" at line 1.');
         $this->expectException(SecurityNotAllowedFilterError::class);
         $twig->load('index')->render([]);
     }
