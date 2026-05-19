@@ -28,7 +28,7 @@ use Twig\Source;
  * @author Fabien Potencier <fabien@symfony.com>
  */
 #[YieldReady]
-final class ModuleNode extends Node
+final class ModuleNode extends Node implements CoercesChildrenToStringInterface
 {
     /**
      * @param BodyNode $body
@@ -88,6 +88,12 @@ final class ModuleNode extends Node
         foreach ($this->getAttribute('embedded_templates') as $template) {
             $compiler->subcompile($template);
         }
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // the parent expression is resolved through the loader, which coerces it to a string
+        return $this->hasNode('parent') ? ['parent'] : [];
     }
 
     /**

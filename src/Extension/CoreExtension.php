@@ -1686,6 +1686,9 @@ final class CoreExtension extends AbstractExtension
     public static function getAttribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
     {
         $propertyNotAllowedError = null;
+        if ($sandboxed && $item instanceof \Stringable) {
+            $env->getExtension(SandboxExtension::class)->ensureToStringAllowed($item, $lineno, $source);
+        }
 
         // array
         if (Template::METHOD_CALL !== $type) {

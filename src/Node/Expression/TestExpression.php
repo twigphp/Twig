@@ -13,11 +13,12 @@ namespace Twig\Node\Expression;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\NameDeprecation;
 use Twig\Node\Node;
 use Twig\TwigTest;
 
-class TestExpression extends CallExpression implements ReturnBoolInterface
+class TestExpression extends CallExpression implements ReturnBoolInterface, CoercesChildrenToStringInterface
 {
     #[FirstClassTwigCallableReady]
     /**
@@ -69,5 +70,22 @@ class TestExpression extends CallExpression implements ReturnBoolInterface
         }
 
         $this->compileCallable($compiler);
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        $names = [];
+
+        // the `empty` test triggers an implicit string coercion through `CoreExtension::testEmpty()`
+        if ('empty' === $this->getAttribute('name')) {
+            $names[] = 'node';
+        }
+
+        // a test may coerce its arguments to string (the host PHP code is opaque to Twig)
+        if ($this->hasNode('arguments')) {
+            $names[] = 'arguments';
+        }
+
+        return $names;
     }
 }

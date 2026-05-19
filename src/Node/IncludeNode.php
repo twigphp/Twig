@@ -22,7 +22,7 @@ use Twig\Node\Expression\AbstractExpression;
  * @author Fabien Potencier <fabien@symfony.com>
  */
 #[YieldReady]
-class IncludeNode extends Node implements NodeOutputInterface
+class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenToStringInterface
 {
     public function __construct(AbstractExpression $expr, ?AbstractExpression $variables, bool $only, bool $ignoreMissing, int $lineno)
     {
@@ -129,5 +129,11 @@ class IncludeNode extends Node implements NodeOutputInterface
             $compiler->subcompile($this->getNode('variables'));
             $compiler->raw(')');
         }
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // the loader resolves the template-name expression by coercing it to a string
+        return ['expr'];
     }
 }

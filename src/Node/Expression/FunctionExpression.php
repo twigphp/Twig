@@ -13,11 +13,12 @@ namespace Twig\Node\Expression;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\NameDeprecation;
 use Twig\Node\Node;
 use Twig\TwigFunction;
 
-class FunctionExpression extends CallExpression implements SupportDefinedTestInterface
+class FunctionExpression extends CallExpression implements SupportDefinedTestInterface, CoercesChildrenToStringInterface
 {
     use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
@@ -77,5 +78,11 @@ class FunctionExpression extends CallExpression implements SupportDefinedTestInt
         }
 
         $this->compileCallable($compiler);
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // a function may coerce its arguments to string (the host PHP code is opaque to Twig)
+        return ['arguments'];
     }
 }

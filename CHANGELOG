@@ -1,6 +1,8 @@
 # 3.26.0 (2026-XX-XX)
 
  * Encode single quotes as `\x27` in `Compiler::string()` as a defense-in-depth measure
+ * Fix sandbox `__toString` bypasses
+ * Add `Twig\Node\CoercesChildrenToStringInterface` to let nodes declare which of their child nodes will be string-coerced at runtime so the sandbox wraps them with a `__toString` check
 
 # 3.25.0 (2026-05-17)
 
