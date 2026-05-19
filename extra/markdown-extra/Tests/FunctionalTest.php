@@ -79,4 +79,23 @@ EOF, "<h1>Hello</h1>\n+<p>Great!</p>"],
             ["{{ include('html')|markdown_to_html }}", "<h1>Hello</h1>\n+<p>Great!</p>"],
         ];
     }
+
+    public function testMarkdownToHtmlIsNotSafeInJsContext()
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => "{% autoescape 'js' %}{{ '# Hello'|markdown_to_html }}{% endautoescape %}",
+        ]));
+        $twig->addExtension(new MarkdownExtension());
+        $twig->addRuntimeLoader(new class implements RuntimeLoaderInterface {
+            public function load(string $c): ?object
+            {
+                return MarkdownRuntime::class === $c ? new $c(new DefaultMarkdown()) : null;
+            }
+        });
+
+        $output = $twig->render('index');
+
+        $this->assertStringNotContainsString('<h1>', $output);
+        $this->assertMatchesRegularExpression('{\\\\u003[Cc]h1\\\\u003[Ee]Hello\\\\u003[Cc]\\\\/h1\\\\u003[Ee]}', $output);
+    }
 }

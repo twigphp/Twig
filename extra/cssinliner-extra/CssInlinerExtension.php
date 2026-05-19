@@ -20,7 +20,7 @@ class CssInlinerExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('inline_css', [self::class, 'inlineCss'], ['is_safe' => ['all']]),
+            new TwigFilter('inline_css', [self::class, 'inlineCss'], ['is_safe' => ['html'], 'pre_escape' => 'html']),
         ];
     }
 

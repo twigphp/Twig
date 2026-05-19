@@ -1,0 +1,12 @@
+--TEST--
+"html_to_markdown" filter output is HTML-escaped by autoescape
+--TEMPLATE--
+{{ html|html_to_markdown }}
+---
+{{ html|html_to_markdown|raw }}
+--DATA--
+return ['html' => '<code>&lt;img src=x onerror=alert(1)&gt;</code>']
+--EXPECT--
+`&lt;img src=x onerror=alert(1)&gt;`
+---
+`<img src=x onerror=alert(1)>`
