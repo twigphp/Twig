@@ -1,6 +1,19 @@
 # 3.26.0 (2026-XX-XX)
 
+ * Document that the sandbox doesn't protect against resource exhaustion
+ * Document `template_from_string` caveats when used in a sandboxed environment
+ * Add docs on `Markup` about the goal of this class in the context of a sandbox
  * Pre-escape HTML input on the `spaceless` filter
+ * Pre-escape HTML input on `inline_css` and `inky_to_html` filters
+ * Fix XSS by adjusting `is_safe` annotation on HTML-emitting filters
+ * [Profiler] Escape template and profile names in `HtmlDumper`
+ * Fix unbounded memoisation of `IntlDateFormatter` / `NumberFormatter`
+ * Fix sandbox bypass in the "column" filter
+ * Fix sandbox bypass in the `{% sandbox %}` tag when including a preloaded template
+ * Fix sandbox bypass: PHP code injection via `{% use %}` template name
+ * Fix sandbox bypass: PHP code injection via `_self` / import macro reference
+ * Fix sandbox bypass in object destructuring assignment
+ * Fix sandbox bypass: propagate `Source` to `checkArrow` for source-policy sandboxing
  * Encode single quotes as `\x27` in `Compiler::string()` as a defense-in-depth measure
  * Fix sandbox `__toString` bypasses
  * Add `Twig\Node\CoercesChildrenToStringInterface` to let nodes declare which of their child nodes will be string-coerced at runtime so the sandbox wraps them with a `__toString` check
