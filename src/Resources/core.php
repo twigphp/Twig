@@ -464,11 +464,11 @@ function twig_array_batch($items, $size, $fill = null, $preserveKeys = true)
  *
  * @deprecated since Twig 3.9
  */
-function twig_array_column($array, $name, $index = null): array
+function twig_array_column(Environment $env, $array, $name, $index = null): array
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
-    return CoreExtension::column($array, $name, $index);
+    return CoreExtension::column($env, twig_resolve_is_sandboxed($env), $array, $name, $index);
 }
 
 /**
