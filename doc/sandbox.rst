@@ -68,6 +68,21 @@ the extension constructor::
 
     $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
 
+Limiting Resource Usage
+-----------------------
+
+The sandbox prevents untrusted templates from reaching code, data, methods, or
+properties they shouldn't. It does **not** prevent a template from consuming
+CPU, memory, or wall-clock time, even under the strictest allow-list.
+
+This is by design: any limit baked into Twig itself would be both arbitrary
+and trivial to work around, since there are many ways a template can burn
+resources (large ranges, nested loops, large string operations, recursive
+macros, expensive filters, deeply nested includes, and so on).
+
+If you render untrusted templates, you should contain them at the process level
+rather than at the template engine level.
+
 Accepting Callables Arguments
 -----------------------------
 
