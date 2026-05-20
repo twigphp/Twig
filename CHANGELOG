@@ -1,4 +1,4 @@
-# 3.26.0 (2026-XX-XX)
+# 3.26.0 (2026-05-20)
 
  * Document that the sandbox doesn't protect against resource exhaustion
  * Document `template_from_string` caveats when used in a sandboxed environment
