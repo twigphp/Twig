@@ -1,0 +1,22 @@
+--TEST--
+"spaceless" filter pre-escapes its input under autoescape
+--DEPRECATION--
+Since twig/twig 3.12: Twig Filter "spaceless" is deprecated in index.twig at line 3.
+Since twig/twig 3.12: Twig Filter "spaceless" is deprecated in index.twig at line 5.
+Since twig/twig 3.12: Twig Filter "spaceless" is deprecated in index.twig at line 7.
+--TEMPLATE--
+{% autoescape 'html' %}
+1. {{ payload|spaceless }}
+
+2. {{ payload|escape|spaceless }}
+
+3. {{ payload|raw|spaceless }}
+{% endautoescape %}
+--DATA--
+return ['payload' => '<script>   alert(1)   </script>']
+--EXPECT--
+1. &lt;script&gt;   alert(1)   &lt;/script&gt;
+
+2. &lt;script&gt;   alert(1)   &lt;/script&gt;
+
+3. <script>   alert(1)   </script>
