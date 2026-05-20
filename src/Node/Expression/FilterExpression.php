@@ -14,11 +14,12 @@ namespace Twig\Node\Expression;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\NameDeprecation;
 use Twig\Node\Node;
 use Twig\TwigFilter;
 
-class FilterExpression extends CallExpression
+class FilterExpression extends CallExpression implements CoercesChildrenToStringInterface
 {
     /**
      * @param AbstractExpression $node
@@ -76,5 +77,11 @@ class FilterExpression extends CallExpression
         }
 
         $this->compileCallable($compiler);
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // a filter may coerce its input and arguments to string (e.g. `upper`, `replace`)
+        return ['node', 'arguments'];
     }
 }

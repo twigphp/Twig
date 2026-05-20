@@ -14,10 +14,11 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 use Twig\Extension\SandboxExtension;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Template;
 
-class GetAttrExpression extends AbstractExpression implements SupportDefinedTestInterface
+class GetAttrExpression extends AbstractExpression implements SupportDefinedTestInterface, CoercesChildrenToStringInterface
 {
     use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
@@ -155,6 +156,12 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
         if ($isShortCircuited) {
             $compiler->raw(')');
         }
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // for a method-like access, the host PHP method may coerce any of its arguments to string
+        return $this->hasNode('arguments') ? ['arguments'] : [];
     }
 
     private function changeIgnoreStrictCheck(self $node): void

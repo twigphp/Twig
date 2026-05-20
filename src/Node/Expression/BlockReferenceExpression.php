@@ -13,6 +13,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Node;
 
 /**
@@ -20,7 +21,7 @@ use Twig\Node\Node;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class BlockReferenceExpression extends AbstractExpression implements SupportDefinedTestInterface
+class BlockReferenceExpression extends AbstractExpression implements SupportDefinedTestInterface, CoercesChildrenToStringInterface
 {
     use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
@@ -58,6 +59,12 @@ class BlockReferenceExpression extends AbstractExpression implements SupportDefi
                 $this->compileTemplateCall($compiler, 'renderBlock');
             }
         }
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // the template expression is resolved through the loader, which coerces it to a string
+        return $this->hasNode('template') ? ['template'] : [];
     }
 
     private function compileTemplateCall(Compiler $compiler, string $method): Compiler

@@ -55,6 +55,7 @@ class SandboxTest extends TestCase
             'array_like' => new ArrayLikeObject(),
             'magic' => new MagicObject(),
             'recursion' => [4],
+            'iterator' => new \ArrayIterator(['a', new FooObject()]),
         ];
         self::$params['recursion'][] = &self::$params['recursion'];
         self::$params['recursion'][] = new FooObject();
@@ -293,7 +294,8 @@ class SandboxTest extends TestCase
      */
     public function testSandboxUnallowedToString($template)
     {
-        $twig = $this->getEnvironment(true, [], ['index' => $template], [], ['upper', 'join', 'replace'], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject'], [], ['random']);
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['if', 'do', 'for', 'set'], ['upper', 'join', 'replace', 'format', 'split'], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject'], [], ['random', 'range', 'my_func']);
+        $twig->addFunction(new \Twig\TwigFunction('my_func', fn ($a) => (string) $a));
         try {
             $twig->load('index')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method "__toString()" method is called in the template');
@@ -329,8 +331,163 @@ class SandboxTest extends TestCase
             'context' => ['{{ _context|join(", ") }}'],
             'spread_array_operator' => ['{{ [1, 2, ...[5, 6, 7, obj]]|join(",") }}'],
             'spread_array_operator_var' => ['{{ [1, 2, ...some_array]|join(",") }}'],
+            'spread_iterator_in_function_args' => ['{{ ["x", ...iterator]|join(",") }}'],
             'recursion' => ['{{ recursion|join(", ") }}'],
+            'ternary_print' => ['{{ true ? obj : "" }}'],
+            'ternary_filter_input' => ['{{ (true ? obj : "")|upper }}'],
+            'elvis_filter_input' => ['{{ (obj ?: "")|upper }}'],
+            'nullcoalesce_filter_input' => ['{{ (obj ?? "")|upper }}'],
+            'function_arg_with_ternary' => ['{{ random(true ? obj : "") }}'],
+            'filter_arg_with_ternary' => ['{{ "%s"|format(true ? obj : "") }}'],
+            'matches_in_print' => ['{{ obj matches "/foo/" ? "1" : "0" }}'],
+            'equal_in_print' => ['{{ obj == "x" ? "1" : "0" }}'],
+            'equal_in_if' => ['{% if obj == "x" %}LEAK{% endif %}'],
+            'notequal_in_if' => ['{% if obj != "x" %}LEAK{% endif %}'],
+            'spaceship_in_if' => ['{% if (obj <=> "x") == 0 %}LEAK{% endif %}'],
+            'less_in_if' => ['{% if obj < "B" %}LEAK{% endif %}'],
+            'greater_in_if' => ['{% if obj > "A" %}LEAK{% endif %}'],
+            'lessequal_in_if' => ['{% if obj <= "z" %}LEAK{% endif %}'],
+            'greaterequal_in_if' => ['{% if obj >= "a" %}LEAK{% endif %}'],
+            'concat_left_in_if' => ['{% if obj ~ "" %}LEAK{% endif %}'],
+            'concat_right_in_if' => ['{% if "" ~ obj %}LEAK{% endif %}'],
+            'range_left' => ['{% for x in obj..1 %}LEAK{% endfor %}'],
+            'range_right' => ['{% for x in 1..obj %}LEAK{% endfor %}'],
+            'do_tag_function_arg' => ['{% do my_func(obj) %}'],
+            'do_tag_filter_input' => ['{% do obj|upper %}'],
+            'do_tag_concat' => ['{% do obj ~ "" %}'],
+            'set_tag_filter_input' => ['{% set _ = obj|upper %}'],
+            'set_tag_concat' => ['{% set _ = obj ~ "" %}'],
+            'set_capture_print' => ['{% set _ %}{{ obj }}{% endset %}'],
+            'is_empty_in_if' => ['{% if obj is empty %}LEAK{% endif %}'],
+            'is_empty_in_print' => ['{{ obj is empty ? "1" : "0" }}'],
+            'method_argument' => ['{{ obj.foo(obj.anotherFooObject) }}'],
+            'filter_input_in_if' => ['{% if obj|upper == "X" %}LEAK{% endif %}'],
+            'filter_arg_in_if' => ['{% if "x"|replace({"x": obj}) == "y" %}LEAK{% endif %}'],
+            'function_arg_in_if' => ['{% if not random(obj) %}LEAK{% endif %}'],
+            'filter_input_in_for' => ['{% for x in (obj|split(",")) %}LEAK{% endfor %}'],
+            'function_arg_in_for' => ['{% for x in [random(obj)] %}LEAK{% endfor %}'],
         ];
+    }
+
+    public function testSandboxBlocksToStringOnFunctionReturn()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ make_obj() }}'], [], [], [], [], ['make_obj']);
+        $twig->addFunction(new \Twig\TwigFunction('make_obj', fn () => new FooObject()));
+        try {
+            $twig->load('index')->render([]);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on the return of an allowed function');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnFilterReturn()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ "x"|to_obj }}'], [], ['to_obj']);
+        $twig->addFilter(new \Twig\TwigFilter('to_obj', fn () => new FooObject()));
+        try {
+            $twig->load('index')->render([]);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on the return of an allowed filter');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnDynamicAttributeName()
+    {
+        $twig = $this->getEnvironment(true, ['strict_variables' => true], ['index' => '{{ arr[obj] }}'], [], [], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on a dynamic attribute name');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnIncludeTemplateName()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% include obj %}'], ['include']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on an include template name');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnExtendsTemplateName()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% extends obj %}'], ['extends']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on an extends template name');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnBlockFunctionTemplateName()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ block("content", obj) }}'], [], [], [], [], ['block']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on a block() template argument');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnEmbedTemplateName()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% embed obj %}{% endembed %}'], ['embed', 'extends']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on an embed template name');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnIsConstantTestArgument()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% if "x" is constant(obj) %}LEAK{% endif %}'], ['if']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on a constant test argument');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnDeprecatedMessage()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% deprecated obj %}'], ['deprecated']);
+        $previous = set_error_handler(static fn () => true, \E_USER_DEPRECATED);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on a deprecated tag message');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        } finally {
+            restore_error_handler();
+        }
+    }
+
+    public function testSandboxKeepsSelfImportShortcut()
+    {
+        $tpl = "{% macro local_lower(s) %}{{ s|lower }}{% endmacro %}{% from _self import local_lower %}{{ local_lower('A') }}";
+        $twig = $this->getEnvironment(true, [], ['index' => $tpl], ['from', 'macro', 'import'], ['lower']);
+
+        $this->assertSame('a', $twig->load('index')->render([]));
     }
 
     /**
@@ -338,7 +495,7 @@ class SandboxTest extends TestCase
      */
     public function testSandboxAllowedToString($template, $output)
     {
-        $twig = $this->getEnvironment(true, [], ['index' => $template], ['set'], [], ['Twig\Tests\Extension\FooObject' => ['foo', 'getAnotherFooObject']]);
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['set', 'do'], [], ['Twig\Tests\Extension\FooObject' => ['foo', 'getAnotherFooObject']]);
         $this->assertEquals($output, $twig->load('index')->render(self::$params));
     }
 
@@ -347,6 +504,8 @@ class SandboxTest extends TestCase
         return [
             'constant_test' => ['{{ obj is constant("PHP_INT_MAX") }}', ''],
             'set_object' => ['{% set a = obj.anotherFooObject %}{{ a.foo }}', 'foo'],
+            'do_object_discarded' => ['{% do obj %}', ''],
+            'set_object_assigned' => ['{% set a = obj %}{{ a is defined ? "1" : "0" }}', '1'],
             'is_defined1' => ['{{ obj.anotherFooObject is defined }}', '1'],
             'is_defined2' => ['{{ magic.foo is defined }}', ''],
             'is_null' => ['{{ obj is null }}', ''],

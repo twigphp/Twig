@@ -15,19 +15,18 @@ use Twig\Environment;
 use Twig\Node\CheckSecurityCallNode;
 use Twig\Node\CheckSecurityNode;
 use Twig\Node\CheckToStringNode;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\Binary\RangeBinary;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\OperatorEscapeInterface;
 use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
-use Twig\Node\PrintNode;
-use Twig\Node\SetNode;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -43,7 +42,6 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
     private $filters;
     /** @var array<string, int> */
     private $functions;
-    private $needsToStringWrap = false;
 
     public function enterNode(Node $node, Environment $env): Node
     {
@@ -52,8 +50,6 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             $this->tags = [];
             $this->filters = [];
             $this->functions = [];
-
-            return $node;
         } elseif ($this->inAModule) {
             // look for tags
             if ($node->getNodeTag() && !isset($this->tags[$node->getNodeTag()])) {
@@ -74,29 +70,13 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             if ($node instanceof RangeBinary && !isset($this->functions['range'])) {
                 $this->functions['range'] = $node->getTemplateLine();
             }
+        }
 
-            if ($node instanceof PrintNode) {
-                $this->needsToStringWrap = true;
-                $this->wrapNode($node, 'expr');
-            }
-
-            if ($node instanceof SetNode && !$node->getAttribute('capture')) {
-                $this->needsToStringWrap = true;
-            }
-
-            // wrap outer nodes that can implicitly call __toString()
-            if ($this->needsToStringWrap) {
-                if ($node instanceof ConcatBinary) {
-                    $this->wrapNode($node, 'left');
-                    $this->wrapNode($node, 'right');
-                }
-                if ($node instanceof FilterExpression) {
-                    $this->wrapNode($node, 'node');
-                    $this->wrapArrayNode($node, 'arguments');
-                }
-                if ($node instanceof FunctionExpression) {
-                    $this->wrapArrayNode($node, 'arguments');
-                }
+        // wrap children that the node itself will string-coerce at runtime;
+        // applies to ModuleNode (`parent` slot for {% extends %}) too
+        if ($this->inAModule && $node instanceof CoercesChildrenToStringInterface) {
+            foreach ($node->getStringCoercedChildNames() as $childName) {
+                $this->wrapNode($node, $childName);
             }
         }
 
@@ -110,10 +90,6 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
 
             $node->setNode('constructor_end', new Nodes([new CheckSecurityCallNode(), $node->getNode('constructor_end')]));
             $node->setNode('class_end', new Nodes([new CheckSecurityNode($this->filters, $this->tags, $this->functions), $node->getNode('class_end')]));
-        } elseif ($this->inAModule) {
-            if ($node instanceof PrintNode || $node instanceof SetNode) {
-                $this->needsToStringWrap = false;
-            }
         }
 
         return $node;
@@ -122,22 +98,24 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
     private function wrapNode(Node $node, string $name): void
     {
         $expr = $node->getNode($name);
+        // `_self` is internal: it compiles to `$this->getTemplateName()` and is always a string
+        if ($expr instanceof ContextVariable && '_self' === $expr->getAttribute('name')) {
+            return;
+        }
         if (($expr instanceof ContextVariable || $expr instanceof GetAttrExpression) && !$expr->isGenerator()) {
             $node->setNode($name, new CheckToStringNode($expr));
         } elseif ($expr instanceof SpreadUnary) {
-            $this->wrapNode($expr, 'node');
-        } elseif ($expr instanceof ArrayExpression) {
+            $expr->setNode('node', new CheckToStringNode($expr->getNode('node'), true));
+        } elseif ($expr instanceof ArrayExpression || $expr instanceof Nodes) {
             foreach ($expr as $name => $_) {
                 $this->wrapNode($expr, $name);
             }
-        }
-    }
-
-    private function wrapArrayNode(Node $node, string $name): void
-    {
-        $args = $node->getNode($name);
-        foreach ($args as $name => $_) {
-            $this->wrapNode($args, $name);
+        } elseif ($expr instanceof OperatorEscapeInterface) {
+            foreach ($expr->getOperandNamesToEscape() as $operandName) {
+                $this->wrapNode($expr, $operandName);
+            }
+        } elseif ($expr instanceof FilterExpression || $expr instanceof FunctionExpression) {
+            $node->setNode($name, new CheckToStringNode($expr));
         }
     }
 

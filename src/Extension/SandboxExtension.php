@@ -142,6 +142,24 @@ final class SandboxExtension extends AbstractExtension
         return $obj;
     }
 
+    /**
+     * Materialises a spread operand and runs the policy on every element.
+     *
+     * @internal
+     *
+     * @throws SecurityNotAllowedMethodError
+     */
+    public function ensureSpreadAllowed(iterable $obj, int $lineno = -1, ?Source $source = null): array
+    {
+        if ($obj instanceof \Traversable) {
+            $obj = iterator_to_array($obj);
+        }
+
+        $this->ensureToStringAllowedForArray($obj, $lineno, $source);
+
+        return $obj;
+    }
+
     private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, array &$stack = []): void
     {
         foreach ($obj as $k => $v) {
