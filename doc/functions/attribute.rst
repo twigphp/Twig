@@ -1,15 +1,6 @@
 ``attribute``
 =============
 
-.. warning::
-
-    The ``attribute`` function is deprecated as of Twig 3.15. Use the
-    :ref:`dot operator <dot_operator>` that now accepts any expression
-    when wrapped with parenthesis.
-
-    Note that this function will still be available in Twig 4.0 to allow a
-    smoother upgrade path.
-
 The ``attribute`` function lets you access an attribute, method, or property of
 an object or array when the name of that attribute, method, or property is stored
 in a variable or dynamically generated with an expression:
