@@ -295,7 +295,7 @@ class SandboxTest extends TestCase
     public function testSandboxUnallowedToString($template)
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['if', 'do', 'for', 'set'], ['upper', 'join', 'replace', 'format', 'split'], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject'], [], ['random', 'range', 'my_func']);
-        $twig->addFunction(new \Twig\TwigFunction('my_func', fn ($a) => (string) $a));
+        $twig->addFunction(new \Twig\TwigFunction('my_func', static fn ($a) => (string) $a));
         try {
             $twig->load('index')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method "__toString()" method is called in the template');
@@ -372,7 +372,7 @@ class SandboxTest extends TestCase
     public function testSandboxBlocksToStringOnFunctionReturn()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ make_obj() }}'], [], [], [], [], ['make_obj']);
-        $twig->addFunction(new \Twig\TwigFunction('make_obj', fn () => new FooObject()));
+        $twig->addFunction(new \Twig\TwigFunction('make_obj', static fn () => new FooObject()));
         try {
             $twig->load('index')->render([]);
             $this->fail('Sandbox throws a SecurityError exception if __toString is called on the return of an allowed function');
@@ -385,7 +385,7 @@ class SandboxTest extends TestCase
     public function testSandboxBlocksToStringOnFilterReturn()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "x"|to_obj }}'], [], ['to_obj']);
-        $twig->addFilter(new \Twig\TwigFilter('to_obj', fn () => new FooObject()));
+        $twig->addFilter(new \Twig\TwigFilter('to_obj', static fn () => new FooObject()));
         try {
             $twig->load('index')->render([]);
             $this->fail('Sandbox throws a SecurityError exception if __toString is called on the return of an allowed filter');
@@ -691,6 +691,7 @@ EOF
             if (str_contains($message, 'BAD-MACRO-REF')) {
                 $triggered = true;
             }
+
             return true;
         }, \E_USER_NOTICE | \E_USER_WARNING);
         try {
@@ -721,6 +722,7 @@ EOF
             if (str_contains($message, 'BAD-IMPORT-REF')) {
                 $triggered = true;
             }
+
             return true;
         }, \E_USER_NOTICE | \E_USER_WARNING);
         try {
