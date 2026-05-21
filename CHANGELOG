@@ -1,6 +1,6 @@
 # 3.26.1 (2026-XX-XX)
 
- * n/a
+ * Deprecate the `Twig\Sandbox\SourcePolicyInterface` interface with no replacement
 
 # 3.26.0 (2026-05-20)
 

@@ -304,6 +304,10 @@ Sandbox
   deprecated as of Twig 3.12. You will need to explicitly allow them if needed
   in 4.0.
 
+* The ``Twig\Sandbox\SourcePolicyInterface`` interface is deprecated as of Twig
+  3.26.1 with no replacement. Passing an instance to the
+  ``Twig\Extension\SandboxExtension`` constructor triggers a deprecation.
+
 * Deprecate the ``sandbox`` tag, use the ``sandboxed`` option of the
   ``include`` function instead:
 
