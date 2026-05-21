@@ -13,14 +13,21 @@
 namespace Twig\Node\Expression;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Node;
 use Twig\TwigFilter;
 
-class FilterExpression extends CallExpression
+class FilterExpression extends CallExpression implements CoercesChildrenToStringInterface
 {
     #[FirstClassTwigCallableReady]
     public function __construct(AbstractExpression $node, TwigFilter $filter, Node $arguments, int $lineno)
     {
         parent::__construct(['node' => $node, 'arguments' => $arguments], ['name' => $filter->getName(), 'type' => 'filter', 'twig_callable' => $filter], $lineno);
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // a filter may coerce its input and arguments to string (e.g. `upper`, `replace`)
+        return ['node', 'arguments'];
     }
 }

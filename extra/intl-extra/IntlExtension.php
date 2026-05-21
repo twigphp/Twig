@@ -145,6 +145,8 @@ final class IntlExtension extends AbstractExtension
         'monetary_grouping_separator' => \NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL,
     ];
 
+    private const MAX_CACHED_FORMATTERS = 100;
+
     private $dateFormatters = [];
     private $numberFormatters = [];
     private $dateFormatterPrototype;
@@ -441,6 +443,9 @@ final class IntlExtension extends AbstractExtension
         $hash = $locale.'|'.$dateFormatValue.'|'.$timeFormatValue.'|'.$timezoneName.'|'.$calendar.'|'.$pattern;
 
         if (!isset($this->dateFormatters[$hash])) {
+            if (\count($this->dateFormatters) >= self::MAX_CACHED_FORMATTERS) {
+                array_shift($this->dateFormatters);
+            }
             $this->dateFormatters[$hash] = new \IntlDateFormatter($locale, $dateFormatValue, $timeFormatValue, $timezone, $calendar, $pattern);
         }
 
@@ -487,6 +492,9 @@ final class IntlExtension extends AbstractExtension
         $hash = $locale.'|'.$style.'|'.json_encode($attrs).'|'.json_encode($textAttrs).'|'.json_encode($symbols);
 
         if (!isset($this->numberFormatters[$hash])) {
+            if (\count($this->numberFormatters) >= self::MAX_CACHED_FORMATTERS) {
+                array_shift($this->numberFormatters);
+            }
             $this->numberFormatters[$hash] = new \NumberFormatter($locale, self::NUMBER_STYLES[$style]);
         }
 

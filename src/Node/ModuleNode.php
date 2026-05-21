@@ -28,7 +28,7 @@ use Twig\Source;
  * @author Fabien Potencier <fabien@symfony.com>
  */
 #[YieldReady]
-final class ModuleNode extends Node
+final class ModuleNode extends Node implements CoercesChildrenToStringInterface
 {
     public function __construct(BodyNode $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, Node $embeddedTemplates, Source $source)
     {
@@ -72,6 +72,12 @@ final class ModuleNode extends Node
         foreach ($this->getAttribute('embedded_templates') as $template) {
             $compiler->subcompile($template);
         }
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // the parent expression is resolved through the loader, which coerces it to a string
+        return $this->hasNode('parent') ? ['parent'] : [];
     }
 
     protected function compileTemplate(Compiler $compiler): void
@@ -220,11 +226,11 @@ final class ModuleNode extends Node
                         ->string($key)
                         ->raw("])) {\n")
                         ->indent()
-                        ->write("throw new RuntimeError('Block ")
+                        ->write("throw new RuntimeError(sprintf('Block \"%s\" is not defined in trait \"%s\".', ")
                         ->string($key)
-                        ->raw(' is not defined in trait ')
+                        ->raw(', ')
                         ->subcompile($trait->getNode('template'))
-                        ->raw(".', ")
+                        ->raw('), ')
                         ->repr($node->getTemplateLine())
                         ->raw(", \$this->source);\n")
                         ->outdent()

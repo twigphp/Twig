@@ -31,4 +31,10 @@ class NullTest extends TestExpression
             ->raw(')')
         ;
     }
+
+    public function getStringCoercedChildNames(): array
+    {
+        // `=== null` is strict, no coercion
+        return [];
+    }
 }
