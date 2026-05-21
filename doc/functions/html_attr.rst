@@ -3,10 +3,6 @@
 
 .. _html_attr:
 
-.. versionadded:: 3.24
-
-    The ``html_attr`` function was added in Twig 3.24.
-
 The ``html_attr`` function renders HTML attributes from one or more mappings,
 taking care of proper escaping. The mappings contain the names of HTML
 attributes as keys, and the corresponding values represent the attributes'

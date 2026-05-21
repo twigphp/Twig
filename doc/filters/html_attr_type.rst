@@ -3,10 +3,6 @@
 
 .. _html_attr_type:
 
-.. versionadded:: 3.24
-
-    The ``html_attr_type`` filter was added in Twig 3.24.
-
 The ``html_attr_type`` filter converts arrays into specialized attribute value
 objects that implement custom rendering logic. It is designed for use
 with the :ref:`html_attr` function for attributes where

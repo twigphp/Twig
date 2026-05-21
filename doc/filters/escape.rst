@@ -63,10 +63,6 @@ documents:
   aware that in some processing contexts like XML, characters like the colon ``:``
   may have meaning like for XML namespace separation.
 
-.. versionadded:: 3.24
-
-    The ``html_attr_relaxed`` strategy has been added in 3.23.
-
 Note that doing contextual escaping in HTML documents is hard and choosing the
 right escaping strategy depends on a lot of factors. Please, read related
 documentation like `the OWASP prevention cheat sheet

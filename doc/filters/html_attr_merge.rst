@@ -3,10 +3,6 @@
 
 .. _html_attr_merge:
 
-.. versionadded:: 3.24
-
-    The ``html_attr_merge`` filter was added in Twig 3.24.
-
 The ``html_attr_merge`` filter merges multiple mappings that represent
 HTML attribute values. Such mappings contain the names of the HTML attributes
 as keys, and the corresponding values represent the attributes' values.

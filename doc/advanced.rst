@@ -219,10 +219,6 @@ the first argument to the filter call (or the second one if
 Sandbox-aware Filters
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 3.25
-
-    The ``needs_is_sandboxed`` option was added in Twig 3.25.
-
 If you want to know whether the current template is sandboxed in your
 filter, set the ``needs_is_sandboxed`` option to ``true``; Twig will pass the
 current sandbox state as a boolean to the filter call (as the first
