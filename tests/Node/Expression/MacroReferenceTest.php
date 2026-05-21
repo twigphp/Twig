@@ -11,6 +11,7 @@
 
 namespace Twig\Tests\Node\Expression;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
@@ -18,9 +19,7 @@ use Twig\Node\Expression\Variable\TemplateVariable;
 
 class MacroReferenceTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidMacroNames
-     */
+    #[DataProvider('provideInvalidMacroNames')]
     public function testConstructorRejectsNonIdentifierName(string $name)
     {
         $this->expectException(\LogicException::class);

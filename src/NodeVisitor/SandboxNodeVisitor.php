@@ -115,7 +115,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             foreach ($expr->getOperandNamesToEscape() as $operandName) {
                 $this->wrapNode($expr, $operandName);
             }
-        } elseif ($expr instanceof FilterExpression || $expr instanceof FunctionExpression) {
+        } elseif (($expr instanceof FilterExpression || $expr instanceof FunctionExpression) && !$expr->isGenerator()) {
             $node->setNode($name, new CheckToStringNode($expr));
         }
     }

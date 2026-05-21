@@ -267,7 +267,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFilter('sort', self::sort(...)),
             new TwigFilter('merge', self::merge(...)),
             new TwigFilter('batch', self::batch(...)),
-            new TwigFilter('column', self::column(...)),
+            new TwigFilter('column', self::column(...), ['needs_environment' => true, 'needs_is_sandboxed' => true]),
             new TwigFilter('filter', self::filter(...)),
             new TwigFilter('map', self::map(...)),
             new TwigFilter('reduce', self::reduce(...)),
@@ -1619,6 +1619,9 @@ final class CoreExtension extends AbstractExtension
     public static function getAttribute(Environment $env, Source $source, $object, $item, array $arguments = [], $type = Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false, $sandboxed = false, int $lineno = -1)
     {
         $propertyNotAllowedError = null;
+        if ($sandboxed && $item instanceof \Stringable) {
+            $env->getExtension(SandboxExtension::class)->ensureToStringAllowed($item, $lineno, $source);
+        }
 
         // array
         if (Template::METHOD_CALL !== $type) {
@@ -1879,7 +1882,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @internal
      */
-    public static function column($array, $name, $index = null): array
+    public static function column(Environment $env, bool $isSandboxed, $array, $name, $index = null): array
     {
         if (!is_iterable($array)) {
             throw new RuntimeError(\sprintf('The "column" filter expects a sequence or a mapping, got "%s".', get_debug_type($array)));
@@ -1887,6 +1890,18 @@ final class CoreExtension extends AbstractExtension
 
         if ($array instanceof \Traversable) {
             $array = iterator_to_array($array);
+        }
+
+        if ($isSandboxed) {
+            $sandbox = $env->getExtension(SandboxExtension::class);
+            foreach ($array as $item) {
+                if (\is_object($item)) {
+                    $sandbox->checkPropertyAllowed($item, (string) $name);
+                    if (null !== $index) {
+                        $sandbox->checkPropertyAllowed($item, (string) $index);
+                    }
+                }
+            }
         }
 
         return array_column($array, $name, $index);
