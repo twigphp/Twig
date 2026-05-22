@@ -62,6 +62,8 @@ class SandboxTest extends TestCase
             'magic' => new MagicObject(),
             'recursion' => [4],
             'iterator' => new \ArrayIterator(['a', new FooObject()]),
+            'iterator_map' => new \ArrayIterator(['__toString' => new FooObject()]),
+            'iterator_nested' => new \ArrayIterator(['a', new \ArrayIterator(['b', new FooObject()])]),
         ];
         self::$params['recursion'][] = &self::$params['recursion'];
         self::$params['recursion'][] = new FooObject();
@@ -589,6 +591,9 @@ class SandboxTest extends TestCase
             'spread_array_operator' => ['{{ [1, 2, ...[5, 6, 7, obj]]|join(",") }}'],
             'spread_array_operator_var' => ['{{ [1, 2, ...some_array]|join(",") }}'],
             'spread_iterator_in_function_args' => ['{{ ["x", ...iterator]|join(",") }}'],
+            'iterator_in_join' => ['{{ iterator|join(", ") }}'],
+            'iterator_nested_in_join' => ['{{ iterator_nested|join(", ") }}'],
+            'iterator_in_replace' => ['{{ "__toString"|replace(iterator_map) }}'],
             'recursion' => ['{{ recursion|join(", ") }}'],
             'ternary_print' => ['{{ true ? obj : "" }}'],
             'ternary_filter_input' => ['{{ (true ? obj : "")|upper }}'],
@@ -1162,6 +1167,46 @@ EOF
         } catch (SecurityNotAllowedPropertyError $e) {
             $this->assertSame('Twig\Tests\Extension\MagicObject', $e->getClassName());
             $this->assertSame('anything', $e->getPropertyName());
+        }
+    }
+
+    public function testSourcePolicySandboxBlocksToStringInTraversableJoin()
+    {
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ iterator|join(", ") }}'], [], ['join'], [], [], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects contained in a Traversable passed to the "join" filter (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSourcePolicySandboxBlocksToStringInTraversableReplace()
+    {
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ "__toString"|replace(iterator_map) }}'], [], ['replace'], [], [], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects contained in a Traversable passed to the "replace" filter (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
         }
     }
 

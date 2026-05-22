@@ -132,6 +132,16 @@ final class SandboxExtension extends AbstractExtension
             return $obj;
         }
 
+        // A non-Stringable Traversable would later be materialised (e.g. by filters such as
+        // `join` or `replace`) and its elements coerced to string by PHP itself, bypassing
+        // the policy. Materialise it now and recursively check the contents.
+        if ($obj instanceof \Traversable && !$obj instanceof \Stringable && $this->isSandboxed($source)) {
+            $obj = iterator_to_array($obj);
+            $this->ensureToStringAllowedForArray($obj, $lineno, $source);
+
+            return $obj;
+        }
+
         if ($obj instanceof \Stringable && $this->isSandboxed($source)) {
             try {
                 $this->policy->checkMethodAllowed($obj, '__toString');

@@ -7,6 +7,7 @@
  * Escape root profile name in `HtmlDumper`
  * Deprecate the `Twig\Sandbox\SourcePolicyInterface` interface with no replacement
  * Fix sandbox bypass in the "column" filter when sandboxing is enabled via `SourcePolicyInterface`
+ * Fix sandbox `__toString` bypass via `Traversable` arguments to the `join` and `replace` filters
 
 # 3.26.0 (2026-05-20)
 
