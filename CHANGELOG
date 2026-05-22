@@ -6,6 +6,7 @@
  * Restrict allowed classes in `Twig\Profiler\Profile::unserialize()` to prevent arbitrary class instantiation
  * Escape root profile name in `HtmlDumper`
  * Deprecate the `Twig\Sandbox\SourcePolicyInterface` interface with no replacement
+ * Fix sandbox bypass in the "column" filter when sandboxing is enabled via `SourcePolicyInterface`
 
 # 3.26.0 (2026-05-20)
 
