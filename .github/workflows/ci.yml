@@ -98,38 +98,6 @@ jobs:
                   LANG: 'en_US.UTF-8'
               run: phpunit
 
-    integration-tests:
-        if: "false" # TODO re-enable that job when Drupal does not use features deprecated in 3.x anymore
-        needs:
-            - 'tests'
-
-        name: "Integration tests with PHP ${{ matrix.php-version }}"
-
-        runs-on: 'ubuntu-latest'
-
-        continue-on-error: true
-
-        strategy:
-            matrix:
-                php-version:
-                    - '8.2'
-
-        steps:
-            - name: "Checkout code"
-              uses: actions/checkout@v4
-
-            - name: "Install PHP with extensions"
-              uses: shivammathur/setup-php@v2
-              with:
-                  coverage: "none"
-                  extensions: "gd, pdo_sqlite, uuid"
-                  php-version: ${{ matrix.php-version }}
-                  ini-values: memory_limit=-1
-                  tools: composer:v2
-
-            - run: bash ./tests/drupal_test.sh
-              shell: "bash"
-
     phpstan:
         name: "PHPStan"
 

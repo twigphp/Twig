@@ -34,7 +34,11 @@ use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
+use Twig\Sandbox\SourcePolicyInterface;
 use Twig\Source;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 class SandboxTest extends TestCase
 {
@@ -252,7 +256,7 @@ class SandboxTest extends TestCase
     public function testSandboxUnallowedToString($template)
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['if', 'do', 'for', 'set'], ['upper', 'join', 'replace', 'format', 'split'], [FooObject::class => 'getAnotherFooObject'], [], ['random', 'range', 'my_func']);
-        $twig->addFunction(new \Twig\TwigFunction('my_func', fn ($a) => (string) $a));
+        $twig->addFunction(new TwigFunction('my_func', static fn ($a) => (string) $a));
         try {
             $twig->load('index')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method "__toString()" method is called in the template');
@@ -329,7 +333,7 @@ class SandboxTest extends TestCase
     public function testSandboxBlocksToStringOnFunctionReturn()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ make_obj() }}'], [], [], [], [], ['make_obj']);
-        $twig->addFunction(new \Twig\TwigFunction('make_obj', fn () => new FooObject()));
+        $twig->addFunction(new TwigFunction('make_obj', static fn () => new FooObject()));
         try {
             $twig->load('index')->render([]);
             $this->fail('Sandbox throws a SecurityError exception if __toString is called on the return of an allowed function');
@@ -342,7 +346,7 @@ class SandboxTest extends TestCase
     public function testSandboxBlocksToStringOnFilterReturn()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "x"|to_obj }}'], [], ['to_obj']);
-        $twig->addFilter(new \Twig\TwigFilter('to_obj', fn () => new FooObject()));
+        $twig->addFilter(new TwigFilter('to_obj', static fn () => new FooObject()));
         try {
             $twig->load('index')->render([]);
             $this->fail('Sandbox throws a SecurityError exception if __toString is called on the return of an allowed filter');
@@ -646,6 +650,7 @@ EOF
             if (str_contains($message, 'BAD-MACRO-REF')) {
                 $triggered = true;
             }
+
             return true;
         }, \E_USER_NOTICE | \E_USER_WARNING);
         try {
@@ -676,6 +681,7 @@ EOF
             if (str_contains($message, 'BAD-IMPORT-REF')) {
                 $triggered = true;
             }
+
             return true;
         }, \E_USER_NOTICE | \E_USER_WARNING);
         try {
@@ -835,7 +841,7 @@ EOF
 
     public function testSandboxSourcePolicyEnableReturningFalse()
     {
-        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return '1_basic' != $source->getName();
@@ -846,7 +852,7 @@ EOF
 
     public function testSandboxSourcePolicyEnableReturningTrue()
     {
-        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return '1_basic' === $source->getName();
@@ -858,7 +864,7 @@ EOF
 
     public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables()
     {
-        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return false;
@@ -870,7 +876,7 @@ EOF
 
     public function testSourcePolicyAllowsClosureInArrow()
     {
-        $sourcePolicy = new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return true;
@@ -884,7 +890,7 @@ EOF
     public function testNeedsIsSandboxedFilterReceivesTrueWhenSandboxed()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo"|sandbox_aware }}'], [], ['sandbox_aware']);
-        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $value.':'.($isSandboxed ? 'on' : 'off');
         }, ['needs_is_sandboxed' => true]));
 
@@ -894,7 +900,7 @@ EOF
     public function testNeedsIsSandboxedFilterReceivesFalseWhenNotSandboxed()
     {
         $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo"|sandbox_aware }}']);
-        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $value.':'.($isSandboxed ? 'on' : 'off');
         }, ['needs_is_sandboxed' => true]));
 
@@ -906,13 +912,13 @@ EOF
         $twig = $this->getEnvironment(false, [], [
             'in' => '{{ "foo"|sandbox_aware }}',
             'out' => '{{ "foo"|sandbox_aware }}',
-        ], [], ['sandbox_aware'], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+        ], [], ['sandbox_aware'], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return 'in' === $source->getName();
             }
         });
-        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $value.':'.($isSandboxed ? 'on' : 'off');
         }, ['needs_is_sandboxed' => true]));
 
@@ -924,7 +930,7 @@ EOF
     {
         $loader = new ArrayLoader(['index' => '{{ sandbox_aware("foo") }}']);
         $twig = new Environment($loader, ['debug' => true, 'cache' => false, 'autoescape' => false]);
-        $twig->addFunction(new \Twig\TwigFunction('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addFunction(new TwigFunction('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $value.':'.($isSandboxed ? 'on' : 'off');
         }, ['needs_is_sandboxed' => true]));
 
@@ -934,7 +940,7 @@ EOF
     public function testNeedsIsSandboxedTestReceivesTrueWhenSandboxed()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
-        $twig->addTest(new \Twig\TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addTest(new TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $isSandboxed && 'foo' === $value;
         }, ['needs_is_sandboxed' => true]));
 
@@ -944,7 +950,7 @@ EOF
     public function testNeedsIsSandboxedTestReceivesFalseWhenNotSandboxed()
     {
         $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
-        $twig->addTest(new \Twig\TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addTest(new TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return !$isSandboxed && 'foo' === $value;
         }, ['needs_is_sandboxed' => true]));
 
