@@ -8,12 +8,11 @@ return (new Config())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PHPUnit75Migration:risky' => true,
+        '@PHPUnit7x5Migration:risky' => true,
         'php_unit_dedicate_assert' => ['target' => '5.6'],
         'array_syntax' => ['syntax' => 'short'],
         'php_unit_fqcn_annotation' => true,
         'no_unreachable_default_argument_value' => false,
-        'braces' => ['allow_single_line_closure' => true],
         'heredoc_to_nowdoc' => false,
         'single_line_throw' => false,
         'ordered_imports' => true,
