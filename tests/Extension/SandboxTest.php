@@ -28,6 +28,7 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\Expression\CallExpression;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
@@ -35,7 +36,12 @@ use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
+use Twig\Sandbox\SourcePolicyInterface;
 use Twig\Source;
+use Twig\TwigCallableInterface;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 class SandboxTest extends TestCase
 {
@@ -295,7 +301,7 @@ class SandboxTest extends TestCase
     public function testSandboxUnallowedToString($template)
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['if', 'do', 'for', 'set'], ['upper', 'join', 'replace', 'format', 'split'], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject'], [], ['random', 'range', 'my_func']);
-        $twig->addFunction(new \Twig\TwigFunction('my_func', static fn ($a) => (string) $a));
+        $twig->addFunction(new TwigFunction('my_func', static fn ($a) => (string) $a));
         try {
             $twig->load('index')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed method "__toString()" method is called in the template');
@@ -372,7 +378,7 @@ class SandboxTest extends TestCase
     public function testSandboxBlocksToStringOnFunctionReturn()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ make_obj() }}'], [], [], [], [], ['make_obj']);
-        $twig->addFunction(new \Twig\TwigFunction('make_obj', static fn () => new FooObject()));
+        $twig->addFunction(new TwigFunction('make_obj', static fn () => new FooObject()));
         try {
             $twig->load('index')->render([]);
             $this->fail('Sandbox throws a SecurityError exception if __toString is called on the return of an allowed function');
@@ -385,7 +391,7 @@ class SandboxTest extends TestCase
     public function testSandboxBlocksToStringOnFilterReturn()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "x"|to_obj }}'], [], ['to_obj']);
-        $twig->addFilter(new \Twig\TwigFilter('to_obj', static fn () => new FooObject()));
+        $twig->addFilter(new TwigFilter('to_obj', static fn () => new FooObject()));
         try {
             $twig->load('index')->render([]);
             $this->fail('Sandbox throws a SecurityError exception if __toString is called on the return of an allowed filter');
@@ -928,7 +934,7 @@ EOF
 
     public function testSandboxSourcePolicyEnableReturningFalse()
     {
-        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return '1_basic' != $source->getName();
@@ -939,7 +945,7 @@ EOF
 
     public function testSandboxSourcePolicyEnableReturningTrue()
     {
-        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return '1_basic' === $source->getName();
@@ -951,7 +957,7 @@ EOF
 
     public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables()
     {
-        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return false;
@@ -966,7 +972,7 @@ EOF
      */
     public function testSourcePolicyBlocksNonClosureCallableInArrow(string $template)
     {
-        $sourcePolicy = new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return true;
@@ -993,7 +999,7 @@ EOF
 
     public function testSourcePolicyAllowsClosureInArrow()
     {
-        $sourcePolicy = new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return true;
@@ -1011,7 +1017,7 @@ EOF
     {
         $this->expectDeprecation('Since twig/twig 3.15: Passing a callable that is not a PHP \Closure as an argument to the "sort" filter is deprecated.');
 
-        $sourcePolicy = new class implements \Twig\Sandbox\SourcePolicyInterface {
+        $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return false;
@@ -1025,7 +1031,7 @@ EOF
     public function testNeedsIsSandboxedFilterReceivesTrueWhenSandboxed()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo"|sandbox_aware }}'], [], ['sandbox_aware']);
-        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $value.':'.($isSandboxed ? 'on' : 'off');
         }, ['needs_is_sandboxed' => true]));
 
@@ -1035,7 +1041,7 @@ EOF
     public function testNeedsIsSandboxedFilterReceivesFalseWhenNotSandboxed()
     {
         $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo"|sandbox_aware }}']);
-        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $value.':'.($isSandboxed ? 'on' : 'off');
         }, ['needs_is_sandboxed' => true]));
 
@@ -1047,13 +1053,13 @@ EOF
         $twig = $this->getEnvironment(false, [], [
             'in' => '{{ "foo"|sandbox_aware }}',
             'out' => '{{ "foo"|sandbox_aware }}',
-        ], [], ['sandbox_aware'], [], [], [], new class implements \Twig\Sandbox\SourcePolicyInterface {
+        ], [], ['sandbox_aware'], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
                 return 'in' === $source->getName();
             }
         });
-        $twig->addFilter(new \Twig\TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $value.':'.($isSandboxed ? 'on' : 'off');
         }, ['needs_is_sandboxed' => true]));
 
@@ -1065,7 +1071,7 @@ EOF
     {
         $loader = new ArrayLoader(['index' => '{{ sandbox_aware("foo") }}']);
         $twig = new Environment($loader, ['debug' => true, 'cache' => false, 'autoescape' => false]);
-        $twig->addFunction(new \Twig\TwigFunction('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addFunction(new TwigFunction('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $value.':'.($isSandboxed ? 'on' : 'off');
         }, ['needs_is_sandboxed' => true]));
 
@@ -1075,7 +1081,7 @@ EOF
     public function testNeedsIsSandboxedTestReceivesTrueWhenSandboxed()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
-        $twig->addTest(new \Twig\TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addTest(new TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return $isSandboxed && 'foo' === $value;
         }, ['needs_is_sandboxed' => true]));
 
@@ -1085,7 +1091,7 @@ EOF
     public function testNeedsIsSandboxedTestReceivesFalseWhenNotSandboxed()
     {
         $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
-        $twig->addTest(new \Twig\TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
+        $twig->addTest(new TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
             return !$isSandboxed && 'foo' === $value;
         }, ['needs_is_sandboxed' => true]));
 
@@ -1101,11 +1107,11 @@ EOF
 
         $this->expectDeprecation(\sprintf('Since twig/twig 3.25: Not implementing the "needsIsSandboxed()" method in "%s" is deprecated. This method will be part of the "Twig\TwigCallableInterface" interface in 4.0.', $callable::class));
 
-        $this->assertFalse(\Twig\Node\Expression\CallExpression::needsIsSandboxed($callable));
+        $this->assertFalse(CallExpression::needsIsSandboxed($callable));
     }
 }
 
-class LegacyTwigCallableWithoutNeedsIsSandboxed implements \Twig\TwigCallableInterface
+class LegacyTwigCallableWithoutNeedsIsSandboxed implements TwigCallableInterface
 {
     public function getName(): string
     {
@@ -1147,7 +1153,7 @@ class LegacyTwigCallableWithoutNeedsIsSandboxed implements \Twig\TwigCallableInt
         return false;
     }
 
-    public function withDynamicArguments(string $name, string $dynamicName, array $arguments): \Twig\TwigCallableInterface
+    public function withDynamicArguments(string $name, string $dynamicName, array $arguments): TwigCallableInterface
     {
         return $this;
     }
