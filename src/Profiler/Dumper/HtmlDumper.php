@@ -30,6 +30,11 @@ final class HtmlDumper extends BaseDumper
         return '<pre>'.parent::dump($profile).'</pre>';
     }
 
+    protected function formatRoot(Profile $profile): string
+    {
+        return self::escape($profile->getName());
+    }
+
     protected function formatTemplate(Profile $profile, $prefix): string
     {
         return \sprintf('%s└ <span style="background-color: %s">%s</span>', $prefix, self::$colors['template'], self::escape($profile->getTemplate()));

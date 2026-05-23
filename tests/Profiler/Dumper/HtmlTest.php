@@ -59,4 +59,14 @@ EOF, $dumper->dump($this->getProfile()));
         $this->assertStringContainsString('&lt;img src=x onerror=alert(2)&gt;', $output);
         $this->assertStringContainsString('&lt;img src=x onerror=alert(3)&gt;', $output);
     }
+
+    public function testDumpEscapesRootProfileName()
+    {
+        $root = new Profile('template-name', Profile::ROOT, '<img src=x onerror=alert(1)>');
+
+        $output = (new HtmlDumper())->dump($root);
+
+        $this->assertStringNotContainsString('<img src=x onerror=alert(1)>', $output);
+        $this->assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $output);
+    }
 }
