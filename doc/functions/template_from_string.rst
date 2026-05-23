@@ -43,16 +43,6 @@ any related error message:
     with the ``include`` function, you can use it with any tag or function that
     takes a template as an argument (like the ``embed`` or ``extends`` tags).
 
-.. danger::
-
-    Never allow ``template_from_string`` in a sandboxed template. There is no
-    legitimate use case for letting untrusted template code build and render
-    arbitrary new templates on the fly, and doing so makes any sandbox policy
-    impossible to reason about. In particular, when sandboxing is driven by a
-    ``SourcePolicyInterface``, the template created by ``template_from_string``
-    gets a synthesized name that is not possible to match, so the inner
-    template ends up running with no sandbox at all.
-
 Arguments
 ---------
 

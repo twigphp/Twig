@@ -21,7 +21,6 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -35,7 +34,6 @@ use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
-use Twig\Sandbox\SourcePolicyInterface;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -723,7 +721,6 @@ EOF
         $this->assertFalse($twig->getExtension(SandboxExtension::class)->isSandboxed(), 'Sandboxed include() function call should not leave Sandbox enabled when an error occurs.');
     }
 
-
     public function testSandboxWithClosureFilter()
     {
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
@@ -830,74 +827,14 @@ EOF
         $this->assertSame('bar', $twig->load('index')->render($params));
     }
 
-    protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [], $sourcePolicy = null)
+    protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [])
     {
         $loader = new ArrayLoader($templates);
         $twig = new Environment($loader, array_merge(['debug' => true, 'cache' => false, 'autoescape' => false], $options));
         $policy = new SecurityPolicy($tags, $filters, $methods, $properties, $functions);
-        $twig->addExtension(new SandboxExtension($policy, $sandboxed, $sourcePolicy));
+        $twig->addExtension(new SandboxExtension($policy, $sandboxed));
 
         return $twig;
-    }
-
-    #[IgnoreDeprecations]
-    public function testSandboxSourcePolicyEnableReturningFalse()
-    {
-        $this->expectUserDeprecationMessage('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
-            public function enableSandbox(Source $source): bool
-            {
-                return '1_basic' != $source->getName();
-            }
-        });
-        $this->assertEquals('FOO', $twig->load('1_basic')->render(self::$params));
-    }
-
-    #[IgnoreDeprecations]
-    public function testSandboxSourcePolicyEnableReturningTrue()
-    {
-        $this->expectUserDeprecationMessage('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
-            public function enableSandbox(Source $source): bool
-            {
-                return '1_basic' === $source->getName();
-            }
-        });
-        $this->expectException(SecurityError::class);
-        $twig->load('1_basic')->render([]);
-    }
-
-    #[IgnoreDeprecations]
-    public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables()
-    {
-        $this->expectUserDeprecationMessage('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
-            public function enableSandbox(Source $source): bool
-            {
-                return false;
-            }
-        });
-        $this->expectException(SecurityError::class);
-        $twig->load('1_basic')->render([]);
-    }
-
-    #[IgnoreDeprecations]
-    public function testSourcePolicyAllowsClosureInArrow()
-    {
-        $this->expectUserDeprecationMessage('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $sourcePolicy = new class implements SourcePolicyInterface {
-            public function enableSandbox(Source $source): bool
-            {
-                return true;
-            }
-        };
-
-        $twig = $this->getEnvironment(false, [], ['1_basic' => '{{ ["b","a"]|sort((a, b) => a < b ? -1 : 1)|join(",") }}'], [], ['sort', 'join'], [], [], [], $sourcePolicy);
-        $this->assertSame('a,b', $twig->load('1_basic')->render([]));
     }
 
     public function testNeedsIsSandboxedFilterReceivesTrueWhenSandboxed()
@@ -918,28 +855,6 @@ EOF
         }, ['needs_is_sandboxed' => true]));
 
         $this->assertSame('foo:off', $twig->load('index')->render([]));
-    }
-
-    #[IgnoreDeprecations]
-    public function testNeedsIsSandboxedFilterFollowsSourcePolicy()
-    {
-        $this->expectUserDeprecationMessage('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $twig = $this->getEnvironment(false, [], [
-            'in' => '{{ "foo"|sandbox_aware }}',
-            'out' => '{{ "foo"|sandbox_aware }}',
-        ], [], ['sandbox_aware'], [], [], [], new class implements SourcePolicyInterface {
-            public function enableSandbox(Source $source): bool
-            {
-                return 'in' === $source->getName();
-            }
-        });
-        $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
-            return $value.':'.($isSandboxed ? 'on' : 'off');
-        }, ['needs_is_sandboxed' => true]));
-
-        $this->assertSame('foo:on', $twig->load('in')->render([]));
-        $this->assertSame('foo:off', $twig->load('out')->render([]));
     }
 
     public function testNeedsIsSandboxedFunctionWithoutSandboxExtension()

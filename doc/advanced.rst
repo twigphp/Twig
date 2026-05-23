@@ -233,10 +233,6 @@ are also requested)::
         return str_rot13($string);
     }, ['needs_is_sandboxed' => true]);
 
-The sandbox state is resolved against the current template source, which
-means it takes both the global sandbox state and any ``SourcePolicy`` into
-account.
-
 The same ``needs_is_sandboxed`` option is also available on functions and
 tests.
 

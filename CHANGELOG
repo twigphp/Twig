@@ -1,6 +1,6 @@
 # 4.0.0 (2026-XX-XX)
 
- * n/a
+ * Remove the `Twig\Sandbox\SourcePolicyInterface` interface and the corresponding argument of `Twig\Extension\SandboxExtension::__construct()`
 
 # 4.0.0 alpha 1 (2026-05-17)
 

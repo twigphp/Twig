@@ -15,7 +15,6 @@ use Twig\NodeVisitor\SandboxNodeVisitor;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityPolicyInterface;
-use Twig\Sandbox\SourcePolicyInterface;
 use Twig\Source;
 
 final class SandboxExtension extends AbstractExtension
@@ -23,17 +22,11 @@ final class SandboxExtension extends AbstractExtension
     private bool $sandboxedGlobally;
     private bool $sandboxed = false;
     private SecurityPolicyInterface $policy;
-    private ?SourcePolicyInterface $sourcePolicy;
 
-    public function __construct(SecurityPolicyInterface $policy, $sandboxed = false, ?SourcePolicyInterface $sourcePolicy = null)
+    public function __construct(SecurityPolicyInterface $policy, $sandboxed = false)
     {
-        if (null !== $sourcePolicy) {
-            trigger_deprecation('twig/twig', '3.27.0', 'The "%s" interface is deprecated with no replacement, do not pass an instance to "%s".', SourcePolicyInterface::class, self::class);
-        }
-
         $this->policy = $policy;
         $this->sandboxedGlobally = $sandboxed;
-        $this->sourcePolicy = $sourcePolicy;
     }
 
     public function getNodeVisitors(): array
@@ -53,21 +46,12 @@ final class SandboxExtension extends AbstractExtension
 
     public function isSandboxed(?Source $source = null): bool
     {
-        return $this->sandboxedGlobally || $this->sandboxed || $this->isSourceSandboxed($source);
+        return $this->sandboxedGlobally || $this->sandboxed;
     }
 
     public function isSandboxedGlobally(): bool
     {
         return $this->sandboxedGlobally;
-    }
-
-    private function isSourceSandboxed(?Source $source): bool
-    {
-        if (null === $source || null === $this->sourcePolicy) {
-            return false;
-        }
-
-        return $this->sourcePolicy->enableSandbox($source);
     }
 
     public function setSecurityPolicy(SecurityPolicyInterface $policy): void
