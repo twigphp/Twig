@@ -799,6 +799,15 @@ class SandboxTest extends TestCase
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
     }
 
+    public function testSandboxAllowsArrayDynamicKeyWhenToStringAllowed()
+    {
+        $twig = $this->getEnvironment(true, [], [
+            'index' => '{% set arr = {(obj): "v", (obj.anotherFooObject): "v2"} %}{{ arr|keys|join(",") }}',
+        ], ['set'], ['join', 'keys'], ['Twig\Tests\Extension\FooObject' => ['__toString', 'getAnotherFooObject']]);
+
+        $this->assertSame('foo', $twig->load('index')->render(self::$params));
+    }
+
     public function testSandboxAllowMethodToStringDisabled()
     {
         $twig = $this->getEnvironment(false, [], self::$templates);

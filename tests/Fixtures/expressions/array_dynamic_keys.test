@@ -1,0 +1,59 @@
+--TEST--
+Mapping keys can be any expression that evaluates to a scalar or Stringable
+--TEMPLATE--
+{# context variable holding a Stringable object #}
+{{ {(obj): 'a'}|keys|join(',') }}
+
+{# attribute access on an object yielding a Stringable #}
+{{ {(holder.stringable): 'a'}|keys|join(',') }}
+
+{# attribute access yielding a string #}
+{{ {(holder.name): 'a'}|keys|join(',') }}
+
+{# filter result yielding a Stringable #}
+{{ {(obj|raw): 'a'}|keys|join(',') }}
+
+{# filter result yielding a string #}
+{{ {('hello'|upper): 'a'}|keys|join(',') }}
+
+{# filter result yielding an integer (keys stay int) #}
+{{ {(holder.name|length): 'a'}|keys|first == 4 ? 'ok' : 'ko' }}
+
+{# method call yielding a Stringable #}
+{{ {(holder.getStringable()): 'a'}|keys|join(',') }}
+
+{# mixed static and dynamic keys #}
+{{ {'static': 's', (obj): 'd', (holder.name): 'n'}|keys|join(',') }}
+
+{# nested mapping with a dynamic Stringable key #}
+{{ {'outer': {(obj): 'inner'}} | json_encode | raw }}
+--DATA--
+class TwigTestStringy implements \Stringable {
+    public function __construct(private string $v) {}
+    public function __toString(): string { return $this->v; }
+}
+class TwigTestHolder {
+    public string $name = 'attr';
+    public TwigTestStringy $stringable;
+    public function __construct() { $this->stringable = new TwigTestStringy('attr_obj'); }
+    public function getStringable(): TwigTestStringy { return new TwigTestStringy('method_obj'); }
+}
+return ['obj' => new TwigTestStringy('ctx_obj'), 'holder' => new TwigTestHolder()]
+--EXPECT--
+ctx_obj
+
+attr_obj
+
+attr
+
+ctx_obj
+
+HELLO
+
+ok
+
+method_obj
+
+static,ctx_obj,attr
+
+{"outer":{"ctx_obj":"inner"}}
