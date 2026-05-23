@@ -173,7 +173,7 @@ final class Profile implements \IteratorAggregate, \Serializable
 
     public function unserialize($data): void
     {
-        $this->__unserialize(unserialize($data));
+        $this->__unserialize(unserialize($data, ['allowed_classes' => [self::class]]));
     }
 
     /**
