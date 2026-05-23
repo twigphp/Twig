@@ -27,6 +27,10 @@ final class SandboxExtension extends AbstractExtension
 
     public function __construct(SecurityPolicyInterface $policy, $sandboxed = false, ?SourcePolicyInterface $sourcePolicy = null)
     {
+        if (null !== $sourcePolicy) {
+            trigger_deprecation('twig/twig', '3.27.0', 'The "%s" interface is deprecated with no replacement, do not pass an instance to "%s".', SourcePolicyInterface::class, self::class);
+        }
+
         $this->policy = $policy;
         $this->sandboxedGlobally = $sandboxed;
         $this->sourcePolicy = $sourcePolicy;
