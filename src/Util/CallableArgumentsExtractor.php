@@ -14,7 +14,6 @@ namespace Twig\Util;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\CallExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\VariadicExpression;
 use Twig\Node\Node;

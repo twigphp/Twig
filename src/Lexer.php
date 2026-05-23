@@ -13,7 +13,6 @@
 namespace Twig;
 
 use Twig\Error\SyntaxError;
-use Twig\ExpressionParser\ExpressionParsers;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
