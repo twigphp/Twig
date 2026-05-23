@@ -10,6 +10,7 @@
  * Fix sandbox `__toString` bypass via `Traversable` arguments to the `join` and `replace` filters (also covers containers that implement both `Stringable` and `Traversable`)
  * Fix sandbox `__toString` bypass via the `in` and `not in` operators
  * Prevent a stack overflow in `SandboxExtension::ensureToStringAllowed()` when a self-referencing iterable is passed to a sandboxed template
+ * Fix sandbox `__toString` policy bypass via dynamic mapping keys
 
 # 3.26.0 (2026-05-20)
 
