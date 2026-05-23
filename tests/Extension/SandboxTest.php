@@ -932,8 +932,13 @@ EOF
         return $twig;
     }
 
+    /**
+     * @group legacy
+     */
     public function testSandboxSourcePolicyEnableReturningFalse()
     {
+        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -943,8 +948,13 @@ EOF
         $this->assertEquals('FOO', $twig->load('1_basic')->render(self::$params));
     }
 
+    /**
+     * @group legacy
+     */
     public function testSandboxSourcePolicyEnableReturningTrue()
     {
+        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -955,8 +965,13 @@ EOF
         $twig->load('1_basic')->render([]);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables()
     {
+        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -968,10 +983,14 @@ EOF
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider provideSourcePolicyArrowBlockedTemplates
      */
     public function testSourcePolicyBlocksNonClosureCallableInArrow(string $template)
     {
+        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -997,8 +1016,13 @@ EOF
         yield 'has every' => ['{{ [1,2] has every "is_int" ? "yes" : "no" }}'];
     }
 
+    /**
+     * @group legacy
+     */
     public function testSourcePolicyAllowsClosureInArrow()
     {
+        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -1015,6 +1039,7 @@ EOF
      */
     public function testNonSandboxedSourcePolicyAllowsNonClosureCallable()
     {
+        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
         $this->expectDeprecation('Since twig/twig 3.15: Passing a callable that is not a PHP \Closure as an argument to the "sort" filter is deprecated.');
 
         $sourcePolicy = new class implements SourcePolicyInterface {
@@ -1048,8 +1073,13 @@ EOF
         $this->assertSame('foo:off', $twig->load('index')->render([]));
     }
 
+    /**
+     * @group legacy
+     */
     public function testNeedsIsSandboxedFilterFollowsSourcePolicy()
     {
+        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $twig = $this->getEnvironment(false, [], [
             'in' => '{{ "foo"|sandbox_aware }}',
             'out' => '{{ "foo"|sandbox_aware }}',
