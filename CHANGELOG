@@ -1,5 +1,6 @@
 # 3.27.0 (2026-XX-XX)
 
+ * Restrict allowed classes in `Twig\Profiler\Profile::unserialize()` to prevent arbitrary class instantiation
  * Deprecate the `Twig\Sandbox\SourcePolicyInterface` interface with no replacement
 
 # 3.26.0 (2026-05-20)

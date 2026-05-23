@@ -121,6 +121,23 @@ class ProfileTest extends TestCase
         $this->assertEquals($profile1->getName(), $profile3->getName());
     }
 
+    public function testUnserializeDoesNotInstantiateArbitraryClasses()
+    {
+        $payload = serialize([
+            'template',
+            'name',
+            Profile::ROOT,
+            [],
+            [],
+            [new ProfileTestProbe()],
+        ]);
+
+        $profile = new Profile();
+        $profile->unserialize($payload);
+
+        $this->assertFalse(ProfileTestProbe::$wakeupCalled, 'Magic unserialize methods must not be called on arbitrary classes');
+    }
+
     public function testReset()
     {
         $profile = new Profile();
@@ -129,5 +146,15 @@ class ProfileTest extends TestCase
         $profile->reset();
 
         $this->assertEquals(0, $profile->getDuration());
+    }
+}
+
+class ProfileTestProbe
+{
+    public static bool $wakeupCalled = false;
+
+    public function __unserialize(array $data): void
+    {
+        self::$wakeupCalled = true;
     }
 }
