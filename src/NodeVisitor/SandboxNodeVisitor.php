@@ -16,6 +16,7 @@ use Twig\Node\CheckSecurityCallNode;
 use Twig\Node\CheckSecurityNode;
 use Twig\Node\CheckToStringNode;
 use Twig\Node\CoercesChildrenToStringInterface;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\RangeBinary;
 use Twig\Node\Expression\FilterExpression;
@@ -42,7 +43,6 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
     private array $filters;
     /** @var array<string, int> */
     private array $functions;
-    private bool $needsToStringWrap = false;
 
     public function enterNode(Node $node, Environment $env): Node
     {
@@ -106,7 +106,9 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         if (($expr instanceof ContextVariable || $expr instanceof GetAttrExpression) && !$expr->isGenerator()) {
             $node->setNode($name, new CheckToStringNode($expr));
         } elseif ($expr instanceof SpreadUnary) {
-            $expr->setNode('node', new CheckToStringNode($expr->getNode('node'), true));
+            /** @var AbstractExpression $spreadNode */
+            $spreadNode = $expr->getNode('node');
+            $expr->setNode('node', new CheckToStringNode($spreadNode, true));
         } elseif ($expr instanceof ArrayExpression || $expr instanceof Nodes) {
             foreach ($expr as $name => $_) {
                 $this->wrapNode($expr, $name);
