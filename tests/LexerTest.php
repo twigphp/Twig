@@ -404,6 +404,7 @@ class LexerTest extends TestCase
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
         // can be executed without throwing any exceptions
+        $this->addToAssertionCount(1);
     }
 
     public function testLiteralIsNotAnOperator()
