@@ -11,6 +11,7 @@
 
 namespace Twig\Tests\Extension;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\DeprecatedCallableInfo;
 use Twig\Error\RuntimeError;
@@ -25,9 +26,7 @@ use Twig\TwigTest;
 
 class AttributeExtensionTest extends TestCase
 {
-    /**
-     * @dataProvider provideFilters
-     */
+    #[DataProvider('provideFilters')]
     public function testFilter(string $name, string $method, array $options)
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);
@@ -54,9 +53,7 @@ class AttributeExtensionTest extends TestCase
         yield 'pattern' => ['pattern_*_filter', 'patternFilter', []];
     }
 
-    /**
-     * @dataProvider provideFunctions
-     */
+    #[DataProvider('provideFunctions')]
     public function testFunction(string $name, string $method, array $options)
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);
@@ -83,9 +80,7 @@ class AttributeExtensionTest extends TestCase
         yield 'deprecated' => ['deprecated_function', 'deprecatedFunction', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
     }
 
-    /**
-     * @dataProvider provideTests
-     */
+    #[DataProvider('provideTests')]
     public function testTest(string $name, string $method, array $options)
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);

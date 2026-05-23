@@ -356,9 +356,7 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestForInvalidNullSafeOperatorShortCircuiting
-     */
+    #[DataProvider('getTestForInvalidNullSafeOperatorShortCircuiting')]
     public function testInvalidNullSafeOperatorShortCircuiting(string $template, array $data, string $expectedMessage)
     {
         $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);

@@ -145,9 +145,7 @@ class TemplateTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getNullCoalesceWithImportedMacroData
-     */
+    #[DataProvider('getNullCoalesceWithImportedMacroData')]
     public function testNullCoalesceWithImportedMacro(array $templates, string $expected)
     {
         $twig = new Environment(new ArrayLoader($templates));

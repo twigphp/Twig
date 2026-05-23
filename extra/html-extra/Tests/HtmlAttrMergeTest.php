@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\Html\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Error\RuntimeError;
 use Twig\Extra\Html\HtmlAttr\MergeableInterface;
@@ -18,9 +19,7 @@ use Twig\Extra\Html\HtmlExtension;
 
 class HtmlAttrMergeTest extends TestCase
 {
-    /**
-     * @dataProvider htmlAttrProvider
-     */
+    #[DataProvider('htmlAttrProvider')]
     public function testMerge(array $expected, array $inputs)
     {
         $result = HtmlExtension::htmlAttrMerge(...$inputs);

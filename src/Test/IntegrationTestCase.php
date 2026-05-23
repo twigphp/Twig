@@ -108,8 +108,6 @@ abstract class IntegrationTestCase extends TestCase
     }
 
     /**
-     * @dataProvider getTests
-     *
      * @return void
      */
     #[DataProvider('getTests')]
@@ -119,8 +117,6 @@ abstract class IntegrationTestCase extends TestCase
     }
 
     /**
-     * @dataProvider getLegacyTests
-     *
      * @group legacy
      *
      * @return void

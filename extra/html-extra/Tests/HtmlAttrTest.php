@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\Html\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -21,9 +22,7 @@ use Twig\Loader\ArrayLoader;
 
 class HtmlAttrTest extends TestCase
 {
-    /**
-     * @dataProvider htmlAttrProvider
-     */
+    #[DataProvider('htmlAttrProvider')]
     public function testPrintingAttributes(string $expected, array $inputs)
     {
         $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), ...$inputs);
