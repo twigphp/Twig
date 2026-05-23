@@ -2,6 +2,7 @@
 
  * Restrict allowed classes in `Twig\Profiler\Profile::unserialize()` to prevent arbitrary class instantiation
  * Escape root profile name in `HtmlDumper`
+ * Fix sandbox bypass in deprecated internal wrappers `twig_array_some()`, `twig_array_every()`, and `twig_check_arrow_in_sandbox()` (`src/Resources/core.php`)
  * Deprecate the `Twig\Sandbox\SourcePolicyInterface` interface with no replacement
 
 # 3.26.0 (2026-05-20)
