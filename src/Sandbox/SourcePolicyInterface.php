@@ -18,7 +18,7 @@ use Twig\Source;
  *
  * @author Yaakov Saxon
  *
- * @deprecated since Twig 3.26.1 with no replacement
+ * @deprecated since Twig 3.27.0 with no replacement
  */
 interface SourcePolicyInterface
 {

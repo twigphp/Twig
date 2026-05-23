@@ -937,7 +937,7 @@ EOF
      */
     public function testSandboxSourcePolicyEnableReturningFalse()
     {
-        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
         $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
@@ -953,7 +953,7 @@ EOF
      */
     public function testSandboxSourcePolicyEnableReturningTrue()
     {
-        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
         $twig = $this->getEnvironment(false, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
@@ -970,7 +970,7 @@ EOF
      */
     public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables()
     {
-        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
@@ -989,7 +989,7 @@ EOF
      */
     public function testSourcePolicyBlocksNonClosureCallableInArrow(string $template)
     {
-        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
@@ -1021,7 +1021,7 @@ EOF
      */
     public function testSourcePolicyAllowsClosureInArrow()
     {
-        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
@@ -1039,7 +1039,7 @@ EOF
      */
     public function testNonSandboxedSourcePolicyAllowsNonClosureCallable()
     {
-        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
         $this->expectDeprecation('Since twig/twig 3.15: Passing a callable that is not a PHP \Closure as an argument to the "sort" filter is deprecated.');
 
         $sourcePolicy = new class implements SourcePolicyInterface {
@@ -1078,7 +1078,7 @@ EOF
      */
     public function testNeedsIsSandboxedFilterFollowsSourcePolicy()
     {
-        $this->expectDeprecation('Since twig/twig 3.26.1: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
         $twig = $this->getEnvironment(false, [], [
             'in' => '{{ "foo"|sandbox_aware }}',
