@@ -1173,8 +1173,13 @@ EOF
         $this->assertSame('bar', $twig->load('index')->render($params));
     }
 
+    /**
+     * @group legacy
+     */
     public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedProperty()
     {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -1194,8 +1199,13 @@ EOF
         }
     }
 
+    /**
+     * @group legacy
+     */
     public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedIndex()
     {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -1215,8 +1225,13 @@ EOF
         }
     }
 
+    /**
+     * @group legacy
+     */
     public function testSourcePolicySandboxAllowsColumnFilterOnAllowedProperty()
     {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -1230,8 +1245,13 @@ EOF
         $this->assertSame('bar', $twig->load('index')->render($params));
     }
 
+    /**
+     * @group legacy
+     */
     public function testSourcePolicySandboxBlocksColumnFilterOnMagicGetter()
     {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
