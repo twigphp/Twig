@@ -80,6 +80,14 @@ abstract class Template
             return $this->parent;
         }
 
+        // The compiled doGetParent() may evaluate user expressions (filters,
+        // functions, method calls) when the parent name is dynamic. Make sure
+        // the sandbox security check runs first so those expressions cannot
+        // bypass the allow-list when getParent() is reached before the first
+        // ensureSecurityChecked() call on this template (e.g. via
+        // getTemplateForMacro() or yieldBlock() into a pre-warmed instance).
+        $this->ensureSecurityChecked();
+
         if (!$parent = $this->doGetParent($context)) {
             return false;
         }
@@ -399,6 +407,7 @@ abstract class Template
         $blocks = array_merge($this->blocks, $blocks);
 
         try {
+            $this->ensureSecurityChecked();
             yield from $this->doDisplay($context, $blocks);
         } catch (Error $e) {
             if (!$e->getSourceContext()) {
@@ -443,6 +452,7 @@ abstract class Template
 
         if (null !== $template) {
             try {
+                $template->ensureSecurityChecked();
                 yield from $template->$block($context, $blocks);
             } catch (Error $e) {
                 if (!$e->getSourceContext()) {
@@ -510,17 +520,30 @@ abstract class Template
     protected function getTemplateForMacro(string $name, array $context, int $line, Source $source): self
     {
         if (method_exists($this, $name)) {
+            $this->ensureSecurityChecked();
+
             return $this;
         }
 
         $parent = $this;
         while ($parent = $parent->getParent($context)) {
             if (method_exists($parent, $name)) {
+                $parent->ensureSecurityChecked();
+
                 return $parent;
             }
         }
 
         throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', substr($name, \strlen('macro_')), $this->getTemplateName()), $line, $source);
+    }
+
+    /**
+     * Runs the sandbox security check against the current sandbox state.
+     *
+     * @internal
+     */
+    public function ensureSecurityChecked(): void
+    {
     }
 
     /**

@@ -1519,10 +1519,6 @@ final class CoreExtension extends AbstractExtension
                 return '';
             }
 
-            if ($isSandboxed) {
-                $loaded->unwrap()->checkSecurity();
-            }
-
             return $loaded->render($variables);
         } finally {
             if ($isSandboxed && !$alreadySandboxed) {

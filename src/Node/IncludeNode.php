@@ -38,8 +38,6 @@ class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenTo
     {
         $compiler->addDebugInfo($this);
 
-        $sandboxed = $this->hasAttribute('sandboxed') && $this->getAttribute('sandboxed');
-
         if ($this->getAttribute('ignore_missing')) {
             $template = $compiler->getVarName();
 
@@ -64,10 +62,6 @@ class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenTo
                 ->indent()
             ;
 
-            if ($sandboxed) {
-                $compiler->write(\sprintf("\$%s->unwrap()->checkSecurity();\n", $template));
-            }
-
             $compiler->write(\sprintf('yield from $%s->unwrap()->yield(', $template));
 
             $this->addTemplateArguments($compiler);
@@ -76,18 +70,6 @@ class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenTo
                 ->outdent()
                 ->write("}\n")
             ;
-        } elseif ($sandboxed) {
-            $template = $compiler->getVarName();
-
-            $compiler->write(\sprintf('$%s = ', $template));
-            $this->addGetTemplate($compiler);
-            $compiler
-                ->raw(";\n")
-                ->write(\sprintf("\$%s->unwrap()->checkSecurity();\n", $template))
-                ->write(\sprintf('yield from $%s->unwrap()->yield(', $template))
-            ;
-            $this->addTemplateArguments($compiler);
-            $compiler->raw(");\n");
         } else {
             $compiler->write('yield from ');
             $this->addGetTemplate($compiler);
