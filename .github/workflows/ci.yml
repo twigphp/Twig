@@ -122,6 +122,12 @@ jobs:
 
             - name: "Run tests for ${{ matrix.extension }}"
               working-directory: extra/${{ matrix.extension }}
+              env:
+                  # intl-extra's integration tests expect en_US-formatted ICU output. The Ubuntu
+                  # runner default (C.UTF-8) makes ICU fall back to the "C" locale, producing e.g.
+                  # "€ 1000000.00" instead of "€1,000,000.00". phpunit.xml.dist's <env> entry is
+                  # too late because ICU caches the default locale at the first call.
+                  LANG: 'en_US.UTF-8'
               run: vendor/bin/simple-phpunit
 
     phpstan:
