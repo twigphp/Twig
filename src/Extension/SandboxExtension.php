@@ -132,17 +132,11 @@ final class SandboxExtension extends AbstractExtension
             return $obj;
         }
 
-        // A non-Stringable Traversable would later be materialised (e.g. by filters such as
-        // `join` or `replace`) and its elements coerced to string by PHP itself, bypassing
-        // the policy. Materialise it now and recursively check the contents.
-        if ($obj instanceof \Traversable && !$obj instanceof \Stringable && $this->isSandboxed($source)) {
-            $obj = iterator_to_array($obj);
-            $this->ensureToStringAllowedForArray($obj, $lineno, $source);
-
+        if (!$this->isSandboxed($source)) {
             return $obj;
         }
 
-        if ($obj instanceof \Stringable && $this->isSandboxed($source)) {
+        if ($obj instanceof \Stringable) {
             try {
                 $this->policy->checkMethodAllowed($obj, '__toString');
             } catch (SecurityNotAllowedMethodError $e) {
@@ -150,6 +144,25 @@ final class SandboxExtension extends AbstractExtension
                 $e->setTemplateLine($lineno);
 
                 throw $e;
+            }
+        }
+
+        // A Traversable would later be materialised (e.g. by filters such as `join`
+        // or `replace`) and its elements coerced to string by PHP itself, bypassing
+        // the policy. Materialise it now and recursively check the contents. This
+        // also applies to objects that implement both `Stringable` and `Traversable`:
+        // the `__toString` check above only validates the container's own coercion,
+        // not the elements yielded by `getIterator()`.
+        if ($obj instanceof \Traversable) {
+            $array = iterator_to_array($obj);
+            $this->ensureToStringAllowedForArray($array, $lineno, $source);
+
+            // Return the materialised array only when the object is not also
+            // Stringable, so that callers that rely on `__toString` (e.g. `{{ obj }}`)
+            // keep working. Plain consumers of iterables (join, replace, ...) call
+            // `iterator_to_array()` again, so the extra materialisation is benign.
+            if (!$obj instanceof \Stringable) {
+                return $array;
             }
         }
 
