@@ -1,6 +1,7 @@
 # 4.0.0 (2026-XX-XX)
 
  * Remove the `Twig\Sandbox\SourcePolicyInterface` interface and the corresponding argument of `Twig\Extension\SandboxExtension::__construct()`
+ * Enforce the `parent`, `block`, and `attribute` functions against the sandbox `allowedFunctions` allow-list
 
 # 4.0.0 alpha 1 (2026-05-17)
 

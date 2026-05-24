@@ -95,15 +95,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
 
         foreach ($functions as $function) {
             if (!\in_array($function, $this->allowedFunctions, true)) {
-                if ('parent' === $function) {
-                    trigger_deprecation('twig/twig', '3.27', 'The "parent" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
-                } elseif ('block' === $function) {
-                    trigger_deprecation('twig/twig', '3.27', 'The "block" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
-                } elseif ('attribute' === $function) {
-                    trigger_deprecation('twig/twig', '3.27', 'The "attribute" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
-                } else {
-                    throw new SecurityNotAllowedFunctionError(\sprintf('Function "%s" is not allowed.', $function), $function);
-                }
+                throw new SecurityNotAllowedFunctionError(\sprintf('Function "%s" is not allowed.', $function), $function);
             }
         }
     }
