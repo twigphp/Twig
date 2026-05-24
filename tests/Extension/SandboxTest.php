@@ -192,6 +192,64 @@ class SandboxTest extends TestCase
     }
 
     /**
+     * @dataProvider provideNonStringArrayAccessKeys
+     */
+    public function testSandboxNonStringKeyAccessDoesNotTriggerImplicitConversionDeprecation(string $template, string $expectedKey)
+    {
+        $loader = new ArrayLoader(['t' => $template]);
+        $twig = new Environment($loader);
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy(allowedFilters: ['escape']), true));
+
+        $obj = new class implements \ArrayAccess {
+            public function offsetGet($k): mixed
+            {
+                return null;
+            }
+
+            public function offsetExists($k): bool
+            {
+                return false;
+            }
+
+            public function offsetSet($k, $v): void
+            {
+            }
+
+            public function offsetUnset($k): void
+            {
+            }
+        };
+
+        // Promote E_DEPRECATED to an ErrorException so PHP 8.1's implicit
+        // float-to-int conversion notice (or any future similar notice) fails
+        // the test instead of slipping through error_log and leaking the
+        // sandboxed key value.
+        set_error_handler(static function (int $errno, string $msg) {
+            throw new \ErrorException($msg, 0, $errno);
+        }, \E_DEPRECATED);
+
+        try {
+            $twig->render('t', ['obj' => $obj]);
+            $this->fail('Expected SecurityNotAllowedPropertyError');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertSame($expectedKey, $e->getPropertyName());
+        } finally {
+            restore_error_handler();
+        }
+    }
+
+    public static function provideNonStringArrayAccessKeys(): iterable
+    {
+        // Float key: the one that triggers the implicit conversion deprecation
+        // on PHP 8.1+ before the fix.
+        yield 'float key' => ['{{ obj[3.14] }}', '3'];
+        // Bool keys: do not deprecate today but serve as regression guards
+        // and exercise the same coercion branch.
+        yield 'true key' => ['{{ obj[true] }}', '1'];
+        yield 'false key' => ['{{ obj[false] }}', '0'];
+    }
+
+    /**
      * @group legacy
      */
     public function testIfSandBoxIsDisabledAfterSyntaxErrorLegacy()
