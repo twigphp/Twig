@@ -52,6 +52,9 @@ jobs:
 
         continue-on-error: true
 
+        env:
+            SYMFONY_PHPUNIT_VERSION: ${{ matrix.php-version == '8.1' && '9.6' || '11.3' }}
+
         strategy:
             matrix:
                 php-version:
@@ -83,7 +86,7 @@ jobs:
             - name: "Add PHPUnit matcher"
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-            - name: "Prevent installing symfony/translation-contract 3.0"
+            - name: "Prevent installing symfony/translation-contracts 3.0"
               if: "matrix.extension == 'twig-extra-bundle'"
               working-directory: extra/${{ matrix.extension }}
               run: "composer require --no-update 'symfony/translation-contracts:^1.1|^2.0'"
@@ -95,6 +98,10 @@ jobs:
             - name: "Run tests for ${{ matrix.extension }}"
               working-directory: extra/${{ matrix.extension }}
               env:
+                  # intl-extra's integration tests expect en_US-formatted ICU output. The Ubuntu
+                  # runner default (C.UTF-8) makes ICU fall back to the "C" locale, producing e.g.
+                  # "€ 1000000.00" instead of "€1,000,000.00". phpunit.xml.dist's <env> entry is
+                  # too late because ICU caches the default locale at the first call.
                   LANG: 'en_US.UTF-8'
               run: phpunit
 
