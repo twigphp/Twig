@@ -1260,6 +1260,35 @@ EOF
         $this->assertSame('stringable-traversable', $twig->load('index')->render($params));
     }
 
+    /**
+     * @dataProvider getCyclicTraversableTemplates
+     */
+    public function testSandboxHandlesCyclicTraversableWithoutStackOverflow(string $template)
+    {
+        // A self-referencing IteratorAggregate must not cause the sandbox policy
+        // walker to recurse infinitely when materialising the iterable. PHP itself
+        // throws a clean error when the cyclic object reaches `implode()` /
+        // string coercion; the sandbox must NOT turn that into a stack overflow.
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => $template],
+            [],
+            ['join', 'replace'],
+        );
+
+        $this->expectException(RuntimeError::class);
+
+        $twig->load('index')->render(['obj' => new CyclicTraversableObject()]);
+    }
+
+    public static function getCyclicTraversableTemplates(): iterable
+    {
+        yield 'join' => ['{{ obj|join(",") }}'];
+        yield 'replace' => ['{{ "x"|replace(obj) }}'];
+        yield 'spread' => ['{{ ["a", ...obj]|join(",") }}'];
+    }
+
     public function testSourcePolicySandboxBlocksToStringInTraversableJoin()
     {
         $sourcePolicy = new class implements SourcePolicyInterface {
@@ -1825,5 +1854,17 @@ class StringableTraversableObject implements \IteratorAggregate, \Stringable
     public function getIterator(): \Traversable
     {
         yield from $this->items;
+    }
+}
+
+// Self-referencing IteratorAggregate: getIterator() yields `$this`. Used to
+// verify that the sandbox policy walker (which materialises Traversables to
+// enforce the `__toString` policy on yielded elements) does not recurse
+// infinitely.
+class CyclicTraversableObject implements \IteratorAggregate
+{
+    public function getIterator(): \Traversable
+    {
+        yield $this;
     }
 }

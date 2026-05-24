@@ -126,8 +126,33 @@ final class SandboxExtension extends AbstractExtension
      */
     public function ensureToStringAllowed($obj, int $lineno = -1, ?Source $source = null)
     {
+        return $this->doEnsureToStringAllowed($obj, $lineno, $source, new \SplObjectStorage());
+    }
+
+    /**
+     * Materialises a spread operand and runs the policy on every element.
+     *
+     * @internal
+     *
+     * @throws SecurityNotAllowedMethodError
+     */
+    public function ensureSpreadAllowed(iterable $obj, int $lineno = -1, ?Source $source = null): array
+    {
+        $seen = new \SplObjectStorage();
+        if ($obj instanceof \Traversable) {
+            $seen[$obj] = true;
+            $obj = iterator_to_array($obj);
+        }
+
+        $this->ensureToStringAllowedForArray($obj, $lineno, $source, $seen);
+
+        return $obj;
+    }
+
+    private function doEnsureToStringAllowed($obj, int $lineno, ?Source $source, \SplObjectStorage $seen)
+    {
         if (\is_array($obj)) {
-            $this->ensureToStringAllowedForArray($obj, $lineno, $source);
+            $this->ensureToStringAllowedForArray($obj, $lineno, $source, $seen);
 
             return $obj;
         }
@@ -154,8 +179,17 @@ final class SandboxExtension extends AbstractExtension
         // the `__toString` check above only validates the container's own coercion,
         // not the elements yielded by `getIterator()`.
         if ($obj instanceof \Traversable) {
+            // Guard against self-referencing iterables (e.g. an IteratorAggregate
+            // whose getIterator() yields $this): without this check, materialising
+            // and recursing into the elements would overflow the stack. Mirrors
+            // the array-cycle guard in ensureToStringAllowedForArray().
+            if (isset($seen[$obj])) {
+                return $obj;
+            }
+
+            $seen[$obj] = true;
             $array = iterator_to_array($obj);
-            $this->ensureToStringAllowedForArray($array, $lineno, $source);
+            $this->ensureToStringAllowedForArray($array, $lineno, $source, $seen);
 
             // Return the materialised array only when the object is not also
             // Stringable, so that callers that rely on `__toString` (e.g. `{{ obj }}`)
@@ -169,25 +203,7 @@ final class SandboxExtension extends AbstractExtension
         return $obj;
     }
 
-    /**
-     * Materialises a spread operand and runs the policy on every element.
-     *
-     * @internal
-     *
-     * @throws SecurityNotAllowedMethodError
-     */
-    public function ensureSpreadAllowed(iterable $obj, int $lineno = -1, ?Source $source = null): array
-    {
-        if ($obj instanceof \Traversable) {
-            $obj = iterator_to_array($obj);
-        }
-
-        $this->ensureToStringAllowedForArray($obj, $lineno, $source);
-
-        return $obj;
-    }
-
-    private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, array &$stack = []): void
+    private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, \SplObjectStorage $seen, array &$stack = []): void
     {
         foreach ($obj as $k => $v) {
             if (!$v) {
@@ -195,7 +211,7 @@ final class SandboxExtension extends AbstractExtension
             }
 
             if (!\is_array($v)) {
-                $this->ensureToStringAllowed($v, $lineno, $source);
+                $this->doEnsureToStringAllowed($v, $lineno, $source, $seen);
                 continue;
             }
 
@@ -207,7 +223,7 @@ final class SandboxExtension extends AbstractExtension
                 $stack[$r->getId()] = true;
             }
 
-            $this->ensureToStringAllowedForArray($v, $lineno, $source, $stack);
+            $this->ensureToStringAllowedForArray($v, $lineno, $source, $seen, $stack);
         }
     }
 }
