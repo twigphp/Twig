@@ -1208,10 +1208,14 @@ EOF
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getStringableTraversableBypassTemplates
      */
     public function testSourcePolicySandboxBlocksToStringInStringableTraversable(string $template)
     {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -1289,8 +1293,13 @@ EOF
         yield 'spread' => ['{{ ["a", ...obj]|join(",") }}'];
     }
 
+    /**
+     * @group legacy
+     */
     public function testSourcePolicySandboxBlocksToStringInTraversableJoin()
     {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
@@ -1309,8 +1318,13 @@ EOF
         }
     }
 
+    /**
+     * @group legacy
+     */
     public function testSourcePolicySandboxBlocksToStringInTraversableReplace()
     {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
         $sourcePolicy = new class implements SourcePolicyInterface {
             public function enableSandbox(Source $source): bool
             {
