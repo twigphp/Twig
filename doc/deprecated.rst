@@ -304,6 +304,10 @@ Sandbox
   deprecated as of Twig 3.12. You will need to explicitly allow them if needed
   in 4.0.
 
+* Having the ``parent``, ``block``, and ``attribute`` functions allowed by
+  default in a sandbox is deprecated as of Twig 3.27. You will need to
+  explicitly allow them if needed in 4.0.
+
 * The ``Twig\Sandbox\SourcePolicyInterface`` interface is deprecated as of Twig
   3.27.0 with no replacement. Passing an instance to the
   ``Twig\Extension\SandboxExtension`` constructor triggers a deprecation.
