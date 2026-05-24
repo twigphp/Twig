@@ -66,6 +66,16 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
                 $this->functions[$node->getAttribute('name')] = $node->getTemplateLine();
             }
 
+            // look for functions whose parser callable replaced the FunctionExpression
+            // with a specialized node (e.g. `parent`, `block`, `attribute`); the
+            // original function name was stashed by FunctionExpressionParser.
+            if ($node->hasAttribute('sandboxed_function_name')) {
+                $name = $node->getAttribute('sandboxed_function_name');
+                if (!isset($this->functions[$name])) {
+                    $this->functions[$name] = $node->getTemplateLine();
+                }
+            }
+
             // the .. operator is equivalent to the range() function
             if ($node instanceof RangeBinary && !isset($this->functions['range'])) {
                 $this->functions['range'] = $node->getTemplateLine();

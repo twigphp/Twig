@@ -147,6 +147,107 @@ class SandboxTest extends TestCase
         yield ['use', '{% use "1_empty" %}'];
     }
 
+    /**
+     * @dataProvider getSandboxedForParserCallableFunctionsTests
+     *
+     * @group legacy
+     */
+    public function testSandboxForParserCallableFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $context, string $expected)
+    {
+        $this->expectDeprecation(\sprintf('Since twig/twig 3.27: The "%s" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.', $function));
+
+        $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], $allowedMethods, $allowedProperties, []);
+        $this->assertSame($expected, $twig->load($templateName)->render($context));
+    }
+
+    public static function getSandboxedForParserCallableFunctionsTests()
+    {
+        yield 'attribute on array' => [
+            'attribute',
+            'index',
+            ['index' => '{{ attribute(data, "secret") }}'],
+            [], [], [],
+            ['data' => ['secret' => 'LEAK']],
+            'LEAK',
+        ];
+
+        yield 'attribute on object property' => [
+            'attribute',
+            'index',
+            ['index' => '{{ attribute(obj, "bar") }}'],
+            [], [], [FooObject::class => ['bar']],
+            ['obj' => new FooObject()],
+            'bar',
+        ];
+
+        yield 'attribute on object method' => [
+            'attribute',
+            'index',
+            ['index' => '{{ attribute(obj, "foo") }}'],
+            [], [FooObject::class => ['foo']], [],
+            ['obj' => new FooObject()],
+            'foo',
+        ];
+
+        yield 'block from same template' => [
+            'block',
+            'index',
+            ['index' => '{% block content %}B{% endblock %}{{ block("content") }}'],
+            ['block'], [], [], [],
+            'BB',
+        ];
+
+        yield 'parent inside inherited block' => [
+            'parent',
+            'child',
+            [
+                'base' => '{% block content %}PARENT{% endblock %}',
+                'child' => '{% extends "base" %}{% block content %}{{ parent() }} CHILD{% endblock %}',
+            ],
+            ['block'], [], [], [],
+            'PARENT CHILD',
+        ];
+    }
+
+    /**
+     * @dataProvider getAllowedParserCallableFunctionsTests
+     */
+    public function testSandboxWithAllowedParserCallableFunctions(string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $allowedFunctions, array $context, string $expected)
+    {
+        $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], $allowedMethods, $allowedProperties, $allowedFunctions);
+        $this->assertSame($expected, $twig->load($templateName)->render($context));
+    }
+
+    public static function getAllowedParserCallableFunctionsTests()
+    {
+        yield 'attribute allowed' => [
+            'index',
+            ['index' => '{{ attribute(data, "x") }}'],
+            [], [], [], ['attribute'],
+            ['data' => ['x' => 'OK']],
+            'OK',
+        ];
+
+        yield 'block allowed' => [
+            'index',
+            ['index' => '{% block content %}B{% endblock %}{{ block("content") }}'],
+            ['block'], [], [], ['block'],
+            [],
+            'BB',
+        ];
+
+        yield 'parent allowed' => [
+            'child',
+            [
+                'base' => '{% block content %}PARENT{% endblock %}',
+                'child' => '{% extends "base" %}{% block content %}{{ parent() }} CHILD{% endblock %}',
+            ],
+            ['block', 'extends'], [], [], ['parent'],
+            [],
+            'PARENT CHILD',
+        ];
+    }
+
     public function testSandboxWithInheritance()
     {
         $twig = $this->getEnvironment(true, [], self::$templates, ['extends', 'block']);

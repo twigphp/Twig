@@ -54,7 +54,13 @@ final class FunctionExpressionParser extends AbstractExpressionParser implements
             $fakeNode = new EmptyNode($line);
             $fakeNode->setSourceContext($parser->getStream()->getSourceContext());
 
-            return ($function->getParserCallable())($parser, $fakeNode, $args, $line);
+            $node = ($function->getParserCallable())($parser, $fakeNode, $args, $line);
+            // remember the original function name so the sandbox can enforce
+            // the `allowedFunctions` allow-list even though the parser callable
+            // returned a specialized node (e.g. `parent`, `block`, `attribute`).
+            $node->setAttribute('sandboxed_function_name', $name);
+
+            return $node;
         }
 
         if (!isset($this->readyNodes[$class = $function->getNodeClass()])) {
