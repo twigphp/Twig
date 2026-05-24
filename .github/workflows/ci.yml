@@ -52,9 +52,6 @@ jobs:
 
         continue-on-error: true
 
-        env:
-            SYMFONY_PHPUNIT_VERSION: ${{ matrix.php-version == '8.1' && '9.6' || '11.3' }}
-
         strategy:
             matrix:
                 php-version:
