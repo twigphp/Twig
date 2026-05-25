@@ -963,6 +963,20 @@ EOF
         $this->assertSame('bar', $twig->load('index')->render($params));
     }
 
+    /**
+     * Kept for forward compatibility with 3.x: code calling setStrict() must keep working.
+     */
+    public function testSetStrictIsANoOp()
+    {
+        $policy = new SecurityPolicy([], [], [], [], []);
+        $policy->setStrict(true);
+        $policy->setStrict(false);
+
+        // 4.0 behavior is the default and unaffected by setStrict()
+        $this->expectException(SecurityNotAllowedTagError::class);
+        $policy->checkSecurity(['extends'], [], []);
+    }
+
     protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [])
     {
         $loader = new ArrayLoader($templates);

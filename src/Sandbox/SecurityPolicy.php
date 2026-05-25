@@ -79,6 +79,19 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $this->allowedFunctions = $functions;
     }
 
+    /**
+     * Kept as a no-op for forward compatibility with 3.x code bases.
+     *
+     * In 3.x, this method toggled an opt-in to the 4.0 sandbox behavior for the
+     * ``extends`` and ``use`` tags and the ``parent``, ``block``, and ``attribute``
+     * functions. In 4.0 that behavior is the default and cannot be turned off, so
+     * calling this method has no effect; it exists only to let user code run
+     * unmodified on both 3.x and 4.0.
+     */
+    public function setStrict(bool $strict): void
+    {
+    }
+
     public function checkSecurity($tags, $filters, $functions): void
     {
         foreach ($tags as $tag) {
