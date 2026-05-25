@@ -8,6 +8,7 @@
  * Cast printed expressions to string so values that cannot be converted to a string (arrays, non-`Stringable` objects, ...) report a usable stack trace at the print location
  * Make the `include()` function return a `Markup` object so an assigned result is not re-escaped when printed
  * Skip the sandbox `__toString` check on arguments whose PHP parameter type cannot implicitly coerce to string
+ * Add an `always_allowed_in_sandbox` option for filters and functions, and an `isAlwaysAllowedInSandbox()` method for token parsers, to let authors mark callables and tags that are always allowed in sandbox mode without explicit allow-listing
 
 # 3.27.1 (2026-05-30)
 

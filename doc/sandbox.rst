@@ -57,6 +57,52 @@ allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
 
         $policy->setStrict(true);
 
+Marking Filters, Functions, and Tags as Always Allowed
+------------------------------------------------------
+
+.. versionadded:: 3.27
+
+    The ``always_allowed_in_sandbox`` option for filters and functions, and
+    the ``isAlwaysAllowedInSandbox()`` method for token parsers, were added in
+    Twig 3.27.
+
+Some filters, functions, and tags are inherently safe and should always be
+usable in sandboxed templates without forcing every policy to allow-list them.
+Mark such callables by setting the ``always_allowed_in_sandbox`` option to
+``true``::
+
+    $twig->addFilter(new \Twig\TwigFilter('upper', 'strtoupper', [
+        'always_allowed_in_sandbox' => true,
+    ]));
+
+    $twig->addFunction(new \Twig\TwigFunction('max', 'max', [
+        'always_allowed_in_sandbox' => true,
+    ]));
+
+For tags, override ``isAlwaysAllowedInSandbox()`` on your token parser to
+return ``true``::
+
+    final class MyTagTokenParser extends \Twig\TokenParser\AbstractTokenParser
+    {
+        public function isAlwaysAllowedInSandbox(): bool
+        {
+            return true;
+        }
+
+        // ...
+    }
+
+Marked filters, functions, and tags are skipped by the sandbox security check
+entirely, so they incur no runtime overhead, and they do not need to be
+listed in the ``SecurityPolicy`` allow-lists.
+
+.. caution::
+
+    Only mark callables and tags as always allowed when their behavior is
+    safe regardless of the arguments they receive. A callable that can read
+    arbitrary PHP constants, access object internals, perform I/O, or trigger
+    side effects must not be marked: keep it under the allow-list.
+
 Enabling the Sandbox
 --------------------
 

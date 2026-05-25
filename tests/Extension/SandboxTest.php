@@ -31,6 +31,11 @@ use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\CallExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
+use Twig\Node\Nodes;
+use Twig\Node\TextNode;
+use Twig\Parser;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
@@ -40,6 +45,9 @@ use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Sandbox\SourcePolicyInterface;
 use Twig\Source;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigCallableInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -1989,6 +1997,134 @@ EOF
 
         $this->assertFalse(CallExpression::needsIsSandboxed($callable));
     }
+
+    public function testAlwaysAllowedInSandboxFilterBypassesAllowList()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ "fabien"|safe_upper }}']);
+        $twig->addFilter(new TwigFilter('safe_upper', 'strtoupper', ['always_allowed_in_sandbox' => true]));
+
+        $this->assertSame('FABIEN', $twig->load('index')->render([]));
+    }
+
+    public function testAlwaysAllowedInSandboxFilterStillEnforcedWhenFlagNotSet()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ "fabien"|gated_upper }}']);
+        $twig->addFilter(new TwigFilter('gated_upper', 'strtoupper'));
+
+        $this->expectException(SecurityNotAllowedFilterError::class);
+        $this->expectExceptionMessage('Filter "gated_upper" is not allowed');
+        $twig->load('index')->render([]);
+    }
+
+    public function testAlwaysAllowedInSandboxFunctionBypassesAllowList()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ safe_greet("fabien") }}']);
+        $twig->addFunction(new TwigFunction('safe_greet', static fn (string $name) => "hi $name", ['always_allowed_in_sandbox' => true]));
+
+        $this->assertSame('hi fabien', $twig->load('index')->render([]));
+    }
+
+    public function testAlwaysAllowedInSandboxFunctionStillEnforcedWhenFlagNotSet()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ gated_greet("fabien") }}']);
+        $twig->addFunction(new TwigFunction('gated_greet', static fn (string $name) => "hi $name"));
+
+        $this->expectException(SecurityNotAllowedFunctionError::class);
+        $this->expectExceptionMessage('Function "gated_greet" is not allowed');
+        $twig->load('index')->render([]);
+    }
+
+    public function testAlwaysAllowedInSandboxFunctionAlsoCoversRangeOperator()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ (1..2)[0] }}']);
+        // override the built-in `range` function with one that is always allowed
+        $twig->addFunction(new TwigFunction('range', 'range', ['always_allowed_in_sandbox' => true]));
+
+        $this->assertSame('1', $twig->load('index')->render([]));
+    }
+
+    public function testAlwaysAllowedInSandboxFilterFromUndefinedCallbackUsesParsedCallable()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ "fabien"|callback_upper }}']);
+        $callbackCalled = false;
+        $twig->registerUndefinedFilterCallback(static function (string $name) use (&$callbackCalled) {
+            if ($callbackCalled || 'callback_upper' !== $name) {
+                return false;
+            }
+            $callbackCalled = true;
+
+            return new TwigFilter('callback_upper', 'strtoupper', ['always_allowed_in_sandbox' => true]);
+        });
+
+        $this->assertSame('FABIEN', $twig->load('index')->render([]));
+    }
+
+    public function testAlwaysAllowedInSandboxFunctionFromUndefinedCallbackUsesParsedCallable()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ callback_upper("fabien") }}']);
+        $callbackCalled = false;
+        $twig->registerUndefinedFunctionCallback(static function (string $name) use (&$callbackCalled) {
+            if ($callbackCalled || 'callback_upper' !== $name) {
+                return false;
+            }
+            $callbackCalled = true;
+
+            return new TwigFunction('callback_upper', 'strtoupper', ['always_allowed_in_sandbox' => true]);
+        });
+
+        $this->assertSame('FABIEN', $twig->load('index')->render([]));
+    }
+
+    public function testAlwaysAllowedInSandboxParserCallableFunctionFromUndefinedCallbackUsesParsedCallable()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ callback_literal() }}']);
+        $callbackCalled = false;
+        $twig->registerUndefinedFunctionCallback(static function (string $name) use (&$callbackCalled) {
+            if ($callbackCalled || 'callback_literal' !== $name) {
+                return false;
+            }
+            $callbackCalled = true;
+
+            return new TwigFunction('callback_literal', null, [
+                'always_allowed_in_sandbox' => true,
+                'parser_callable' => static fn (Parser $parser, Node $node, Nodes $arguments, int $line): ConstantExpression => new ConstantExpression('literal', $line),
+            ]);
+        });
+
+        $this->assertSame('literal', $twig->load('index')->render([]));
+    }
+
+    public function testAlwaysAllowedInSandboxTagBypassesAllowList()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% always_allowed_tag %}']);
+        $twig->addTokenParser(new AlwaysAllowedSandboxTokenParser());
+
+        $this->assertSame('always-allowed', $twig->load('index')->render([]));
+    }
+
+    public function testAlwaysAllowedInSandboxTagStillEnforcedWhenFlagNotSet()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% gated_tag %}']);
+        $twig->addTokenParser(new GatedSandboxTokenParser());
+
+        $this->expectException(SecurityNotAllowedTagError::class);
+        $this->expectExceptionMessage('Tag "gated_tag" is not allowed');
+        $twig->load('index')->render([]);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testCustomTokenParserWithoutIsAlwaysAllowedInSandboxTriggersDeprecation()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% legacy_tag %}'], tags: ['legacy_tag']);
+        $twig->addTokenParser(new LegacyTokenParserWithoutIsAlwaysAllowedInSandbox());
+
+        $this->expectDeprecation(\sprintf('Since twig/twig 3.27: Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "Twig\TokenParser\TokenParserInterface" interface in 4.0.', LegacyTokenParserWithoutIsAlwaysAllowedInSandbox::class));
+
+        // tag is allow-listed, so the render itself succeeds; the deprecation fires from the sandbox visitor while compiling
+        $this->assertSame('', $twig->load('index')->render([]));
+    }
 }
 
 class LegacyTwigCallableWithoutNeedsIsSandboxed implements TwigCallableInterface
@@ -2222,5 +2358,62 @@ class CyclicTraversableObject implements \IteratorAggregate
     public function getIterator(): \Traversable
     {
         yield $this;
+    }
+}
+
+class AlwaysAllowedSandboxTokenParser extends AbstractTokenParser
+{
+    public function parse(Token $token): Node
+    {
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+
+        return new TextNode('always-allowed', $token->getLine());
+    }
+
+    public function getTag(): string
+    {
+        return 'always_allowed_tag';
+    }
+
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return true;
+    }
+}
+
+class GatedSandboxTokenParser extends AbstractTokenParser
+{
+    public function parse(Token $token): Node
+    {
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+
+        return new TextNode('gated', $token->getLine());
+    }
+
+    public function getTag(): string
+    {
+        return 'gated_tag';
+    }
+}
+
+class LegacyTokenParserWithoutIsAlwaysAllowedInSandbox implements TokenParserInterface
+{
+    private Parser $parser;
+
+    public function setParser(Parser $parser): void
+    {
+        $this->parser = $parser;
+    }
+
+    public function parse(Token $token): Node
+    {
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+
+        return new TextNode('', $token->getLine());
+    }
+
+    public function getTag(): string
+    {
+        return 'legacy_tag';
     }
 }

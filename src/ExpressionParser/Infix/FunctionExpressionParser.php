@@ -59,6 +59,7 @@ final class FunctionExpressionParser extends AbstractExpressionParser implements
             // the `allowedFunctions` allow-list even though the parser callable
             // returned a specialized node (e.g. `parent`, `block`, `attribute`).
             $node->setAttribute('sandboxed_function_name', $name);
+            $node->setAttribute('sandboxed_function', $function);
 
             return $node;
         }

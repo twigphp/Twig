@@ -34,6 +34,11 @@ abstract class AbstractTokenParser implements TokenParserInterface
         $this->parser = $parser;
     }
 
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return false;
+    }
+
     /**
      * Parses an assignment expression like "a, b".
      */

@@ -312,6 +312,17 @@ Sandbox
   on ``Twig\Sandbox\SecurityPolicy`` opts-in to the 4.0 behavior for these
   functions too.
 
+* Not implementing the ``isAlwaysAllowedInSandbox()`` method in
+  ``Twig\TwigCallableInterface`` implementations (``TwigFilter``,
+  ``TwigFunction``, ``TwigTest``) and in
+  ``Twig\TokenParser\TokenParserInterface`` implementations is deprecated as
+  of Twig 3.27. This method will be added to both interfaces in Twig 4.0. It
+  returns ``true`` when the filter, function, test, or tag is always allowed
+  in a sandboxed template, regardless of the security policy allow-list.
+  Custom callables extending ``Twig\AbstractTwigCallable`` and custom token
+  parsers extending ``Twig\TokenParser\AbstractTokenParser`` inherit a
+  default implementation that returns ``false``.
+
 * The ``Twig\Sandbox\SourcePolicyInterface`` interface is deprecated as of Twig
   3.27.0 with no replacement. Passing an instance to the
   ``Twig\Extension\SandboxExtension`` constructor triggers a deprecation.

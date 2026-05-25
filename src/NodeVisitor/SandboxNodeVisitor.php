@@ -27,6 +27,8 @@ use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
+use Twig\TokenParser\TokenParserInterface;
+use Twig\TwigCallableInterface;
 use Twig\Util\CallableParameters;
 
 /**
@@ -53,18 +55,18 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             $this->functions = [];
         } elseif ($this->inAModule) {
             // look for tags
-            if ($node->getNodeTag() && !isset($this->tags[$node->getNodeTag()])) {
+            if ($node->getNodeTag() && !isset($this->tags[$node->getNodeTag()]) && !$this->isTagAlwaysAllowedInSandbox($env, $node->getNodeTag())) {
                 $this->tags[$node->getNodeTag()] = $node->getTemplateLine();
             }
 
             // look for filters
-            if ($node instanceof FilterExpression && !isset($this->filters[$node->getAttribute('name')])) {
-                $this->filters[$node->getAttribute('name')] = $node->getTemplateLine();
+            if ($node instanceof FilterExpression && !isset($this->filters[$name = $node->getAttribute('name')]) && !$this->isFilterAlwaysAllowedInSandbox($env, $node)) {
+                $this->filters[$name] = $node->getTemplateLine();
             }
 
             // look for functions
-            if ($node instanceof FunctionExpression && !isset($this->functions[$node->getAttribute('name')])) {
-                $this->functions[$node->getAttribute('name')] = $node->getTemplateLine();
+            if ($node instanceof FunctionExpression && !isset($this->functions[$name = $node->getAttribute('name')]) && !$this->isFunctionAlwaysAllowedInSandbox($env, $node)) {
+                $this->functions[$name] = $node->getTemplateLine();
             }
 
             // look for functions whose parser callable replaced the FunctionExpression
@@ -72,13 +74,13 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             // original function name was stashed by FunctionExpressionParser.
             if ($node->hasAttribute('sandboxed_function_name')) {
                 $name = $node->getAttribute('sandboxed_function_name');
-                if (!isset($this->functions[$name])) {
+                if (!isset($this->functions[$name]) && !$this->isSandboxedFunctionAlwaysAllowedInSandbox($env, $node, $name)) {
                     $this->functions[$name] = $node->getTemplateLine();
                 }
             }
 
             // the .. operator is equivalent to the range() function
-            if ($node instanceof RangeBinary && !isset($this->functions['range'])) {
+            if ($node instanceof RangeBinary && !isset($this->functions['range']) && !$this->isFunctionNameAlwaysAllowedInSandbox($env, 'range')) {
                 $this->functions['range'] = $node->getTemplateLine();
             }
         }
@@ -198,6 +200,72 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         } elseif ($expr instanceof FilterExpression || $expr instanceof FunctionExpression) {
             $node->setNode($name, new CheckToStringNode($expr));
         }
+    }
+
+    private function isTagAlwaysAllowedInSandbox(Environment $env, string $name): bool
+    {
+        if (null === $parser = $env->getTokenParser($name)) {
+            return false;
+        }
+
+        return self::isAlwaysAllowedInSandbox($parser);
+    }
+
+    private function isFilterAlwaysAllowedInSandbox(Environment $env, FilterExpression $node): bool
+    {
+        if ($node->hasAttribute('twig_callable')) {
+            $filter = $node->getAttribute('twig_callable');
+        } elseif (null === $filter = $env->getFilter($node->getAttribute('name'))) {
+            return false;
+        }
+
+        return self::isAlwaysAllowedInSandbox($filter);
+    }
+
+    private function isFunctionAlwaysAllowedInSandbox(Environment $env, FunctionExpression $node): bool
+    {
+        if ($node->hasAttribute('twig_callable')) {
+            $function = $node->getAttribute('twig_callable');
+        } elseif (null === $function = $env->getFunction($node->getAttribute('name'))) {
+            return false;
+        }
+
+        return self::isAlwaysAllowedInSandbox($function);
+    }
+
+    private function isSandboxedFunctionAlwaysAllowedInSandbox(Environment $env, Node $node, string $name): bool
+    {
+        if ($node->hasAttribute('sandboxed_function')) {
+            $function = $node->getAttribute('sandboxed_function');
+        } elseif (null === $function = $env->getFunction($name)) {
+            return false;
+        }
+
+        return self::isAlwaysAllowedInSandbox($function);
+    }
+
+    private function isFunctionNameAlwaysAllowedInSandbox(Environment $env, string $name): bool
+    {
+        if (null === $function = $env->getFunction($name)) {
+            return false;
+        }
+
+        return self::isAlwaysAllowedInSandbox($function);
+    }
+
+    /**
+     * @param TwigCallableInterface|TokenParserInterface $subject
+     */
+    private static function isAlwaysAllowedInSandbox($subject): bool
+    {
+        if (method_exists($subject, 'isAlwaysAllowedInSandbox')) {
+            return $subject->isAlwaysAllowedInSandbox();
+        }
+
+        $interface = $subject instanceof TokenParserInterface ? TokenParserInterface::class : TwigCallableInterface::class;
+        trigger_deprecation('twig/twig', '3.27', 'Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "%s" interface in 4.0.', $subject::class, $interface);
+
+        return false;
     }
 
     public function getPriority(): int

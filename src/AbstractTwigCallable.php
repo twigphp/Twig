@@ -34,6 +34,7 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
             'needs_charset' => false,
             'needs_is_sandboxed' => false,
             'is_variadic' => false,
+            'always_allowed_in_sandbox' => false,
             'deprecation_info' => null,
             'deprecated' => false,
             'deprecating_package' => '',
@@ -111,6 +112,11 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
     public function needsIsSandboxed(): bool
     {
         return $this->options['needs_is_sandboxed'];
+    }
+
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return $this->options['always_allowed_in_sandbox'];
     }
 
     /**
