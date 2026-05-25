@@ -118,6 +118,49 @@ class SandboxTest extends TestCase
         yield ['with', '{% with foo %}{% endwith %}'];
     }
 
+    #[DataProvider('getUnallowedParserCallableFunctionsTests')]
+    public function testSandboxUnallowedParserCallableFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $context)
+    {
+        $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], [], [], []);
+
+        try {
+            $twig->load($templateName)->render($context);
+            $this->fail(\sprintf('Sandbox throws a SecurityError exception when the "%s" function is not in allowedFunctions', $function));
+        } catch (SecurityNotAllowedFunctionError $e) {
+            $this->assertSame($function, $e->getFunctionName());
+        }
+    }
+
+    public static function getUnallowedParserCallableFunctionsTests()
+    {
+        yield 'attribute' => [
+            'attribute',
+            'index',
+            ['index' => '{{ attribute(data, "secret") }}'],
+            [],
+            ['data' => ['secret' => 'LEAK']],
+        ];
+
+        yield 'block' => [
+            'block',
+            'index',
+            ['index' => '{% block content %}B{% endblock %}{{ block("content") }}'],
+            ['block'],
+            [],
+        ];
+
+        yield 'parent' => [
+            'parent',
+            'child',
+            [
+                'base' => '{% block content %}PARENT{% endblock %}',
+                'child' => '{% extends "base" %}{% block content %}{{ parent() }} CHILD{% endblock %}',
+            ],
+            ['block', 'extends'],
+            [],
+        ];
+    }
+
     #[DataProvider('getAllowedParserCallableFunctionsTests')]
     public function testSandboxWithAllowedParserCallableFunctions(string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $allowedFunctions, array $context, string $expected)
     {
