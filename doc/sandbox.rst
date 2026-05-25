@@ -48,9 +48,14 @@ allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
 
 .. caution::
 
-    The ``extends`` and ``use`` tags are always allowed in a sandboxed
-    template. That behavior will change in 4.0 where these tags will need to be
-    explicitly allowed like any other tag.
+    The ``extends`` and ``use`` tags, as well as the ``parent``, ``block``, and
+    ``attribute`` functions are always allowed in a sandboxed template. That
+    behavior will change in 4.0 where they will need to be explicitly allowed
+    like any other tag or function. To opt-in to the 4.0 behavior now (so they
+    need to be allow-listed or get rejected), enable strict mode on the
+    security policy::
+
+        $policy->setStrict(true);
 
 Enabling the Sandbox
 --------------------

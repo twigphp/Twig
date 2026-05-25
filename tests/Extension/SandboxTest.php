@@ -135,7 +135,7 @@ class SandboxTest extends TestCase
      */
     public function testSandboxForExtendsAndUseTags(string $tag, string $template)
     {
-        $this->expectDeprecation(\sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.', $tag));
+        $this->expectDeprecation(\sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).', $tag));
 
         $twig = $this->getEnvironment(true, [], self::$templates, []);
         $twig->createTemplate($template, 'index')->render([]);
@@ -154,7 +154,7 @@ class SandboxTest extends TestCase
      */
     public function testSandboxForParserCallableFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $context, string $expected)
     {
-        $this->expectDeprecation(\sprintf('Since twig/twig 3.27: The "%s" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.', $function));
+        $this->expectDeprecation(\sprintf('Since twig/twig 3.27: The "%s" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).', $function));
 
         $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], $allowedMethods, $allowedProperties, []);
         $this->assertSame($expected, $twig->load($templateName)->render($context));
@@ -246,6 +246,98 @@ class SandboxTest extends TestCase
             [],
             'PARENT CHILD',
         ];
+    }
+
+    /**
+     * @dataProvider getStrictSandboxRejectsGrandfatheredTagsTests
+     */
+    public function testStrictSandboxRejectsGrandfatheredTags(string $tag, string $template)
+    {
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], null, true);
+
+        $this->expectException(SecurityNotAllowedTagError::class);
+        $this->expectExceptionMessage(\sprintf('Tag "%s" is not allowed', $tag));
+
+        $twig->createTemplate($template, 'index')->render([]);
+    }
+
+    public static function getStrictSandboxRejectsGrandfatheredTagsTests()
+    {
+        yield ['extends', '{% extends "1_empty" %}'];
+        yield ['use', '{% use "1_empty" %}'];
+    }
+
+    /**
+     * @dataProvider getStrictSandboxRejectsGrandfatheredFunctionsTests
+     */
+    public function testStrictSandboxRejectsGrandfatheredFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $context)
+    {
+        $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], [], [], [], null, true);
+
+        $this->expectException(SecurityNotAllowedFunctionError::class);
+        $this->expectExceptionMessage(\sprintf('Function "%s" is not allowed', $function));
+
+        $twig->load($templateName)->render($context);
+    }
+
+    public static function getStrictSandboxRejectsGrandfatheredFunctionsTests()
+    {
+        yield 'attribute' => [
+            'attribute',
+            'index',
+            ['index' => '{{ attribute(data, "secret") }}'],
+            [],
+            ['data' => ['secret' => 'LEAK']],
+        ];
+
+        yield 'block' => [
+            'block',
+            'index',
+            ['index' => '{% block content %}B{% endblock %}{{ block("content") }}'],
+            ['block'],
+            [],
+        ];
+
+        yield 'parent' => [
+            'parent',
+            'child',
+            [
+                'base' => '{% block content %}PARENT{% endblock %}',
+                'child' => '{% extends "base" %}{% block content %}{{ parent() }} CHILD{% endblock %}',
+            ],
+            ['extends', 'block'],
+            [],
+        ];
+    }
+
+    public function testStrictSandboxStillAllowsExplicitlyAllowedGrandfatheredNames()
+    {
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            [
+                'base' => '{% block content %}PARENT{% endblock %}',
+                'child' => '{% extends "base" %}{% block content %}{{ parent() }} CHILD - {{ attribute(data, "x") }}{% endblock %}',
+            ],
+            ['extends', 'block'],
+            [],
+            [],
+            [],
+            ['parent', 'attribute'],
+            null,
+            true,
+        );
+
+        $this->assertSame('PARENT CHILD - OK', $twig->load('child')->render(['data' => ['x' => 'OK']]));
+    }
+
+    public function testStrictModeCanBeEnabledViaSetterAfterConstruction()
+    {
+        $policy = new SecurityPolicy([], [], [], [], []);
+        $policy->setStrict(true);
+
+        $this->expectException(SecurityNotAllowedTagError::class);
+        $policy->checkSecurity(['extends'], [], []);
     }
 
     public function testSandboxWithInheritance()
@@ -1081,11 +1173,12 @@ EOF
         $this->assertSame('bar', $twig->load('index')->render($params));
     }
 
-    protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [], $sourcePolicy = null)
+    protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [], $sourcePolicy = null, bool $strict = false)
     {
         $loader = new ArrayLoader($templates);
         $twig = new Environment($loader, array_merge(['debug' => true, 'cache' => false, 'autoescape' => false], $options));
         $policy = new SecurityPolicy($tags, $filters, $methods, $properties, $functions);
+        $policy->setStrict($strict);
         $twig->addExtension(new SandboxExtension($policy, $sandboxed, $sourcePolicy));
 
         return $twig;

@@ -26,6 +26,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
     private $allowedMethods;
     private $allowedProperties;
     private $allowedFunctions;
+    private bool $strict = false;
 
     public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [])
     {
@@ -64,14 +65,28 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $this->allowedFunctions = $functions;
     }
 
+    /**
+     * Toggles strict mode.
+     *
+     * In strict mode, the tags and functions that are historically always allowed in a
+     * sandbox (the ``extends`` and ``use`` tags, the ``parent``, ``block``, and
+     * ``attribute`` functions) are no longer implicitly allowed and must be added to the
+     * relevant allow-list to be usable. Use this flag in 3.x to opt-in to the forthcoming
+     * 4.0 behavior and silence the related deprecations.
+     */
+    public function setStrict(bool $strict): void
+    {
+        $this->strict = $strict;
+    }
+
     public function checkSecurity($tags, $filters, $functions): void
     {
         foreach ($tags as $tag) {
             if (!\in_array($tag, $this->allowedTags, true)) {
-                if ('extends' === $tag) {
-                    trigger_deprecation('twig/twig', '3.12', 'The "extends" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
-                } elseif ('use' === $tag) {
-                    trigger_deprecation('twig/twig', '3.12', 'The "use" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
+                if (!$this->strict && 'extends' === $tag) {
+                    trigger_deprecation('twig/twig', '3.12', 'The "extends" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).');
+                } elseif (!$this->strict && 'use' === $tag) {
+                    trigger_deprecation('twig/twig', '3.12', 'The "use" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).');
                 } else {
                     throw new SecurityNotAllowedTagError(\sprintf('Tag "%s" is not allowed.', $tag), $tag);
                 }
@@ -86,12 +101,12 @@ final class SecurityPolicy implements SecurityPolicyInterface
 
         foreach ($functions as $function) {
             if (!\in_array($function, $this->allowedFunctions, true)) {
-                if ('parent' === $function) {
-                    trigger_deprecation('twig/twig', '3.27', 'The "parent" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
-                } elseif ('block' === $function) {
-                    trigger_deprecation('twig/twig', '3.27', 'The "block" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
-                } elseif ('attribute' === $function) {
-                    trigger_deprecation('twig/twig', '3.27', 'The "attribute" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed.');
+                if (!$this->strict && 'parent' === $function) {
+                    trigger_deprecation('twig/twig', '3.27', 'The "parent" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).');
+                } elseif (!$this->strict && 'block' === $function) {
+                    trigger_deprecation('twig/twig', '3.27', 'The "block" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).');
+                } elseif (!$this->strict && 'attribute' === $function) {
+                    trigger_deprecation('twig/twig', '3.27', 'The "attribute" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).');
                 } else {
                     throw new SecurityNotAllowedFunctionError(\sprintf('Function "%s" is not allowed.', $function), $function);
                 }
