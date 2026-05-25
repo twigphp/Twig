@@ -64,6 +64,10 @@ Nodes
 * Not passing a ``BodyNode`` instance as the body of a ``ModuleNode`` or
   ``MacroNode`` constructor is deprecated as of Twig 3.12.
 
+* Not passing the ``$usedTests`` argument to
+  ``Twig\Node\CheckSecurityNode::__construct()`` is deprecated as of Twig
+  3.28; the argument will be required in 4.0.
+
 * Returning ``null`` from ``TokenParserInterface::parse()`` is deprecated as of
   Twig 3.12 (as forbidden by the interface).
 
@@ -322,6 +326,28 @@ Sandbox
   Custom callables extending ``Twig\AbstractTwigCallable`` and custom token
   parsers extending ``Twig\TokenParser\AbstractTokenParser`` inherit a
   default implementation that returns ``false``.
+
+* Having the ``constant`` test and user-defined tests always allowed by default
+  in a sandbox is deprecated as of Twig 3.28. You will need to explicitly allow
+  them via the new ``allowedTests`` parameter of ``Twig\Sandbox\SecurityPolicy``
+  (or via ``setAllowedTests()``) in 4.0. The same ``setStrict(true)`` toggle
+  opts-in to the 4.0 behavior for tests too. The other built-in tests
+  (``empty``, ``defined``, ``even``, ``same as``, ``iterable``, etc.) are
+  flagged as always allowed and do not trigger this deprecation.
+
+* Not declaring a 4th ``array $tests`` argument in
+  ``Twig\Sandbox\SecurityPolicyInterface::checkSecurity()`` implementations is
+  deprecated as of Twig 3.28. The argument will be part of the interface
+  signature in 4.0.
+
+* Not passing the ``$tests`` argument to
+  ``Twig\Sandbox\SecurityPolicy::checkSecurity()`` is deprecated as of Twig
+  3.28; it will be required in 4.0.
+
+* Passing a ``Twig\Source`` as the 4th argument of
+  ``Twig\Extension\SandboxExtension::checkSecurity()`` is deprecated as of
+  Twig 3.28. The 4th argument is now an ``array`` of tests; pass the source
+  as the 5th argument instead.
 
 * The ``Twig\Sandbox\SourcePolicyInterface`` interface is deprecated as of Twig
   3.27.0 with no replacement. Passing an instance to the

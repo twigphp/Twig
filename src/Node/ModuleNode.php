@@ -184,6 +184,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
                 ->write("use Twig\Sandbox\SecurityNotAllowedTagError;\n")
                 ->write("use Twig\Sandbox\SecurityNotAllowedFilterError;\n")
                 ->write("use Twig\Sandbox\SecurityNotAllowedFunctionError;\n")
+                ->write("use Twig\Sandbox\SecurityNotAllowedTestError;\n")
                 ->write("use Twig\Source;\n")
                 ->write("use Twig\Template;\n")
                 ->write("use Twig\TemplateWrapper;\n")

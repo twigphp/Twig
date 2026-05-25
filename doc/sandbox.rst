@@ -29,13 +29,24 @@ properties and methods on objects::
         'Article' => ['title', 'body'],
     ];
     $functions = ['range'];
-    $policy = new \Twig\Sandbox\SecurityPolicy($tags, $filters, $methods, $properties, $functions);
+    $tests = ['my_test'];
+    $policy = new \Twig\Sandbox\SecurityPolicy($tags, $filters, $methods, $properties, $functions, $tests);
 
 With the above configuration, the security policy will only allow usage of the
-``if`` tag, and the ``upper`` filter. Moreover, the templates will only be able
-to call the ``getTitle()`` and ``getBody()`` methods on ``Article`` objects,
-and the ``title`` and ``body`` public properties. Everything else won't be
-allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
+``if`` tag, the ``upper`` filter, and the ``my_test`` test (on top of the
+built-in tests that are always allowed, see below). Moreover, the templates
+will only be able to call the ``getTitle()`` and ``getBody()`` methods on
+``Article`` objects, and the ``title`` and ``body`` public properties.
+Everything else won't be allowed and will generate a
+``\Twig\Sandbox\SecurityError`` exception.
+
+.. note::
+
+    The ``allowedTests`` argument is available since Twig 3.28 (in earlier
+    versions all tests were always allowed). Most built-in tests (``empty``,
+    ``defined``, ``even``, ``same as``, ``iterable``, etc.) are always allowed
+    and do not need to be listed. Only custom tests and the built-in
+    ``constant`` test must be allow-listed like filters and functions.
 
 .. note::
 
@@ -48,34 +59,38 @@ allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
 
 .. caution::
 
-    The ``extends`` and ``use`` tags, as well as the ``parent``, ``block``, and
-    ``attribute`` functions are always allowed in a sandboxed template. That
-    behavior will change in 4.0 where they will need to be explicitly allowed
-    like any other tag or function. To opt-in to the 4.0 behavior now (so they
-    need to be allow-listed or get rejected), enable strict mode on the
-    security policy::
+    The ``extends`` and ``use`` tags, the ``parent``, ``block``, and
+    ``attribute`` functions, the ``constant`` test, and any custom test are
+    always allowed in a sandboxed template. That behavior will change in 4.0
+    where they will need to be explicitly allowed like any other tag, filter,
+    function, or test. To opt-in to the 4.0 behavior now (so they need to be
+    allow-listed or get rejected), enable strict mode on the security policy::
 
         $policy->setStrict(true);
 
-Marking Filters, Functions, and Tags as Always Allowed
-------------------------------------------------------
+Marking Filters, Functions, Tests, and Tags as Always Allowed
+-------------------------------------------------------------
 
 .. versionadded:: 3.28
 
-    The ``always_allowed_in_sandbox`` option for filters and functions, and
-    the ``isAlwaysAllowedInSandbox()`` method for token parsers, were added in
-    Twig 3.28.
+    The ``always_allowed_in_sandbox`` option for filters, functions, and tests,
+    and the ``isAlwaysAllowedInSandbox()`` method for token parsers, were added
+    in Twig 3.28.
 
-Some filters, functions, and tags are inherently safe and should always be
-usable in sandboxed templates without forcing every policy to allow-list them.
-Mark such callables by setting the ``always_allowed_in_sandbox`` option to
-``true``::
+Some filters, functions, tests, and tags are inherently safe and should always
+be usable in sandboxed templates without forcing every policy to allow-list
+them. Mark such callables by setting the ``always_allowed_in_sandbox`` option
+to ``true``::
 
     $twig->addFilter(new \Twig\TwigFilter('upper', 'strtoupper', [
         'always_allowed_in_sandbox' => true,
     ]));
 
     $twig->addFunction(new \Twig\TwigFunction('max', 'max', [
+        'always_allowed_in_sandbox' => true,
+    ]));
+
+    $twig->addTest(new \Twig\TwigTest('even', null, [
         'always_allowed_in_sandbox' => true,
     ]));
 
@@ -92,8 +107,8 @@ return ``true``::
         // ...
     }
 
-Marked filters, functions, and tags are skipped by the sandbox security check
-entirely, so they incur no runtime overhead, and they do not need to be
+Marked filters, functions, tests, and tags are skipped by the sandbox security
+check entirely, so they incur no runtime overhead, and they do not need to be
 listed in the ``SecurityPolicy`` allow-lists.
 
 The sandbox assumes that attackers control template source, not the Twig
@@ -110,9 +125,9 @@ Only mark a callable or tag as always allowed when **all** the following
 conditions hold:
 
 * **No new capability.** The item must not expose anything beyond what the
-  sandbox already accepts. Pure value predicates (``is even``), pure value
-  transformations (``upper``, ``trim``, ``abs``), and pure control flow
-  (``if``, ``for``, ``set``) qualify.
+  sandbox already accepts. Pure value predicates (``is even``, ``is empty``),
+  pure value transformations (``upper``, ``trim``, ``abs``), and pure control
+  flow (``if``, ``for``, ``set``) qualify.
 * **No PHP runtime access.** The item must not read arbitrary PHP constants,
   call arbitrary classes or functions, instantiate objects from
   user-controlled names, or otherwise reach into the PHP runtime. This rules
@@ -170,6 +185,15 @@ explicitly allow-listed in 3.x.
 When upgrading to 4.0, you can drop these names from your ``SecurityPolicy``
 allow-lists. Leaving them in is harmless: listing a name that is always
 allowed has no effect.
+
+The corresponding built-in tests (``defined``, ``divisible by``, ``empty``,
+``even``, ``iterable``, ``mapping``, ``none``, ``null``, ``odd``, ``same as``,
+``sequence``, ``true``) are **already** flagged as always allowed since Twig
+3.28, so they never need to be allow-listed. This is safe because tests were
+never enforced by the sandbox before 3.28: flagging them keeps existing
+templates working unchanged. The ``constant`` test is the exception: it reaches
+into the PHP runtime, so it is not always allowed and must be allow-listed (it
+is still implicitly allowed in 3.x with a deprecation, and rejected in 4.0).
 
 Enabling the Sandbox
 --------------------

@@ -1,5 +1,12 @@
 parameters:
 	ignoreErrors:
+		- # The "$tests" parameter is documented now and will be part of the signature in 4.0
+			message: '#^PHPDoc tag @param references unknown parameter\: \$tests$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Sandbox/SecurityPolicyInterface.php
+
+
 		- # 2 parameters will be required
 			message: '#^Method Twig\\Node\\IncludeNode\:\:addGetTemplate\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count

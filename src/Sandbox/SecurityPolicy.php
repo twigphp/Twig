@@ -26,15 +26,17 @@ final class SecurityPolicy implements SecurityPolicyInterface
     private $allowedMethods;
     private $allowedProperties;
     private $allowedFunctions;
+    private array $allowedTests;
     private bool $strict = false;
 
-    public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [])
+    public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [], array $allowedTests = [])
     {
         $this->allowedTags = $allowedTags;
         $this->allowedFilters = $allowedFilters;
         $this->setAllowedMethods($allowedMethods);
         $this->allowedProperties = $allowedProperties;
         $this->allowedFunctions = $allowedFunctions;
+        $this->allowedTests = $allowedTests;
     }
 
     public function setAllowedTags(array $tags): void
@@ -65,22 +67,32 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $this->allowedFunctions = $functions;
     }
 
+    public function setAllowedTests(array $tests): void
+    {
+        $this->allowedTests = $tests;
+    }
+
     /**
      * Toggles strict mode.
      *
-     * In strict mode, the tags and functions that are historically always allowed in a
-     * sandbox (the ``extends`` and ``use`` tags, the ``parent``, ``block``, and
-     * ``attribute`` functions) are no longer implicitly allowed and must be added to the
-     * relevant allow-list to be usable. Use this flag in 3.x to opt-in to the forthcoming
-     * 4.0 behavior and silence the related deprecations.
+     * In strict mode, the tags, functions, and tests that are historically always
+     * allowed in a sandbox (the ``extends`` and ``use`` tags, the ``parent``,
+     * ``block``, and ``attribute`` functions, and any test) are no longer implicitly
+     * allowed and must be added to the relevant allow-list to be usable. Use this
+     * flag in 3.x to opt-in to the forthcoming 4.0 behavior and silence the related
+     * deprecations.
      */
     public function setStrict(bool $strict): void
     {
         $this->strict = $strict;
     }
 
-    public function checkSecurity($tags, $filters, $functions): void
+    public function checkSecurity($tags, $filters, $functions, array $tests = []): void
     {
+        if (\func_num_args() < 4) {
+            trigger_deprecation('twig/twig', '3.28', 'Not passing the "$tests" argument to "%s::checkSecurity()" is deprecated; it will be required in 4.0.', static::class);
+        }
+
         foreach ($tags as $tag) {
             if (!\in_array($tag, $this->allowedTags, true)) {
                 if (!$this->strict && 'extends' === $tag) {
@@ -109,6 +121,16 @@ final class SecurityPolicy implements SecurityPolicyInterface
                     trigger_deprecation('twig/twig', '3.27', 'The "attribute" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).');
                 } else {
                     throw new SecurityNotAllowedFunctionError(\sprintf('Function "%s" is not allowed.', $function), $function);
+                }
+            }
+        }
+
+        foreach ($tests as $test) {
+            if (!\in_array($test, $this->allowedTests, true)) {
+                if (!$this->strict) {
+                    trigger_deprecation('twig/twig', '3.28', 'The "%s" test is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).', $test);
+                } else {
+                    throw new SecurityNotAllowedTestError(\sprintf('Test "%s" is not allowed.', $test), $test);
                 }
             }
         }
