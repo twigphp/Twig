@@ -302,11 +302,15 @@ Sandbox
 
 * Having the ``extends`` and ``use`` tags allowed by default in a sandbox is
   deprecated as of Twig 3.12. You will need to explicitly allow them if needed
-  in 4.0.
+  in 4.0. To opt-in to the 4.0 behavior now (so the tags need to be
+  allow-listed or get rejected), enable strict mode on the security policy by
+  calling ``$policy->setStrict(true)``.
 
 * Having the ``parent``, ``block``, and ``attribute`` functions allowed by
   default in a sandbox is deprecated as of Twig 3.27. You will need to
-  explicitly allow them if needed in 4.0.
+  explicitly allow them if needed in 4.0. The same ``setStrict(true)`` toggle
+  on ``Twig\Sandbox\SecurityPolicy`` opts-in to the 4.0 behavior for these
+  functions too.
 
 * The ``Twig\Sandbox\SourcePolicyInterface`` interface is deprecated as of Twig
   3.27.0 with no replacement. Passing an instance to the
