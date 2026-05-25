@@ -1728,10 +1728,6 @@ final class CoreExtension extends AbstractExtension
 
             static $propertyCheckers = [];
 
-            if ($object instanceof \Closure && '__invoke' === $item) {
-                return $isDefinedTest ? true : $object();
-            }
-
             if (isset($object->$item)
                 || ($propertyCheckers[$object::class][$item] ??= self::getPropertyChecker($object::class, $item))($object, $item)
             ) {

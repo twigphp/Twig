@@ -62,6 +62,27 @@ the extension constructor::
 
     $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
 
+Allowed Operations Apply Transitively to Their Arguments
+--------------------------------------------------------
+
+The method and property allow-lists only restrict attribute access written
+explicitly in the template (``obj.foo`` and ``obj.foo()``). Once an object is
+passed as an argument to an allowed tag, filter, function, or test, that
+operation can interact with it in any way PHP allows, without going through
+the sandbox allow-list.
+
+This is especially easy to miss for implicit calls made through PHP
+interfaces. For example, allowing ``json_encode`` may expose public object
+properties and call ``JsonSerializable::jsonSerialize()``; allowing sequence
+operations such as ``for``, ``keys``, ``slice``, ``random``, or ``join`` may
+call ``IteratorAggregate::getIterator()``, ``Iterator`` methods, or
+``Countable::count()``; allowing ``cycle`` with an ``ArrayAccess`` value may
+call ``offsetGet()``. None of these calls appear in the template source.
+
+Only allow operations whose behavior is safe for the objects you expose to
+sandboxed templates. If this is not guaranteed, convert objects to plain
+arrays or scalars before passing them in.
+
 Limiting Resource Usage
 -----------------------
 
