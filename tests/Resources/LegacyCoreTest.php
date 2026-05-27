@@ -122,6 +122,93 @@ class LegacyCoreTest extends TestCase
         $template->callLegacyArrayReduce([1, 2], 'intval');
     }
 
+    public function testTwigArraySomeEnforcesGlobalSandbox()
+    {
+        $env = $this->createSandboxedEnvironment(true);
+        $template = new LegacyCoreTestTemplate($env, 'index.twig');
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessageMatches('/must be a Closure in sandbox mode/');
+        $template->callLegacyArraySome(['a', 'b'], 'is_string');
+    }
+
+    public function testTwigArraySomeRecoversSourceForSourcePolicy()
+    {
+        $env = $this->createSandboxedEnvironment(false, new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return 'sandboxed.twig' === $source->getName();
+            }
+        });
+
+        $template = new LegacyCoreTestTemplate($env, 'sandboxed.twig');
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessageMatches('/must be a Closure in sandbox mode/');
+        $template->callLegacyArraySome(['a', 'b'], 'is_string');
+    }
+
+    public function testTwigArrayEveryEnforcesGlobalSandbox()
+    {
+        $env = $this->createSandboxedEnvironment(true);
+        $template = new LegacyCoreTestTemplate($env, 'index.twig');
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessageMatches('/must be a Closure in sandbox mode/');
+        $template->callLegacyArrayEvery(['a', 'b'], 'is_string');
+    }
+
+    public function testTwigArrayEveryRecoversSourceForSourcePolicy()
+    {
+        $env = $this->createSandboxedEnvironment(false, new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return 'sandboxed.twig' === $source->getName();
+            }
+        });
+
+        $template = new LegacyCoreTestTemplate($env, 'sandboxed.twig');
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessageMatches('/must be a Closure in sandbox mode/');
+        $template->callLegacyArrayEvery(['a', 'b'], 'is_string');
+    }
+
+    public function testTwigCheckArrowInSandboxEnforcesGlobalSandbox()
+    {
+        $env = $this->createSandboxedEnvironment(true);
+        $template = new LegacyCoreTestTemplate($env, 'index.twig');
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessageMatches('/must be a Closure in sandbox mode/');
+        $template->callLegacyCheckArrowInSandbox('strlen', 'test', 'filter');
+    }
+
+    public function testTwigCheckArrowInSandboxRecoversSourceForSourcePolicy()
+    {
+        $env = $this->createSandboxedEnvironment(false, new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return 'sandboxed.twig' === $source->getName();
+            }
+        });
+
+        $template = new LegacyCoreTestTemplate($env, 'sandboxed.twig');
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessageMatches('/must be a Closure in sandbox mode/');
+        $template->callLegacyCheckArrowInSandbox('strlen', 'test', 'filter');
+    }
+
+    public function testTwigCheckArrowInSandboxIsNoopWhenNotSandboxed()
+    {
+        $env = $this->createSandboxedEnvironment(false);
+        $template = new LegacyCoreTestTemplate($env, 'index.twig');
+
+        $template->callLegacyCheckArrowInSandbox('strlen', 'test', 'filter');
+        $this->expectNotToPerformAssertions();
+    }
+
     private function createSandboxedEnvironment(bool $globallySandboxed, ?SourcePolicyInterface $sourcePolicy = null): Environment
     {
         $env = new Environment(new ArrayLoader([]), ['cache' => false, 'autoescape' => false]);
@@ -161,6 +248,21 @@ class LegacyCoreTestTemplate extends Template
     public function callLegacyArrayColumn($array, $name, $index = null)
     {
         return twig_array_column($this->env, $array, $name, $index);
+    }
+
+    public function callLegacyArraySome($array, $arrow)
+    {
+        return twig_array_some($this->env, $array, $arrow);
+    }
+
+    public function callLegacyArrayEvery($array, $arrow)
+    {
+        return twig_array_every($this->env, $array, $arrow);
+    }
+
+    public function callLegacyCheckArrowInSandbox($arrow, $thing, $type)
+    {
+        twig_check_arrow_in_sandbox($this->env, $arrow, $thing, $type);
     }
 
     public function getTemplateName(): string

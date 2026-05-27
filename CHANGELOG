@@ -5,6 +5,7 @@
  * Fix PHP 8.1+ implicit float-to-int deprecation triggered by sandboxed `ArrayAccess` attribute access with a float key
  * Restrict allowed classes in `Twig\Profiler\Profile::unserialize()` to prevent arbitrary class instantiation
  * Escape root profile name in `HtmlDumper`
+ * Fix sandbox bypass in deprecated internal wrappers `twig_array_some()`, `twig_array_every()`, and `twig_check_arrow_in_sandbox()` (`src/Resources/core.php`)
  * Deprecate the `Twig\Sandbox\SourcePolicyInterface` interface with no replacement
  * Fix sandbox bypass in the "column" filter when sandboxing is enabled via `SourcePolicyInterface`
  * Fix sandbox `__toString` bypass via `Traversable` arguments to the `join` and `replace` filters (also covers containers that implement both `Stringable` and `Traversable`)
