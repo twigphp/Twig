@@ -1,4 +1,4 @@
-# 3.27.0 (2026-XX-XX)
+# 3.27.0 (2026-05-27)
 
  * Add a strict mode to `Twig\Sandbox\SecurityPolicy` to opt-in to the 4.0 behavior for the `extends`/`use` tags and the `parent`/`block`/`attribute` functions, which are otherwise still implicitly allowed in a sandbox
  * Deprecate the fact that the `parent`, `block`, and `attribute` functions are always allowed in a sandboxed template
