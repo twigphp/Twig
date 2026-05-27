@@ -2,6 +2,7 @@
 
  * Add a strict mode to `Twig\Sandbox\SecurityPolicy` to opt-in to the 4.0 behavior for the `extends`/`use` tags and the `parent`/`block`/`attribute` functions, which are otherwise still implicitly allowed in a sandbox
  * Deprecate the fact that the `parent`, `block`, and `attribute` functions are always allowed in a sandboxed template
+ * Fix sandbox filter/tag/function allow-list bypass when the sandbox state changed between renders of a cached `Template` instance
  * Fix PHP 8.1+ implicit float-to-int deprecation triggered by sandboxed `ArrayAccess` attribute access with a float key
  * Restrict allowed classes in `Twig\Profiler\Profile::unserialize()` to prevent arbitrary class instantiation
  * Escape root profile name in `HtmlDumper`
