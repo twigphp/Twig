@@ -627,6 +627,9 @@ class SandboxTest extends TestCase
             'do_tag_concat' => ['{% do obj ~ "" %}'],
             'set_tag_filter_input' => ['{% set _ = obj|upper %}'],
             'set_tag_concat' => ['{% set _ = obj ~ "" %}'],
+            'set_tag_array_dynamic_key' => ['{% set _ = {(obj): "v"} %}'],
+            'set_tag_array_dynamic_key_nested' => ['{% set _ = {"foo": {(obj): "v"}} %}'],
+            'set_tag_array_dynamic_key_object_chain' => ['{% set _ = {(obj.anotherFooObject): "v"} %}'],
             'set_capture_print' => ['{% set _ %}{{ obj }}{% endset %}'],
             'is_empty_in_if' => ['{% if obj is empty %}LEAK{% endif %}'],
             'is_empty_in_print' => ['{{ obj is empty ? "1" : "0" }}'],
@@ -794,6 +797,15 @@ class SandboxTest extends TestCase
         FooObject::reset();
         $this->assertEquals('foo', $twig->load('1_basic5')->render(self::$params), 'Sandbox allow some methods');
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
+    }
+
+    public function testSandboxAllowsArrayDynamicKeyWhenToStringAllowed()
+    {
+        $twig = $this->getEnvironment(true, [], [
+            'index' => '{% set arr = {(obj): "v", (obj.anotherFooObject): "v2"} %}{{ arr|keys|join(",") }}',
+        ], ['set'], ['join', 'keys'], ['Twig\Tests\Extension\FooObject' => ['__toString', 'getAnotherFooObject']]);
+
+        $this->assertSame('foo', $twig->load('index')->render(self::$params));
     }
 
     public function testSandboxAllowMethodToStringDisabled()
