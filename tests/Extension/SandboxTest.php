@@ -62,6 +62,10 @@ class SandboxTest extends TestCase
             'magic' => new MagicObject(),
             'recursion' => [4],
             'iterator' => new \ArrayIterator(['a', new FooObject()]),
+            'iterator_map' => new \ArrayIterator(['__toString' => new FooObject()]),
+            'iterator_nested' => new \ArrayIterator(['a', new \ArrayIterator(['b', new FooObject()])]),
+            'stringable_iterator' => new StringableTraversableObject(['a', new FooObject()]),
+            'stringable_iterator_map' => new StringableTraversableObject(['__toString' => new FooObject()]),
         ];
         self::$params['recursion'][] = &self::$params['recursion'];
         self::$params['recursion'][] = new FooObject();
@@ -589,6 +593,9 @@ class SandboxTest extends TestCase
             'spread_array_operator' => ['{{ [1, 2, ...[5, 6, 7, obj]]|join(",") }}'],
             'spread_array_operator_var' => ['{{ [1, 2, ...some_array]|join(",") }}'],
             'spread_iterator_in_function_args' => ['{{ ["x", ...iterator]|join(",") }}'],
+            'iterator_in_join' => ['{{ iterator|join(", ") }}'],
+            'iterator_nested_in_join' => ['{{ iterator_nested|join(", ") }}'],
+            'iterator_in_replace' => ['{{ "__toString"|replace(iterator_map) }}'],
             'recursion' => ['{{ recursion|join(", ") }}'],
             'ternary_print' => ['{{ true ? obj : "" }}'],
             'ternary_filter_input' => ['{{ (true ? obj : "")|upper }}'],
@@ -609,6 +616,12 @@ class SandboxTest extends TestCase
             'concat_right_in_if' => ['{% if "" ~ obj %}LEAK{% endif %}'],
             'range_left' => ['{% for x in obj..1 %}LEAK{% endfor %}'],
             'range_right' => ['{% for x in 1..obj %}LEAK{% endfor %}'],
+            'in_array_right' => ['{% if "needle" in [obj] %}LEAK{% endif %}'],
+            'in_array_left' => ['{% if obj in ["needle"] %}LEAK{% endif %}'],
+            'notin_array_right' => ['{% if "needle" not in [obj] %}LEAK{% endif %}'],
+            'notin_array_left' => ['{% if obj not in ["needle"] %}LEAK{% endif %}'],
+            'in_iterator_right' => ['{% if "needle" in iterator %}LEAK{% endif %}'],
+            'notin_iterator_right' => ['{% if "needle" not in iterator %}LEAK{% endif %}'],
             'do_tag_function_arg' => ['{% do my_func(obj) %}'],
             'do_tag_filter_input' => ['{% do obj|upper %}'],
             'do_tag_concat' => ['{% do obj ~ "" %}'],
@@ -1165,6 +1178,171 @@ EOF
         }
     }
 
+    /**
+     * @dataProvider getStringableTraversableBypassTemplates
+     */
+    public function testSandboxBlocksToStringInStringableTraversable(string $template)
+    {
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => $template],
+            [],
+            ['join', 'replace'],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+        );
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects yielded by a Stringable+Traversable container, even when the container\'s own __toString is allowed.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public static function getStringableTraversableBypassTemplates(): iterable
+    {
+        yield 'join' => ['{{ stringable_iterator|join(", ") }}'];
+        yield 'replace' => ['{{ "__toString"|replace(stringable_iterator_map) }}'];
+    }
+
+    /**
+     * @group legacy
+     *
+     * @dataProvider getStringableTraversableBypassTemplates
+     */
+    public function testSourcePolicySandboxBlocksToStringInStringableTraversable(string $template)
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(
+            false,
+            [],
+            ['index' => $template],
+            [],
+            ['join', 'replace'],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+            [],
+            [],
+            $sourcePolicy,
+        );
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects yielded by a Stringable+Traversable container under a SourcePolicyInterface-only sandbox.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxAllowsPrintingStringableTraversableWhenToStringAllowed()
+    {
+        // Printing the container itself yields its `__toString()` value. The
+        // sandbox materialises the iterable to also policy-check the elements
+        // (some consumers like `join`/`replace` would coerce them too), so the
+        // inner items must not contain anything that violates the policy.
+        $twig = $this->getEnvironment(
+            true,
+            ['autoescape' => 'html'],
+            ['index' => '{{ obj }}'],
+            [],
+            ['escape'],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+        );
+
+        $params = ['obj' => new StringableTraversableObject(['a', 'b'])];
+
+        $this->assertSame('stringable-traversable', $twig->load('index')->render($params));
+    }
+
+    /**
+     * @dataProvider getCyclicTraversableTemplates
+     */
+    public function testSandboxHandlesCyclicTraversableWithoutStackOverflow(string $template)
+    {
+        // A self-referencing IteratorAggregate must not cause the sandbox policy
+        // walker to recurse infinitely when materialising the iterable. PHP itself
+        // throws a clean error when the cyclic object reaches `implode()` /
+        // string coercion; the sandbox must NOT turn that into a stack overflow.
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => $template],
+            [],
+            ['join', 'replace'],
+        );
+
+        $this->expectException(RuntimeError::class);
+
+        $twig->load('index')->render(['obj' => new CyclicTraversableObject()]);
+    }
+
+    public static function getCyclicTraversableTemplates(): iterable
+    {
+        yield 'join' => ['{{ obj|join(",") }}'];
+        yield 'replace' => ['{{ "x"|replace(obj) }}'];
+        yield 'spread' => ['{{ ["a", ...obj]|join(",") }}'];
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSourcePolicySandboxBlocksToStringInTraversableJoin()
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ iterator|join(", ") }}'], [], ['join'], [], [], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects contained in a Traversable passed to the "join" filter (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSourcePolicySandboxBlocksToStringInTraversableReplace()
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ "__toString"|replace(iterator_map) }}'], [], ['replace'], [], [], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects contained in a Traversable passed to the "replace" filter (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
     public function testColumnFilterUnaffectedOutsideSandbox()
     {
         $params = ['obj' => new ColumnObject()];
@@ -1670,4 +1848,37 @@ class MagicObject
 class ColumnObject
 {
     public $bar = 'bar';
+}
+
+// Implements both Stringable and Traversable: a sandbox policy may legitimately
+// allow the container's own `__toString`, but the elements yielded by
+// `getIterator()` must still be policy-checked when consumers (`join`, `replace`,
+// ...) materialise the iterable and coerce its contents to string.
+class StringableTraversableObject implements \IteratorAggregate, \Stringable
+{
+    public function __construct(private array $items)
+    {
+    }
+
+    public function __toString(): string
+    {
+        return 'stringable-traversable';
+    }
+
+    public function getIterator(): \Traversable
+    {
+        yield from $this->items;
+    }
+}
+
+// Self-referencing IteratorAggregate: getIterator() yields `$this`. Used to
+// verify that the sandbox policy walker (which materialises Traversables to
+// enforce the `__toString` policy on yielded elements) does not recurse
+// infinitely.
+class CyclicTraversableObject implements \IteratorAggregate
+{
+    public function getIterator(): \Traversable
+    {
+        yield $this;
+    }
 }
