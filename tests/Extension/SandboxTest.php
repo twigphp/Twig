@@ -1173,6 +1173,104 @@ EOF
         $this->assertSame('bar', $twig->load('index')->render($params));
     }
 
+    /**
+     * @group legacy
+     */
+    public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedProperty()
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $params = ['obj' => new ColumnObject()];
+        $twig = $this->getEnvironment(false, [], ['index' => "{{ [obj]|column('bar')|first }}"], [], ['column', 'first'], [], [], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render($params);
+            $this->fail('Sandbox should reject the "column" filter when the requested property is not in allowedProperties (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertSame('Twig\Tests\Extension\ColumnObject', $e->getClassName());
+            $this->assertSame('bar', $e->getPropertyName());
+        }
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedIndex()
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $params = ['obj' => new ColumnObject()];
+        $twig = $this->getEnvironment(false, [], ['index' => "{{ [obj]|column('bar', 'foo')|keys|first }}"], [], ['column', 'first', 'keys'], [], ['Twig\Tests\Extension\ColumnObject' => ['bar']], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render($params);
+            $this->fail('Sandbox should reject the "column" filter when the index argument targets a disallowed property (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertSame('Twig\Tests\Extension\ColumnObject', $e->getClassName());
+            $this->assertSame('foo', $e->getPropertyName());
+        }
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSourcePolicySandboxAllowsColumnFilterOnAllowedProperty()
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $params = ['obj' => new ColumnObject()];
+        $twig = $this->getEnvironment(false, [], ['index' => "{{ [obj]|column('bar')|first }}"], [], ['column', 'first'], [], ['Twig\Tests\Extension\ColumnObject' => ['bar']], [], $sourcePolicy);
+
+        $this->assertSame('bar', $twig->load('index')->render($params));
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSourcePolicySandboxBlocksColumnFilterOnMagicGetter()
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $params = ['magic' => new MagicObject()];
+        $twig = $this->getEnvironment(false, [], ['index' => "{{ [magic]|column('anything')|first }}"], [], ['column', 'first'], [], [], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render($params);
+            $this->fail('Sandbox should reject the "column" filter before invoking __get on a non-allowlisted property (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertSame('Twig\Tests\Extension\MagicObject', $e->getClassName());
+            $this->assertSame('anything', $e->getPropertyName());
+        }
+    }
+
     protected function getEnvironment($sandboxed, $options, $templates, $tags = [], $filters = [], $methods = [], $properties = [], $functions = [], $sourcePolicy = null, bool $strict = false)
     {
         $loader = new ArrayLoader($templates);
