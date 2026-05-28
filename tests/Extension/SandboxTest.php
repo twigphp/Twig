@@ -1355,6 +1355,60 @@ EOF
         }
     }
 
+    public function testSandboxPreservesTraversableArgumentIdentity()
+    {
+        // Regression for https://github.com/twigphp/Twig/issues/4820:
+        // a typed Traversable argument (e.g. Symfony's FormView) must reach
+        // host code as-is, not as a plain array.
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => '{{ render_traversable(obj) }}'],
+            [],
+            [],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+        );
+        $twig->addFunction(new TwigFunction('render_traversable', static function ($obj) {
+            if (!$obj instanceof StringableTraversableObject) {
+                throw new \RuntimeException(\sprintf('Expected a StringableTraversableObject, got "%s".', get_debug_type($obj)));
+            }
+
+            return (string) $obj;
+        }));
+
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['render_traversable']);
+
+        $params = ['obj' => new StringableTraversableObject(['a', 'b'])];
+        $this->assertSame('stringable-traversable', $twig->load('index')->render($params));
+    }
+
+    public function testSandboxStillBlocksDisallowedToStringInTraversableArgument()
+    {
+        // The container is returned as-is, but yielded elements must still
+        // be policy-checked since host code can string-coerce them.
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => '{{ render_traversable(stringable_iterator) }}'],
+            [],
+            [],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+        );
+        $twig->addFunction(new TwigFunction('render_traversable', static fn ($obj) => (string) $obj));
+
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['render_traversable']);
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects yielded by a Traversable argument to a user function.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
     public function testColumnFilterUnaffectedOutsideSandbox()
     {
         $params = ['obj' => new ColumnObject()];
