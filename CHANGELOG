@@ -1,6 +1,6 @@
 # 3.27.1 (2026-XX-XX)
 
- * n/a
+ * Fix sandbox replacing `IteratorAggregate` arguments (e.g. Symfony's `FormView`) by a plain array
 
 # 3.27.0 (2026-05-27)
 
