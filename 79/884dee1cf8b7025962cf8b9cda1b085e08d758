@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2026-05-29T08:57:51Z
+
+@fabpot it would be great to fix the php-cs-fixer config to match the expectation of the codebase, or to fix existing violations if they are not intended, so that the fabbot CI job could be green again.
