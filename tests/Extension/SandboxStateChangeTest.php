@@ -228,7 +228,7 @@ class SandboxStateChangeTest extends TestCase
         $policy = new SecurityPolicy(
             allowedTags: ['extends', 'block'],
             allowedFilters: [],
-            allowedFunctions: ['range'],
+            allowedFunctions: ['parent', 'range'],
         );
         [$twig, $sandbox] = $this->build($templates, $policy, false);
 
@@ -250,7 +250,7 @@ class SandboxStateChangeTest extends TestCase
         $policy = new SecurityPolicy(
             allowedTags: ['extends', 'block'],
             allowedFilters: ['first'],
-            allowedFunctions: [],
+            allowedFunctions: ['parent'],
         );
         [$twig, $sandbox] = $this->build($templates, $policy, false);
 
