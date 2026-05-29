@@ -1,5 +1,6 @@
 # 3.27.1 (2026-XX-XX)
 
+ * Fix array access with a `Stringable` key to coerce the key to string consistently instead of throwing in the optimized path
  * Fix sandbox replacing `IteratorAggregate` arguments (e.g. Symfony's `FormView`) by a plain array
 
 # 3.27.0 (2026-05-27)
