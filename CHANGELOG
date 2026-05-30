@@ -1,3 +1,7 @@
+# 3.27.2 (2026-XX-XX)
+
+ * n/a
+
 # 3.27.1 (2026-05-30)
 
  * Fix array access with a `Stringable` key to coerce the key to string consistently instead of throwing in the optimized path
