@@ -13,7 +13,6 @@ namespace Twig\Util;
 
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\CallExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\VariadicExpression;
 use Twig\Node\Node;
@@ -184,25 +183,7 @@ final class CallableArgumentsExtractor
 
     private function getCallableParameters(): array
     {
-        $parameters = $this->rc->getReflector()->getParameters();
-        if ($this->node->hasNode('node')) {
-            array_shift($parameters);
-        }
-        if ($this->twigCallable->needsCharset()) {
-            array_shift($parameters);
-        }
-        if ($this->twigCallable->needsEnvironment()) {
-            array_shift($parameters);
-        }
-        if ($this->twigCallable->needsContext()) {
-            array_shift($parameters);
-        }
-        if (CallExpression::needsIsSandboxed($this->twigCallable)) {
-            array_shift($parameters);
-        }
-        foreach ($this->twigCallable->getArguments() as $argument) {
-            array_shift($parameters);
-        }
+        $parameters = $this->rc->getTwigParameters($this->node->hasNode('node'));
 
         $isPhpVariadic = false;
         if ($this->twigCallable->isVariadic()) {

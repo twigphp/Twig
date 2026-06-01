@@ -1,6 +1,6 @@
 # 3.27.2 (2026-XX-XX)
 
- * n/a
+ * Skip the sandbox `__toString` check on arguments whose PHP parameter type cannot implicitly coerce to string
 
 # 3.27.1 (2026-05-30)
 
