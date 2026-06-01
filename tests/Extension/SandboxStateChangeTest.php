@@ -282,7 +282,7 @@ class SandboxStateChangeTest extends TestCase
         );
         [$twig] = $this->build($templates, $policy, true);
         $evilCalls = 0;
-        $twig->addFilter(new \Twig\TwigFilter('evil', function ($v) use (&$evilCalls) {
+        $twig->addFilter(new \Twig\TwigFilter('evil', static function ($v) use (&$evilCalls) {
             ++$evilCalls;
 
             return $v;
@@ -312,7 +312,7 @@ class SandboxStateChangeTest extends TestCase
         );
         [$twig] = $this->build($templates, $policy, true);
         $evilCalls = 0;
-        $twig->addFunction(new \Twig\TwigFunction('evil', function ($v) use (&$evilCalls) {
+        $twig->addFunction(new \Twig\TwigFunction('evil', static function ($v) use (&$evilCalls) {
             ++$evilCalls;
 
             return $v;
@@ -343,7 +343,7 @@ class SandboxStateChangeTest extends TestCase
         );
         [$twig, $sandbox] = $this->build($templates, $policy, false);
         $evilCalls = 0;
-        $twig->addFilter(new \Twig\TwigFilter('evil', function ($v) use (&$evilCalls) {
+        $twig->addFilter(new \Twig\TwigFilter('evil', static function ($v) use (&$evilCalls) {
             ++$evilCalls;
 
             return $v;
