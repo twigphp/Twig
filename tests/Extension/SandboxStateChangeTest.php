@@ -12,7 +12,6 @@
 namespace Twig\Tests\Extension;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
@@ -21,8 +20,6 @@ use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Sandbox\SecurityPolicyInterface;
-use Twig\Sandbox\SourcePolicyInterface;
-use Twig\Source;
 
 /**
  * Regression tests for the sandbox filter/tag/function allow-list bypass that
@@ -35,8 +32,6 @@ use Twig\Source;
  */
 class SandboxStateChangeTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testEnableSandboxAfterFirstRender()
     {
         [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], new SecurityPolicy(allowedFilters: []), false);
@@ -97,32 +92,6 @@ class SandboxStateChangeTest extends TestCase
         $sandbox->setSecurityPolicy(new SecurityPolicy(allowedFilters: ['upper']));
 
         $this->assertSame('FOO', $twig->render('t'));
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testSourcePolicyDecisionFlip()
-    {
-        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $sourcePolicy = new class implements SourcePolicyInterface {
-            public array $sandboxFor = [];
-
-            public function enableSandbox(Source $source): bool
-            {
-                return \in_array($source->getName(), $this->sandboxFor, true);
-            }
-        };
-
-        [$twig] = $this->build(['t' => '{{ "foo"|upper }}'], new SecurityPolicy(allowedFilters: []), false, $sourcePolicy);
-
-        $this->assertSame('FOO', $twig->render('t'));
-
-        $sourcePolicy->sandboxFor = ['t'];
-
-        $this->expectException(SecurityNotAllowedFilterError::class);
-        $twig->render('t');
     }
 
     public function testPreWarmedParentTemplateThroughExtends()
@@ -192,31 +161,6 @@ class SandboxStateChangeTest extends TestCase
         $this->expectException(SecurityNotAllowedFilterError::class);
         $this->expectExceptionMessage('Filter "upper" is not allowed');
         $twig->render('caller.twig');
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testSandboxTagAroundIncludeOfPreWarmedTemplate()
-    {
-        $this->expectDeprecation('Since twig/twig 3.15: The "sandbox" tag is deprecated in "wrapper" at line 1.');
-
-        $templates = [
-            'wrapper' => '{% sandbox %}{% include "user" %}{% endsandbox %}',
-            'user' => '{% extends "shared" %}{% block c %}user{% endblock %}',
-            'shared' => '{% block c %}{% endblock %}{{ "ok"|upper }}',
-        ];
-        $policy = new SecurityPolicy(
-            allowedTags: ['extends', 'block', 'include'],
-            allowedFilters: ['escape'],
-        );
-        [$twig] = $this->build($templates, $policy, false);
-
-        $this->assertSame('OK', $twig->render('shared'));
-
-        $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "upper" is not allowed');
-        $twig->render('wrapper');
     }
 
     public function testTagBypassThroughPreWarmedParent()
@@ -392,10 +336,10 @@ class SandboxStateChangeTest extends TestCase
     /**
      * @return array{0: Environment, 1: SandboxExtension}
      */
-    private function build(array $templates, SecurityPolicyInterface $policy, bool $sandboxed, ?SourcePolicyInterface $sourcePolicy = null): array
+    private function build(array $templates, SecurityPolicyInterface $policy, bool $sandboxed): array
     {
         $twig = new Environment(new ArrayLoader($templates), ['cache' => false, 'autoescape' => false]);
-        $sandbox = new SandboxExtension($policy, $sandboxed, $sourcePolicy);
+        $sandbox = new SandboxExtension($policy, $sandboxed);
         $twig->addExtension($sandbox);
 
         return [$twig, $sandbox];

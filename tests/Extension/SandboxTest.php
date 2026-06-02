@@ -23,6 +23,7 @@ namespace Twig\Tests\Extension;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
@@ -980,9 +981,7 @@ EOF
         }
     }
 
-    /**
-     * @dataProvider getStringableTraversableBypassTemplates
-     */
+    #[DataProvider('getStringableTraversableBypassTemplates')]
     public function testSandboxBlocksToStringInStringableTraversable(string $template)
     {
         $twig = $this->getEnvironment(
@@ -1009,43 +1008,6 @@ EOF
         yield 'replace' => ['{{ "__toString"|replace(stringable_iterator_map) }}'];
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getStringableTraversableBypassTemplates
-     */
-    public function testSourcePolicySandboxBlocksToStringInStringableTraversable(string $template)
-    {
-        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $sourcePolicy = new class implements SourcePolicyInterface {
-            public function enableSandbox(Source $source): bool
-            {
-                return true;
-            }
-        };
-
-        $twig = $this->getEnvironment(
-            false,
-            [],
-            ['index' => $template],
-            [],
-            ['join', 'replace'],
-            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
-            [],
-            [],
-            $sourcePolicy,
-        );
-
-        try {
-            $twig->load('index')->render(self::$params);
-            $this->fail('Sandbox should block __toString on objects yielded by a Stringable+Traversable container under a SourcePolicyInterface-only sandbox.');
-        } catch (SecurityNotAllowedMethodError $e) {
-            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
-            $this->assertSame('__tostring', $e->getMethodName());
-        }
-    }
-
     public function testSandboxAllowsPrintingStringableTraversableWhenToStringAllowed()
     {
         // Printing the container itself yields its `__toString()` value. The
@@ -1066,9 +1028,7 @@ EOF
         $this->assertSame('stringable-traversable', $twig->load('index')->render($params));
     }
 
-    /**
-     * @dataProvider getCyclicTraversableTemplates
-     */
+    #[DataProvider('getCyclicTraversableTemplates')]
     public function testSandboxHandlesCyclicTraversableWithoutStackOverflow(string $template)
     {
         // A self-referencing IteratorAggregate must not cause the sandbox policy
@@ -1093,56 +1053,6 @@ EOF
         yield 'join' => ['{{ obj|join(",") }}'];
         yield 'replace' => ['{{ "x"|replace(obj) }}'];
         yield 'spread' => ['{{ ["a", ...obj]|join(",") }}'];
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testSourcePolicySandboxBlocksToStringInTraversableJoin()
-    {
-        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $sourcePolicy = new class implements SourcePolicyInterface {
-            public function enableSandbox(Source $source): bool
-            {
-                return true;
-            }
-        };
-
-        $twig = $this->getEnvironment(false, [], ['index' => '{{ iterator|join(", ") }}'], [], ['join'], [], [], [], $sourcePolicy);
-
-        try {
-            $twig->load('index')->render(self::$params);
-            $this->fail('Sandbox should block __toString on objects contained in a Traversable passed to the "join" filter (SourcePolicyInterface).');
-        } catch (SecurityNotAllowedMethodError $e) {
-            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
-            $this->assertSame('__tostring', $e->getMethodName());
-        }
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testSourcePolicySandboxBlocksToStringInTraversableReplace()
-    {
-        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
-
-        $sourcePolicy = new class implements SourcePolicyInterface {
-            public function enableSandbox(Source $source): bool
-            {
-                return true;
-            }
-        };
-
-        $twig = $this->getEnvironment(false, [], ['index' => '{{ "__toString"|replace(iterator_map) }}'], [], ['replace'], [], [], [], $sourcePolicy);
-
-        try {
-            $twig->load('index')->render(self::$params);
-            $this->fail('Sandbox should block __toString on objects contained in a Traversable passed to the "replace" filter (SourcePolicyInterface).');
-        } catch (SecurityNotAllowedMethodError $e) {
-            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
-            $this->assertSame('__tostring', $e->getMethodName());
-        }
     }
 
     public function testSandboxPreservesTraversableArgumentIdentity()
@@ -1199,9 +1109,7 @@ EOF
         }
     }
 
-    /**
-     * @dataProvider getSafePhpTypesSkipToStringWrap
-     */
+    #[DataProvider('getSafePhpTypesSkipToStringWrap')]
     public function testSafePhpParamTypesSkipToStringWrap(string $template, callable $func, array $params): void
     {
         // The sandbox visitor must not wrap arguments whose target PHP
@@ -1252,9 +1160,7 @@ EOF
         ];
     }
 
-    /**
-     * @dataProvider getUnsafePhpTypesStillWrap
-     */
+    #[DataProvider('getUnsafePhpTypesStillWrap')]
     public function testUnsafePhpParamTypesStillWrap(string $template, callable $func, array $params): void
     {
         // Conversely, an unsafe parameter type (`mixed`, untyped, `string`,
@@ -1284,9 +1190,7 @@ EOF
         yield 'Stringable param' => ['{{ unsafe_fn(obj) }}', static fn (\Stringable $x) => (string) $x, $params];
     }
 
-    /**
-     * @dataProvider getOpenPhpTypesStillWrap
-     */
+    #[DataProvider('getOpenPhpTypesStillWrap')]
     public function testOpenPhpParamTypesStillWrap(callable $func, object $obj, string $class): void
     {
         // Interfaces and non-final classes are "open": a Stringable subtype

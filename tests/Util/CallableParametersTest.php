@@ -11,14 +11,13 @@
 
 namespace Twig\Tests\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Util\CallableParameters;
 
 class CallableParametersTest extends TestCase
 {
-    /**
-     * @dataProvider provideTypes
-     */
+    #[DataProvider('provideTypes')]
     public function testIsStringCoercionSafe(?\ReflectionType $type, bool $expected, ?\ReflectionClass $scope = null): void
     {
         $this->assertSame($expected, CallableParameters::isStringCoercionSafe($type, $scope));
