@@ -25,7 +25,7 @@ final class ReflectionCallable
     private string $name;
 
     public function __construct(
-        TwigCallableInterface $twigCallable,
+        private TwigCallableInterface $twigCallable,
     ) {
         $callable = $twigCallable->getCallable();
         if (\is_string($callable) && false !== $pos = strpos($callable, '::')) {
@@ -75,6 +75,41 @@ final class ReflectionCallable
     public function getReflector(): \ReflectionFunctionAbstract
     {
         return $this->reflector;
+    }
+
+    /**
+     * Returns the PHP parameters that map to the callable's template-level
+     * arguments.
+     *
+     * The parameters Twig injects automatically (the piped input value when
+     * $stripInput is true, then needs_charset/environment/context/is_sandboxed)
+     * and the bound arguments are stripped.
+     *
+     * @return list<\ReflectionParameter>
+     */
+    public function getTwigParameters(bool $stripInput = false): array
+    {
+        $parameters = $this->reflector->getParameters();
+        if ($stripInput) {
+            array_shift($parameters);
+        }
+        if ($this->twigCallable->needsCharset()) {
+            array_shift($parameters);
+        }
+        if ($this->twigCallable->needsEnvironment()) {
+            array_shift($parameters);
+        }
+        if ($this->twigCallable->needsContext()) {
+            array_shift($parameters);
+        }
+        if ($this->twigCallable->needsIsSandboxed()) {
+            array_shift($parameters);
+        }
+        foreach ($this->twigCallable->getArguments() as $argument) {
+            array_shift($parameters);
+        }
+
+        return array_values($parameters);
     }
 
     public function getCallable(): \Closure|string|array

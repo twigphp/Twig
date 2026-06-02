@@ -56,6 +56,10 @@ class SandboxTest extends TestCase
             'magic' => new MagicObject(),
             'recursion' => [4],
             'iterator' => new \ArrayIterator(['a', new FooObject()]),
+            'iterator_map' => new \ArrayIterator(['__toString' => new FooObject()]),
+            'iterator_nested' => new \ArrayIterator(['a', new \ArrayIterator(['b', new FooObject()])]),
+            'stringable_iterator' => new StringableTraversableObject(['a', new FooObject()]),
+            'stringable_iterator_map' => new StringableTraversableObject(['__toString' => new FooObject()]),
         ];
         self::$params['recursion'][] = &self::$params['recursion'];
         self::$params['recursion'][] = new FooObject();
@@ -428,6 +432,9 @@ class SandboxTest extends TestCase
             'spread_array_operator' => ['{{ [1, 2, ...[5, 6, 7, obj]]|join(",") }}'],
             'spread_array_operator_var' => ['{{ [1, 2, ...some_array]|join(",") }}'],
             'spread_iterator_in_function_args' => ['{{ ["x", ...iterator]|join(",") }}'],
+            'iterator_in_join' => ['{{ iterator|join(", ") }}'],
+            'iterator_nested_in_join' => ['{{ iterator_nested|join(", ") }}'],
+            'iterator_in_replace' => ['{{ "__toString"|replace(iterator_map) }}'],
             'recursion' => ['{{ recursion|join(", ") }}'],
             'ternary_print' => ['{{ true ? obj : "" }}'],
             'ternary_filter_input' => ['{{ (true ? obj : "")|upper }}'],
@@ -448,11 +455,20 @@ class SandboxTest extends TestCase
             'concat_right_in_if' => ['{% if "" ~ obj %}LEAK{% endif %}'],
             'range_left' => ['{% for x in obj..1 %}LEAK{% endfor %}'],
             'range_right' => ['{% for x in 1..obj %}LEAK{% endfor %}'],
+            'in_array_right' => ['{% if "needle" in [obj] %}LEAK{% endif %}'],
+            'in_array_left' => ['{% if obj in ["needle"] %}LEAK{% endif %}'],
+            'notin_array_right' => ['{% if "needle" not in [obj] %}LEAK{% endif %}'],
+            'notin_array_left' => ['{% if obj not in ["needle"] %}LEAK{% endif %}'],
+            'in_iterator_right' => ['{% if "needle" in iterator %}LEAK{% endif %}'],
+            'notin_iterator_right' => ['{% if "needle" not in iterator %}LEAK{% endif %}'],
             'do_tag_function_arg' => ['{% do my_func(obj) %}'],
             'do_tag_filter_input' => ['{% do obj|upper %}'],
             'do_tag_concat' => ['{% do obj ~ "" %}'],
             'set_tag_filter_input' => ['{% set _ = obj|upper %}'],
             'set_tag_concat' => ['{% set _ = obj ~ "" %}'],
+            'set_tag_array_dynamic_key' => ['{% set _ = {(obj): "v"} %}'],
+            'set_tag_array_dynamic_key_nested' => ['{% set _ = {"foo": {(obj): "v"}} %}'],
+            'set_tag_array_dynamic_key_object_chain' => ['{% set _ = {(obj.anotherFooObject): "v"} %}'],
             'set_capture_print' => ['{% set _ %}{{ obj }}{% endset %}'],
             'is_empty_in_if' => ['{% if obj is empty %}LEAK{% endif %}'],
             'is_empty_in_print' => ['{{ obj is empty ? "1" : "0" }}'],
@@ -618,6 +634,15 @@ class SandboxTest extends TestCase
         FooObject::reset();
         $this->assertEquals('foo', $twig->load('1_basic5')->render(self::$params), 'Sandbox allow some methods');
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
+    }
+
+    public function testSandboxAllowsArrayDynamicKeyWhenToStringAllowed()
+    {
+        $twig = $this->getEnvironment(true, [], [
+            'index' => '{% set arr = {(obj): "v", (obj.anotherFooObject): "v2"} %}{{ arr|keys|join(",") }}',
+        ], ['set'], ['join', 'keys'], ['Twig\Tests\Extension\FooObject' => ['__toString', 'getAnotherFooObject']]);
+
+        $this->assertSame('foo', $twig->load('index')->render(self::$params));
     }
 
     public function testSandboxAllowMethodToStringDisabled()
@@ -955,6 +980,447 @@ EOF
         }
     }
 
+    /**
+     * @dataProvider getStringableTraversableBypassTemplates
+     */
+    public function testSandboxBlocksToStringInStringableTraversable(string $template)
+    {
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => $template],
+            [],
+            ['join', 'replace'],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+        );
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects yielded by a Stringable+Traversable container, even when the container\'s own __toString is allowed.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public static function getStringableTraversableBypassTemplates(): iterable
+    {
+        yield 'join' => ['{{ stringable_iterator|join(", ") }}'];
+        yield 'replace' => ['{{ "__toString"|replace(stringable_iterator_map) }}'];
+    }
+
+    /**
+     * @group legacy
+     *
+     * @dataProvider getStringableTraversableBypassTemplates
+     */
+    public function testSourcePolicySandboxBlocksToStringInStringableTraversable(string $template)
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(
+            false,
+            [],
+            ['index' => $template],
+            [],
+            ['join', 'replace'],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+            [],
+            [],
+            $sourcePolicy,
+        );
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects yielded by a Stringable+Traversable container under a SourcePolicyInterface-only sandbox.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxAllowsPrintingStringableTraversableWhenToStringAllowed()
+    {
+        // Printing the container itself yields its `__toString()` value. The
+        // sandbox materialises the iterable to also policy-check the elements
+        // (some consumers like `join`/`replace` would coerce them too), so the
+        // inner items must not contain anything that violates the policy.
+        $twig = $this->getEnvironment(
+            true,
+            ['autoescape' => 'html'],
+            ['index' => '{{ obj }}'],
+            [],
+            ['escape'],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+        );
+
+        $params = ['obj' => new StringableTraversableObject(['a', 'b'])];
+
+        $this->assertSame('stringable-traversable', $twig->load('index')->render($params));
+    }
+
+    /**
+     * @dataProvider getCyclicTraversableTemplates
+     */
+    public function testSandboxHandlesCyclicTraversableWithoutStackOverflow(string $template)
+    {
+        // A self-referencing IteratorAggregate must not cause the sandbox policy
+        // walker to recurse infinitely when materialising the iterable. PHP itself
+        // throws a clean error when the cyclic object reaches `implode()` /
+        // string coercion; the sandbox must NOT turn that into a stack overflow.
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => $template],
+            [],
+            ['join', 'replace'],
+        );
+
+        $this->expectException(RuntimeError::class);
+
+        $twig->load('index')->render(['obj' => new CyclicTraversableObject()]);
+    }
+
+    public static function getCyclicTraversableTemplates(): iterable
+    {
+        yield 'join' => ['{{ obj|join(",") }}'];
+        yield 'replace' => ['{{ "x"|replace(obj) }}'];
+        yield 'spread' => ['{{ ["a", ...obj]|join(",") }}'];
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSourcePolicySandboxBlocksToStringInTraversableJoin()
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ iterator|join(", ") }}'], [], ['join'], [], [], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects contained in a Traversable passed to the "join" filter (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSourcePolicySandboxBlocksToStringInTraversableReplace()
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ "__toString"|replace(iterator_map) }}'], [], ['replace'], [], [], [], $sourcePolicy);
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects contained in a Traversable passed to the "replace" filter (SourcePolicyInterface).');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxPreservesTraversableArgumentIdentity()
+    {
+        // Regression for https://github.com/twigphp/Twig/issues/4820:
+        // a typed Traversable argument (e.g. Symfony's FormView) must reach
+        // host code as-is, not as a plain array.
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => '{{ render_traversable(obj) }}'],
+            [],
+            [],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+        );
+        $twig->addFunction(new TwigFunction('render_traversable', static function ($obj) {
+            if (!$obj instanceof StringableTraversableObject) {
+                throw new \RuntimeException(\sprintf('Expected a StringableTraversableObject, got "%s".', get_debug_type($obj)));
+            }
+
+            return (string) $obj;
+        }));
+
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['render_traversable']);
+
+        $params = ['obj' => new StringableTraversableObject(['a', 'b'])];
+        $this->assertSame('stringable-traversable', $twig->load('index')->render($params));
+    }
+
+    public function testSandboxStillBlocksDisallowedToStringInTraversableArgument()
+    {
+        // The container is returned as-is, but yielded elements must still
+        // be policy-checked since host code can string-coerce them.
+        $twig = $this->getEnvironment(
+            true,
+            [],
+            ['index' => '{{ render_traversable(stringable_iterator) }}'],
+            [],
+            [],
+            ['Twig\Tests\Extension\StringableTraversableObject' => ['__tostring']],
+        );
+        $twig->addFunction(new TwigFunction('render_traversable', static fn ($obj) => (string) $obj));
+
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['render_traversable']);
+
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox should block __toString on objects yielded by a Traversable argument to a user function.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    /**
+     * @dataProvider getSafePhpTypesSkipToStringWrap
+     */
+    public function testSafePhpParamTypesSkipToStringWrap(string $template, callable $func, array $params): void
+    {
+        // The sandbox visitor must not wrap arguments whose target PHP
+        // parameter type cannot implicitly coerce to string (int, float,
+        // bool, non-Stringable/non-Traversable classes, ...). We observe
+        // the optimization by passing values whose `__toString` is NOT in
+        // the policy: with the wrap, the render throws; without it, it
+        // succeeds.
+        $twig = $this->getEnvironment(true, [], ['index' => $template]);
+        $twig->addFunction(new TwigFunction('safe_fn', $func));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['safe_fn']);
+
+        $this->assertSame('ok', $twig->load('index')->render($params));
+    }
+
+    public static function getSafePhpTypesSkipToStringWrap(): iterable
+    {
+        yield 'int param' => [
+            '{{ safe_fn(n) }}',
+            static fn (int $n) => 'ok',
+            ['n' => 42],
+        ];
+        yield 'float param' => [
+            '{{ safe_fn(n) }}',
+            static fn (float $n) => 'ok',
+            ['n' => 3.14],
+        ];
+        yield 'bool param' => [
+            '{{ safe_fn(b) }}',
+            static fn (bool $b) => 'ok',
+            ['b' => true],
+        ];
+        yield 'non-stringable class param' => [
+            '{{ safe_fn(obj) }}',
+            static fn (ColumnObject $o) => 'ok',
+            ['obj' => new ColumnObject()],
+        ];
+        yield 'nullable int param with null value' => [
+            '{{ safe_fn(n) }}',
+            static fn (?int $n) => 'ok',
+            ['n' => null],
+        ];
+        yield 'int|float union param' => [
+            '{{ safe_fn(n) }}',
+            static fn (int|float $n) => 'ok',
+            ['n' => 7],
+        ];
+    }
+
+    /**
+     * @dataProvider getUnsafePhpTypesStillWrap
+     */
+    public function testUnsafePhpParamTypesStillWrap(string $template, callable $func, array $params): void
+    {
+        // Conversely, an unsafe parameter type (`mixed`, untyped, `string`,
+        // `iterable`, `Stringable`, ...) must keep wrapping arguments so the
+        // sandbox can still block disallowed `__toString` calls.
+        $twig = $this->getEnvironment(true, [], ['index' => $template]);
+        $twig->addFunction(new TwigFunction('unsafe_fn', $func));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['unsafe_fn']);
+
+        try {
+            $twig->load('index')->render($params);
+            $this->fail('Sandbox should still check __toString when the PHP parameter type can implicitly coerce to string.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public static function getUnsafePhpTypesStillWrap(): iterable
+    {
+        $params = ['obj' => new FooObject()];
+        yield 'untyped param' => ['{{ unsafe_fn(obj) }}', static fn ($x) => (string) $x, $params];
+        yield 'mixed param' => ['{{ unsafe_fn(obj) }}', static fn (mixed $x) => (string) $x, $params];
+        yield 'string param' => ['{{ unsafe_fn(obj) }}', static fn (string $x) => $x, $params];
+        yield 'object param' => ['{{ unsafe_fn(obj) }}', static fn (object $x) => (string) $x, $params];
+        yield 'Stringable param' => ['{{ unsafe_fn(obj) }}', static fn (\Stringable $x) => (string) $x, $params];
+    }
+
+    /**
+     * @dataProvider getOpenPhpTypesStillWrap
+     */
+    public function testOpenPhpParamTypesStillWrap(callable $func, object $obj, string $class): void
+    {
+        // Interfaces and non-final classes are "open": a Stringable subtype
+        // can satisfy them, so the sandbox must keep gating __toString.
+        // Skipping the wrap on these would bypass the policy.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ unsafe_fn(obj) }}']);
+        $twig->addFunction(new TwigFunction('unsafe_fn', $func));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['unsafe_fn']);
+
+        try {
+            $twig->load('index')->render(['obj' => $obj]);
+            $this->fail('Sandbox must still check __toString for an interface or non-final class parameter.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame($class, $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public static function getOpenPhpTypesStillWrap(): iterable
+    {
+        yield 'interface param' => [static fn (\Countable $x) => (string) $x, new CountableFooObject(), CountableFooObject::class];
+        yield 'non-final class param' => [static fn (PlainBaseObject $x) => (string) $x, new StringablePlainObject(), StringablePlainObject::class];
+    }
+
+    public function testTestArgumentsMapAfterTheTestedValueParameter(): void
+    {
+        // A test's tested value is its first PHP parameter, so its template
+        // arguments must be mapped to the parameters *after* it. Mapping the
+        // first argument to the (safe-typed) value parameter would skip its
+        // __toString wrap and bypass the policy.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ 5 is my_test(obj) }}']);
+        $twig->addTest(new TwigTest('my_test', static fn (int $value, $arg) => 'x' === (string) $arg));
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on a test argument bound to an unsafe parameter.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSafeVariadicPhpTypeSkipsToStringWrap(): void
+    {
+        // PHP-variadic with a safe type: all spilled arguments skip the wrap.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ safe_fn(1, 2, 3) }}']);
+        $twig->addFunction(new TwigFunction('safe_fn', static fn (int ...$x) => 'ok'));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['safe_fn']);
+
+        $this->assertSame('ok', $twig->load('index')->render());
+    }
+
+    public function testSpreadIntoUnsafeVariadicStillWraps(): void
+    {
+        // A spread fills an unsafe (untyped) variadic param, so every spilled
+        // element must keep its __toString wrap.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ unsafe_fn(...args) }}']);
+        $twig->addFunction(new TwigFunction('unsafe_fn', static fn (...$x) => (string) $x[0]));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['unsafe_fn']);
+
+        try {
+            $twig->load('index')->render(['args' => [new FooObject()]]);
+            $this->fail('Sandbox must check __toString on spread elements bound to an unsafe variadic parameter.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testNormalizedNamedArgumentDoesNotFallThroughToSafeVariadic(): void
+    {
+        // The compiler normalizes named arguments (`foo_bar` maps to
+        // `$fooBar`). The sandbox visitor must use the same mapping and not
+        // fall back to the safe typed variadic tail, or it would skip the
+        // __toString check on `$fooBar`.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ unsafe_fn(foo_bar: obj) }}']);
+        $twig->addFunction(new TwigFunction('unsafe_fn', static fn ($fooBar, int ...$rest) => (string) $fooBar, ['is_variadic' => true]));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['unsafe_fn']);
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on normalized named arguments before considering the variadic tail.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testNormalizedNamedFilterArgumentDoesNotFallThroughToSafeVariadic(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ 1|unsafe_filter(foo_bar: obj) }}']);
+        $twig->addFilter(new TwigFilter('unsafe_filter', static fn ($value, $fooBar, int ...$rest) => (string) $fooBar, ['is_variadic' => true]));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFilters(['unsafe_filter']);
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on normalized named filter arguments before considering the variadic tail.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testNormalizedNamedTestArgumentDoesNotFallThroughToSafeVariadic(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ 1 is unsafe_test(foo_bar: obj) ? "yes" : "no" }}']);
+        $twig->addTest(new TwigTest('unsafe_test', static fn ($value, $fooBar, int ...$rest) => 'x' === (string) $fooBar, ['is_variadic' => true]));
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on normalized named test arguments before considering the variadic tail.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testFilterInputTypeSkipsToStringWrap(): void
+    {
+        // A filter whose first PHP param has a safe type also skips the
+        // input (`node`) wrap.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ n|safe_filter }}']);
+        $twig->addFilter(new TwigFilter('safe_filter', static fn (int $n) => 'ok'));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFilters(['safe_filter']);
+
+        $this->assertSame('ok', $twig->load('index')->render(['n' => 42]));
+    }
+
     public function testColumnFilterUnaffectedOutsideSandbox()
     {
         $params = ['obj' => new ColumnObject()];
@@ -1130,4 +1596,57 @@ class MagicObject
 class ColumnObject
 {
     public $bar = 'bar';
+}
+
+class CountableFooObject extends FooObject implements \Countable
+{
+    public function count(): int
+    {
+        return 0;
+    }
+}
+
+class PlainBaseObject
+{
+}
+
+class StringablePlainObject extends PlainBaseObject implements \Stringable
+{
+    public function __toString(): string
+    {
+        return 'plain';
+    }
+}
+
+// Implements both Stringable and Traversable: a sandbox policy may legitimately
+// allow the container's own `__toString`, but the elements yielded by
+// `getIterator()` must still be policy-checked when consumers (`join`, `replace`,
+// ...) materialise the iterable and coerce its contents to string.
+class StringableTraversableObject implements \IteratorAggregate, \Stringable
+{
+    public function __construct(private array $items)
+    {
+    }
+
+    public function __toString(): string
+    {
+        return 'stringable-traversable';
+    }
+
+    public function getIterator(): \Traversable
+    {
+        yield from $this->items;
+    }
+}
+
+// Self-referencing IteratorAggregate: getIterator() yields `$this`. Used to
+// verify that the sandbox policy walker (which materialises Traversables to
+// enforce the `__toString` policy on yielded elements) does not recurse
+// infinitely.
+class CyclicTraversableObject implements \IteratorAggregate
+{
+    public function getIterator(): \Traversable
+    {
+        yield $this;
+    }
 }

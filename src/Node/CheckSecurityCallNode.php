@@ -24,7 +24,6 @@ class CheckSecurityCallNode extends Node
     {
         $compiler
             ->write("\$this->sandbox = \$this->extensions[SandboxExtension::class];\n")
-            ->write("\$this->checkSecurity();\n")
         ;
     }
 }

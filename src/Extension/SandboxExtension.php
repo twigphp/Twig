@@ -104,24 +104,7 @@ final class SandboxExtension extends AbstractExtension
      */
     public function ensureToStringAllowed($obj, int $lineno = -1, ?Source $source = null)
     {
-        if (\is_array($obj)) {
-            $this->ensureToStringAllowedForArray($obj, $lineno, $source);
-
-            return $obj;
-        }
-
-        if ($obj instanceof \Stringable && $this->isSandboxed($source)) {
-            try {
-                $this->policy->checkMethodAllowed($obj, '__toString');
-            } catch (SecurityNotAllowedMethodError $e) {
-                $e->setSourceContext($source);
-                $e->setTemplateLine($lineno);
-
-                throw $e;
-            }
-        }
-
-        return $obj;
+        return $this->doEnsureToStringAllowed($obj, $lineno, $source, new \SplObjectStorage());
     }
 
     /**
@@ -133,16 +116,72 @@ final class SandboxExtension extends AbstractExtension
      */
     public function ensureSpreadAllowed(iterable $obj, int $lineno = -1, ?Source $source = null): array
     {
+        $seen = new \SplObjectStorage();
         if ($obj instanceof \Traversable) {
+            $seen[$obj] = true;
             $obj = iterator_to_array($obj);
         }
 
-        $this->ensureToStringAllowedForArray($obj, $lineno, $source);
+        $this->ensureToStringAllowedForArray($obj, $lineno, $source, $seen);
 
         return $obj;
     }
 
-    private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, array &$stack = []): void
+    private function doEnsureToStringAllowed($obj, int $lineno, ?Source $source, \SplObjectStorage $seen)
+    {
+        if (\is_array($obj)) {
+            $this->ensureToStringAllowedForArray($obj, $lineno, $source, $seen);
+
+            return $obj;
+        }
+
+        if (!$this->isSandboxed($source)) {
+            return $obj;
+        }
+
+        if ($obj instanceof \Stringable) {
+            try {
+                $this->policy->checkMethodAllowed($obj, '__toString');
+            } catch (SecurityNotAllowedMethodError $e) {
+                $e->setSourceContext($source);
+                $e->setTemplateLine($lineno);
+
+                throw $e;
+            }
+        }
+
+        // Elements yielded by a Traversable may be string-coerced downstream
+        // (e.g. by `join`/`replace`), bypassing the policy. Check them now.
+        if ($obj instanceof \Traversable) {
+            if (isset($seen[$obj])) {
+                return $obj;
+            }
+            $seen[$obj] = true;
+
+            // IteratorAggregate::getIterator() is idempotent, so we can walk
+            // the elements and return the original object: host code typed
+            // against a specific class (e.g. FormView) keeps working.
+            if ($obj instanceof \IteratorAggregate) {
+                foreach ($obj as $v) {
+                    $this->doEnsureToStringAllowed($v, $lineno, $source, $seen);
+                }
+
+                return $obj;
+            }
+
+            // Single-pass Iterator/Generator: materialise to validate.
+            $array = iterator_to_array($obj);
+            $this->ensureToStringAllowedForArray($array, $lineno, $source, $seen);
+
+            if (!$obj instanceof \Stringable) {
+                return $array;
+            }
+        }
+
+        return $obj;
+    }
+
+    private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, \SplObjectStorage $seen, array &$stack = []): void
     {
         foreach ($obj as $k => $v) {
             if (!$v) {
@@ -150,7 +189,7 @@ final class SandboxExtension extends AbstractExtension
             }
 
             if (!\is_array($v)) {
-                $this->ensureToStringAllowed($v, $lineno, $source);
+                $this->doEnsureToStringAllowed($v, $lineno, $source, $seen);
                 continue;
             }
 
@@ -162,7 +201,7 @@ final class SandboxExtension extends AbstractExtension
                 $stack[$r->getId()] = true;
             }
 
-            $this->ensureToStringAllowedForArray($v, $lineno, $source, $stack);
+            $this->ensureToStringAllowedForArray($v, $lineno, $source, $seen, $stack);
         }
     }
 }

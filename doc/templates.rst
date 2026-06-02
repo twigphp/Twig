@@ -625,6 +625,42 @@ exist:
     {% set key = 'name' %}
     {(key): 'Fabien', (1 + 1): 2, ('ci' ~ 'ty'): 'city'}
 
+  Any expression is supported as a dynamic key. The result is coerced to
+  string, so objects implementing ``__toString()`` (PHP ``Stringable``) are
+  accepted:
+
+  .. code-block:: twig
+
+    {# attribute access #}
+    {(user.role): 'allowed'}
+
+    {# method call #}
+    {(user.getRole()): 'allowed'}
+
+    {# filter result #}
+    {(name|upper): 'Fabien'}
+
+    {# function call #}
+    {(slug(title)): post}
+
+    {# chained expression #}
+    {(user.email|lower): 'subscribed'}
+
+    {# Stringable object (cast via __toString) #}
+    {(uuid): 'token'}
+
+  .. versionadded:: 3.26.1
+
+      Support for arbitrary expressions as dynamic mapping keys
+      (attribute access, method calls, filter results, function calls,
+      and any ``Stringable`` object) was added in Twig 3.26.1.
+
+  .. note::
+
+      Inside a sandbox, the ``__toString()`` coercion goes through the
+      ``SecurityPolicy`` method allowlist, the same way as ``{{ obj }}``
+      or ``{{ obj|upper }}``.
+
 * ``true`` / ``false``: ``true`` represents the true value, ``false``
   represents the false value.
 

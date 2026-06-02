@@ -225,6 +225,56 @@ class TemplateTest extends TestCase
         $this->assertSame('EmptyString', CoreExtension::getAttribute($twig, $template->getSourceContext(), $array, null), 'null is treated as "" when accessing a sequence/mapping (equals PHP behavior)');
     }
 
+    #[DataProvider('getStrictVariablesModes')]
+    public function testArrayAccessWithStringableKeyIsConsistentAcrossStrictModes(bool $strict)
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '{{ array[object] }}']), [
+            'strict_variables' => $strict,
+            'autoescape' => false,
+        ]);
+
+        $object = new class implements \Stringable {
+            public function __toString(): string
+            {
+                return 'string';
+            }
+        };
+
+        $this->assertSame('value', $twig->render('index', ['array' => ['string' => 'value'], 'object' => $object]));
+    }
+
+    public static function getStrictVariablesModes(): iterable
+    {
+        yield 'lax' => [false];
+        yield 'strict' => [true];
+    }
+
+    public function testArrayAccessWithStringableKeyIsCheckedBySandbox()
+    {
+        $object = new class implements \Stringable {
+            public function __toString(): string
+            {
+                return 'string';
+            }
+        };
+        $data = ['array' => ['string' => 'value'], 'object' => $object];
+
+        $twig = new Environment(new ArrayLoader(['index' => '{{ array[object] }}']), ['autoescape' => false]);
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [], [], []), true));
+
+        try {
+            $twig->render('index', $data);
+            $this->fail('The sandbox must reject the __toString() coercion of the array key.');
+        } catch (SecurityError $e) {
+            $this->assertStringContainsStringIgnoringCase('__toString', $e->getMessage());
+        }
+
+        $twig = new Environment(new ArrayLoader(['index' => '{{ array[object] }}']), ['autoescape' => false]);
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [$object::class => ['__toString']], [], []), true));
+
+        $this->assertSame('value', $twig->render('index', $data));
+    }
+
     #[DataProvider('getGetAttributeTests')]
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {

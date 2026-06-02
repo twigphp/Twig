@@ -42,6 +42,17 @@ class CheckSecurityNode extends Node
     {
         $compiler
             ->write("\n")
+            ->write("public function ensureSecurityChecked(): void\n")
+            ->write("{\n")
+            ->indent()
+            ->write("if (\$this->sandbox->isSandboxed(\$this->source)) {\n")
+            ->indent()
+            ->write("\$this->checkSecurity();\n")
+            ->outdent()
+            ->write("}\n")
+            ->outdent()
+            ->write("}\n")
+            ->write("\n")
             ->write("public function checkSecurity()\n")
             ->write("{\n")
             ->indent()
