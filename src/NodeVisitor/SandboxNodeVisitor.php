@@ -27,6 +27,7 @@ use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
+use Twig\Util\CallableParameters;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -85,7 +86,22 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         // wrap children that the node itself will string-coerce at runtime;
         // applies to ModuleNode (`parent` slot for {% extends %}) too
         if ($this->inAModule && $node instanceof CoercesChildrenToStringInterface) {
+            $params = CallableParameters::fromNode($node, $env);
             foreach ($node->getStringCoercedChildNames() as $childName) {
+                // For Filter/Function/Test calls, consult the PHP callable
+                // signature: skip wrapping arguments whose param type cannot
+                // implicitly string-coerce (e.g. `int`, a `final` value object).
+                if (null !== $params && 'arguments' === $childName) {
+                    $this->wrapArguments($node, $params);
+
+                    continue;
+                }
+                if (null !== $params && 'node' === $childName && $node instanceof FilterExpression) {
+                    // The filter's input value maps to the first PHP parameter.
+                    if (isset($params[0]) && CallableParameters::isStringCoercionSafe($params[0]->getType(), $params[0]->getDeclaringClass())) {
+                        continue;
+                    }
+                }
                 $this->wrapNode($node, $childName);
             }
         }
@@ -103,6 +119,61 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
 
         return $node;
+    }
+
+    /**
+     * Wraps each entry in the `arguments` slot only when the corresponding
+     * PHP parameter type can implicitly string-coerce.
+     *
+     * @param list<\ReflectionParameter> $params parameters relative to the
+     *                                           first template argument (for
+     *                                           filters and tests: starting
+     *                                           after the `node`/input
+     *                                           parameter)
+     */
+    private function wrapArguments(Node $node, array $params): void
+    {
+        $arguments = $node->getNode('arguments');
+        if (!$arguments instanceof Nodes && !$arguments instanceof ArrayExpression) {
+            $this->wrapNode($node, 'arguments');
+
+            return;
+        }
+
+        // Filters and tests pass their input value (`node`) as the first PHP
+        // param, so their template arguments start at offset 1.
+        $positional = \array_slice($params, $node->hasNode('node') ? 1 : 0);
+        $variadic = null;
+        $byName = [];
+        foreach ($positional as $p) {
+            if ($p->isVariadic()) {
+                $variadic = $p;
+                break;
+            }
+            $byName[$this->normalizeName($p->getName())] ??= $p;
+        }
+
+        $positionalIdx = 0;
+        foreach ($arguments as $key => $_) {
+            if (\is_int($key)) {
+                $param = $positional[$positionalIdx] ?? $variadic;
+                if (null !== $param && !$param->isVariadic()) {
+                    ++$positionalIdx;
+                }
+            } else {
+                $param = $byName[$this->normalizeName($key)] ?? $variadic;
+            }
+
+            if (null !== $param && CallableParameters::isStringCoercionSafe($param->getType(), $param->getDeclaringClass())) {
+                continue;
+            }
+            $this->wrapNode($arguments, (string) $key);
+        }
+    }
+
+    private function normalizeName(string $name): string
+    {
+        return strtolower(str_replace('_', '', $name));
     }
 
     private function wrapNode(Node $node, string $name): void

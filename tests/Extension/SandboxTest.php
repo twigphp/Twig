@@ -1409,6 +1409,228 @@ EOF
         }
     }
 
+    /**
+     * @dataProvider getSafePhpTypesSkipToStringWrap
+     */
+    public function testSafePhpParamTypesSkipToStringWrap(string $template, callable $func, array $params): void
+    {
+        // The sandbox visitor must not wrap arguments whose target PHP
+        // parameter type cannot implicitly coerce to string (int, float,
+        // bool, non-Stringable/non-Traversable classes, ...). We observe
+        // the optimization by passing values whose `__toString` is NOT in
+        // the policy: with the wrap, the render throws; without it, it
+        // succeeds.
+        $twig = $this->getEnvironment(true, [], ['index' => $template]);
+        $twig->addFunction(new TwigFunction('safe_fn', $func));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['safe_fn']);
+
+        $this->assertSame('ok', $twig->load('index')->render($params));
+    }
+
+    public static function getSafePhpTypesSkipToStringWrap(): iterable
+    {
+        yield 'int param' => [
+            '{{ safe_fn(n) }}',
+            static fn (int $n) => 'ok',
+            ['n' => 42],
+        ];
+        yield 'float param' => [
+            '{{ safe_fn(n) }}',
+            static fn (float $n) => 'ok',
+            ['n' => 3.14],
+        ];
+        yield 'bool param' => [
+            '{{ safe_fn(b) }}',
+            static fn (bool $b) => 'ok',
+            ['b' => true],
+        ];
+        yield 'non-stringable class param' => [
+            '{{ safe_fn(obj) }}',
+            static fn (ColumnObject $o) => 'ok',
+            ['obj' => new ColumnObject()],
+        ];
+        yield 'nullable int param with null value' => [
+            '{{ safe_fn(n) }}',
+            static fn (?int $n) => 'ok',
+            ['n' => null],
+        ];
+        yield 'int|float union param' => [
+            '{{ safe_fn(n) }}',
+            static fn (int|float $n) => 'ok',
+            ['n' => 7],
+        ];
+    }
+
+    /**
+     * @dataProvider getUnsafePhpTypesStillWrap
+     */
+    public function testUnsafePhpParamTypesStillWrap(string $template, callable $func, array $params): void
+    {
+        // Conversely, an unsafe parameter type (`mixed`, untyped, `string`,
+        // `iterable`, `Stringable`, ...) must keep wrapping arguments so the
+        // sandbox can still block disallowed `__toString` calls.
+        $twig = $this->getEnvironment(true, [], ['index' => $template]);
+        $twig->addFunction(new TwigFunction('unsafe_fn', $func));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['unsafe_fn']);
+
+        try {
+            $twig->load('index')->render($params);
+            $this->fail('Sandbox should still check __toString when the PHP parameter type can implicitly coerce to string.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public static function getUnsafePhpTypesStillWrap(): iterable
+    {
+        $params = ['obj' => new FooObject()];
+        yield 'untyped param' => ['{{ unsafe_fn(obj) }}', static fn ($x) => (string) $x, $params];
+        yield 'mixed param' => ['{{ unsafe_fn(obj) }}', static fn (mixed $x) => (string) $x, $params];
+        yield 'string param' => ['{{ unsafe_fn(obj) }}', static fn (string $x) => $x, $params];
+        yield 'object param' => ['{{ unsafe_fn(obj) }}', static fn (object $x) => (string) $x, $params];
+        yield 'Stringable param' => ['{{ unsafe_fn(obj) }}', static fn (\Stringable $x) => (string) $x, $params];
+    }
+
+    /**
+     * @dataProvider getOpenPhpTypesStillWrap
+     */
+    public function testOpenPhpParamTypesStillWrap(callable $func, object $obj, string $class): void
+    {
+        // Interfaces and non-final classes are "open": a Stringable subtype
+        // can satisfy them, so the sandbox must keep gating __toString.
+        // Skipping the wrap on these would bypass the policy.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ unsafe_fn(obj) }}']);
+        $twig->addFunction(new TwigFunction('unsafe_fn', $func));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['unsafe_fn']);
+
+        try {
+            $twig->load('index')->render(['obj' => $obj]);
+            $this->fail('Sandbox must still check __toString for an interface or non-final class parameter.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame($class, $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public static function getOpenPhpTypesStillWrap(): iterable
+    {
+        yield 'interface param' => [static fn (\Countable $x) => (string) $x, new CountableFooObject(), CountableFooObject::class];
+        yield 'non-final class param' => [static fn (PlainBaseObject $x) => (string) $x, new StringablePlainObject(), StringablePlainObject::class];
+    }
+
+    public function testTestArgumentsMapAfterTheTestedValueParameter(): void
+    {
+        // A test's tested value is its first PHP parameter, so its template
+        // arguments must be mapped to the parameters *after* it. Mapping the
+        // first argument to the (safe-typed) value parameter would skip its
+        // __toString wrap and bypass the policy.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ 5 is my_test(obj) }}']);
+        $twig->addTest(new TwigTest('my_test', static fn (int $value, $arg) => 'x' === (string) $arg));
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on a test argument bound to an unsafe parameter.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSafeVariadicPhpTypeSkipsToStringWrap(): void
+    {
+        // PHP-variadic with a safe type: all spilled arguments skip the wrap.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ safe_fn(1, 2, 3) }}']);
+        $twig->addFunction(new TwigFunction('safe_fn', static fn (int ...$x) => 'ok'));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['safe_fn']);
+
+        $this->assertSame('ok', $twig->load('index')->render());
+    }
+
+    public function testSpreadIntoUnsafeVariadicStillWraps(): void
+    {
+        // A spread fills an unsafe (untyped) variadic param, so every spilled
+        // element must keep its __toString wrap.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ unsafe_fn(...args) }}']);
+        $twig->addFunction(new TwigFunction('unsafe_fn', static fn (...$x) => (string) $x[0]));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['unsafe_fn']);
+
+        try {
+            $twig->load('index')->render(['args' => [new FooObject()]]);
+            $this->fail('Sandbox must check __toString on spread elements bound to an unsafe variadic parameter.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testNormalizedNamedArgumentDoesNotFallThroughToSafeVariadic(): void
+    {
+        // The compiler normalizes named arguments (`foo_bar` maps to
+        // `$fooBar`). The sandbox visitor must use the same mapping and not
+        // fall back to the safe typed variadic tail, or it would skip the
+        // __toString check on `$fooBar`.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ unsafe_fn(foo_bar: obj) }}']);
+        $twig->addFunction(new TwigFunction('unsafe_fn', static fn ($fooBar, int ...$rest) => (string) $fooBar, ['is_variadic' => true]));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['unsafe_fn']);
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on normalized named arguments before considering the variadic tail.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testNormalizedNamedFilterArgumentDoesNotFallThroughToSafeVariadic(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ 1|unsafe_filter(foo_bar: obj) }}']);
+        $twig->addFilter(new TwigFilter('unsafe_filter', static fn ($value, $fooBar, int ...$rest) => (string) $fooBar, ['is_variadic' => true]));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFilters(['unsafe_filter']);
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on normalized named filter arguments before considering the variadic tail.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testNormalizedNamedTestArgumentDoesNotFallThroughToSafeVariadic(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ 1 is unsafe_test(foo_bar: obj) ? "yes" : "no" }}']);
+        $twig->addTest(new TwigTest('unsafe_test', static fn ($value, $fooBar, int ...$rest) => 'x' === (string) $fooBar, ['is_variadic' => true]));
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on normalized named test arguments before considering the variadic tail.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testFilterInputTypeSkipsToStringWrap(): void
+    {
+        // A filter whose first PHP param has a safe type also skips the
+        // input (`node`) wrap.
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ n|safe_filter }}']);
+        $twig->addFilter(new TwigFilter('safe_filter', static fn (int $n) => 'ok'));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFilters(['safe_filter']);
+
+        $this->assertSame('ok', $twig->load('index')->render(['n' => 42]));
+    }
+
     public function testColumnFilterUnaffectedOutsideSandbox()
     {
         $params = ['obj' => new ColumnObject()];
@@ -1914,6 +2136,26 @@ class MagicObject
 class ColumnObject
 {
     public $bar = 'bar';
+}
+
+class CountableFooObject extends FooObject implements \Countable
+{
+    public function count(): int
+    {
+        return 0;
+    }
+}
+
+class PlainBaseObject
+{
+}
+
+class StringablePlainObject extends PlainBaseObject implements \Stringable
+{
+    public function __toString(): string
+    {
+        return 'plain';
+    }
 }
 
 // Implements both Stringable and Traversable: a sandbox policy may legitimately
