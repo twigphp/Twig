@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2026-06-01T20:09:01Z
+
+> For final classes implementing Stringable, would it make sense to try checking the policy at compile-time and mark it safe if we know that the policy allows casting them to string ? This might help with the kind of logic currently done by Drupal to optimize the sandbox: [#4820 (comment)](https://github.com/twigphp/Twig/issues/4820#issuecomment-4566333505)
+
+This is not possible as `SecurityPolicy` can be swapped, so we cannot make that decision at compile-time. The fact that security policies can be swapped is annoying for sure: https://github.com/twigphp/Twig/commit/99a10384ff0
