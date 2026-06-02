@@ -1889,9 +1889,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ($isSandboxed) {
-            // The sandbox might be enabled via a SourcePolicyInterface, in which case the SandboxExtension
-            // would not consider the sandbox active without the current Source: $isSandboxed is already
-            // computed against the call-site source, so check the policy directly to honor that decision.
+            // $isSandboxed is computed against the call-site source, so check the policy directly to honor that decision.
             $policy = $env->getExtension(SandboxExtension::class)->getSecurityPolicy();
             foreach ($array as $item) {
                 if (\is_object($item)) {
