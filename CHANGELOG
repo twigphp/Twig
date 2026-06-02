@@ -1,6 +1,7 @@
 # 3.27.2 (2026-XX-XX)
 
  * Make the `IntegrationTestCase` and `NodeTestCase` test helpers compatible with PHPUnit 11
+ * Cast printed expressions to string so values that cannot be converted to a string (arrays, non-`Stringable` objects, ...) report a usable stack trace at the print location
  * Skip the sandbox `__toString` check on arguments whose PHP parameter type cannot implicitly coerce to string
 
 # 3.27.1 (2026-05-30)
