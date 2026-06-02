@@ -1,0 +1,10 @@
+--TEST--
+"include" function returns Markup so an assigned result is not re-escaped
+--TEMPLATE--
+{% set assigned = include("foo.twig") %}[{{ assigned }}]
+--TEMPLATE(foo.twig)--
+{{- "a & b"|escape -}}
+--DATA--
+return []
+--EXPECT--
+[a &amp; b]

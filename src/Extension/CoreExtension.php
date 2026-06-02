@@ -1490,9 +1490,11 @@ final class CoreExtension extends AbstractExtension
      * @param bool                         $ignoreMissing Whether to ignore missing templates or not
      * @param bool                         $sandboxed     Whether to sandbox the template or not
      *
+     * @return string|Markup
+     *
      * @internal
      */
-    public static function include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false): string
+    public static function include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
     {
         $alreadySandboxed = false;
         $sandbox = null;
@@ -1519,7 +1521,9 @@ final class CoreExtension extends AbstractExtension
                 return '';
             }
 
-            return $loaded->render($variables);
+            $rendered = $loaded->render($variables);
+
+            return '' === $rendered ? '' : new Markup($rendered, $env->getCharset());
         } finally {
             if ($isSandboxed && !$alreadySandboxed) {
                 $sandbox->disableSandbox();

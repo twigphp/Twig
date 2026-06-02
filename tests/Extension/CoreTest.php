@@ -29,6 +29,7 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
+use Twig\Markup;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicy;
 
@@ -415,6 +416,41 @@ class CoreTest extends TestCase
         // We expect a runtime error
         $this->expectException(SecurityError::class);
         $twig->render('index');
+    }
+
+    public function testSandboxedIncludeResultStaysEscapedWhenAssigned()
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => "{% set body = include('included', sandboxed: true) %}[{{ body }}]",
+            'included' => '{{ evil }}',
+        ]), ['autoescape' => 'html']);
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], ['escape'], [], [], ['include']), false));
+
+        $this->assertSame('[&lt;script&gt;]', $twig->render('index', ['evil' => '<script>']));
+    }
+
+    public function testIncludeReturnsMarkupForRenderedContent()
+    {
+        $twig = new Environment(new ArrayLoader(['included' => 'content']));
+
+        $result = CoreExtension::include($twig, [], 'included');
+
+        $this->assertInstanceOf(Markup::class, $result);
+        $this->assertSame('content', (string) $result);
+    }
+
+    public function testIncludeReturnsAnEmptyStringForEmptyContent()
+    {
+        $twig = new Environment(new ArrayLoader(['included' => '']));
+
+        $this->assertSame('', CoreExtension::include($twig, [], 'included'));
+    }
+
+    public function testIncludeReturnsAnEmptyStringForIgnoredMissingTemplate()
+    {
+        $twig = new Environment(new ArrayLoader([]));
+
+        $this->assertSame('', CoreExtension::include($twig, [], 'missing', ignoreMissing: true));
     }
 
     public function testLastModified()
