@@ -316,7 +316,7 @@ Sandbox
   ``Twig\TwigCallableInterface`` implementations (``TwigFilter``,
   ``TwigFunction``, ``TwigTest``) and in
   ``Twig\TokenParser\TokenParserInterface`` implementations is deprecated as
-  of Twig 3.27. This method will be added to both interfaces in Twig 4.0. It
+  of Twig 3.28. This method will be added to both interfaces in Twig 4.0. It
   returns ``true`` when the filter, function, test, or tag is always allowed
   in a sandboxed template, regardless of the security policy allow-list.
   Custom callables extending ``Twig\AbstractTwigCallable`` and custom token

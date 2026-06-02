@@ -263,7 +263,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
 
         $interface = $subject instanceof TokenParserInterface ? TokenParserInterface::class : TwigCallableInterface::class;
-        trigger_deprecation('twig/twig', '3.27', 'Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "%s" interface in 4.0.', $subject::class, $interface);
+        trigger_deprecation('twig/twig', '3.28', 'Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "%s" interface in 4.0.', $subject::class, $interface);
 
         return false;
     }

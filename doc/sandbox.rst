@@ -60,11 +60,11 @@ allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
 Marking Filters, Functions, and Tags as Always Allowed
 ------------------------------------------------------
 
-.. versionadded:: 3.27
+.. versionadded:: 3.28
 
     The ``always_allowed_in_sandbox`` option for filters and functions, and
     the ``isAlwaysAllowedInSandbox()`` method for token parsers, were added in
-    Twig 3.27.
+    Twig 3.28.
 
 Some filters, functions, and tags are inherently safe and should always be
 usable in sandboxed templates without forcing every policy to allow-list them.

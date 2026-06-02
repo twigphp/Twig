@@ -2140,7 +2140,7 @@ EOF
         $twig = $this->getEnvironment(true, [], ['index' => '{% legacy_tag %}'], tags: ['legacy_tag']);
         $twig->addTokenParser(new LegacyTokenParserWithoutIsAlwaysAllowedInSandbox());
 
-        $this->expectDeprecation(\sprintf('Since twig/twig 3.27: Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "Twig\TokenParser\TokenParserInterface" interface in 4.0.', LegacyTokenParserWithoutIsAlwaysAllowedInSandbox::class));
+        $this->expectDeprecation(\sprintf('Since twig/twig 3.28: Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "Twig\TokenParser\TokenParserInterface" interface in 4.0.', LegacyTokenParserWithoutIsAlwaysAllowedInSandbox::class));
 
         // tag is allow-listed, so the render itself succeeds; the deprecation fires from the sandbox visitor while compiling
         $this->assertSame('', $twig->load('index')->render([]));
