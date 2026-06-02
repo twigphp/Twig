@@ -2112,6 +2112,26 @@ EOF
         $twig->load('index')->render([]);
     }
 
+    public function testAlwaysAllowedInSandboxFilterStillEnforcesToStringPolicyOnArguments()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj|safe_upper }}']);
+        $twig->addFilter(new TwigFilter('safe_upper', static fn (string $s) => strtoupper($s), ['always_allowed_in_sandbox' => true]));
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
+        $twig->load('index')->render(['obj' => new FooObject()]);
+    }
+
+    public function testAlwaysAllowedInSandboxFunctionStillEnforcesToStringPolicyOnArguments()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ safe_greet(obj) }}']);
+        $twig->addFunction(new TwigFunction('safe_greet', static fn (string $s) => "hi $s", ['always_allowed_in_sandbox' => true]));
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
+        $twig->load('index')->render(['obj' => new FooObject()]);
+    }
+
     /**
      * @group legacy
      */
