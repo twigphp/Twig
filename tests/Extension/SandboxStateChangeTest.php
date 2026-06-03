@@ -11,6 +11,7 @@
 
 namespace Twig\Tests\Extension;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
@@ -102,6 +103,7 @@ class SandboxStateChangeTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSourcePolicyDecisionFlip()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -197,6 +199,7 @@ class SandboxStateChangeTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSandboxTagAroundIncludeOfPreWarmedTemplate()
     {
         $this->expectDeprecation('Since twig/twig 3.15: The "sandbox" tag is deprecated in "wrapper" at line 1.');

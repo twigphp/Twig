@@ -20,6 +20,7 @@ namespace Twig\Tests\Node\Expression;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Twig\Error\SyntaxError;
 use Twig\Node\EmptyNode;
@@ -29,6 +30,7 @@ use Twig\TwigFunction;
 /**
  * @group legacy
  */
+#[Group('legacy')]
 class CallTest extends TestCase
 {
     public function testGetArguments()

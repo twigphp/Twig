@@ -20,6 +20,8 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
@@ -183,6 +185,7 @@ class LexerTest extends TestCase
     /**
      * @dataProvider getStringWithEscapedDelimiter
      */
+    #[DataProvider('getStringWithEscapedDelimiter')]
     public function testStringWithEscapedDelimiter(string $template, string $expected)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -259,6 +262,7 @@ class LexerTest extends TestCase
      *
      * @dataProvider getStringWithEscapedDelimiterProducingDeprecation
      */
+    #[DataProvider('getStringWithEscapedDelimiterProducingDeprecation'), Group('legacy')]
     public function testStringWithEscapedDelimiterProducingDeprecation(string $template, string $expected, string $expectedDeprecation)
     {
         $this->expectDeprecation($expectedDeprecation);
@@ -536,6 +540,7 @@ bar
     /**
      * @dataProvider getTemplateForErrorsAtTheEndOfTheStream
      */
+    #[DataProvider('getTemplateForErrorsAtTheEndOfTheStream')]
     public function testErrorsAtTheEndOfTheStream(string $template)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -559,6 +564,7 @@ bar
     /**
      * @dataProvider getTemplateForStrings
      */
+    #[DataProvider('getTemplateForStrings')]
     public function testStrings(string $expected)
     {
         $template = '{{ "'.$expected.'" }}';
@@ -597,6 +603,7 @@ bar
     /**
      * @dataProvider getTemplateForInlineCommentsForVariable
      */
+    #[DataProvider('getTemplateForInlineCommentsForVariable')]
     public function testInlineCommentForVariable(string $template)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -630,6 +637,7 @@ bar
     /**
      * @dataProvider getTemplateForInlineCommentsForBlock
      */
+    #[DataProvider('getTemplateForInlineCommentsForBlock')]
     public function testInlineCommentForBlock(string $template)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -668,6 +676,7 @@ bar
     /**
      * @dataProvider getTemplateForInlineCommentsForComment
      */
+    #[DataProvider('getTemplateForInlineCommentsForComment')]
     public function testInlineCommentForComment(string $template)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -685,6 +694,7 @@ bar
     /**
      * @dataProvider getTemplateForUnclosedBracketInExpression
      */
+    #[DataProvider('getTemplateForUnclosedBracketInExpression')]
     public function testUnclosedBracketInExpression(string $template, string $bracket)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -706,6 +716,7 @@ bar
     /**
      * @dataProvider getTemplateForUnexpectedBracketInExpression
      */
+    #[DataProvider('getTemplateForUnexpectedBracketInExpression')]
     public function testUnexpectedBracketInExpression(string $template, string $bracket)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));

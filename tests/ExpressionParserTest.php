@@ -20,6 +20,8 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Attribute\FirstClassTwigCallableReady;
@@ -56,6 +58,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider getFailingTestsForAssignment
      */
+    #[DataProvider('getFailingTestsForAssignment')]
     public function testCanOnlyAssignToNames($template)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -86,6 +89,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider getTestsForSequence
      */
+    #[DataProvider('getTestsForSequence')]
     public function testSequenceExpression($template, $expected)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -99,6 +103,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider getFailingTestsForSequence
      */
+    #[DataProvider('getFailingTestsForSequence')]
     public function testSequenceSyntaxError($template)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -247,6 +252,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider getTestsForString
      */
+    #[DataProvider('getTestsForString')]
     public function testStringExpression($template, $expected)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
@@ -304,6 +310,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider getTestsForNullSafeOperator
      */
+    #[DataProvider('getTestsForNullSafeOperator')]
     public function testNullSafeOperator($template, $data, $expected)
     {
         $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);
@@ -376,6 +383,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider getTestForInvalidNullSafeOperatorShortCircuiting
      */
+    #[DataProvider('getTestForInvalidNullSafeOperatorShortCircuiting')]
     public function testInvalidNullSafeOperatorShortCircuiting(string $template, array $data, string $expectedMessage)
     {
         $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);
@@ -414,6 +422,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider             getMacroDefinitionDoesNotSupportNonConstantDefaultValues
      */
+    #[DataProvider('getMacroDefinitionDoesNotSupportNonConstantDefaultValues')]
     public function testMacroDefinitionDoesNotSupportNonConstantDefaultValues($template)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -436,6 +445,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider getMacroDefinitionSupportsConstantDefaultValues
      */
+    #[DataProvider('getMacroDefinitionSupportsConstantDefaultValues')]
     public function testMacroDefinitionSupportsConstantDefaultValues($template)
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -606,6 +616,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testNotReadyFunction()
     {
         $this->expectDeprecation('Since twig/twig 3.12: Twig node "Twig\Tests\NotReadyFunctionExpression" is not marked as ready for passing a "TwigFunction" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.');
@@ -621,6 +632,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testNotReadyFilter()
     {
         $this->expectDeprecation('Since twig/twig 3.12: Twig node "Twig\Tests\NotReadyFilterExpression" is not marked as ready for passing a "TwigFilter" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.');
@@ -636,6 +648,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testNotReadyTest()
     {
         $this->expectDeprecation('Since twig/twig 3.12: Twig node "Twig\Tests\NotReadyTestExpression" is not marked as ready for passing a "TwigTest" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.');
@@ -716,6 +729,7 @@ class ExpressionParserTest extends TestCase
     /**
      * @dataProvider getBindingPowerTests
      */
+    #[DataProvider('getBindingPowerTests')]
     public function testBindingPower(string $expression, string $expectedExpression, mixed $expectedResult, array $context = [])
     {
         $env = new Environment(new ArrayLoader([

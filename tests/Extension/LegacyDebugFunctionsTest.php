@@ -11,6 +11,7 @@
 
 namespace Twig\Tests\Extension;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -19,6 +20,7 @@ use Twig\Loader\ArrayLoader;
 /**
  * @group legacy
  */
+#[Group('legacy')]
 class LegacyDebugFunctionsTest extends TestCase
 {
     public function testDump()

@@ -20,6 +20,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
@@ -144,6 +145,7 @@ EOHTML,
     /**
      * @dataProvider getErroredTemplates
      */
+    #[DataProvider('getErroredTemplates')]
     public function testTwigExceptionAddsFileAndLine($templates, $name, $line)
     {
         $loader = new ArrayLoader($templates);
@@ -272,6 +274,7 @@ EOHTML,
     /**
      * @dataProvider getErrorWithoutLineAndContextData
      */
+    #[DataProvider('getErrorWithoutLineAndContextData')]
     public function testErrorWithoutLineAndContext(LoaderInterface $loader, bool $debug, bool $addDebugInfo, bool $exceptionWithLineAndContext, int $errorLine)
     {
         $twig = new Environment($loader, ['debug' => $debug, 'cache' => false]);

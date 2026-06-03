@@ -20,6 +20,7 @@ namespace Twig\Tests\Node\Expression;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\Group;
 use Twig\Node\Expression\ConditionalExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Test\NodeTestCase;
@@ -27,6 +28,7 @@ use Twig\Test\NodeTestCase;
 /**
  * @group legacy
  */
+#[Group('legacy')]
 class ConditionalTest extends NodeTestCase
 {
     public function testConstructor()

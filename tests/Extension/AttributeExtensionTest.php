@@ -11,6 +11,7 @@
 
 namespace Twig\Tests\Extension;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\DeprecatedCallableInfo;
 use Twig\Error\RuntimeError;
@@ -28,6 +29,7 @@ class AttributeExtensionTest extends TestCase
     /**
      * @dataProvider provideFilters
      */
+    #[DataProvider('provideFilters')]
     public function testFilter(string $name, string $method, array $options)
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);
@@ -57,6 +59,7 @@ class AttributeExtensionTest extends TestCase
     /**
      * @dataProvider provideFunctions
      */
+    #[DataProvider('provideFunctions')]
     public function testFunction(string $name, string $method, array $options)
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);
@@ -86,6 +89,7 @@ class AttributeExtensionTest extends TestCase
     /**
      * @dataProvider provideTests
      */
+    #[DataProvider('provideTests')]
     public function testTest(string $name, string $method, array $options)
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);

@@ -20,6 +20,8 @@ namespace Twig\Tests\Extension;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
@@ -99,6 +101,7 @@ class SandboxTest extends TestCase
     /**
      * @dataProvider getSandboxedForCoreTagsTests
      */
+    #[DataProvider('getSandboxedForCoreTagsTests')]
     public function testSandboxForCoreTags(string $tag, string $template)
     {
         $twig = $this->getEnvironment(true, [], self::$templates, []);
@@ -137,6 +140,7 @@ class SandboxTest extends TestCase
      *
      * @group legacy
      */
+    #[DataProvider('getSandboxedForExtendsAndUseTagsTests'), Group('legacy')]
     public function testSandboxForExtendsAndUseTags(string $tag, string $template)
     {
         $this->expectDeprecation(\sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).', $tag));
@@ -156,6 +160,7 @@ class SandboxTest extends TestCase
      *
      * @group legacy
      */
+    #[DataProvider('getSandboxedForParserCallableFunctionsTests'), Group('legacy')]
     public function testSandboxForParserCallableFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $context, string $expected)
     {
         $this->expectDeprecation(\sprintf('Since twig/twig 3.27: The "%s" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).', $function));
@@ -216,6 +221,7 @@ class SandboxTest extends TestCase
     /**
      * @dataProvider getAllowedParserCallableFunctionsTests
      */
+    #[DataProvider('getAllowedParserCallableFunctionsTests')]
     public function testSandboxWithAllowedParserCallableFunctions(string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $allowedFunctions, array $context, string $expected)
     {
         $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], $allowedMethods, $allowedProperties, $allowedFunctions);
@@ -255,6 +261,7 @@ class SandboxTest extends TestCase
     /**
      * @dataProvider getStrictSandboxRejectsGrandfatheredTagsTests
      */
+    #[DataProvider('getStrictSandboxRejectsGrandfatheredTagsTests')]
     public function testStrictSandboxRejectsGrandfatheredTags(string $tag, string $template)
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], null, true);
@@ -274,6 +281,7 @@ class SandboxTest extends TestCase
     /**
      * @dataProvider getStrictSandboxRejectsGrandfatheredFunctionsTests
      */
+    #[DataProvider('getStrictSandboxRejectsGrandfatheredFunctionsTests')]
     public function testStrictSandboxRejectsGrandfatheredFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $context)
     {
         $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], [], [], [], null, true);
@@ -391,6 +399,7 @@ class SandboxTest extends TestCase
     /**
      * @dataProvider provideNonStringArrayAccessKeys
      */
+    #[DataProvider('provideNonStringArrayAccessKeys')]
     public function testSandboxNonStringKeyAccessDoesNotTriggerImplicitConversionDeprecation(string $template, string $expectedKey)
     {
         $loader = new ArrayLoader(['t' => $template]);
@@ -449,6 +458,7 @@ class SandboxTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testIfSandBoxIsDisabledAfterSyntaxErrorLegacy()
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
@@ -553,6 +563,7 @@ class SandboxTest extends TestCase
     /**
      * @dataProvider getSandboxUnallowedToStringTests
      */
+    #[DataProvider('getSandboxUnallowedToStringTests')]
     public function testSandboxUnallowedToString($template)
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['if', 'do', 'for', 'set'], ['upper', 'join', 'replace', 'format', 'split'], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject'], [], ['random', 'range', 'my_func']);
@@ -766,6 +777,7 @@ class SandboxTest extends TestCase
     /**
      * @dataProvider getSandboxAllowedToStringTests
      */
+    #[DataProvider('getSandboxAllowedToStringTests')]
     public function testSandboxAllowedToString($template, $output)
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['set', 'do'], [], ['Twig\Tests\Extension\FooObject' => ['foo', 'getAnotherFooObject']]);
@@ -1048,6 +1060,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSandboxTagIncludeWithPreloadedTemplate()
     {
         $twig = $this->getEnvironment(false, [], [
@@ -1065,6 +1078,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSandboxTagIncludeIgnoreMissingWithPreloadedTemplate()
     {
         $twig = $this->getEnvironment(false, [], [
@@ -1193,6 +1207,7 @@ EOF
     /**
      * @dataProvider getStringableTraversableBypassTemplates
      */
+    #[DataProvider('getStringableTraversableBypassTemplates')]
     public function testSandboxBlocksToStringInStringableTraversable(string $template)
     {
         $twig = $this->getEnvironment(
@@ -1224,6 +1239,7 @@ EOF
      *
      * @dataProvider getStringableTraversableBypassTemplates
      */
+    #[DataProvider('getStringableTraversableBypassTemplates'), Group('legacy')]
     public function testSourcePolicySandboxBlocksToStringInStringableTraversable(string $template)
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1279,6 +1295,7 @@ EOF
     /**
      * @dataProvider getCyclicTraversableTemplates
      */
+    #[DataProvider('getCyclicTraversableTemplates')]
     public function testSandboxHandlesCyclicTraversableWithoutStackOverflow(string $template)
     {
         // A self-referencing IteratorAggregate must not cause the sandbox policy
@@ -1308,6 +1325,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSourcePolicySandboxBlocksToStringInTraversableJoin()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1333,6 +1351,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSourcePolicySandboxBlocksToStringInTraversableReplace()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1412,6 +1431,7 @@ EOF
     /**
      * @dataProvider getSafePhpTypesSkipToStringWrap
      */
+    #[DataProvider('getSafePhpTypesSkipToStringWrap')]
     public function testSafePhpParamTypesSkipToStringWrap(string $template, callable $func, array $params): void
     {
         // The sandbox visitor must not wrap arguments whose target PHP
@@ -1465,6 +1485,7 @@ EOF
     /**
      * @dataProvider getUnsafePhpTypesStillWrap
      */
+    #[DataProvider('getUnsafePhpTypesStillWrap')]
     public function testUnsafePhpParamTypesStillWrap(string $template, callable $func, array $params): void
     {
         // Conversely, an unsafe parameter type (`mixed`, untyped, `string`,
@@ -1497,6 +1518,7 @@ EOF
     /**
      * @dataProvider getOpenPhpTypesStillWrap
      */
+    #[DataProvider('getOpenPhpTypesStillWrap')]
     public function testOpenPhpParamTypesStillWrap(callable $func, object $obj, string $class): void
     {
         // Interfaces and non-final classes are "open": a Stringable subtype
@@ -1642,6 +1664,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedProperty()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1668,6 +1691,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedIndex()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1694,6 +1718,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSourcePolicySandboxAllowsColumnFilterOnAllowedProperty()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1714,6 +1739,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSourcePolicySandboxBlocksColumnFilterOnMagicGetter()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1751,6 +1777,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSandboxSourcePolicyEnableReturningFalse()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1767,6 +1794,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSandboxSourcePolicyEnableReturningTrue()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1784,6 +1812,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1803,6 +1832,7 @@ EOF
      *
      * @dataProvider provideSourcePolicyArrowBlockedTemplates
      */
+    #[DataProvider('provideSourcePolicyArrowBlockedTemplates'), Group('legacy')]
     public function testSourcePolicyBlocksNonClosureCallableInArrow(string $template)
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1835,6 +1865,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSourcePolicyAllowsClosureInArrow()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1853,6 +1884,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testNonSandboxedSourcePolicyAllowsNonClosureCallable()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1892,6 +1924,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testNeedsIsSandboxedFilterFollowsSourcePolicy()
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
@@ -1947,6 +1980,7 @@ EOF
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testNeedsIsSandboxedHelperTriggersDeprecationForCustomImplementation()
     {
         $callable = new LegacyTwigCallableWithoutNeedsIsSandboxed();

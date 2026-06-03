@@ -20,6 +20,7 @@ namespace Twig\Tests\Node\Expression;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\Group;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NullCoalesceExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
@@ -28,6 +29,7 @@ use Twig\Test\NodeTestCase;
 /**
  * @group legacy
  */
+#[Group('legacy')]
 class NullCoalesceTest extends NodeTestCase
 {
     public static function provideTests(): iterable

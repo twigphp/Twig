@@ -20,6 +20,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Cache\CacheInterface;
@@ -462,9 +463,8 @@ class EnvironmentTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @requires PHP 8
      */
+    #[Group('legacy')]
     public function testLegacyEchoingNode()
     {
         $loader = new ArrayLoader(['echo_bar' => 'A{% set v %}B{% test %}C{% endset %}D{% test %}E{{ v }}F{% set w %}{% test %}{% endset %}G{{ w }}H']);

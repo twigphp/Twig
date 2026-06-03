@@ -20,6 +20,8 @@ namespace Twig\Tests\Util;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Error\SyntaxError;
@@ -98,6 +100,7 @@ class CallableArgumentsExtractorTest extends TestCase
     /**
      * @dataProvider getGetArgumentsConversionData
      */
+    #[DataProvider('getGetArgumentsConversionData')]
     public function testGetArgumentsConversion($arg1, $arg2)
     {
         $this->assertEquals([null], $this->getArguments('custom', eval("return fn (\$$arg1) => '';"), [$arg1 => null]));
@@ -121,6 +124,7 @@ class CallableArgumentsExtractorTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testGetArgumentsConversionForVariadics()
     {
         $this->expectDeprecation('Since twig/twig 3.15: Using "snake_case" for variadic arguments is required for a smooth upgrade with Twig 4.0; rename "someNumberVariadic" to "some_number_variadic" in "test.twig" at line 2.');

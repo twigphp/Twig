@@ -20,6 +20,7 @@ namespace Twig\Tests\Runtime;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Error\RuntimeError;
 use Twig\Runtime\EscaperRuntime;
@@ -386,6 +387,7 @@ class EscaperRuntimeTest extends TestCase
     /**
      * @dataProvider provideCustomEscaperCases
      */
+    #[DataProvider('provideCustomEscaperCases')]
     public function testCustomEscaper($expected, $string, $strategy, $charset)
     {
         $escaper = new EscaperRuntime();
@@ -405,6 +407,7 @@ class EscaperRuntimeTest extends TestCase
     /**
      * @dataProvider provideObjectsForEscaping
      */
+    #[DataProvider('provideObjectsForEscaping')]
     public function testObjectEscaping(string $escapedHtml, string $escapedJs, array $safeClasses)
     {
         $obj = new Extension_TestClass();

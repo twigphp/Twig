@@ -54,6 +54,51 @@ jobs:
             - name: "Run tests"
               run: vendor/bin/simple-phpunit
 
+    tests-phpunit-11:
+        name: "PHP ${{ matrix.php-version }} (PHPUnit 11.3)"
+
+        runs-on: 'ubuntu-latest'
+
+        env:
+            SYMFONY_PHPUNIT_VERSION: '11.3'
+
+        strategy:
+            matrix:
+                php-version:
+                    - '8.2'
+                    - '8.3'
+                    - '8.4'
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v4
+
+            - name: "Install PHP with extensions"
+              uses: shivammathur/setup-php@v2
+              with:
+                  coverage: "none"
+                  php-version: ${{ matrix.php-version }}
+                  ini-values: memory_limit=-1
+
+            - name: "Add PHPUnit matcher"
+              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+            - run: composer install
+
+            - name: "Switch use_yield to true on PHP ${{ matrix.php-version }}"
+              if: "matrix.php-version == '8.2'"
+              run: |
+                  sed -i -e "s/'use_yield' => false/'use_yield' => true/" src/Environment.php
+
+            - name: "Install PHPUnit"
+              run: vendor/bin/simple-phpunit install
+
+            - name: "PHPUnit version"
+              run: vendor/bin/simple-phpunit --version
+
+            - name: "Run tests"
+              run: vendor/bin/simple-phpunit
+
     extension-tests:
         needs:
             - 'tests'
