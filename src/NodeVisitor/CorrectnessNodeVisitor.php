@@ -13,8 +13,10 @@ namespace Twig\NodeVisitor;
 
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
 use Twig\Node\ConfigNode;
+use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\NodeCaptureInterface;
@@ -33,12 +35,17 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     private ?Node $currentTagNode = null;
     private bool $hasParent = false;
     private ?\WeakMap $blockNodes = null;
+    private int $blockDepth = 0;
+    private int $macroDepth = 0;
 
     public function enterNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode) {
             $this->rootNodes = new \WeakMap();
             $this->hasParent = $node->hasNode('parent');
+            // reset in case a previous traversal threw before balancing the counters
+            $this->blockDepth = 0;
+            $this->macroDepth = 0;
 
             // allows to identify when we enter/leave the block nodes
             $this->blockNodes = new \WeakMap();
@@ -59,11 +66,25 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
             return $node;
         }
 
+        if ($node instanceof BlockNode) {
+            ++$this->blockDepth;
+        } elseif ($node instanceof MacroNode) {
+            ++$this->macroDepth;
+        }
+
         if ($this->hasParent && $node->getNodeTag() && !$node instanceof BlockReferenceNode) {
             $this->currentTagNode = $node;
         }
 
         if ($node instanceof ConfigNode && !isset($this->rootNodes[$node])) {
+            // "extends" inside a "block" or a "macro" has always been a hard error; keep it
+            if ('extends' === $node->getNodeTag() && $this->blockDepth) {
+                throw new SyntaxError('Cannot use "extend" in a block.', $node->getTemplateLine(), $node->getSourceContext());
+            }
+            if ('extends' === $node->getNodeTag() && $this->macroDepth) {
+                throw new SyntaxError('Cannot use "extend" in a macro.', $node->getTemplateLine(), $node->getSourceContext());
+            }
+
             trigger_deprecation('twig/twig', '3.27', 'Using the "%s" tag outside the root of a template is deprecated in %s at line %d.', $node->getNodeTag(), $node->getSourceContext()->getName(), $node->getTemplateLine());
         }
 
@@ -84,6 +105,11 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
             $this->rootNodes = null;
             $this->hasParent = false;
             $this->blockNodes = null;
+        }
+        if ($node instanceof BlockNode) {
+            --$this->blockDepth;
+        } elseif ($node instanceof MacroNode) {
+            --$this->macroDepth;
         }
         if ($this->hasParent && $node->getNodeTag() && !$node instanceof BlockReferenceNode) {
             $this->currentTagNode = null;
