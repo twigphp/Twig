@@ -20,7 +20,7 @@ use Twig\Test\NodeTestCase;
  * Guards that the shipped test case classes stay usable on PHPUnit >= 11,
  * which rejects non-static data providers.
  */
-class DataProviderCompatibilityTest extends TestCase
+final class DataProviderCompatibilityTest extends TestCase
 {
     /**
      * @return iterable<array{class-string}>
@@ -32,15 +32,11 @@ class DataProviderCompatibilityTest extends TestCase
     }
 
     /**
-     * @dataProvider provideTestCaseClasses
-     *
      * @param class-string $class
      */
     #[DataProvider('provideTestCaseClasses')]
     public function testDataProviderAttributesReferenceStaticMethods(string $class): void
     {
-        // Read attribute metadata via reflection without instantiating the attribute,
-        // so the check also runs under PHPUnit < 10 where the attribute class is absent.
         $found = false;
         foreach ((new \ReflectionClass($class))->getMethods() as $method) {
             foreach ($method->getAttributes(DataProvider::class) as $attribute) {

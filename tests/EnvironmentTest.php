@@ -20,7 +20,6 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
