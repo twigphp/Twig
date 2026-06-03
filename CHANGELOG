@@ -1,5 +1,6 @@
 # 3.27.2 (2026-XX-XX)
 
+ * Fix nested `block()` calls to resolve against the overriding template when a block rendered through `block(name, template)` calls `parent()`
  * Stop reporting a skipped test in `IntegrationTestCase` when there is no legacy test to run
  * Make the `IntegrationTestCase` and `NodeTestCase` test helpers compatible with PHPUnit 11
  * Cast printed expressions to string so values that cannot be converted to a string (arrays, non-`Stringable` objects, ...) report a usable stack trace at the print location

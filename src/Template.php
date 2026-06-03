@@ -440,6 +440,8 @@ abstract class Template
         } elseif (isset($this->blocks[$name])) {
             $template = $this->blocks[$name][0];
             $block = $this->blocks[$name][1];
+            // expose this template's own blocks so nested block() calls resolve against them when the block is rendered directly (e.g. block(name, template))
+            $blocks = array_merge($this->blocks, $blocks);
         } else {
             $template = null;
             $block = null;
