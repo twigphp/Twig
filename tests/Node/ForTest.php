@@ -73,7 +73,7 @@ class ForTest extends NodeTestCase
 \$context['_parent'] = \$context;
 \$context['_seq'] = CoreExtension::ensureTraversable($itemsGetter);
 foreach (\$context['_seq'] as \$context["key"] => \$context["item"]) {
-    yield $fooGetter;
+    yield (string) $fooGetter;
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['key'], \$context['item'], \$context['_parent']);
@@ -107,7 +107,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    yield $fooGetter;
+    yield (string) $fooGetter;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -149,7 +149,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    yield $fooGetter;
+    yield (string) $fooGetter;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
     \$context['loop']['first'] = false;
@@ -192,7 +192,7 @@ if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_
     \$context['loop']['last'] = 1 === \$length;
 }
 foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
-    yield $fooGetter;
+    yield (string) $fooGetter;
     \$context['_iterated'] = true;
     ++\$context['loop']['index0'];
     ++\$context['loop']['index'];
@@ -206,7 +206,7 @@ foreach (\$context['_seq'] as \$context["k"] => \$context["v"]) {
 // line 5
 if (!\$context['_iterated']) {
     // line 6
-    yield $fooGetter;
+    yield (string) $fooGetter;
 }
 \$_parent = \$context['_parent'];
 unset(\$context['_seq'], \$context['k'], \$context['v'], \$context['_parent'], \$context['_iterated'], \$context['loop']);
