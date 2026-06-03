@@ -20,6 +20,8 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
@@ -34,6 +36,7 @@ class EscaperTest extends TestCase
      *
      * @group legacy
      */
+    #[DataProvider('provideCustomEscaperCases'), Group('legacy')]
     public function testCustomEscaper($expected, $string, $strategy)
     {
         $twig = new Environment(new ArrayLoader());
@@ -56,6 +59,7 @@ class EscaperTest extends TestCase
      *
      * @group legacy
      */
+    #[DataProvider('provideCustomEscaperCases'), Group('legacy')]
     public function testCustomEscaperWithoutCallingSetEscaperRuntime($expected, $string, $strategy)
     {
         $twig = new Environment(new ArrayLoader());
@@ -67,6 +71,7 @@ class EscaperTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testCustomEscapersOnMultipleEnvs()
     {
         $env1 = new Environment(new ArrayLoader());
@@ -84,6 +89,7 @@ class EscaperTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testSafeClassesUseCustomRuntimeLoader()
     {
         $runtime = new EscaperRuntime();

@@ -20,6 +20,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\DeprecatedCallableInfo;
 
@@ -28,6 +29,7 @@ class DeprecatedCallableInfoTest extends TestCase
     /**
      * @dataProvider provideTestsForTriggerDeprecation
      */
+    #[DataProvider('provideTestsForTriggerDeprecation')]
     public function testTriggerDeprecation($expected, DeprecatedCallableInfo $info)
     {
         $info->setType('function');

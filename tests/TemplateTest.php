@@ -20,6 +20,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -46,6 +47,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getAttributeExceptions
      */
+    #[DataProvider('getAttributeExceptions')]
     public function testGetAttributeExceptions($template, $message)
     {
         $templates = ['index' => $template];
@@ -96,6 +98,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getGetAttributeWithSandbox
      */
+    #[DataProvider('getGetAttributeWithSandbox')]
     public function testGetAttributeWithSandbox($object, $item, $allowed)
     {
         $twig = new Environment(new ArrayLoader());
@@ -135,6 +138,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getRenderTemplateWithoutOutputData
      */
+    #[DataProvider('getRenderTemplateWithoutOutputData')]
     public function testRenderTemplateWithoutOutput(string $template)
     {
         $twig = new Environment(new ArrayLoader(['index' => $template]));
@@ -153,6 +157,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getNullCoalesceWithImportedMacroData
      */
+    #[DataProvider('getNullCoalesceWithImportedMacroData')]
     public function testNullCoalesceWithImportedMacro(array $templates, string $expected)
     {
         $twig = new Environment(new ArrayLoader($templates));
@@ -255,6 +260,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getStrictVariablesModes
      */
+    #[DataProvider('getStrictVariablesModes')]
     public function testArrayAccessWithStringableKeyIsConsistentAcrossStrictModes(bool $strict)
     {
         $twig = new Environment(new ArrayLoader(['index' => '{{ array[object] }}']), [
@@ -307,6 +313,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
+    #[DataProvider('getGetAttributeTests')]
     public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
     {
         $twig = new Environment(new ArrayLoader());
@@ -318,6 +325,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
+    #[DataProvider('getGetAttributeTests')]
     public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
     {
         $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
@@ -337,6 +345,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
+    #[DataProvider('getGetAttributeTests')]
     public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
     {
         $twig = new Environment(new ArrayLoader());
@@ -348,6 +357,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider getGetAttributeTests
      */
+    #[DataProvider('getGetAttributeTests')]
     public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
     {
         $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);

@@ -20,6 +20,8 @@ namespace Twig\Tests\Extension;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
@@ -37,6 +39,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideCycleCases
      */
+    #[DataProvider('provideCycleCases')]
     public function testCycleFunction($values, $position, $expected)
     {
         $this->assertSame($expected, CoreExtension::cycle($values, $position));
@@ -60,6 +63,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideCycleInvalidCases
      */
+    #[DataProvider('provideCycleInvalidCases')]
     public function testCycleFunctionThrowRuntimeError($values, mixed $position = null)
     {
         $this->expectException(RuntimeError::class);
@@ -78,6 +82,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider getRandomFunctionTestData
      */
+    #[DataProvider('getRandomFunctionTestData')]
     public function testRandomFunction(array $expectedInArray, $value1, $value2 = null)
     {
         for ($i = 0; $i < 100; ++$i) {
@@ -178,6 +183,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideTwigFirstCases
      */
+    #[DataProvider('provideTwigFirstCases')]
     public function testTwigFirst($expected, $input)
     {
         $this->assertSame($expected, CoreExtension::first('UTF-8', $input));
@@ -199,6 +205,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideTwigLastCases
      */
+    #[DataProvider('provideTwigLastCases')]
     public function testTwigLast($expected, $input)
     {
         $this->assertSame($expected, CoreExtension::last('UTF-8', $input));
@@ -220,6 +227,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideArrayKeyCases
      */
+    #[DataProvider('provideArrayKeyCases')]
     public function testArrayKeysFilter(array $expected, $input)
     {
         $this->assertSame($expected, CoreExtension::keys($input));
@@ -243,6 +251,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideInFilterCases
      */
+    #[DataProvider('provideInFilterCases')]
     public function testInFilter($expected, $value, $compare)
     {
         $this->assertSame($expected, CoreExtension::inFilter($value, $compare));
@@ -271,6 +280,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideSliceFilterCases
      */
+    #[DataProvider('provideSliceFilterCases')]
     public function testSliceFilter($expected, $input, $start, $length = null, $preserveKeys = false)
     {
         $this->assertSame($expected, CoreExtension::slice('UTF-8', $input, $start, $length, $preserveKeys));
@@ -300,6 +310,7 @@ class CoreTest extends TestCase
     /**
      * @dataProvider provideCompareCases
      */
+    #[DataProvider('provideCompareCases')]
     public function testCompare($expected, $a, $b)
     {
         $this->assertSame($expected, CoreExtension::compare($a, $b));
@@ -414,6 +425,7 @@ class CoreTest extends TestCase
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testCycleWithArrayAccessAndTraversableButNotCountable()
     {
         $this->expectDeprecation('Since twig/twig 3.12: Passing a non-countable sequence of values to "Twig\Extension\CoreExtension::cycle()" is deprecated.');

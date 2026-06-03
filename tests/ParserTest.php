@@ -20,6 +20,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -74,6 +75,7 @@ class ParserTest extends TestCase
     /**
      * @dataProvider getFilterBodyNodesData
      */
+    #[DataProvider('getFilterBodyNodesData')]
     public function testFilterBodyNodes($input, $expected)
     {
         $parser = $this->getParser();
@@ -103,6 +105,7 @@ class ParserTest extends TestCase
     /**
      * @dataProvider getFilterBodyNodesDataThrowsException
      */
+    #[DataProvider('getFilterBodyNodesDataThrowsException')]
     public function testFilterBodyNodesThrowsException($input)
     {
         $parser = $this->getParser();
@@ -124,6 +127,7 @@ class ParserTest extends TestCase
     /**
      * @dataProvider getFilterBodyNodesWithBOMData
      */
+    #[DataProvider('getFilterBodyNodesWithBOMData')]
     public function testFilterBodyNodesWithBOM($emptyNode)
     {
         $parser = $this->getParser();

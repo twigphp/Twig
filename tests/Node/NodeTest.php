@@ -20,6 +20,7 @@ namespace Twig\Tests\Node;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Node\NameDeprecation;
@@ -84,6 +85,7 @@ EOF, (string) $node);
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testAttributeDeprecationWithoutAlternative()
     {
         $node = new NodeForTest([], ['foo' => false]);
@@ -96,6 +98,7 @@ EOF, (string) $node);
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testAttributeDeprecationWithAlternative()
     {
         $node = new NodeForTest([], ['foo' => false]);
@@ -116,6 +119,7 @@ EOF, (string) $node);
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testNodeDeprecationWithoutAlternative()
     {
         $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
@@ -128,6 +132,7 @@ EOF, (string) $node);
     /**
      * @group legacy
      */
+    #[Group('legacy')]
     public function testNodeAttributeDeprecationWithAlternative()
     {
         $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);

@@ -11,6 +11,7 @@
 
 namespace Twig\Tests\Resources;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -31,6 +32,7 @@ require_once __DIR__.'/../../src/Resources/core.php';
  *
  * @group legacy
  */
+#[Group('legacy')]
 class LegacyCoreTest extends TestCase
 {
     public function testTwigSortFilterEnforcesGlobalSandbox()

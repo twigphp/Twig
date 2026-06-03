@@ -20,6 +20,7 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\FileExtensionEscapingStrategy;
 
@@ -28,6 +29,7 @@ class FileExtensionEscapingStrategyTest extends TestCase
     /**
      * @dataProvider getGuessData
      */
+    #[DataProvider('getGuessData')]
     public function testGuess($strategy, $filename)
     {
         $this->assertSame($strategy, FileExtensionEscapingStrategy::guess($filename));
