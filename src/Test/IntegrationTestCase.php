@@ -11,6 +11,8 @@
 
 namespace Twig\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -118,10 +120,13 @@ abstract class IntegrationTestCase extends TestCase
     }
 
     /**
+     * The annotation feeds PHPUnit < 10; the attribute feeds PHPUnit >= 10 and must point to a static provider, as PHPUnit >= 11 rejects non-static ones.
+     *
      * @dataProvider getTests
      *
      * @return void
      */
+    #[DataProvider('provideTests')]
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
@@ -134,9 +139,20 @@ abstract class IntegrationTestCase extends TestCase
      *
      * @return void
      */
+    #[DataProvider('provideLegacyTests'), Group('legacy')]
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
+    }
+
+    final public static function provideTests(): iterable
+    {
+        return self::assembleTests(false, static::getFixturesDirectory());
+    }
+
+    final public static function provideLegacyTests(): iterable
+    {
+        return self::assembleTests(true, static::getFixturesDirectory());
     }
 
     /**
@@ -153,6 +169,11 @@ abstract class IntegrationTestCase extends TestCase
             $fixturesDir = $this->getFixturesDir();
         }
 
+        return self::assembleTests($legacyTests, $fixturesDir);
+    }
+
+    private static function assembleTests(bool $legacyTests, string $fixturesDir): array
+    {
         $fixturesDir = realpath($fixturesDir);
         $tests = [];
 
