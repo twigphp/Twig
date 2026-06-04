@@ -1,0 +1,10 @@
+--TEST--
+"include_only" function does not give access to the current context
+--TEMPLATE--
+{{ include_only("foo.twig") }}
+--TEMPLATE(foo.twig)--
+[{{ foo|default('undefined') }}]
+--DATA--
+return ['foo' => 'bar']
+--EXPECT--
+[undefined]

@@ -1,0 +1,10 @@
+--TEST--
+"include_only" function returns Markup so an assigned result is not re-escaped
+--TEMPLATE--
+{% set assigned = include_only("included.twig") %}[{{ assigned }}]
+--TEMPLATE(included.twig)--
+{{- "a & b"|escape -}}
+--DATA--
+return []
+--EXPECT--
+[a &amp; b]
