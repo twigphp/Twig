@@ -42,6 +42,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     private bool $hasParent = false;
     private int $blockDepth = 0;
     private int $macroDepth = 0;
+    private int $capturingNodeDepth = 0;
     private bool $hasExtends = false;
 
     public function enterNode(Node $node, Environment $env): Node
@@ -104,6 +105,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
         $this->hasParent = false;
         $this->blockDepth = 0;
         $this->macroDepth = 0;
+        $this->capturingNodeDepth = 0;
         $this->hasExtends = false;
     }
 
@@ -122,6 +124,10 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
 
     private function enterScope(Node $node): void
     {
+        if ($node instanceof NodeCaptureInterface) {
+            ++$this->capturingNodeDepth;
+        }
+
         if ($node instanceof BlockNode) {
             ++$this->blockDepth;
         } elseif ($node instanceof MacroNode) {
@@ -133,6 +139,10 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
 
     private function leaveScope(Node $node): void
     {
+        if ($node instanceof NodeCaptureInterface) {
+            --$this->capturingNodeDepth;
+        }
+
         if ($node instanceof BlockNode) {
             --$this->blockDepth;
         } elseif ($node instanceof MacroNode) {
@@ -173,20 +183,14 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     {
         // A "block" definition nested under an output-wrapping tag is registered globally
         // regardless of that tag, so the nesting is misleading. This only matters at the root
-        // of a child template's body: once inside a block or a macro (or in a standalone
-        // template), the block is rendered in place and behaves like any other, so there is
-        // no restriction.
-        if (!$this->hasParent || $this->blockDepth || $this->macroDepth || !$this->tagStack) {
+        // of a child template's body: once inside a block, a macro, an output capture, or in
+        // a standalone template, the block is rendered in place and behaves like any other.
+        if (!$this->hasParent || $this->blockDepth || $this->macroDepth || $this->capturingNodeDepth || !$this->tagStack) {
             return;
         }
 
         $tag = $this->tagStack[array_key_last($this->tagStack)];
-        if (!$tag instanceof NodeCaptureInterface) {
-            throw new SyntaxError(\sprintf('A "block" tag cannot be under a "%s" tag (line %d).', $tag->getNodeTag(), $tag->getTemplateLine()), $node->getTemplateLine(), $node->getSourceContext());
-        }
-
-        // capturing tags (e.g. "set") used to allow this, so only deprecate it
-        trigger_deprecation('twig/twig', '3.14', \sprintf('Having a "block" tag under a "%s" tag (line %d) is deprecated in %s at line %d.', $tag->getNodeTag(), $tag->getTemplateLine(), $node->getSourceContext()->getName(), $node->getTemplateLine()));
+        throw new SyntaxError(\sprintf('A "block" tag cannot be under a "%s" tag (line %d).', $tag->getNodeTag(), $tag->getTemplateLine()), $node->getTemplateLine(), $node->getSourceContext());
     }
 
     /**

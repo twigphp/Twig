@@ -301,13 +301,6 @@ Templates
   in ``Environment::resolveTemplate()`` and ``Environment::load()``); pass
   instances of ``Twig\TemplateWrapper`` instead.
 
-* Having a "block" definition nested in another node that captures the output
-  (like "set") in a child template is deprecated in Twig 3.14 and will throw
-  in Twig 4.0. In Twig 4.0, root-level "block" definitions in child
-  templates must be direct children of the template body. Blocks nested in a
-  capture inside another block body or in a template that does not extend
-  another one are not affected.
-
 * Using a ``macro``, ``extends``, or ``use`` tag outside the root of a template
   (for instance nested under an ``if`` or inside a ``block`` or ``macro``) is
   deprecated as of Twig 3.27 and will throw in Twig 4.0. These tags have a
