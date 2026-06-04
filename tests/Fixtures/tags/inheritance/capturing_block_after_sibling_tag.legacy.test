@@ -1,0 +1,14 @@
+--TEST--
+capturing "block" tag is still detected after a sibling tag at the same level
+--DEPRECATION--
+Since twig/twig 3.14: Having a "block" tag under a "set" tag (line 3) is deprecated in index.twig at line 3.
+--TEMPLATE--
+{% extends "layout.twig" %}
+{% set foo %}{% if true %}{% endif %}{% block content %}FOO{% endblock %}{% endset %}
+{% block content1 %}BAR{{ foo }}{% endblock %}
+--TEMPLATE(layout.twig)--
+{% block content %}{% endblock %}{% block content1 %}{% endblock %}
+--DATA--
+return []
+--EXPECT--
+FOOBARFOO

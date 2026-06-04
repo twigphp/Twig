@@ -1,7 +1,5 @@
 --TEST--
-conditional "block" tag with "extends" tag (nested)
---DEPRECATION--
-Since twig/twig 3.14: Having a "block" tag under a "if" tag (line 7) is deprecated in layout.twig at line 8.
+"block" definition under a condition nested inside a top-level block is allowed
 --TEMPLATE--
 {% extends "layout.twig" %}
 

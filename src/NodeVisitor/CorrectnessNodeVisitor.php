@@ -31,10 +31,14 @@ use Twig\Node\TextNode;
 final class CorrectnessNodeVisitor implements NodeVisitorInterface
 {
     private ?\WeakMap $rootNodes = null;
-    // in a tag node that does not support "block" nodes (all of them except "block")
-    private ?Node $currentTagNode = null;
+    /**
+     * Stack of the output-wrapping tags ("if", "for", "set", ...) currently open;
+     * the top one is the nearest tag a "block" definition would be nested under.
+     *
+     * @var list<Node>
+     */
+    private array $tagStack = [];
     private bool $hasParent = false;
-    private ?\WeakMap $blockNodes = null;
     private int $blockDepth = 0;
     private int $macroDepth = 0;
 
@@ -44,18 +48,16 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
             $this->rootNodes = new \WeakMap();
             $this->hasParent = $node->hasNode('parent');
             // reset in case a previous traversal threw before balancing the counters
+            $this->tagStack = [];
             $this->blockDepth = 0;
             $this->macroDepth = 0;
 
-            // allows to identify when we enter/leave the block nodes
-            $this->blockNodes = new \WeakMap();
-            foreach ($node->getNode('blocks') as $n) {
-                $this->blockNodes[$n] = true;
-            }
-
             $body = $node->getNode('body')->getNode('0');
-            // see Parser::subparse() which does not wrap the parsed Nodes if there is only one node
-            foreach (\count($body) ? $body : new Nodes([$body]) as $k => $n) {
+            // Parser::subparse() does not wrap the parsed nodes when there is only one,
+            // so $body can be a single "real" node instead of a Nodes container; in that
+            // case it is the only root node and must not be iterated over its children.
+            $rootNodes = $body instanceof Nodes || Node::class === $body::class ? $body : new Nodes([$body]);
+            foreach ($rootNodes as $n) {
                 // check that this root node of a child template only contains empty output nodes
                 if ($this->hasParent && !$this->isEmptyOutputNode($n)) {
                     throw new SyntaxError('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $n->getTemplateLine(), $n->getSourceContext());
@@ -70,10 +72,8 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
             ++$this->blockDepth;
         } elseif ($node instanceof MacroNode) {
             ++$this->macroDepth;
-        }
-
-        if ($this->hasParent && $node->getNodeTag() && !$node instanceof BlockReferenceNode) {
-            $this->currentTagNode = $node;
+        } elseif ($node->getNodeTag() && !$node instanceof BlockReferenceNode) {
+            $this->tagStack[] = $node;
         }
 
         if ($node instanceof ConfigNode && !isset($this->rootNodes[$node])) {
@@ -88,11 +88,18 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
             trigger_deprecation('twig/twig', '3.27', 'Using the "%s" tag outside the root of a template is deprecated in %s at line %d.', $node->getNodeTag(), $node->getSourceContext()->getName(), $node->getTemplateLine());
         }
 
-        if ($this->currentTagNode && $node instanceof BlockReferenceNode) {
-            if ($this->currentTagNode instanceof NodeCaptureInterface || \count($this->blockNodes) > 1) {
-                trigger_deprecation('twig/twig', '3.14', \sprintf('Having a "block" tag under a "%s" tag (line %d) is deprecated in %s at line %d.', $this->currentTagNode->getNodeTag(), $this->currentTagNode->getTemplateLine(), $node->getSourceContext()->getName(), $node->getTemplateLine()));
+        // A "block" definition nested under an output-wrapping tag is registered globally
+        // regardless of that tag, so the nesting is misleading. This only matters at the root
+        // of a child template's body: once inside a block or a macro (or in a standalone
+        // template), the block is rendered in place and behaves like any other, so there is
+        // no restriction.
+        if ($this->hasParent && !$this->blockDepth && !$this->macroDepth && $this->tagStack && $node instanceof BlockReferenceNode) {
+            $tag = $this->tagStack[array_key_last($this->tagStack)];
+            if ($tag instanceof NodeCaptureInterface) {
+                // capturing tags (e.g. "set") used to allow this, so only deprecate it
+                trigger_deprecation('twig/twig', '3.14', \sprintf('Having a "block" tag under a "%s" tag (line %d) is deprecated in %s at line %d.', $tag->getNodeTag(), $tag->getTemplateLine(), $node->getSourceContext()->getName(), $node->getTemplateLine()));
             } else {
-                throw new SyntaxError(\sprintf('A "block" tag cannot be under a "%s" tag (line %d).', $this->currentTagNode->getNodeTag(), $this->currentTagNode->getTemplateLine()), $node->getTemplateLine(), $node->getSourceContext());
+                throw new SyntaxError(\sprintf('A "block" tag cannot be under a "%s" tag (line %d).', $tag->getNodeTag(), $tag->getTemplateLine()), $node->getTemplateLine(), $node->getSourceContext());
             }
         }
 
@@ -104,15 +111,13 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ModuleNode) {
             $this->rootNodes = null;
             $this->hasParent = false;
-            $this->blockNodes = null;
         }
         if ($node instanceof BlockNode) {
             --$this->blockDepth;
         } elseif ($node instanceof MacroNode) {
             --$this->macroDepth;
-        }
-        if ($this->hasParent && $node->getNodeTag() && !$node instanceof BlockReferenceNode) {
-            $this->currentTagNode = null;
+        } elseif ($node->getNodeTag() && !$node instanceof BlockReferenceNode) {
+            array_pop($this->tagStack);
         }
 
         return $node;
