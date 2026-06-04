@@ -20,6 +20,7 @@ use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\NodeCaptureInterface;
+use Twig\Node\NodeOutputInterface;
 use Twig\Node\Nodes;
 use Twig\Node\TextNode;
 
@@ -143,6 +144,10 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
         // Can the text be considered "empty" (only whitespace)?
         if ($node instanceof TextNode) {
             return $node->isBlank();
+        }
+
+        if (!$node instanceof BlockReferenceNode && $node instanceof NodeOutputInterface) {
+            return false;
         }
 
         foreach ($node as $n) {

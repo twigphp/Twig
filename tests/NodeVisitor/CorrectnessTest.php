@@ -11,6 +11,7 @@ namespace Twig\Tests\NodeVisitor;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -18,9 +19,11 @@ use Twig\Loader\ArrayLoader;
 use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\IncludeNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
+use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
@@ -32,6 +35,7 @@ class CorrectnessTest extends TestCase
     /**
      * @dataProvider getFilterBodyNodesData
      */
+    #[DataProvider('getFilterBodyNodesData')]
     public function testFilterBodyNodes($input, $expected)
     {
         $this->assertEquals($expected, $this->traverse($input, $expected));
@@ -54,6 +58,7 @@ class CorrectnessTest extends TestCase
     /**
      * @dataProvider getFilterBodyNodesDataThrowsException
      */
+    #[DataProvider('getFilterBodyNodesDataThrowsException')]
     public function testFilterBodyNodesThrowsException($input)
     {
         $this->expectException(SyntaxError::class);
@@ -64,6 +69,8 @@ class CorrectnessTest extends TestCase
     {
         return [
             [new TextNode('foo', 1)],
+            [new PrintNode(new ConstantExpression('foo', 1), 1)],
+            [new IncludeNode(new ConstantExpression('foo', 1), null, false, false, 1)],
             [new Nodes([new Nodes([new TextNode('foo', 1)])])],
         ];
     }
@@ -71,6 +78,7 @@ class CorrectnessTest extends TestCase
     /**
      * @dataProvider getFilterBodyNodesWithBOMData
      */
+    #[DataProvider('getFilterBodyNodesWithBOMData')]
     public function testFilterBodyNodesWithBOM($emptyText)
     {
         $input = new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$emptyText, 1);

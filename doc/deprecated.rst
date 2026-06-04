@@ -302,9 +302,10 @@ Templates
   instances of ``Twig\TemplateWrapper`` instead.
 
 * Having a "block" definition nested in another node that captures the output
-  (like "set") is deprecated in Twig 3.14 and will throw in Twig 4.0. Such use
-  cases should be avoided as the "block" tag is used to both define the block
-  AND display it in place. Here is how you can decouple both easily:
+  (like "set") in a child template is deprecated in Twig 3.14 and will throw
+  in Twig 4.0. Such use cases should be avoided as the "block" tag is used to
+  both define the block AND display it in place. Here is how you can decouple
+  both:
 
   Before::
 

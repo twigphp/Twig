@@ -1,0 +1,17 @@
+--TEST--
+Exception for child templates printing content outside blocks defined by parent
+--TEMPLATE--
+{% extends 'base.twig' %}
+
+{{ content }}
+
+{% block sidebar %}
+    Content inside a block.
+{% endblock %}
+--TEMPLATE(base.twig)--
+{% block sidebar %}
+{% endblock %}
+--DATA--
+return ['content' => 'Content outside a block.'];
+--EXCEPTION--
+Twig\Error\SyntaxError: A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag in "index.twig" at line 4?
