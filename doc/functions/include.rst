@@ -8,6 +8,18 @@ The ``include`` function returns the rendered content of a template:
     {{ include('template.html.twig') }}
     {{ include(some_var) }}
 
+The returned content is a ``\Twig\Markup`` instance, so it is considered safe
+and is not escaped again when you store it in a variable and print it later:
+
+.. code-block:: twig
+
+    {% set body = include('body.html.twig') %}
+    {{ body }} {# rendered as-is, not re-escaped #}
+
+Beware that, like any safe value, it is not re-escaped for the context it ends
+up in, so only embed it in the same context it was rendered for (typically
+HTML).
+
 Included templates have access to the variables of the active context.
 
 If you are using the filesystem loader, the templates are looked for in the
