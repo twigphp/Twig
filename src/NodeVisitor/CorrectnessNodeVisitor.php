@@ -42,74 +42,24 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     private bool $hasParent = false;
     private int $blockDepth = 0;
     private int $macroDepth = 0;
-    private ?ConfigNode $extendsNode = null;
+    private bool $hasExtends = false;
 
     public function enterNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode) {
-            $this->rootNodes = new \WeakMap();
-            $this->hasParent = $node->hasNode('parent');
-            // reset in case a previous traversal threw before balancing the counters
-            $this->tagStack = [];
-            $this->blockDepth = 0;
-            $this->macroDepth = 0;
-            $this->extendsNode = null;
-
-            $body = $node->getNode('body')->getNode('0');
-            // Parser::subparse() does not wrap the parsed nodes when there is only one,
-            // so $body can be a single "real" node instead of a Nodes container; in that
-            // case it is the only root node and must not be iterated over its children.
-            $rootNodes = $body instanceof Nodes || Node::class === $body::class ? $body : new Nodes([$body]);
-            foreach ($rootNodes as $n) {
-                // check that this root node of a child template only contains empty output nodes
-                if ($this->hasParent && !$this->isEmptyOutputNode($n)) {
-                    throw new SyntaxError('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $n->getTemplateLine(), $n->getSourceContext());
-                }
-                $this->rootNodes[$n] = true;
-            }
+            $this->enterModule($node);
 
             return $node;
         }
 
-        if ($node instanceof BlockNode) {
-            ++$this->blockDepth;
-        } elseif ($node instanceof MacroNode) {
-            ++$this->macroDepth;
-        } elseif ($node->getNodeTag() && !$node instanceof BlockReferenceNode) {
-            $this->tagStack[] = $node;
+        $this->enterScope($node);
+
+        if ($node instanceof ConfigNode) {
+            $this->checkConfigTag($node);
         }
 
-        if ($node instanceof ConfigNode && 'extends' === $node->getNodeTag()) {
-            // "extends" inside a "block" or a "macro" has always been a hard error; keep it
-            if ($this->blockDepth) {
-                throw new SyntaxError('Cannot use "extend" in a block.', $node->getTemplateLine(), $node->getSourceContext());
-            }
-            if ($this->macroDepth) {
-                throw new SyntaxError('Cannot use "extend" in a macro.', $node->getTemplateLine(), $node->getSourceContext());
-            }
-            if ($this->extendsNode) {
-                throw new SyntaxError('Multiple extends tags are forbidden.', $node->getTemplateLine(), $node->getSourceContext());
-            }
-            $this->extendsNode = $node;
-        }
-
-        if ($node instanceof ConfigNode && !isset($this->rootNodes[$node])) {
-            trigger_deprecation('twig/twig', '3.27', 'Using the "%s" tag outside the root of a template is deprecated in %s at line %d.', $node->getNodeTag(), $node->getSourceContext()->getName(), $node->getTemplateLine());
-        }
-
-        // A "block" definition nested under an output-wrapping tag is registered globally
-        // regardless of that tag, so the nesting is misleading. This only matters at the root
-        // of a child template's body: once inside a block or a macro (or in a standalone
-        // template), the block is rendered in place and behaves like any other, so there is
-        // no restriction.
-        if ($this->hasParent && !$this->blockDepth && !$this->macroDepth && $this->tagStack && $node instanceof BlockReferenceNode) {
-            $tag = $this->tagStack[array_key_last($this->tagStack)];
-            if ($tag instanceof NodeCaptureInterface) {
-                // capturing tags (e.g. "set") used to allow this, so only deprecate it
-                trigger_deprecation('twig/twig', '3.14', \sprintf('Having a "block" tag under a "%s" tag (line %d) is deprecated in %s at line %d.', $tag->getNodeTag(), $tag->getTemplateLine(), $node->getSourceContext()->getName(), $node->getTemplateLine()));
-            } else {
-                throw new SyntaxError(\sprintf('A "block" tag cannot be under a "%s" tag (line %d).', $tag->getNodeTag(), $tag->getTemplateLine()), $node->getTemplateLine(), $node->getSourceContext());
-            }
+        if ($node instanceof BlockReferenceNode) {
+            $this->checkBlockDefinitionNesting($node);
         }
 
         return $node;
@@ -118,19 +68,12 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     public function leaveNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode) {
-            $this->rootNodes = null;
-            $this->hasParent = false;
-            $this->extendsNode = null;
+            $this->resetState();
 
             return $node;
         }
-        if ($node instanceof BlockNode) {
-            --$this->blockDepth;
-        } elseif ($node instanceof MacroNode) {
-            --$this->macroDepth;
-        } elseif ($node->getNodeTag() && !$node instanceof BlockReferenceNode) {
-            array_pop($this->tagStack);
-        }
+
+        $this->leaveScope($node);
 
         return $node;
     }
@@ -138,6 +81,112 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     public function getPriority(): int
     {
         return -255;
+    }
+
+    private function enterModule(ModuleNode $node): void
+    {
+        $this->resetState();
+        $this->rootNodes = new \WeakMap();
+        $this->hasParent = $node->hasNode('parent');
+
+        foreach ($this->getRootNodes($node) as $n) {
+            if ($this->hasParent && !$this->isEmptyOutputNode($n)) {
+                throw new SyntaxError('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $n->getTemplateLine(), $n->getSourceContext());
+            }
+            $this->rootNodes[$n] = true;
+        }
+    }
+
+    private function resetState(): void
+    {
+        $this->rootNodes = null;
+        $this->tagStack = [];
+        $this->hasParent = false;
+        $this->blockDepth = 0;
+        $this->macroDepth = 0;
+        $this->hasExtends = false;
+    }
+
+    /**
+     * @return iterable<Node>
+     */
+    private function getRootNodes(ModuleNode $node): iterable
+    {
+        $body = $node->getNode('body')->getNode('0');
+
+        // Parser::subparse() does not wrap the parsed nodes when there is only one,
+        // so $body can be a single "real" node instead of a Nodes container; in that
+        // case it is the only root node and must not be iterated over its children.
+        return $body instanceof Nodes || Node::class === $body::class ? $body : [$body];
+    }
+
+    private function enterScope(Node $node): void
+    {
+        if ($node instanceof BlockNode) {
+            ++$this->blockDepth;
+        } elseif ($node instanceof MacroNode) {
+            ++$this->macroDepth;
+        } elseif ($node->getNodeTag() && !$node instanceof BlockReferenceNode) {
+            $this->tagStack[] = $node;
+        }
+    }
+
+    private function leaveScope(Node $node): void
+    {
+        if ($node instanceof BlockNode) {
+            --$this->blockDepth;
+        } elseif ($node instanceof MacroNode) {
+            --$this->macroDepth;
+        } elseif ($node->getNodeTag() && !$node instanceof BlockReferenceNode) {
+            array_pop($this->tagStack);
+        }
+    }
+
+    private function checkConfigTag(ConfigNode $node): void
+    {
+        if ('extends' === $node->getNodeTag()) {
+            $this->checkExtendsTag($node);
+        }
+
+        if (!isset($this->rootNodes[$node])) {
+            trigger_deprecation('twig/twig', '3.27', 'Using the "%s" tag outside the root of a template is deprecated in %s at line %d.', $node->getNodeTag(), $node->getSourceContext()->getName(), $node->getTemplateLine());
+        }
+    }
+
+    private function checkExtendsTag(ConfigNode $node): void
+    {
+        // "extends" inside a "block" or a "macro" has always been a hard error; keep it
+        if ($this->blockDepth) {
+            throw new SyntaxError('Cannot use "extend" in a block.', $node->getTemplateLine(), $node->getSourceContext());
+        }
+        if ($this->macroDepth) {
+            throw new SyntaxError('Cannot use "extend" in a macro.', $node->getTemplateLine(), $node->getSourceContext());
+        }
+        if ($this->hasExtends) {
+            throw new SyntaxError('Multiple extends tags are forbidden.', $node->getTemplateLine(), $node->getSourceContext());
+        }
+
+        $this->hasExtends = true;
+    }
+
+    private function checkBlockDefinitionNesting(BlockReferenceNode $node): void
+    {
+        // A "block" definition nested under an output-wrapping tag is registered globally
+        // regardless of that tag, so the nesting is misleading. This only matters at the root
+        // of a child template's body: once inside a block or a macro (or in a standalone
+        // template), the block is rendered in place and behaves like any other, so there is
+        // no restriction.
+        if (!$this->hasParent || $this->blockDepth || $this->macroDepth || !$this->tagStack) {
+            return;
+        }
+
+        $tag = $this->tagStack[array_key_last($this->tagStack)];
+        if (!$tag instanceof NodeCaptureInterface) {
+            throw new SyntaxError(\sprintf('A "block" tag cannot be under a "%s" tag (line %d).', $tag->getNodeTag(), $tag->getTemplateLine()), $node->getTemplateLine(), $node->getSourceContext());
+        }
+
+        // capturing tags (e.g. "set") used to allow this, so only deprecate it
+        trigger_deprecation('twig/twig', '3.14', \sprintf('Having a "block" tag under a "%s" tag (line %d) is deprecated in %s at line %d.', $tag->getNodeTag(), $tag->getTemplateLine(), $node->getSourceContext()->getName(), $node->getTemplateLine()));
     }
 
     /**
