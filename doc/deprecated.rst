@@ -303,27 +303,10 @@ Templates
 
 * Having a "block" definition nested in another node that captures the output
   (like "set") in a child template is deprecated in Twig 3.14 and will throw
-  in Twig 4.0. Such use cases should be avoided as the "block" tag is used to
-  both define the block AND display it in place. Here is how you can decouple
-  both:
-
-  Before::
-
-    {% extends "layout.twig" %}
-
-    {% set str %}
-        {% block content %}Some content{% endblock %}
-    {% endset %}
-
-  After::
-
-    {% extends "layout.twig" %}
-
-    {% block content %}Some content{% endblock %}
-
-    {% set str %}
-        {{ block('content') }}
-    {% endset %}
+  in Twig 4.0. In Twig 4.0, root-level "block" definitions in child
+  templates must be direct children of the template body. Blocks nested in a
+  capture inside another block body or in a template that does not extend
+  another one are not affected.
 
 * Using a ``macro``, ``extends``, or ``use`` tag outside the root of a template
   (for instance nested under an ``if`` or inside a ``block`` or ``macro``) is
