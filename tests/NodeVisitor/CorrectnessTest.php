@@ -75,7 +75,9 @@ class CorrectnessTest extends TestCase
     {
         $input = new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$emptyText, 1);
 
-        $this->assertCount(0, $this->traverse($input, new EmptyNode()));
+        // a child template whose root content is only a BOM followed by blanks is valid:
+        // the visitor must accept it (no SyntaxError) and leave it untouched
+        $this->assertSame($input, $this->traverse($input, new EmptyNode()));
     }
 
     public static function getFilterBodyNodesWithBOMData()

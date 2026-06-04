@@ -45,8 +45,8 @@ class TextTest extends NodeTestCase
      */
     public function testIsBlank($blank)
     {
-        $this->isTrue((new TextNode($blank, 1))->isBlank());
-        $this->isTrue((new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$blank, 1))->isBlank());
+        $this->assertTrue((new TextNode($blank, 1))->isBlank());
+        $this->assertTrue((new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$blank, 1))->isBlank());
     }
 
     public static function getIsBlankData()

@@ -111,6 +111,8 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ModuleNode) {
             $this->rootNodes = null;
             $this->hasParent = false;
+
+            return $node;
         }
         if ($node instanceof BlockNode) {
             --$this->blockDepth;
