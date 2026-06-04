@@ -414,7 +414,7 @@ class Parser
         return $this->parent || 0 < \count($this->traits);
     }
 
-    public function setParent(?Node $parent): void
+    public function setParent(?Node $parent, bool $throwOnMultiple = true): void
     {
         if (null === $parent) {
             trigger_deprecation('twig/twig', '3.12', 'Passing "null" to "%s()" is deprecated.', __METHOD__);
@@ -425,6 +425,10 @@ class Parser
         }
 
         if (null !== $this->parent) {
+            if (!$throwOnMultiple) {
+                return;
+            }
+
             throw new SyntaxError('Multiple extends tags are forbidden.', $parent->getTemplateLine(), $parent->getSourceContext());
         }
 

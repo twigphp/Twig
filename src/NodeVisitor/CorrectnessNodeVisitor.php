@@ -42,6 +42,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     private bool $hasParent = false;
     private int $blockDepth = 0;
     private int $macroDepth = 0;
+    private ?ConfigNode $extendsNode = null;
 
     public function enterNode(Node $node, Environment $env): Node
     {
@@ -52,6 +53,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
             $this->tagStack = [];
             $this->blockDepth = 0;
             $this->macroDepth = 0;
+            $this->extendsNode = null;
 
             $body = $node->getNode('body')->getNode('0');
             // Parser::subparse() does not wrap the parsed nodes when there is only one,
@@ -77,15 +79,21 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
             $this->tagStack[] = $node;
         }
 
-        if ($node instanceof ConfigNode && !isset($this->rootNodes[$node])) {
+        if ($node instanceof ConfigNode && 'extends' === $node->getNodeTag()) {
             // "extends" inside a "block" or a "macro" has always been a hard error; keep it
-            if ('extends' === $node->getNodeTag() && $this->blockDepth) {
+            if ($this->blockDepth) {
                 throw new SyntaxError('Cannot use "extend" in a block.', $node->getTemplateLine(), $node->getSourceContext());
             }
-            if ('extends' === $node->getNodeTag() && $this->macroDepth) {
+            if ($this->macroDepth) {
                 throw new SyntaxError('Cannot use "extend" in a macro.', $node->getTemplateLine(), $node->getSourceContext());
             }
+            if ($this->extendsNode) {
+                throw new SyntaxError('Multiple extends tags are forbidden.', $node->getTemplateLine(), $node->getSourceContext());
+            }
+            $this->extendsNode = $node;
+        }
 
+        if ($node instanceof ConfigNode && !isset($this->rootNodes[$node])) {
             trigger_deprecation('twig/twig', '3.27', 'Using the "%s" tag outside the root of a template is deprecated in %s at line %d.', $node->getNodeTag(), $node->getSourceContext()->getName(), $node->getTemplateLine());
         }
 
@@ -112,6 +120,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ModuleNode) {
             $this->rootNodes = null;
             $this->hasParent = false;
+            $this->extendsNode = null;
 
             return $node;
         }
