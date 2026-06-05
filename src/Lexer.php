@@ -531,9 +531,10 @@ class Lexer
 
     private function moveCursor($text): void
     {
-        $length = \strlen($text);
-        $this->cursor += $length;
-        $this->lineno += substr_count($this->normalizeNewlines($text), "\n");
+        $this->cursor += \strlen($text);
+        // count "\r\n" and "\r" as a single newline without allocating a
+        // normalized copy when the chunk has no carriage return (common case)
+        $this->lineno += str_contains($text, "\r") ? substr_count($this->normalizeNewlines($text), "\n") : substr_count($text, "\n");
     }
 
     private function normalizeNewlines(string $text): string
