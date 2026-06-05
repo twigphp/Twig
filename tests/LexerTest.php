@@ -734,4 +734,93 @@ bar
         yield ['{{ { a: 1 }}', '}'];
         yield ['{{ ([1] + 3)) }}', ')'];
     }
+
+    public function testTokensCarryTheirSourceOffset()
+    {
+        $template = 'Hello {{ name }}!';
+
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        // [type, offset] pairs; offsets point at the start of each lexeme in the source
+        $expected = [
+            [Token::TEXT_TYPE, 0],   // "Hello "
+            [Token::VAR_START_TYPE, 6],   // "{{"
+            [Token::NAME_TYPE, 9],   // "name"
+            [Token::VAR_END_TYPE, 14],  // "}}"
+            [Token::TEXT_TYPE, 16],  // "!"
+            [Token::EOF_TYPE, 17],
+        ];
+
+        foreach ($expected as [$type, $offset]) {
+            $token = $stream->getCurrent();
+            $this->assertTrue($token->test($type), \sprintf('Expected token "%s".', Token::typeToEnglish($type)));
+            $this->assertSame($offset, $token->getOffset());
+
+            if (!$stream->isEOF()) {
+                $stream->next();
+            }
+        }
+    }
+
+    public function testOffsetsAllowRecoveringTheRawExpressionSource()
+    {
+        $template = "Hello {{ name|upper ~ '!' }}";
+
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        $stream->expect(Token::TEXT_TYPE);
+        $start = $stream->expect(Token::VAR_START_TYPE)->getOffset();
+        while (!$stream->test(Token::VAR_END_TYPE)) {
+            $stream->next();
+        }
+        $end = $stream->getCurrent()->getOffset();
+
+        // slice the raw expression out of the original source, between "{{" and "}}"
+        $raw = trim(substr($template, $start + 2, $end - $start - 2));
+
+        $this->assertSame("name|upper ~ '!'", $raw);
+    }
+
+    public function testOffsetsReferToTheOriginalSourceWhenLineEndingsAreNormalized()
+    {
+        $template = "Hello\r\n{{ name }}";
+
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        $stream->expect(Token::TEXT_TYPE);
+        $start = $stream->expect(Token::VAR_START_TYPE)->getOffset();
+        $this->assertSame('{{', substr($template, $start, 2));
+
+        $name = $stream->expect(Token::NAME_TYPE);
+        $this->assertSame('name', substr($template, $name->getOffset(), 4));
+
+        $end = $stream->expect(Token::VAR_END_TYPE)->getOffset();
+        $this->assertSame('name', trim(substr($template, $start + 2, $end - $start - 2)));
+    }
+
+    public function testBlockTagDelimitersPointAtTheMarkers()
+    {
+        $template = '{% set x = 1 %}';
+
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+        $stream = $lexer->tokenize(new Source($template, 'index'));
+
+        // the opening "{%" and the closing "%}" both point at the marker itself,
+        // not at the whitespace the closing regex also consumes
+        $this->assertSame(0, $stream->expect(Token::BLOCK_START_TYPE)->getOffset());
+        $this->assertSame('{%', substr($template, 0, 2));
+        while (!$stream->test(Token::BLOCK_END_TYPE)) {
+            $stream->next();
+        }
+        $end = $stream->getCurrent()->getOffset();
+        $this->assertSame('%}', substr($template, $end, 2));
+    }
+
+    public function testSyntheticTokensHaveNoOffset()
+    {
+        $this->assertNull((new Token(Token::NAME_TYPE, 'foo', 1))->getOffset());
+    }
 }
