@@ -77,3 +77,37 @@ You can also use the filter on an included file or a variable:
     your Markdown library you can configure CommonMark extensions. Register the desired
     extension(s) as a service, then tag the service with
     ``twig.markdown.league_extension``.
+
+Using a Custom Converter
+------------------------
+
+The ``markdown_to_html`` filter delegates the conversion to a class implementing
+``Twig\Extra\Markdown\MarkdownInterface``. Several implementations are provided:
+``LeagueMarkdown`` (``league/commonmark``), ``MichelfMarkdown``
+(``michelf/php-markdown``), and ``ErusevMarkdown`` (``erusev/parsedown``). Each
+accepts a pre-configured converter in its constructor, so you can tune the
+underlying library or switch to another implementation (for instance
+``ParsedownExtra``, which extends ``Parsedown``)::
+
+    use Twig\Extra\Markdown\ErusevMarkdown;
+
+    $parsedown = new \ParsedownExtra();
+    $parsedown->setSafeMode(true);
+
+    $markdown = new ErusevMarkdown($parsedown);
+
+When using ``twig/extra-bundle``, register your converter as the
+``twig.markdown.default`` service to make it the one used by the filter:
+
+.. code-block:: yaml
+
+    # config/services.yaml
+    services:
+        twig.markdown.default:
+            class: Twig\Extra\Markdown\ErusevMarkdown
+            arguments:
+                - '@my_configured_parsedown'
+
+If you use ``league/commonmark``, prefer the ``commonmark`` configuration of the
+bundle (for example ``html_input: escape`` and ``allow_unsafe_links: false`` to
+protect against XSS) instead of replacing the service.
