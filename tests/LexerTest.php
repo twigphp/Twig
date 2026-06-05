@@ -717,22 +717,22 @@ bar
      * @dataProvider getTemplateForUnexpectedBracketInExpression
      */
     #[DataProvider('getTemplateForUnexpectedBracketInExpression')]
-    public function testUnexpectedBracketInExpression(string $template, string $bracket)
+    public function testUnexpectedBracketInExpression(string $template, string $bracket, int $column)
     {
         $lexer = new Lexer(new Environment(new ArrayLoader()));
 
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage(\sprintf('Unexpected "%s" in "index" at line 1.', $bracket));
+        $this->expectExceptionMessage(\sprintf('Unexpected "%s" in "index" at line 1 column %d.', $bracket, $column));
 
         $lexer->tokenize(new Source($template, 'index'));
     }
 
     public static function getTemplateForUnexpectedBracketInExpression()
     {
-        yield ['{{ 1 + 3) }}', ')'];
-        yield ['{{ obj] }}', ']'];
-        yield ['{{ { a: 1 }}', '}'];
-        yield ['{{ ([1] + 3)) }}', ')'];
+        yield ['{{ 1 + 3) }}', ')', 9];
+        yield ['{{ obj] }}', ']', 7];
+        yield ['{{ { a: 1 }}', '}', 12];
+        yield ['{{ ([1] + 3)) }}', ')', 13];
     }
 
     public function testTokensCarryTheirSourceOffset()
@@ -819,8 +819,52 @@ bar
         $this->assertSame('%}', substr($template, $end, 2));
     }
 
+    public function testClosingDelimiterLineMatchesTheMarkerLine()
+    {
+        $template = "{% from 'forms.twig'\n  %}";
+        $env = new Environment(new ArrayLoader());
+
+        try {
+            $env->parse($env->tokenize(new Source($template, 'index')));
+            $this->fail('A SyntaxError should have been thrown.');
+        } catch (SyntaxError $e) {
+            $this->assertSame(2, $e->getTemplateLine());
+            $this->assertSame(3, $e->getTemplateColumn());
+            $this->assertStringEndsWith('at line 2 column 3.', $e->getMessage());
+        }
+    }
+
     public function testSyntheticTokensHaveNoOffset()
     {
         $this->assertNull((new Token(Token::NAME_TYPE, 'foo', 1))->getOffset());
+    }
+
+    public function testSyntaxErrorReportsTheColumn()
+    {
+        $lexer = new Lexer(new Environment(new ArrayLoader()));
+
+        try {
+            $lexer->tokenize(new Source("{{ 1 + 3) }}\n{{ ok }}", 'index'));
+            $this->fail('A SyntaxError should have been thrown.');
+        } catch (SyntaxError $e) {
+            $this->assertSame(1, $e->getTemplateLine());
+            $this->assertSame(9, $e->getTemplateColumn());
+            $this->assertStringEndsWith('at line 1 column 9.', $e->getMessage());
+        }
+    }
+
+    public function testSyntaxErrorColumnUsesOriginalSourceOffsets()
+    {
+        $template = "x\r\n{{ 1__2 }}";
+        $env = new Environment(new ArrayLoader());
+
+        try {
+            $env->parse($env->tokenize(new Source($template, 'index')));
+            $this->fail('A SyntaxError should have been thrown.');
+        } catch (SyntaxError $e) {
+            $this->assertSame(2, $e->getTemplateLine());
+            $this->assertSame(5, $e->getTemplateColumn());
+            $this->assertStringEndsWith('at line 2 column 5.', $e->getMessage());
+        }
     }
 }

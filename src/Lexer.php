@@ -386,7 +386,7 @@ class Lexer
         }
         // unlexable
         else {
-            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
+            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source, columnno: $this->source->getColumn($this->cursor));
         }
     }
 
@@ -501,7 +501,7 @@ class Lexer
             $this->moveCursor($match[0]);
         } else {
             // unlexable
-            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
+            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source, columnno: $this->source->getColumn($this->cursor));
         }
     }
 
@@ -608,7 +608,7 @@ class Lexer
         } elseif (\in_array($code, $this->closingBrackets, true)) {
             // closing bracket
             if (!$this->brackets) {
-                throw new SyntaxError(\sprintf('Unexpected "%s".', $code), $this->lineno, $this->source);
+                throw new SyntaxError(\sprintf('Unexpected "%s".', $code), $this->lineno, $this->source, columnno: $this->source->getColumn($this->cursor));
             }
 
             [$expect, $lineno] = array_pop($this->brackets);

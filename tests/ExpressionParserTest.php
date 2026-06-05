@@ -414,7 +414,7 @@ class ExpressionParserTest extends TestCase
         $parser = new Parser($env);
 
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('An argument must be a name. Unexpected token "string" of value "a" ("name" expected) in "index" at line 1.');
+        $this->expectExceptionMessage('An argument must be a name. Unexpected token "string" of value "a" ("name" expected) in "index" at line 1 column 14.');
 
         $parser->parse($env->tokenize(new Source('{% macro foo("a") %}{% endmacro %}', 'index')));
     }

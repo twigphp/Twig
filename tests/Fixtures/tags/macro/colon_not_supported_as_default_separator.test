@@ -7,4 +7,4 @@
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\SyntaxError: Arguments must be separated by a comma. Unexpected token "punctuation" of value ":" ("punctuation" expected with value ",") in "index.twig" at line 2.
+Twig\Error\SyntaxError: Arguments must be separated by a comma. Unexpected token "punctuation" of value ":" ("punctuation" expected with value ",") in "index.twig" at line 2 column 18.
