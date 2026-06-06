@@ -329,9 +329,7 @@ class TemplateTest extends TestCase
         $this->assertNull(CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, 'foo'));
     }
 
-    /**
-     * @dataProvider provideNonStringPrintValues
-     */
+    #[DataProvider('provideNonStringPrintValues')]
     public function testPrintingANonStringReportsTheErrorAtThePrintLocation($value, string $expectedMessage)
     {
         $twig = new Environment(new ArrayLoader(['index' => "foo\n{{ value }}\nbar"]));
