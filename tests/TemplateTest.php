@@ -329,6 +329,35 @@ class TemplateTest extends TestCase
         $this->assertNull(CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, 'foo'));
     }
 
+    /**
+     * @dataProvider provideNonStringPrintValues
+     */
+    public function testPrintingANonStringReportsTheErrorAtThePrintLocation($value, string $expectedMessage)
+    {
+        $twig = new Environment(new ArrayLoader(['index' => "foo\n{{ value }}\nbar"]));
+
+        set_error_handler(static function (int $type, string $msg, string $file, int $line): bool {
+            throw new \ErrorException($msg, 0, $type, $file, $line);
+        }, \E_WARNING);
+
+        try {
+            $twig->render('index', ['value' => $value]);
+            $this->fail('Printing a non-string value should fail.');
+        } catch (RuntimeError $e) {
+            $this->assertSame('index', $e->getSourceContext()->getName());
+            $this->assertSame(2, $e->getTemplateLine());
+            $this->assertSame($expectedMessage, $e->getPrevious()->getMessage());
+        } finally {
+            restore_error_handler();
+        }
+    }
+
+    public static function provideNonStringPrintValues(): iterable
+    {
+        yield 'array' => [['a', 'b'], 'Array to string conversion'];
+        yield 'non-Stringable object' => [new \stdClass(), 'Object of class stdClass could not be converted to string'];
+    }
+
     public static function getGetAttributeTests()
     {
         $array = [

@@ -1,0 +1,28 @@
+--TEST--
+"block" function with a template argument resolves nested "block" calls against the overriding template through parent()
+--TEMPLATE--
+{{ block('block1', 'theme.html.twig') }}
+--TEMPLATE(theme.html.twig)--
+{% extends 'base.html.twig' %}
+
+{%- block block1 -%}
+    {{- parent() -}}
+    BLOCK1THEME/
+{%- endblock -%}
+
+{%- block block2 -%}
+    BLOCK2THEME/
+{%- endblock -%}
+--TEMPLATE(base.html.twig)--
+{%- block block1 -%}
+    BLOCK1BASE/
+    {{- block('block2') -}}
+{%- endblock -%}
+
+{%- block block2 -%}
+    BLOCK2BASE/
+{%- endblock -%}
+--DATA--
+return []
+--EXPECT--
+BLOCK1BASE/BLOCK2THEME/BLOCK1THEME/

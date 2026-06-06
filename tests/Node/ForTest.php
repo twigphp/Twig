@@ -82,7 +82,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     \$macros = \$this->macros;
     \$parent = \$context;
     foreach (\$iterator as \$context["key"] => \$context["item"]) {
-        yield {$fooGetter};
+        yield (string) {$fooGetter};
     }
     unset(\$context['key'], \$context['item']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
@@ -107,7 +107,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
     foreach (\$iterator as \$context["k"] => \$context["v"]) {
-        yield {$fooGetter};
+        yield (string) {$fooGetter};
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
@@ -132,7 +132,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
     foreach (\$iterator as \$context["k"] => \$context["v"]) {
-        yield {$fooGetter};
+        yield (string) {$fooGetter};
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
@@ -159,13 +159,13 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
     foreach (\$iterator as \$context["k"] => \$context["v"]) {
         if (true) {
-            yield {$fooGetter};
+            yield (string) {$fooGetter};
         }
     }
     // line 5
     if (0 === \$iterator->getIndex0()) {
         // line 6
-        yield {$fooGetter};
+        yield (string) {$fooGetter};
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;

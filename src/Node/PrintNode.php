@@ -15,6 +15,8 @@ namespace Twig\Node;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\ReturnStringInterface;
 
 /**
  * Represents a node that outputs an expression.
@@ -34,9 +36,18 @@ class PrintNode extends Node implements NodeOutputInterface, CoercesChildrenToSt
         /** @var AbstractExpression */
         $expr = $this->getNode('expr');
 
+        $compiler->addDebugInfo($this);
+
+        if ($expr->isGenerator()) {
+            $compiler->write('yield from ');
+        } else {
+            $compiler->write('yield ');
+            if (!$this->isString($expr)) {
+                $compiler->raw('(string) ');
+            }
+        }
+
         $compiler
-            ->addDebugInfo($this)
-            ->write($expr->isGenerator() ? 'yield from ' : 'yield ')
             ->subcompile($expr)
             ->raw(";\n")
         ;
@@ -45,5 +56,14 @@ class PrintNode extends Node implements NodeOutputInterface, CoercesChildrenToSt
     public function getStringCoercedChildNames(): array
     {
         return ['expr'];
+    }
+
+    private function isString(AbstractExpression $expr): bool
+    {
+        if ($expr instanceof ReturnStringInterface) {
+            return true;
+        }
+
+        return $expr instanceof ConstantExpression && !$expr->isDefinedTestEnabled() && \is_string($expr->getAttribute('value'));
     }
 }

@@ -1259,6 +1259,18 @@ the modifiers on one side of a tag or on both sides:
         {{~ value }}    </li>
     {# outputs '<li>\nno spaces    </li>' #}
 
+To remove the whitespace between two tags, use an empty comment with the
+whitespace trimming modifier on both sides:
+
+.. code-block:: html+twig
+
+    <div>
+        {#--#}
+        <strong>foo</strong>
+        {#--#}
+    </div>
+    {# outputs '<div><strong>foo</strong></div>' #}
+
 Extensions
 ----------
 

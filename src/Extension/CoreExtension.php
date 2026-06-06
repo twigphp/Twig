@@ -1423,9 +1423,11 @@ final class CoreExtension extends AbstractExtension
      * @param bool                         $ignoreMissing Whether to ignore missing templates or not
      * @param bool                         $sandboxed     Whether to sandbox the template or not
      *
+     * @return string|Markup
+     *
      * @internal
      */
-    public static function include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false): string
+    public static function include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
     {
         $alreadySandboxed = false;
         $sandbox = null;
@@ -1452,7 +1454,9 @@ final class CoreExtension extends AbstractExtension
                 return '';
             }
 
-            return $loaded->render($variables);
+            $rendered = $loaded->render($variables);
+
+            return '' === $rendered ? '' : new Markup($rendered, $env->getCharset());
         } finally {
             if ($isSandboxed && !$alreadySandboxed) {
                 $sandbox->disableSandbox();
@@ -1772,14 +1776,14 @@ final class CoreExtension extends AbstractExtension
                 $classCache[$lcName = $lcMethods[$i]] = $method;
 
                 if ('g' === $lcName[0] && str_starts_with($lcName, 'get')) {
-                    $name = substr($method, 3);
-                    $lcName = substr($lcName, 3);
+                    $prefixLength = 3;
+                    $lcName = substr($lcName, $prefixLength);
                 } elseif ('i' === $lcName[0] && str_starts_with($lcName, 'is')) {
-                    $name = substr($method, 2);
-                    $lcName = substr($lcName, 2);
+                    $prefixLength = 2;
+                    $lcName = substr($lcName, $prefixLength);
                 } elseif ('h' === $lcName[0] && str_starts_with($lcName, 'has')) {
-                    $name = substr($method, 3);
-                    $lcName = substr($lcName, 3);
+                    $prefixLength = 3;
+                    $lcName = substr($lcName, $prefixLength);
                     if (\in_array('is'.$lcName, $lcMethods, true)) {
                         continue;
                     }
@@ -1787,8 +1791,11 @@ final class CoreExtension extends AbstractExtension
                     continue;
                 }
 
-                // skip get() and is() methods (in which case, $name is empty)
-                if ($name) {
+                // skip get(), is() and has() methods (in which case, $lcName is empty)
+                if ($lcName) {
+                    // camelCase name (e.g. getFooBar() -> fooBar)
+                    $name = $lcName[0].substr($method, $prefixLength + 1);
+
                     if (!isset($classCache[$name])) {
                         $classCache[$name] = $method;
                     }

@@ -29,6 +29,15 @@
 When using a string literal for the ``enum`` argument, it will be validated
 during compile time to be a valid enum name.
 
+As the FQCN can be long, you can store the enum in a variable to avoid repeating
+it:
+
+.. code-block:: twig
+
+    {% set suite = enum('App\\CardSuite') %}
+    {{ suite.Clubs.value }} {# "clubs" #}
+    {{ suite.Spades.value }} {# "spades" #}
+
 Arguments
 ---------
 

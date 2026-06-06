@@ -189,7 +189,10 @@ abstract class IntegrationTestCase extends TestCase
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         if (!$outputs) {
-            $this->markTestSkipped('no tests to run');
+            // dummy test added by assembleTests() when there is no (legacy) test to run
+            $this->expectNotToPerformAssertions();
+
+            return;
         }
 
         if ($condition) {
