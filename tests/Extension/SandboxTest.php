@@ -21,6 +21,7 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -28,7 +29,6 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Loader\ArrayLoader;
-use Twig\Node\Expression\CallExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -45,7 +45,6 @@ use Twig\Source;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\TokenParserInterface;
-use Twig\TwigCallableInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -1418,19 +1417,6 @@ EOF
         $this->assertSame('on', $twig->load('index')->render([]));
     }
 
-    /**
-     * @group legacy
-     */
-    #[Group('legacy')]
-    public function testNeedsIsSandboxedHelperTriggersDeprecationForCustomImplementation()
-    {
-        $callable = new LegacyTwigCallableWithoutNeedsIsSandboxed();
-
-        $this->expectDeprecation(\sprintf('Since twig/twig 3.25: Not implementing the "needsIsSandboxed()" method in "%s" is deprecated. This method will be part of the "Twig\TwigCallableInterface" interface in 4.0.', $callable::class));
-
-        $this->assertFalse(CallExpression::needsIsSandboxed($callable));
-    }
-
     public function testAlwaysAllowedInSandboxFilterBypassesAllowList()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "fabien"|safe_upper }}']);
@@ -1565,106 +1551,16 @@ EOF
         $twig->load('index')->render(['obj' => new FooObject()]);
     }
 
-    /**
-     * @group legacy
-     */
+    #[IgnoreDeprecations]
     public function testCustomTokenParserWithoutIsAlwaysAllowedInSandboxTriggersDeprecation()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% legacy_tag %}'], tags: ['legacy_tag']);
         $twig->addTokenParser(new LegacyTokenParserWithoutIsAlwaysAllowedInSandbox());
 
-        $this->expectDeprecation(\sprintf('Since twig/twig 3.28: Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "Twig\TokenParser\TokenParserInterface" interface in 4.0.', LegacyTokenParserWithoutIsAlwaysAllowedInSandbox::class));
+        $this->expectUserDeprecationMessage(\sprintf('Since twig/twig 3.28: Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "Twig\TokenParser\TokenParserInterface" interface in 4.0.', LegacyTokenParserWithoutIsAlwaysAllowedInSandbox::class));
 
         // tag is allow-listed, so the render itself succeeds; the deprecation fires from the sandbox visitor while compiling
         $this->assertSame('', $twig->load('index')->render([]));
-    }
-}
-
-class LegacyTwigCallableWithoutNeedsIsSandboxed implements TwigCallableInterface
-{
-    public function getName(): string
-    {
-        return 'foo';
-    }
-
-    public function getType(): string
-    {
-        return 'filter';
-    }
-
-    public function getDynamicName(): string
-    {
-        return 'foo';
-    }
-
-    public function getCallable()
-    {
-        return null;
-    }
-
-    public function getNodeClass(): string
-    {
-        return '';
-    }
-
-    public function needsCharset(): bool
-    {
-        return false;
-    }
-
-    public function needsEnvironment(): bool
-    {
-        return false;
-    }
-
-    public function needsContext(): bool
-    {
-        return false;
-    }
-
-    public function withDynamicArguments(string $name, string $dynamicName, array $arguments): TwigCallableInterface
-    {
-        return $this;
-    }
-
-    public function getArguments(): array
-    {
-        return [];
-    }
-
-    public function isVariadic(): bool
-    {
-        return false;
-    }
-
-    public function isDeprecated(): bool
-    {
-        return false;
-    }
-
-    public function getDeprecatingPackage(): string
-    {
-        return '';
-    }
-
-    public function getDeprecatedVersion(): string
-    {
-        return '';
-    }
-
-    public function getAlternative(): ?string
-    {
-        return null;
-    }
-
-    public function getMinimalNumberOfRequiredArguments(): int
-    {
-        return 0;
-    }
-
-    public function __toString(): string
-    {
-        return 'foo';
     }
 }
 
