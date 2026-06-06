@@ -7,4 +7,4 @@
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\SyntaxError: Unexpected token "end of statement block" ("name" expected with value "as") in "index.twig" at line 2.
+Twig\Error\SyntaxError: Unexpected token "end of statement block" ("name" expected with value "as") in "index.twig" at line 2 column 24.
