@@ -115,6 +115,9 @@ class ForNode extends Node
         $compiler->raw(");\n");
 
         // keep the values set in the inner context for variables defined in the outer context
-        $compiler->write("\$context = array_intersect_key(\$context, \$_parent) + \$_parent;\n");
+        $compiler
+            ->write("\$context = array_intersect_key(\$context, \$_parent);\n")
+            ->write("\$context += \$_parent;\n")
+        ;
     }
 }
