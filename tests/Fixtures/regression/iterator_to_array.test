@@ -1,5 +1,5 @@
 --TEST--
-#4029 When use_yield is true, CaptureNode fall in iterator_to_array pitfall regarding index overwrite
+When use_yield is true, CaptureNode fall in iterator_to_array pitfall regarding index overwrite
 --TEMPLATE--
 {%- set tmp -%}
   {%- block foo 'foo' -%}

@@ -5,4 +5,4 @@ Twig does not allow to use 2 underscored between digits in numbers
 --DATA--
 return []
 --EXCEPTION--
-Twig\Error\SyntaxError: Unexpected token "name" of value "__2" ("end of print statement" expected) in "index.twig" at line 2.
+Twig\Error\SyntaxError: Unexpected token "name" of value "__2" ("end of print statement" expected) in "index.twig" at line 2 column 5.

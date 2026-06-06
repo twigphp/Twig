@@ -76,6 +76,8 @@ class Lexer
     public const REGEX_INLINE_COMMENT = '/#[^\n]*/A';
     public const PUNCTUATION = '()[]{}?:.,|';
 
+    private const REGEX_RAW_INLINE_COMMENT = '/#[^\r\n]*/A';
+
     private const SPECIAL_CHARS = [
         'f' => "\f",
         'n' => "\n",
@@ -128,7 +130,7 @@ class Lexer
                     '|'.
                     preg_quote($this->options['whitespace_line_trim'].$this->options['tag_block'][1]).'['.$this->options['whitespace_line_chars'].']*'. // ~%}[ \t\0\x0B]*
                     '|'.
-                    preg_quote($this->options['tag_block'][1]).'\n?'. // %}\n?
+                    preg_quote($this->options['tag_block'][1]).'(?:\r\n?|\n)?'. // %}(?:\r\n?|\n)?
                 ')
             }Ax',
 
@@ -158,7 +160,7 @@ class Lexer
                     '|'.
                     preg_quote($this->options['whitespace_line_trim'].$this->options['tag_comment'][1]).'['.$this->options['whitespace_line_chars'].']*'. // ~#}[ \t\0\x0B]*
                     '|'.
-                    preg_quote($this->options['tag_comment'][1]).'\n?'. // #}\n?
+                    preg_quote($this->options['tag_comment'][1]).'(?:\r\n?|\n)?'. // #}(?:\r\n?|\n)?
                 ')
             }sx',
 
@@ -200,7 +202,7 @@ class Lexer
         $this->initialize();
 
         $this->source = $source;
-        $this->code = str_replace(["\r\n", "\r"], "\n", $source->getCode());
+        $this->code = $source->getCode();
         $this->cursor = 0;
         $this->lineno = 1;
         $this->end = \strlen($this->code);
@@ -254,8 +256,9 @@ class Lexer
     {
         // if no matches are left we return the rest of the template as simple text token
         if ($this->position == \count($this->positions[0]) - 1) {
-            $this->pushToken(Token::TEXT_TYPE, substr($this->code, $this->cursor));
-            $this->cursor = $this->end;
+            $text = substr($this->code, $this->cursor);
+            $this->pushToken(Token::TEXT_TYPE, $this->normalizeNewlines($text));
+            $this->moveCursor($text);
 
             return;
         }
@@ -283,15 +286,20 @@ class Lexer
                 $text = rtrim($text, " \t\0\x0B");
             }
         }
-        $this->pushToken(Token::TEXT_TYPE, $text);
-        $this->moveCursor($textContent.$position[0]);
+        $this->pushToken(Token::TEXT_TYPE, $this->normalizeNewlines($text));
+        $this->moveCursor($textContent);
 
         switch ($this->positions[1][$this->position][0]) {
             case $this->options['tag_comment'][0]:
+                $this->moveCursor($position[0]);
                 $this->lexComment();
                 break;
 
             case $this->options['tag_block'][0]:
+                $lineno = $this->lineno;
+                $cursor = $this->cursor;
+                $this->moveCursor($position[0]);
+
                 // raw data?
                 if (preg_match($this->regexes['lex_block_raw'], $this->code, $match, 0, $this->cursor)) {
                     $this->moveCursor($match[0]);
@@ -301,14 +309,17 @@ class Lexer
                     $this->moveCursor($match[0]);
                     $this->lineno = (int) $match[1];
                 } else {
-                    $this->pushToken(Token::BLOCK_START_TYPE);
+                    $this->pushToken(Token::BLOCK_START_TYPE, '', $cursor, $lineno);
                     $this->pushState(self::STATE_BLOCK);
                     $this->currentVarBlockLine = $this->lineno;
                 }
                 break;
 
             case $this->options['tag_variable'][0]:
-                $this->pushToken(Token::VAR_START_TYPE);
+                $lineno = $this->lineno;
+                $cursor = $this->cursor;
+                $this->moveCursor($position[0]);
+                $this->pushToken(Token::VAR_START_TYPE, '', $cursor, $lineno);
                 $this->pushState(self::STATE_VAR);
                 $this->currentVarBlockLine = $this->lineno;
                 break;
@@ -318,8 +329,7 @@ class Lexer
     private function lexBlock(): void
     {
         if (!$this->brackets && preg_match($this->regexes['lex_block'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::BLOCK_END_TYPE);
-            $this->moveCursor($match[0]);
+            $this->pushClosingToken(Token::BLOCK_END_TYPE, $match[0]);
             $this->popState();
         } else {
             $this->lexExpression();
@@ -329,8 +339,7 @@ class Lexer
     private function lexVar(): void
     {
         if (!$this->brackets && preg_match($this->regexes['lex_var'], $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::VAR_END_TYPE);
-            $this->moveCursor($match[0]);
+            $this->pushClosingToken(Token::VAR_END_TYPE, $match[0]);
             $this->popState();
         } else {
             $this->lexExpression();
@@ -371,11 +380,11 @@ class Lexer
         elseif (str_contains(self::PUNCTUATION, $this->code[$this->cursor])) {
             $this->checkBrackets($this->code[$this->cursor]);
             $this->pushToken(Token::PUNCTUATION_TYPE, $this->code[$this->cursor]);
-            ++$this->cursor;
+            $this->moveCursor($this->code[$this->cursor]);
         }
         // strings
         elseif (preg_match(self::REGEX_STRING, $this->code, $match, 0, $this->cursor)) {
-            $this->pushToken(Token::STRING_TYPE, $this->stripcslashes(substr($match[0], 1, -1), substr($match[0], 0, 1)));
+            $this->pushToken(Token::STRING_TYPE, $this->stripcslashes($this->normalizeNewlines(substr($match[0], 1, -1)), substr($match[0], 0, 1)));
             $this->moveCursor($match[0]);
         }
         // opening double quoted string
@@ -385,12 +394,12 @@ class Lexer
             $this->moveCursor($match[0]);
         }
         // inline comment
-        elseif (preg_match(self::REGEX_INLINE_COMMENT, $this->code, $match, 0, $this->cursor)) {
+        elseif (preg_match(self::REGEX_RAW_INLINE_COMMENT, $this->code, $match, 0, $this->cursor)) {
             $this->moveCursor($match[0]);
         }
         // unlexable
         else {
-            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
+            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source, columnno: $this->source->getColumn($this->cursor));
         }
     }
 
@@ -451,6 +460,7 @@ class Lexer
             throw new SyntaxError('Unexpected end of file: Unclosed "verbatim" block.', $this->lineno, $this->source);
         }
 
+        $offset = $this->cursor;
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
         $this->moveCursor($text.$match[0][0]);
 
@@ -466,7 +476,7 @@ class Lexer
             }
         }
 
-        $this->pushToken(Token::TEXT_TYPE, $text);
+        $this->pushToken(Token::TEXT_TYPE, $this->normalizeNewlines($text), $offset);
     }
 
     private function lexComment(): void
@@ -486,7 +496,7 @@ class Lexer
             $this->moveCursor($match[0]);
             $this->pushState(self::STATE_INTERPOLATION);
         } elseif (preg_match(self::REGEX_DQ_STRING_PART, $this->code, $match, 0, $this->cursor) && '' !== $match[0]) {
-            $this->pushToken(Token::STRING_TYPE, $this->stripcslashes($match[0], '"'));
+            $this->pushToken(Token::STRING_TYPE, $this->stripcslashes($this->normalizeNewlines($match[0]), '"'));
             $this->moveCursor($match[0]);
         } elseif (preg_match(self::REGEX_DQ_STRING_DELIM, $this->code, $match, 0, $this->cursor)) {
             [$expect, $lineno] = array_pop($this->brackets);
@@ -495,10 +505,10 @@ class Lexer
             }
 
             $this->popState();
-            ++$this->cursor;
+            $this->moveCursor($match[0]);
         } else {
             // unlexable
-            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source);
+            throw new SyntaxError(\sprintf('Unexpected character "%s".', $this->code[$this->cursor]), $this->lineno, $this->source, columnno: $this->source->getColumn($this->cursor));
         }
     }
 
@@ -507,28 +517,47 @@ class Lexer
         $bracket = end($this->brackets);
         if ($this->options['interpolation'][0] === $bracket[0] && preg_match($this->regexes['interpolation_end'], $this->code, $match, 0, $this->cursor)) {
             array_pop($this->brackets);
-            $this->pushToken(Token::INTERPOLATION_END_TYPE);
-            $this->moveCursor($match[0]);
+            $this->pushClosingToken(Token::INTERPOLATION_END_TYPE, $match[0]);
             $this->popState();
         } else {
             $this->lexExpression();
         }
     }
 
-    private function pushToken(int $type, $value = ''): void
+    private function pushToken(int $type, $value = '', ?int $offset = null, ?int $lineno = null): void
     {
         // do not push empty text tokens
         if (Token::TEXT_TYPE === $type && '' === $value) {
             return;
         }
 
-        $this->tokens[] = new Token($type, $value, $this->lineno);
+        // by default the token starts at the current cursor; callers that
+        // emit a token after consuming it must pass an explicit offset
+        $this->tokens[] = new Token($type, $value, $lineno ?? $this->lineno, $offset ?? $this->cursor);
     }
 
     private function moveCursor(string $text): void
     {
         $this->cursor += \strlen($text);
-        $this->lineno += substr_count($text, "\n");
+        // count "\r\n" and "\r" as a single newline without allocating a
+        // normalized copy when the chunk has no carriage return (common case)
+        $this->lineno += str_contains($text, "\r") ? substr_count($this->normalizeNewlines($text), "\n") : substr_count($text, "\n");
+    }
+
+    private function normalizeNewlines(string $text): string
+    {
+        return str_replace(["\r\n", "\r"], "\n", $text);
+    }
+
+    private function pushClosingToken(int $type, string $match): void
+    {
+        $leadingWhitespaceLength = \strlen($match) - \strlen(ltrim($match));
+        if ($leadingWhitespaceLength) {
+            $this->moveCursor(substr($match, 0, $leadingWhitespaceLength));
+        }
+
+        $this->pushToken($type);
+        $this->moveCursor(substr($match, $leadingWhitespaceLength));
     }
 
     private function getOperatorRegex(): string
@@ -587,7 +616,7 @@ class Lexer
         } elseif (\in_array($code, $this->closingBrackets, true)) {
             // closing bracket
             if (!$this->brackets) {
-                throw new SyntaxError(\sprintf('Unexpected "%s".', $code), $this->lineno, $this->source);
+                throw new SyntaxError(\sprintf('Unexpected "%s".', $code), $this->lineno, $this->source, columnno: $this->source->getColumn($this->cursor));
             }
 
             [$expect, $lineno] = array_pop($this->brackets);

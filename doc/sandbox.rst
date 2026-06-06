@@ -46,6 +46,131 @@ allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
     Note that native array-like classes (like ``ArrayObject``) are always
     allowed, you don't need to configure them.
 
+.. caution::
+
+    The ``extends`` and ``use`` tags, as well as the ``parent``, ``block``, and
+    ``attribute`` functions are always allowed in a sandboxed template. That
+    behavior will change in 4.0 where they will need to be explicitly allowed
+    like any other tag or function. To opt-in to the 4.0 behavior now (so they
+    need to be allow-listed or get rejected), enable strict mode on the
+    security policy::
+
+        $policy->setStrict(true);
+
+Marking Filters, Functions, and Tags as Always Allowed
+------------------------------------------------------
+
+.. versionadded:: 3.28
+
+    The ``always_allowed_in_sandbox`` option for filters and functions, and
+    the ``isAlwaysAllowedInSandbox()`` method for token parsers, were added in
+    Twig 3.28.
+
+Some filters, functions, and tags are inherently safe and should always be
+usable in sandboxed templates without forcing every policy to allow-list them.
+Mark such callables by setting the ``always_allowed_in_sandbox`` option to
+``true``::
+
+    $twig->addFilter(new \Twig\TwigFilter('upper', 'strtoupper', [
+        'always_allowed_in_sandbox' => true,
+    ]));
+
+    $twig->addFunction(new \Twig\TwigFunction('max', 'max', [
+        'always_allowed_in_sandbox' => true,
+    ]));
+
+For tags, override ``isAlwaysAllowedInSandbox()`` on your token parser to
+return ``true``::
+
+    final class MyTagTokenParser extends \Twig\TokenParser\AbstractTokenParser
+    {
+        public function isAlwaysAllowedInSandbox(): bool
+        {
+            return true;
+        }
+
+        // ...
+    }
+
+Marked filters, functions, and tags are skipped by the sandbox security check
+entirely, so they incur no runtime overhead, and they do not need to be
+listed in the ``SecurityPolicy`` allow-lists.
+
+The sandbox assumes that attackers control template source, not the Twig
+environment, registered extensions, runtime configuration, security policy,
+custom escaping strategies, or context values passed by the application. Treat
+those application-provided pieces as trusted. If a callable or a value is not
+safe for untrusted template authors, don't register or expose it in the
+sandboxed environment.
+
+Criteria for Marking an Item as Always Allowed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Only mark a callable or tag as always allowed when **all** the following
+conditions hold:
+
+* **No new capability.** The item must not expose anything beyond what the
+  sandbox already accepts. Pure value predicates (``is even``), pure value
+  transformations (``upper``, ``trim``, ``abs``), and pure control flow
+  (``if``, ``for``, ``set``) qualify.
+* **No PHP runtime access.** The item must not read arbitrary PHP constants,
+  call arbitrary classes or functions, instantiate objects from
+  user-controlled names, or otherwise reach into the PHP runtime. This rules
+  out ``constant``, ``enum``, ``invoke``, and similar.
+* **No callable arguments.** The item must not accept a callable parameter it
+  dispatches to. This rules out higher-order operations like ``map``,
+  ``filter``, ``reduce``, ``find``, ``sort``, and ``column``: applications may
+  have deliberate reasons to forbid those, and they need the policy gate to do
+  so.
+* **No cross-template resolution.** The item must not resolve template names
+  at runtime or pivot through the loader. This rules out ``include``,
+  ``extends``, ``embed``, ``use``, ``import``, ``from``, ``source``, and
+  ``template_from_string``.
+* **No output-safety bypass.** The item must not let the template declare
+  its own output safe. This rules out ``raw``.
+* **No dedicated introspection or debugging surface.** The item must not be
+  intended to dump arbitrary object internals or call user-defined
+  serialization hooks. This rules out ``json_encode`` and ``dump``.
+* **No side effects on the PHP environment.** The item must not flush
+  output buffers, trigger deprecations, or otherwise affect global state.
+  This rules out ``flush`` and ``deprecated``.
+* **Deterministic output.** The item must return the same value for the same
+  arguments across renders. Applications that rely on sandboxed templates being
+  reproducible (for caching, content hashing, golden-output tests, or audit
+  comparisons) lose that property if a template can pull from the PHP random
+  number generator without the policy opting in. This rules out ``random`` and
+  ``shuffle``: applications that want them can still allow-list them
+  explicitly.
+
+Note that several allowed items will still interact with PHP interfaces on
+objects passed as arguments (``Countable::count()``,
+``IteratorAggregate::getIterator()``, ``Stringable::__toString()`` on
+iterated items). That transitive behavior is documented separately under
+:ref:`Allowed Operations Apply Transitively to Their Arguments
+<allowed-operations-transitive>` and is considered an accepted property of
+the sandbox model. The criteria above are about what the item itself
+exposes, not about how its arguments behave.
+
+Built-ins That Will Be Always Allowed in 4.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following Twig built-ins meet the criteria above and will have the
+``always_allowed_in_sandbox`` flag set in Twig 4.0. They still need to be
+explicitly allow-listed in 3.x.
+
+* Tags: ``apply``, ``block``, ``do``, ``for``, ``guard``, ``if``, ``macro``,
+  ``set``, ``types``, ``with``.
+* Filters: ``abs``, ``batch``, ``capitalize``, ``convert_encoding``,
+  ``default``, ``e``, ``escape``, ``first``, ``format``, ``join``, ``keys``,
+  ``last``, ``length``, ``lower``, ``merge``, ``nl2br``, ``number_format``,
+  ``replace``, ``reverse``, ``round``, ``slice``, ``split``, ``striptags``,
+  ``title``, ``trim``, ``upper``, ``url_encode``.
+* Functions: ``cycle``, ``max``, ``min``.
+
+When upgrading to 4.0, you can drop these names from your ``SecurityPolicy``
+allow-lists. Leaving them in is harmless: listing a name that is always
+allowed has no effect.
+
 Enabling the Sandbox
 --------------------
 
@@ -62,6 +187,8 @@ the extension constructor::
 
     $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
 
+.. _allowed-operations-transitive:
+
 Allowed Operations Apply Transitively to Their Arguments
 --------------------------------------------------------
 
@@ -77,7 +204,10 @@ properties and call ``JsonSerializable::jsonSerialize()``; allowing sequence
 operations such as ``for``, ``keys``, ``slice``, ``random``, or ``join`` may
 call ``IteratorAggregate::getIterator()``, ``Iterator`` methods, or
 ``Countable::count()``; allowing ``cycle`` with an ``ArrayAccess`` value may
-call ``offsetGet()``. None of these calls appear in the template source.
+call ``offsetGet()``; allowing ``url_encode`` on arrays may expose public
+object properties through PHP's query-string serialization; allowing ``max``
+or ``min`` may compare objects by their public properties. None of these calls
+appear in the template source.
 
 Only allow operations whose behavior is safe for the objects you expose to
 sandboxed templates. If this is not guaranteed, convert objects to plain

@@ -1,5 +1,5 @@
 --TEST--
-#4701 Accessing arrays with stringable objects as key
+Accessing arrays with stringable objects as key
 --TEMPLATE--
 {% set hash = {
   'foo': 'FOO',

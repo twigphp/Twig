@@ -48,8 +48,10 @@ class AttributeExtensionTest extends TestCase
         yield 'with context' => ['with_context_filter', 'withContextFilter', ['needs_context' => true]];
         yield 'with env and context' => ['with_env_and_context_filter', 'withEnvAndContextFilter', ['needs_environment' => true, 'needs_context' => true]];
         yield 'with sandbox' => ['with_sandbox_filter', 'withSandboxFilter', ['needs_is_sandboxed' => true]];
+        yield 'always allowed' => ['always_allowed_filter', 'alwaysAllowedFilter', ['always_allowed_in_sandbox' => true]];
         yield 'variadic' => ['variadic_filter', 'variadicFilter', ['is_variadic' => true]];
         yield 'deprecated' => ['deprecated_filter', 'deprecatedFilter', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
+        yield 'deprecated positional' => ['deprecated_positional_filter', 'deprecatedPositionalFilter', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
         yield 'pattern' => ['pattern_*_filter', 'patternFilter', []];
     }
 
@@ -75,9 +77,11 @@ class AttributeExtensionTest extends TestCase
         yield 'with context' => ['with_context_function', 'withContextFunction', ['needs_context' => true]];
         yield 'with env and context' => ['with_env_and_context_function', 'withEnvAndContextFunction', ['needs_environment' => true, 'needs_context' => true]];
         yield 'with sandbox' => ['with_sandbox_function', 'withSandboxFunction', ['needs_is_sandboxed' => true]];
+        yield 'always allowed' => ['always_allowed_function', 'alwaysAllowedFunction', ['always_allowed_in_sandbox' => true]];
         yield 'no argument' => ['no_arg_function', 'noArgFunction', []];
         yield 'variadic' => ['variadic_function', 'variadicFunction', ['is_variadic' => true]];
         yield 'deprecated' => ['deprecated_function', 'deprecatedFunction', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
+        yield 'deprecated positional' => ['deprecated_positional_function', 'deprecatedPositionalFunction', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
     }
 
     #[DataProvider('provideTests')]
@@ -102,8 +106,10 @@ class AttributeExtensionTest extends TestCase
         yield 'with context' => ['with_context_test', 'withContextTest', ['needs_context' => true]];
         yield 'with env and context' => ['with_env_and_context_test', 'withEnvAndContextTest', ['needs_environment' => true, 'needs_context' => true]];
         yield 'with sandbox' => ['with_sandbox_test', 'withSandboxTest', ['needs_is_sandboxed' => true]];
+        yield 'always allowed' => ['always_allowed_test', 'alwaysAllowedTest', ['always_allowed_in_sandbox' => true]];
         yield 'variadic' => ['variadic_test', 'variadicTest', ['is_variadic' => true]];
         yield 'deprecated' => ['deprecated_test', 'deprecatedTest', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
+        yield 'deprecated positional' => ['deprecated_positional_test', 'deprecatedPositionalTest', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
     }
 
     public function testFilterRequireOneArgument()

@@ -31,10 +31,14 @@ final class Token
     public const INTERPOLATION_START_TYPE = 10;
     public const INTERPOLATION_END_TYPE = 11;
 
+    /**
+     * @param non-negative-int|null $offset
+     */
     public function __construct(
         private int $type,
         private $value,
         private int $lineno,
+        private ?int $offset = null,
     ) {
     }
 
@@ -71,6 +75,19 @@ final class Token
     public function getLine(): int
     {
         return $this->lineno;
+    }
+
+    /**
+     * Returns the 0-based byte offset of the token in the source code.
+     *
+     * Returns null for tokens that are not tied to a source position (e.g.
+     * tokens synthesized by a token parser).
+     *
+     * @return non-negative-int|null
+     */
+    public function getOffset(): ?int
+    {
+        return $this->offset;
     }
 
     public function getValue()

@@ -44,6 +44,11 @@ class ExtensionWithAttributes
     {
     }
 
+    #[AsTwigFilter('always_allowed_filter', alwaysAllowedInSandbox: true)]
+    public function alwaysAllowedFilter(string $string)
+    {
+    }
+
     #[AsTwigFilter('variadic_filter')]
     public function variadicFilter(string ...$strings)
     {
@@ -51,6 +56,11 @@ class ExtensionWithAttributes
 
     #[AsTwigFilter('deprecated_filter', deprecationInfo: new DeprecatedCallableInfo('foo/bar', '1.2'))]
     public function deprecatedFilter(string $string)
+    {
+    }
+
+    #[AsTwigFilter('deprecated_positional_filter', null, null, null, null, null, null, null, null, new DeprecatedCallableInfo('foo/bar', '1.2'))]
+    public function deprecatedPositionalFilter(string $string)
     {
     }
 
@@ -84,6 +94,11 @@ class ExtensionWithAttributes
     {
     }
 
+    #[AsTwigFunction('always_allowed_function', alwaysAllowedInSandbox: true)]
+    public function alwaysAllowedFunction(string $string)
+    {
+    }
+
     #[AsTwigFunction('no_arg_function')]
     public function noArgFunction()
     {
@@ -96,6 +111,11 @@ class ExtensionWithAttributes
 
     #[AsTwigFunction('deprecated_function', deprecationInfo: new DeprecatedCallableInfo('foo/bar', '1.2'))]
     public function deprecatedFunction(string $string)
+    {
+    }
+
+    #[AsTwigFunction('deprecated_positional_function', null, null, null, null, null, null, new DeprecatedCallableInfo('foo/bar', '1.2'))]
+    public function deprecatedPositionalFunction(string $string)
     {
     }
 
@@ -129,8 +149,18 @@ class ExtensionWithAttributes
     {
     }
 
+    #[AsTwigTest('always_allowed_test', alwaysAllowedInSandbox: true)]
+    public function alwaysAllowedTest($value)
+    {
+    }
+
     #[AsTwigTest('deprecated_test', deprecationInfo: new DeprecatedCallableInfo('foo/bar', '1.2'))]
     public function deprecatedTest($value, $argument)
+    {
+    }
+
+    #[AsTwigTest('deprecated_positional_test', null, null, null, null, new DeprecatedCallableInfo('foo/bar', '1.2'))]
+    public function deprecatedPositionalTest($value, $argument)
     {
     }
 }
