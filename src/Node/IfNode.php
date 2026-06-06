@@ -31,7 +31,7 @@ class IfNode extends Node
         for ($i = 0, $count = \count($tests); $i < $count; $i += 2) {
             $test = $tests->getNode((string) $i);
             if (!$test instanceof ReturnPrimitiveTypeInterface) {
-                $tests->setNode($i, new TrueTest($test, new TwigTest('true'), null, $test->getTemplateLine()));
+                $tests->setNode($i, new TrueTest($test, new TwigTest('true', null, ['always_allowed_in_sandbox' => true]), null, $test->getTemplateLine()));
             }
         }
         $nodes = ['tests' => $tests];

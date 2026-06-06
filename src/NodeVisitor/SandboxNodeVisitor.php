@@ -22,6 +22,7 @@ use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
+use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ModuleNode;
@@ -45,6 +46,8 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
     private $filters;
     /** @var array<string, int> */
     private $functions;
+    /** @var array<string, int> */
+    private $tests;
 
     public function enterNode(Node $node, Environment $env): Node
     {
@@ -53,6 +56,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             $this->tags = [];
             $this->filters = [];
             $this->functions = [];
+            $this->tests = [];
         } elseif ($this->inAModule) {
             // look for tags
             if ($node->getNodeTag() && !isset($this->tags[$node->getNodeTag()]) && !$this->isTagAlwaysAllowedInSandbox($env, $node->getNodeTag())) {
@@ -67,6 +71,11 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             // look for functions
             if ($node instanceof FunctionExpression && !isset($this->functions[$name = $node->getAttribute('name')]) && !$this->isFunctionAlwaysAllowedInSandbox($env, $node)) {
                 $this->functions[$name] = $node->getTemplateLine();
+            }
+
+            // look for tests
+            if ($node instanceof TestExpression && !isset($this->tests[$name = $node->getAttribute('name')]) && !$this->isTestAlwaysAllowedInSandbox($env, $node)) {
+                $this->tests[$name] = $node->getTemplateLine();
             }
 
             // look for functions whose parser callable replaced the FunctionExpression
@@ -117,7 +126,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             $this->inAModule = false;
 
             $node->setNode('constructor_end', new Nodes([new CheckSecurityCallNode(), $node->getNode('constructor_end')]));
-            $node->setNode('class_end', new Nodes([new CheckSecurityNode($this->filters, $this->tags, $this->functions), $node->getNode('class_end')]));
+            $node->setNode('class_end', new Nodes([new CheckSecurityNode($this->filters, $this->tags, $this->functions, $this->tests), $node->getNode('class_end')]));
         }
 
         return $node;
@@ -231,6 +240,17 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
 
         return self::isAlwaysAllowedInSandbox($function);
+    }
+
+    private function isTestAlwaysAllowedInSandbox(Environment $env, TestExpression $node): bool
+    {
+        if ($node->hasAttribute('twig_callable')) {
+            $test = $node->getAttribute('twig_callable');
+        } elseif (null === $test = $env->getTest($node->getAttribute('name'))) {
+            return false;
+        }
+
+        return self::isAlwaysAllowedInSandbox($test);
     }
 
     private function isSandboxedFunctionAlwaysAllowedInSandbox(Environment $env, Node $node, string $name): bool

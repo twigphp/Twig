@@ -23,7 +23,7 @@ final class ConditionalTernary extends AbstractExpression implements OperatorEsc
     public function __construct(AbstractExpression $test, AbstractExpression $left, AbstractExpression $right, int $lineno)
     {
         if (!$test instanceof ReturnPrimitiveTypeInterface) {
-            $test = new TrueTest($test, new TwigTest('true'), null, $test->getTemplateLine());
+            $test = new TrueTest($test, new TwigTest('true', null, ['always_allowed_in_sandbox' => true]), null, $test->getTemplateLine());
         }
 
         parent::__construct(['test' => $test, 'left' => $left, 'right' => $right], [], $lineno);

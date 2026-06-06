@@ -54,7 +54,7 @@ class DefaultFilter extends FilterExpression
         }
 
         if ('default' === $name && ($node instanceof ContextVariable || $node instanceof GetAttrExpression)) {
-            $test = new DefinedTest(clone $node, new TwigTest('defined'), new EmptyNode(), $node->getTemplateLine());
+            $test = new DefinedTest(clone $node, new TwigTest('defined', null, ['always_allowed_in_sandbox' => true]), new EmptyNode(), $node->getTemplateLine());
             $false = \count($arguments) ? $arguments->getNode('0') : new ConstantExpression('', $node->getTemplateLine());
 
             $node = new ConditionalTernary($test, $default, $false, $node->getTemplateLine());

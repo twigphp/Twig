@@ -413,10 +413,10 @@ class CountingSecurityPolicy implements SecurityPolicyInterface
     {
     }
 
-    public function checkSecurity($tags, $filters, $functions): void
+    public function checkSecurity($tags, $filters, $functions, array $tests = []): void
     {
         ++$this->callCount;
-        $this->inner->checkSecurity($tags, $filters, $functions);
+        $this->inner->checkSecurity($tags, $filters, $functions, $tests);
     }
 
     public function checkMethodAllowed($obj, $method): void

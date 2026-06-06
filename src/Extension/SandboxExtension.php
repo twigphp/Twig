@@ -86,11 +86,29 @@ final class SandboxExtension extends AbstractExtension
         return $this->policy;
     }
 
-    public function checkSecurity($tags, $filters, $functions, ?Source $source = null): void
+    public function checkSecurity($tags, $filters, $functions, $tests = [], $source = null): void
     {
-        if ($this->isSandboxed($source)) {
-            $this->policy->checkSecurity($tags, $filters, $functions);
+        // BC: previous signature was checkSecurity($tags, $filters, $functions, ?Source $source = null);
+        // detect a legacy call where the 4th positional argument was the Source.
+        if ($tests instanceof Source || (null === $tests && \func_num_args() < 5)) {
+            trigger_deprecation('twig/twig', '3.28', 'Passing a "Twig\Source" as the 4th argument of "%s()" is deprecated; pass an array of tests instead.', __METHOD__);
+            $source = $tests;
+            $tests = [];
         }
+
+        if (!$this->isSandboxed($source)) {
+            return;
+        }
+
+        if ((new \ReflectionMethod($this->policy, 'checkSecurity'))->getNumberOfParameters() >= 4) {
+            $this->policy->checkSecurity($tags, $filters, $functions, $tests);
+
+            return;
+        }
+
+        trigger_deprecation('twig/twig', '3.28', 'The "%s::checkSecurity()" method will take a 4th "array $tests" argument in 4.0; not declaring it is deprecated.', $this->policy::class);
+
+        $this->policy->checkSecurity($tags, $filters, $functions);
     }
 
     public function checkMethodAllowed($obj, $method, int $lineno = -1, ?Source $source = null): void

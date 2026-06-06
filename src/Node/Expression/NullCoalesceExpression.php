@@ -39,12 +39,12 @@ class NullCoalesceExpression extends ConditionalExpression
             trigger_deprecation('twig/twig', '3.15', 'Not passing a "%s" instance to the "right" argument of "%s" is deprecated ("%s" given).', AbstractExpression::class, static::class, $right::class);
         }
 
-        $test = new DefinedTest(clone $left, new TwigTest('defined'), new EmptyNode(), $left->getTemplateLine());
+        $test = new DefinedTest(clone $left, new TwigTest('defined', null, ['always_allowed_in_sandbox' => true]), new EmptyNode(), $left->getTemplateLine());
         // for "block()", we don't need the null test as the return value is always a string
         if (!$left instanceof BlockReferenceExpression) {
             $test = new AndBinary(
                 $test,
-                new NotUnary(new NullTest($left, new TwigTest('null'), new EmptyNode(), $left->getTemplateLine()), $left->getTemplateLine()),
+                new NotUnary(new NullTest($left, new TwigTest('null', null, ['always_allowed_in_sandbox' => true]), new EmptyNode(), $left->getTemplateLine()), $left->getTemplateLine()),
                 $left->getTemplateLine()
             );
         }

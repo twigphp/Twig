@@ -310,19 +310,19 @@ final class CoreExtension extends AbstractExtension
     public function getTests(): array
     {
         return [
-            new TwigTest('even', null, ['node_class' => EvenTest::class]),
-            new TwigTest('odd', null, ['node_class' => OddTest::class]),
-            new TwigTest('defined', null, ['node_class' => DefinedTest::class]),
-            new TwigTest('same as', null, ['node_class' => SameasTest::class, 'one_mandatory_argument' => true]),
-            new TwigTest('none', null, ['node_class' => NullTest::class]),
-            new TwigTest('null', null, ['node_class' => NullTest::class]),
-            new TwigTest('divisible by', null, ['node_class' => DivisiblebyTest::class, 'one_mandatory_argument' => true]),
+            new TwigTest('even', null, ['node_class' => EvenTest::class, 'always_allowed_in_sandbox' => true]),
+            new TwigTest('odd', null, ['node_class' => OddTest::class, 'always_allowed_in_sandbox' => true]),
+            new TwigTest('defined', null, ['node_class' => DefinedTest::class, 'always_allowed_in_sandbox' => true]),
+            new TwigTest('same as', null, ['node_class' => SameasTest::class, 'one_mandatory_argument' => true, 'always_allowed_in_sandbox' => true]),
+            new TwigTest('none', null, ['node_class' => NullTest::class, 'always_allowed_in_sandbox' => true]),
+            new TwigTest('null', null, ['node_class' => NullTest::class, 'always_allowed_in_sandbox' => true]),
+            new TwigTest('divisible by', null, ['node_class' => DivisiblebyTest::class, 'one_mandatory_argument' => true, 'always_allowed_in_sandbox' => true]),
             new TwigTest('constant', null, ['node_class' => ConstantTest::class]),
-            new TwigTest('empty', [self::class, 'testEmpty']),
-            new TwigTest('iterable', 'is_iterable'),
-            new TwigTest('sequence', [self::class, 'testSequence']),
-            new TwigTest('mapping', [self::class, 'testMapping']),
-            new TwigTest('true', null, ['node_class' => TrueTest::class]),
+            new TwigTest('empty', [self::class, 'testEmpty'], ['always_allowed_in_sandbox' => true]),
+            new TwigTest('iterable', 'is_iterable', ['always_allowed_in_sandbox' => true]),
+            new TwigTest('sequence', [self::class, 'testSequence'], ['always_allowed_in_sandbox' => true]),
+            new TwigTest('mapping', [self::class, 'testMapping'], ['always_allowed_in_sandbox' => true]),
+            new TwigTest('true', null, ['node_class' => TrueTest::class, 'always_allowed_in_sandbox' => true]),
         ];
     }
 
