@@ -1,6 +1,7 @@
 # 3.28.0 (2026-XX-XX)
 
  * Reduce memory usage and speed up the context restoration compiled at the end of `for` loops
+ * Allow calling a macro with a dynamic name via the dot operator (`macros.(name)(args)`)
  * Report the column number in syntax errors and expose it via `Error::getTemplateColumn()`
  * Track the source offset of each token and expose it via `Token::getOffset()`
  * Fix nested `block()` calls to resolve against the overriding template when a block rendered through `block(name, template)` calls `parent()`

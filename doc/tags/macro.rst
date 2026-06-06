@@ -64,6 +64,19 @@ The macros can then be called at will in the *current* template:
     {# You can also use named arguments #}
     <p>{{ forms.input(name: 'password', type: 'password') }}</p>
 
+The macro name can also be dynamic by wrapping an expression with parenthesis
+after the :ref:`dot operator <dot_operator>`:
+
+.. code-block:: html+twig
+
+    {% set field = 'input' %}
+    <p>{{ forms.(field)('username') }}</p>
+    <p>{{ forms.('text' ~ 'area')('comment') }}</p>
+
+.. versionadded:: 3.28
+
+    Support for calling a macro with a dynamic name was added in Twig 3.28.
+
 Alternatively you can import names from the template into the current namespace
 via the ``from`` tag:
 

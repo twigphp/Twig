@@ -1,0 +1,11 @@
+--TEST--
+macro called with a dynamic name that does not resolve to a known macro
+--TEMPLATE--
+{% import _self as macros %}
+
+{% set name = 'unknown' %}
+{{ macros.(name)() }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Macro "unknown" is not defined in template "index.twig" in "index.twig" at line 5.
