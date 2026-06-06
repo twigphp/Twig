@@ -96,6 +96,13 @@ Marked filters, functions, and tags are skipped by the sandbox security check
 entirely, so they incur no runtime overhead, and they do not need to be
 listed in the ``SecurityPolicy`` allow-lists.
 
+The sandbox assumes that attackers control template source, not the Twig
+environment, registered extensions, runtime configuration, security policy,
+custom escaping strategies, or context values passed by the application. Treat
+those application-provided pieces as trusted. If a callable or a value is not
+safe for untrusted template authors, don't register or expose it in the
+sandboxed environment.
+
 Criteria for Marking an Item as Always Allowed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -121,10 +128,9 @@ conditions hold:
   ``template_from_string``.
 * **No output-safety bypass.** The item must not let the template declare
   its own output safe. This rules out ``raw``.
-* **No information leakage of object internals.** The item must not expose
-  public properties or call ``JsonSerializable::jsonSerialize()`` on
-  arbitrary objects passed as arguments. This rules out ``json_encode`` and
-  ``dump``.
+* **No dedicated introspection or debugging surface.** The item must not be
+  intended to dump arbitrary object internals or call user-defined
+  serialization hooks. This rules out ``json_encode`` and ``dump``.
 * **No side effects on the PHP environment.** The item must not flush
   output buffers, trigger deprecations, or otherwise affect global state.
   This rules out ``flush`` and ``deprecated``.
@@ -198,7 +204,10 @@ properties and call ``JsonSerializable::jsonSerialize()``; allowing sequence
 operations such as ``for``, ``keys``, ``slice``, ``random``, or ``join`` may
 call ``IteratorAggregate::getIterator()``, ``Iterator`` methods, or
 ``Countable::count()``; allowing ``cycle`` with an ``ArrayAccess`` value may
-call ``offsetGet()``. None of these calls appear in the template source.
+call ``offsetGet()``; allowing ``url_encode`` on arrays may expose public
+object properties through PHP's query-string serialization; allowing ``max``
+or ``min`` may compare objects by their public properties. None of these calls
+appear in the template source.
 
 Only allow operations whose behavior is safe for the objects you expose to
 sandboxed templates. If this is not guaranteed, convert objects to plain
