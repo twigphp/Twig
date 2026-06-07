@@ -1,0 +1,21 @@
+--TEST--
+macro called with a dynamic name using the dot operator
+--TEMPLATE--
+{% import _self as test %}
+
+{% macro element1(data) -%}
+    element1: {{ data }}
+{%- endmacro %}
+
+{% macro element2(data) -%}
+    element2: {{ data }}
+{%- endmacro %}
+
+{% set name = 'element1' %}
+{{ test.(name)('foo') }}
+{{ test.('element' ~ 2)('bar') }}
+--DATA--
+return []
+--EXPECT--
+element1: foo
+element2: bar

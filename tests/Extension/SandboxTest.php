@@ -902,6 +902,23 @@ class SandboxTest extends TestCase
         }
     }
 
+    public function testSandboxBlocksToStringOnDynamicMacroName()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => <<<EOF
+            {% import _self as macros %}
+            {% macro foo() %}foo{% endmacro %}
+            {{ macros.(obj)() }}
+            EOF
+        ], ['import', 'macro']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on a dynamic macro name');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
     public function testSandboxBlocksToStringOnIncludeTemplateName()
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% include obj %}'], ['include']);
