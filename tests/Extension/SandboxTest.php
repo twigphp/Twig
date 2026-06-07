@@ -1343,13 +1343,33 @@ EOF
     }
 
     /**
-     * Kept for forward compatibility with 3.x: code calling setStrict() must keep working.
+     * `setStrict()` is kept as a no-op on 4.x so that code written against 3.x
+     * runs unmodified, but it is deprecated and triggers a deprecation notice.
      */
-    public function testSetStrictIsANoOp()
+    public function testSetStrictIsADeprecatedNoOp()
     {
         $policy = new SecurityPolicy([], [], [], [], []);
-        $policy->setStrict(true);
-        $policy->setStrict(false);
+
+        $deprecations = [];
+        try {
+            set_error_handler(static function ($type, $msg) use (&$deprecations) {
+                if (\E_USER_DEPRECATED === $type) {
+                    $deprecations[] = $msg;
+                }
+
+                return true;
+            });
+
+            $policy->setStrict(true);
+            $policy->setStrict(false);
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([
+            'Since twig/twig 4.0: The "Twig\Sandbox\SecurityPolicy::setStrict()" method is deprecated and will be removed in 5.0; it is a no-op on Twig 4.x.',
+            'Since twig/twig 4.0: The "Twig\Sandbox\SecurityPolicy::setStrict()" method is deprecated and will be removed in 5.0; it is a no-op on Twig 4.x.',
+        ], $deprecations);
 
         // 4.0 behavior is the default and unaffected by setStrict()
         $this->expectException(SecurityNotAllowedTagError::class);

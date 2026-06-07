@@ -80,16 +80,16 @@ final class SecurityPolicy implements SecurityPolicyInterface
     }
 
     /**
-     * Kept as a no-op for forward compatibility with 3.x code bases.
+     * No-op kept for forward compatibility with 3.x: on 3.x this method opts-in
+     * to the 4.0 sandbox behavior for the ``extends``/``use`` tags and the
+     * ``parent``/``block``/``attribute`` functions; on 4.x that behavior is the
+     * default, so calling this method has no effect.
      *
-     * In 3.x, this method toggled an opt-in to the 4.0 sandbox behavior for the
-     * ``extends`` and ``use`` tags and the ``parent``, ``block``, and ``attribute``
-     * functions. In 4.0 that behavior is the default and cannot be turned off, so
-     * calling this method has no effect; it exists only to let user code run
-     * unmodified on both 3.x and 4.0.
+     * @deprecated since Twig 4.0, will be removed in 5.0
      */
     public function setStrict(bool $strict): void
     {
+        trigger_deprecation('twig/twig', '4.0', 'The "%s()" method is deprecated and will be removed in 5.0; it is a no-op on Twig 4.x.', __METHOD__);
     }
 
     public function checkSecurity($tags, $filters, $functions): void

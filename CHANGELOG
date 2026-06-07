@@ -1,5 +1,6 @@
 # 4.0.0 (2026-XX-XX)
 
+ * Deprecate `Twig\Sandbox\SecurityPolicy::setStrict()`, kept as a no-op for forward compatibility with 3.x and to be removed in 5.0
  * Remove the `Twig\Sandbox\SourcePolicyInterface` interface and the corresponding argument of `Twig\Extension\SandboxExtension::__construct()`
  * Enforce the `parent`, `block`, and `attribute` functions against the sandbox `allowedFunctions` allow-list
 
