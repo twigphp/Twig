@@ -1,5 +1,6 @@
 # 3.28.0 (2026-XX-XX)
 
+ * Mark `Twig\Markup` as `@final`; it will be final in Twig 4.0
  * Reduce memory usage and speed up the context restoration compiled at the end of `for` loops
  * Allow calling a macro with a dynamic name via the dot operator (`macros.(name)(args)`)
  * Report the column number in syntax errors and expose it via `Error::getTemplateColumn()`
