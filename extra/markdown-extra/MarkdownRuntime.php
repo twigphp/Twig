@@ -22,11 +22,55 @@ class MarkdownRuntime
 
     public function convert(string $body): string
     {
-        // remove indentation
-        if ($white = substr($body, 0, strspn($body, " \t\r\n\0\x0B"))) {
-            $body = preg_replace("{^$white}m", '', $body);
+        return $this->converter->convert(self::stripCommonIndentation($body));
+    }
+
+    /**
+     * Removes the indentation shared by all non-blank lines.
+     *
+     * This lets authors indent a `{% apply markdown_to_html %}` block to match
+     * the surrounding template without that indentation leaking into Markdown
+     * (where leading whitespace is significant, e.g. code blocks).
+     */
+    private static function stripCommonIndentation(string $body): string
+    {
+        $lines = explode("\n", $body);
+
+        $indent = null;
+        foreach ($lines as $line) {
+            if ('' === trim($line)) {
+                continue;
+            }
+
+            $lineIndent = substr($line, 0, strspn($line, " \t"));
+            if (null === $indent) {
+                $indent = $lineIndent;
+                continue;
+            }
+
+            $max = min(\strlen($indent), \strlen($lineIndent));
+            $common = 0;
+            while ($common < $max && $indent[$common] === $lineIndent[$common]) {
+                ++$common;
+            }
+            $indent = substr($indent, 0, $common);
+
+            if ('' === $indent) {
+                return $body;
+            }
         }
 
-        return $this->converter->convert($body);
+        if (null === $indent || '' === $indent) {
+            return $body;
+        }
+
+        $length = \strlen($indent);
+        foreach ($lines as $i => $line) {
+            if (str_starts_with($line, $indent)) {
+                $lines[$i] = substr($line, $length);
+            }
+        }
+
+        return implode("\n", $lines);
     }
 }

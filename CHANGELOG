@@ -5,6 +5,7 @@
  * Track the source offset of each token and expose it via `Token::getOffset()`
  * Fix nested `block()` calls to resolve against the overriding template when a block rendered through `block(name, template)` calls `parent()`
  * Stop reporting a skipped test in `IntegrationTestCase` when there is no legacy test to run
+ * Fix `markdown_to_html` to strip the indentation shared by all lines instead of mangling content that starts with a blank line
  * Make the `IntegrationTestCase` and `NodeTestCase` test helpers compatible with PHPUnit 11
  * Cast printed expressions to string so values that cannot be converted to a string (arrays, non-`Stringable` objects, ...) report a usable stack trace at the print location
  * Make the `include()` function return a `Markup` object so an assigned result is not re-escaped when printed
