@@ -11,9 +11,6 @@
 
 namespace Twig\Sandbox;
 
-use Twig\Markup;
-use Twig\Template;
-
 /**
  * Represents a security policy which need to be enforced when sandbox mode is enabled.
  *
@@ -115,10 +112,6 @@ final class SecurityPolicy implements SecurityPolicyInterface
 
     public function checkMethodAllowed($obj, $method): void
     {
-        if ($obj instanceof Template || $obj instanceof Markup) {
-            return;
-        }
-
         $allowed = false;
         $method = strtolower($method);
         foreach ($this->allowedMethods as $class => $methods) {
