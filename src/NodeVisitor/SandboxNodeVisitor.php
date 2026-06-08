@@ -28,8 +28,6 @@ use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
-use Twig\TokenParser\TokenParserInterface;
-use Twig\TwigCallableInterface;
 use Twig\Util\CallableParameters;
 
 /**
@@ -211,7 +209,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        return self::isAlwaysAllowedInSandbox($parser);
+        return $parser->isAlwaysAllowedInSandbox();
     }
 
     private function isFilterAlwaysAllowedInSandbox(Environment $env, FilterExpression $node): bool
@@ -222,7 +220,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        return self::isAlwaysAllowedInSandbox($filter);
+        return $filter->isAlwaysAllowedInSandbox();
     }
 
     private function isFunctionAlwaysAllowedInSandbox(Environment $env, FunctionExpression $node): bool
@@ -233,7 +231,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        return self::isAlwaysAllowedInSandbox($function);
+        return $function->isAlwaysAllowedInSandbox();
     }
 
     private function isSandboxedFunctionAlwaysAllowedInSandbox(Environment $env, Node $node, string $name): bool
@@ -244,7 +242,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        return self::isAlwaysAllowedInSandbox($function);
+        return $function->isAlwaysAllowedInSandbox();
     }
 
     private function isFunctionNameAlwaysAllowedInSandbox(Environment $env, string $name): bool
@@ -253,22 +251,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        return self::isAlwaysAllowedInSandbox($function);
-    }
-
-    /**
-     * @param TwigCallableInterface|TokenParserInterface $subject
-     */
-    private static function isAlwaysAllowedInSandbox($subject): bool
-    {
-        if (method_exists($subject, 'isAlwaysAllowedInSandbox')) {
-            return $subject->isAlwaysAllowedInSandbox();
-        }
-
-        $interface = $subject instanceof TokenParserInterface ? TokenParserInterface::class : TwigCallableInterface::class;
-        trigger_deprecation('twig/twig', '3.28', 'Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "%s" interface in 4.0.', $subject::class, $interface);
-
-        return false;
+        return $function->isAlwaysAllowedInSandbox();
     }
 
     public function getPriority(): int

@@ -46,25 +46,8 @@ allowed and will generate a ``\Twig\Sandbox\SecurityError`` exception.
     Note that native array-like classes (like ``ArrayObject``) are always
     allowed, you don't need to configure them.
 
-.. caution::
-
-    The ``extends`` and ``use`` tags, as well as the ``parent``, ``block``, and
-    ``attribute`` functions are always allowed in a sandboxed template. That
-    behavior will change in 4.0 where they will need to be explicitly allowed
-    like any other tag or function. To opt-in to the 4.0 behavior now (so they
-    need to be allow-listed or get rejected), enable strict mode on the
-    security policy::
-
-        $policy->setStrict(true);
-
 Marking Filters, Functions, and Tags as Always Allowed
 ------------------------------------------------------
-
-.. versionadded:: 3.28
-
-    The ``always_allowed_in_sandbox`` option for filters and functions, and
-    the ``isAlwaysAllowedInSandbox()`` method for token parsers, were added in
-    Twig 3.28.
 
 Some filters, functions, and tags are inherently safe and should always be
 usable in sandboxed templates without forcing every policy to allow-list them.

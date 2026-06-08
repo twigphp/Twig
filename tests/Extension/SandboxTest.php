@@ -21,7 +21,6 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -44,7 +43,6 @@ use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
-use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -1550,18 +1548,6 @@ EOF
         $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
         $twig->load('index')->render(['obj' => new FooObject()]);
     }
-
-    #[IgnoreDeprecations]
-    public function testCustomTokenParserWithoutIsAlwaysAllowedInSandboxTriggersDeprecation()
-    {
-        $twig = $this->getEnvironment(true, [], ['index' => '{% legacy_tag %}'], tags: ['legacy_tag']);
-        $twig->addTokenParser(new LegacyTokenParserWithoutIsAlwaysAllowedInSandbox());
-
-        $this->expectUserDeprecationMessage(\sprintf('Since twig/twig 3.28: Not implementing the "isAlwaysAllowedInSandbox()" method in "%s" is deprecated. This method will be part of the "Twig\TokenParser\TokenParserInterface" interface in 4.0.', LegacyTokenParserWithoutIsAlwaysAllowedInSandbox::class));
-
-        // tag is allow-listed, so the render itself succeeds; the deprecation fires from the sandbox visitor while compiling
-        $this->assertSame('', $twig->load('index')->render([]));
-    }
 }
 
 class ParentClass
@@ -1742,27 +1728,5 @@ class GatedSandboxTokenParser extends AbstractTokenParser
     public function getTag(): string
     {
         return 'gated_tag';
-    }
-}
-
-class LegacyTokenParserWithoutIsAlwaysAllowedInSandbox implements TokenParserInterface
-{
-    private Parser $parser;
-
-    public function setParser(Parser $parser): void
-    {
-        $this->parser = $parser;
-    }
-
-    public function parse(Token $token): Node
-    {
-        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
-
-        return new TextNode('', $token->getLine());
-    }
-
-    public function getTag(): string
-    {
-        return 'legacy_tag';
     }
 }

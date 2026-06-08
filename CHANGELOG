@@ -1,5 +1,6 @@
 # 4.0.0 (2026-XX-XX)
 
+ * Add the `isAlwaysAllowedInSandbox()` method to `Twig\TwigCallableInterface` and `Twig\TokenParser\TokenParserInterface`
  * Remove the `Twig\Sandbox\SourcePolicyInterface` interface and the corresponding argument of `Twig\Extension\SandboxExtension::__construct()`
  * Enforce the `parent`, `block`, and `attribute` functions against the sandbox `allowedFunctions` allow-list
 
