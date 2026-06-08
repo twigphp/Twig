@@ -121,7 +121,7 @@ class Parser
         }
 
         if ($this->parent) {
-            $this->cleanupBodyForChildTemplates($body);
+            $body = $this->cleanupBodyForChildTemplates($body);
         }
 
         $node = new ModuleNode(
@@ -552,8 +552,12 @@ class Parser
         return $test;
     }
 
-    private function cleanupBodyForChildTemplates(Node $body): void
+    private function cleanupBodyForChildTemplates(Node $body): Node
     {
+        if ($body instanceof BlockReferenceNode || ($body instanceof TextNode && $body->isBlank())) {
+            return new EmptyNode();
+        }
+
         foreach ($body as $k => $node) {
             if ($node instanceof BlockReferenceNode) {
                 // as it has a parent, the block reference won't be used
@@ -563,6 +567,8 @@ class Parser
                 $body->removeNode($k);
             }
         }
+
+        return $body;
     }
 
     private function checkPrecedenceDeprecations(ExpressionParserInterface $expressionParser, AbstractExpression $expr)

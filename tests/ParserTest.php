@@ -171,6 +171,17 @@ EOF, 'index')));
         $this->assertSame('set', $body->getNode('4')->getNodeTag());
     }
 
+    public function testCleanupBodyForChildTemplatesWithASingleNodeBody()
+    {
+        $twig = new Environment(new ArrayLoader());
+        $twig->addTokenParser(new ParentSettingTokenParser());
+
+        $node = $twig->parse($twig->tokenize(new Source('{% set_parent %}', 'index')));
+
+        $body = $node->getNode('body')->getNode('0');
+        $this->assertInstanceOf(EmptyNode::class, $body);
+    }
+
     public function testBodyForParentTemplates()
     {
         $twig = new Environment(new ArrayLoader());
@@ -229,5 +240,22 @@ class TestTokenParser extends AbstractTokenParser
     public function getTag(): string
     {
         return 'test';
+    }
+}
+
+class ParentSettingTokenParser extends AbstractTokenParser
+{
+    public function parse(Token $token): Node
+    {
+        $this->parser->setParent(new ConstantExpression('base', $token->getLine()), false);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+
+        // returns a blank text node so the whole child body is a single removable node
+        return new TextNode('   ', $token->getLine());
+    }
+
+    public function getTag(): string
+    {
+        return 'set_parent';
     }
 }
