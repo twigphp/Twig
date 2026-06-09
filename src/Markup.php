@@ -14,14 +14,11 @@ namespace Twig;
 /**
  * Marks a content as safe.
  *
- * Instances of this class (and any subclass) are trusted by the Twig
- * sandbox: method calls and property accesses on a Markup instance bypass
- * the SecurityPolicy method/property allowlists. This is by design: Markup
- * represents content that has already been deemed safe to output.
- *
- * As a consequence, when extending this class, you are responsible for
- * ensuring that every method and property exposed by your subclass is
- * safe to call from a sandboxed template.
+ * Instances of this class are trusted by the Twig sandbox when output as
+ * strings: their __toString() method is always allowed. This is by design as
+ * Markup represents content that has already been deemed safe to output.
+ * Regular method calls and property accesses are still controlled by the
+ * SecurityPolicy method/property allowlists.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */

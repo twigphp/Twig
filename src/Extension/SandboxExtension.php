@@ -11,6 +11,7 @@
 
 namespace Twig\Extension;
 
+use Twig\Markup;
 use Twig\NodeVisitor\SandboxNodeVisitor;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
@@ -139,7 +140,9 @@ final class SandboxExtension extends AbstractExtension
             return $obj;
         }
 
-        if ($obj instanceof \Stringable) {
+        // Markup carries content that Twig already considers safe, so its
+        // __toString() is always allowed, whatever the security policy is.
+        if ($obj instanceof \Stringable && !$obj instanceof Markup) {
             try {
                 $this->policy->checkMethodAllowed($obj, '__toString');
             } catch (SecurityNotAllowedMethodError $e) {

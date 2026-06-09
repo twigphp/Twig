@@ -28,6 +28,7 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Loader\ArrayLoader;
+use Twig\Markup;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -40,9 +41,11 @@ use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
+use Twig\Sandbox\SecurityPolicyInterface;
 use Twig\Source;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -659,6 +662,39 @@ class SandboxTest extends TestCase
         FooObject::reset();
         $this->assertEquals('foo', $twig->load('1_basic5')->render(self::$params), 'Sandbox allows __toString when sandbox disabled');
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
+    }
+
+    public function testSandboxAllowsPrintingMarkup()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ markup }}']);
+
+        $this->assertSame('<b>safe</b>', $twig->load('index')->render(['markup' => new Markup('<b>safe</b>', 'UTF-8')]));
+    }
+
+    public function testSandboxAllowsPrintingMarkupWithACustomPolicyThatAllowsNothing()
+    {
+        $loader = new ArrayLoader(['index' => '{{ markup }}']);
+        $twig = new Environment($loader, ['cache' => false, 'autoescape' => false]);
+        $twig->addExtension(new SandboxExtension(new DenyEverythingSecurityPolicy(), true));
+
+        $this->assertSame('<b>safe</b>', $twig->load('index')->render(['markup' => new Markup('<b>safe</b>', 'UTF-8')]));
+    }
+
+    public function testSandboxAppliesThePolicyToTemplateMethods()
+    {
+        $template = $this->getEnvironment(true, [], ['index' => 'foo'])->load('index')->unwrap();
+        $policy = new SecurityPolicy();
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $policy->checkMethodAllowed($template, 'getTemplateName');
+    }
+
+    public function testSandboxAppliesThePolicyToMarkupMethods()
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ markup.getCharset() }}']);
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $twig->load('index')->render(['markup' => new Markup('<b>safe</b>', 'UTF-8')]);
     }
 
     public function testSandboxUnallowedFunction()
@@ -1728,5 +1764,22 @@ class GatedSandboxTokenParser extends AbstractTokenParser
     public function getTag(): string
     {
         return 'gated_tag';
+    }
+}
+
+class DenyEverythingSecurityPolicy implements SecurityPolicyInterface
+{
+    public function checkSecurity($tags, $filters, $functions): void
+    {
+    }
+
+    public function checkMethodAllowed($obj, $method): void
+    {
+        throw new SecurityNotAllowedMethodError(\sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, $obj::class), $obj::class, $method);
+    }
+
+    public function checkPropertyAllowed($obj, $property): void
+    {
+        throw new SecurityNotAllowedPropertyError(\sprintf('Calling "%s" property on a "%s" object is not allowed.', $property, $obj::class), $obj::class, $property);
     }
 }
