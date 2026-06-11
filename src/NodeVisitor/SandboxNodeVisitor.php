@@ -251,7 +251,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        return self::isAlwaysAllowedInSandbox($test);
+        return $test->isAlwaysAllowedInSandbox();
     }
 
     private function isSandboxedFunctionAlwaysAllowedInSandbox(Environment $env, Node $node, string $name): bool
