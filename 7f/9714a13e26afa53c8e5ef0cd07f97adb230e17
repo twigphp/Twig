@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-10-14T12:00:11Z
+
+@fabpot what is the state of this PR ? Do you plan to fix it or to abandon it ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2024-10-14T12:14:13Z
+
+> @fabpot what is the state of this PR ? Do you plan to fix it or to abandon it ?
+
+I plan to still work on this (soon).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-06-04T09:15:08Z
+
+I've just pushed a new version which hopefully addresses most of you comments.
+
+---------------------------------------------------------------------------
+
+by stof at 2026-06-04T17:14:38Z
+
+I'm wondering whether we should really deprecate the definition of blocks inside a capturing node. My [argument about block definitions nested inside a block](https://github.com/twigphp/Twig/pull/4292#discussion_r1751659218) could easily apply to block definitions inside a capturing node.
+
+In term of implementation, the CorrectnessNodeVisitor could maintain a `capturingNodeDepth` parameter similar to the `blockDepth` and use it in the guard clause of the method.
