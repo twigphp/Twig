@@ -42,11 +42,10 @@ Everything else won't be allowed and will generate a
 
 .. note::
 
-    The ``allowedTests`` argument is available since Twig 3.28 (in earlier
-    versions all tests were always allowed). Most built-in tests (``empty``,
-    ``defined``, ``even``, ``same as``, ``iterable``, etc.) are always allowed
-    and do not need to be listed. Only custom tests and the built-in
-    ``constant`` test must be allow-listed like filters and functions.
+    Most built-in tests (``empty``, ``defined``, ``even``, ``same as``,
+    ``iterable``, etc.) are always allowed and do not need to be listed. Only
+    custom tests and the built-in ``constant`` test must be allow-listed like
+    filters and functions.
 
 .. note::
 
@@ -149,12 +148,11 @@ iterated items). That transitive behavior is documented separately under
 the sandbox model. The criteria above are about what the item itself
 exposes, not about how its arguments behave.
 
-Built-ins That Will Be Always Allowed in 4.0
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Built-ins That Are Always Allowed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following Twig built-ins meet the criteria above and will have the
-``always_allowed_in_sandbox`` flag set in Twig 4.0. They still need to be
-explicitly allow-listed in 3.x.
+The following Twig built-ins meet the criteria above and have the
+``always_allowed_in_sandbox`` flag set, so they never need to be allow-listed.
 
 * Tags: ``apply``, ``block``, ``do``, ``for``, ``guard``, ``if``, ``macro``,
   ``set``, ``types``, ``with``.
@@ -165,18 +163,14 @@ explicitly allow-listed in 3.x.
   ``title``, ``trim``, ``upper``, ``url_encode``.
 * Functions: ``cycle``, ``max``, ``min``.
 
-When upgrading to 4.0, you can drop these names from your ``SecurityPolicy``
-allow-lists. Leaving them in is harmless: listing a name that is always
-allowed has no effect.
+Listing one of these names in your ``SecurityPolicy`` is harmless: it has no
+effect.
 
 The corresponding built-in tests (``defined``, ``divisible by``, ``empty``,
 ``even``, ``iterable``, ``mapping``, ``none``, ``null``, ``odd``, ``same as``,
-``sequence``, ``true``) are **already** flagged as always allowed since Twig
-3.28, so they never need to be allow-listed. This is safe because tests were
-never enforced by the sandbox before 3.28: flagging them keeps existing
-templates working unchanged. The ``constant`` test is the exception: it reaches
-into the PHP runtime, so it is not always allowed and must be allow-listed (it
-is still implicitly allowed in 3.x with a deprecation, and rejected in 4.0).
+``sequence``, ``true``) are also always allowed, so they never need to be
+allow-listed. The ``constant`` test is the exception: it reaches into the PHP
+runtime, so it is not always allowed and must be allow-listed.
 
 Enabling the Sandbox
 --------------------

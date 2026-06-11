@@ -1,13 +1,12 @@
 --TEST--
-"macro" tag in a condition
---DEPRECATION--
-Since twig/twig 3.27: Using the "macro" tag outside the root of a template is deprecated in index.twig at line 3.
+"macro" tag in a block
 --TEMPLATE--
-{% if false %}
+{% block foo %}
     {% macro input(name, value, type, size) %}
         <input type="{{ type|default("text") }}" name="{{ name }}" value="{{ value|e|default('') }}" size="{{ size|default(20) }}">
     {% endmacro %}
-{% endif %}
+{% endblock %}
 --DATA--
 return []
---EXPECT--
+--EXCEPTION--
+Twig\Error\SyntaxError: The "macro" tag can only be used at the root of a template in "index.twig" at line 3.

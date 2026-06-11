@@ -159,7 +159,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
         }
 
         if (!isset($this->rootNodes[$node])) {
-            trigger_deprecation('twig/twig', '3.27', 'Using the "%s" tag outside the root of a template is deprecated in %s at line %d.', $node->getNodeTag(), $node->getSourceContext()->getName(), $node->getTemplateLine());
+            throw new SyntaxError(\sprintf('The "%s" tag can only be used at the root of a template.', $node->getNodeTag()), $node->getTemplateLine(), $node->getSourceContext());
         }
     }
 

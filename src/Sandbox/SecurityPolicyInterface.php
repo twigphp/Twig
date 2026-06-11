@@ -26,7 +26,7 @@ interface SecurityPolicyInterface
      *
      * @throws SecurityError
      */
-    public function checkSecurity($tags, $filters, $functions/* , array $tests */): void;
+    public function checkSecurity($tags, $filters, $functions, array $tests): void;
 
     /**
      * @param object $obj

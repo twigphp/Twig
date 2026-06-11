@@ -1,7 +1,5 @@
 --TEST--
 "use" tag in a macro
---DEPRECATION--
-Since twig/twig 3.27: Using the "use" tag outside the root of a template is deprecated in index.twig at line 3.
 --TEMPLATE--
 {% macro input(name, value, type, size) %}
     {% use "base.twig" %}
@@ -11,4 +9,5 @@ Since twig/twig 3.27: Using the "use" tag outside the root of a template is depr
 --TEMPLATE(base.twig)--
 --DATA--
 return []
---EXPECT--
+--EXCEPTION--
+Twig\Error\SyntaxError: The "use" tag can only be used at the root of a template in "index.twig" at line 3.

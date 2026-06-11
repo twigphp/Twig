@@ -31,12 +31,8 @@ class CheckSecurityNode extends Node
      * @param array<string, int> $usedFunctions
      * @param array<string, int> $usedTests
      */
-    public function __construct(array $usedFilters, array $usedTags, array $usedFunctions, array $usedTests = [])
+    public function __construct(array $usedFilters, array $usedTags, array $usedFunctions, array $usedTests)
     {
-        if (\func_num_args() < 4) {
-            trigger_deprecation('twig/twig', '3.28', 'Not passing the "$usedTests" argument to "%s::__construct()" is deprecated; it will be required in 4.0.', static::class);
-        }
-
         $this->usedFilters = $usedFilters;
         $this->usedTags = $usedTags;
         $this->usedFunctions = $usedFunctions;
