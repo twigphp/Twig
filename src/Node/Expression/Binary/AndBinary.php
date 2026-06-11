@@ -14,9 +14,16 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 use Twig\Node\Expression\ReturnBoolInterface;
+use Twig\Node\Expression\Test\TrueTest;
+use Twig\Node\Node;
 
 class AndBinary extends AbstractBinary implements ReturnBoolInterface
 {
+    public function __construct(Node $left, Node $right, int $lineno)
+    {
+        parent::__construct(TrueTest::wrap($left), TrueTest::wrap($right), $lineno);
+    }
+
     public function operator(Compiler $compiler): Compiler
     {
         return $compiler->raw('&&');
