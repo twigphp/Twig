@@ -1,5 +1,5 @@
 --TEST--
-conditional "block" tag with "extends" tag (nested)
+"block" definition under a condition nested inside a top-level block is allowed
 --TEMPLATE--
 {% extends "layout.twig" %}
 
@@ -15,15 +15,13 @@ conditional "block" tag with "extends" tag (nested)
 --TEMPLATE(layout.twig)--
 {% extends "base.twig" %}
 
-{% block content_layout -%}
-    nested_layout
-{% endblock -%}
-
 {% block content_base %}
     {{ parent() -}}
     layout
     {% if true -%}
-        {{ block('content_layout') -}}
+        {% block content_layout -%}
+            nested_layout
+        {% endblock -%}
     {% endif %}
 {% endblock %}
 --TEMPLATE(base.twig)--
@@ -36,5 +34,5 @@ return []
 base
 layout
     nested_layout
-nested_index
+        nested_index
 index

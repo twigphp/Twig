@@ -4,6 +4,7 @@
 {% macro foo() %}
     {% extends "foo.twig" %}
 {% endmacro %}
+--TEMPLATE(foo.twig)--
 --DATA--
 return []
 --EXCEPTION--

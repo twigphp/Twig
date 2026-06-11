@@ -6,6 +6,9 @@
  * Report the column number in syntax errors and expose it via `Error::getTemplateColumn()`
  * Track the source offset of each token and expose it via `Token::getOffset()`
  * Fix nested `block()` calls to resolve against the overriding template when a block rendered through `block(name, template)` calls `parent()`
+ * Deprecate the possibility to use a `block` tag within a capture node (like `set`)
+ * Deprecate the possibility to use a `block` tag within a capture node (like `set`) in child templates
+ * Deprecate using a `macro`, `extends`, or `use` tag outside the root of a template
  * Stop reporting a skipped test in `IntegrationTestCase` when there is no legacy test to run
  * Fix `markdown_to_html` to strip the indentation shared by all lines instead of mangling content that starts with a blank line
  * Make the `IntegrationTestCase` and `NodeTestCase` test helpers compatible with PHPUnit 11

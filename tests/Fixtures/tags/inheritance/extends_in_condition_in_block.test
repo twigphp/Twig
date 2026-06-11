@@ -1,0 +1,11 @@
+--TEST--
+"extends" tag nested in a condition inside a block
+--TEMPLATE--
+{% block foo %}
+    {% if true %}{% extends "base.twig" %}{% endif %}
+{% endblock %}
+--TEMPLATE(base.twig)--
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Cannot use "extend" in a block in "index.twig" at line 3.

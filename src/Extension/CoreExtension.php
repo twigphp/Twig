@@ -85,6 +85,7 @@ use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
 use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Node;
+use Twig\NodeVisitor\CorrectnessNodeVisitor;
 use Twig\Parser;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
@@ -328,7 +329,9 @@ final class CoreExtension extends AbstractExtension
 
     public function getNodeVisitors(): array
     {
-        return [];
+        return [
+            new CorrectnessNodeVisitor(),
+        ];
     }
 
     public function getExpressionParsers(): array
