@@ -1,0 +1,12 @@
+--TEST--
+"use" tag in a condition
+--DEPRECATION--
+Since twig/twig 3.27: Using the "use" tag outside the root of a template is deprecated in index.twig at line 3.
+--TEMPLATE--
+{% if false %}
+    {% use "base.twig" %}
+{% endif %}
+--TEMPLATE(base.twig)--
+--DATA--
+return []
+--EXPECT--

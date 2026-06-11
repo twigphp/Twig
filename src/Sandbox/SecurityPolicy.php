@@ -38,14 +38,20 @@ final class SecurityPolicy implements SecurityPolicyInterface
      * @var string[]
      */
     private array $allowedFunctions;
+    /**
+     * @var string[]
+     */
+    private array $allowedTests;
+    private bool $strict = false;
 
-    public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [])
+    public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [], array $allowedTests = [])
     {
         $this->allowedTags = $allowedTags;
         $this->allowedFilters = $allowedFilters;
         $this->setAllowedMethods($allowedMethods);
         $this->allowedProperties = $allowedProperties;
         $this->allowedFunctions = $allowedFunctions;
+        $this->allowedTests = $allowedTests;
     }
 
     public function setAllowedTags(array $tags): void
@@ -76,6 +82,11 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $this->allowedFunctions = $functions;
     }
 
+    public function setAllowedTests(array $tests): void
+    {
+        $this->allowedTests = $tests;
+    }
+
     /**
      * Kept as a no-op for forward compatibility with 3.x code bases.
      *
@@ -89,8 +100,12 @@ final class SecurityPolicy implements SecurityPolicyInterface
     {
     }
 
-    public function checkSecurity($tags, $filters, $functions): void
+    public function checkSecurity($tags, $filters, $functions, array $tests = []): void
     {
+        if (\func_num_args() < 4) {
+            trigger_deprecation('twig/twig', '3.28', 'Not passing the "$tests" argument to "%s::checkSecurity()" is deprecated; it will be required in 4.0.', static::class);
+        }
+
         foreach ($tags as $tag) {
             if (!\in_array($tag, $this->allowedTags, true)) {
                 throw new SecurityNotAllowedTagError(\sprintf('Tag "%s" is not allowed.', $tag), $tag);
@@ -106,6 +121,16 @@ final class SecurityPolicy implements SecurityPolicyInterface
         foreach ($functions as $function) {
             if (!\in_array($function, $this->allowedFunctions, true)) {
                 throw new SecurityNotAllowedFunctionError(\sprintf('Function "%s" is not allowed.', $function), $function);
+            }
+        }
+
+        foreach ($tests as $test) {
+            if (!\in_array($test, $this->allowedTests, true)) {
+                if (!$this->strict) {
+                    trigger_deprecation('twig/twig', '3.28', 'The "%s" test is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).', $test);
+                } else {
+                    throw new SecurityNotAllowedTestError(\sprintf('Test "%s" is not allowed.', $test), $test);
+                }
             }
         }
     }

@@ -18,6 +18,7 @@ use Twig\Extra\Markdown\DefaultMarkdown;
 use Twig\Extra\Markdown\ErusevMarkdown;
 use Twig\Extra\Markdown\LeagueMarkdown;
 use Twig\Extra\Markdown\MarkdownExtension;
+use Twig\Extra\Markdown\MarkdownInterface;
 use Twig\Extra\Markdown\MarkdownRuntime;
 use Twig\Extra\Markdown\MichelfMarkdown;
 use Twig\Loader\ArrayLoader;
@@ -76,6 +77,42 @@ EOF, "<h1>Hello</h1>\n+<p>Great!</p>"],
 {% endapply %}
 EOF, "<h1>Hello</h1>\n+<p>Great!</p>"],
             ["{{ include('html')|markdown_to_html }}", "<h1>Hello</h1>\n+<p>Great!</p>"],
+            [<<<EOF
+{% apply markdown_to_html %}
+
+Paragraph 1
+
+Paragraph 2
+{% endapply %}
+EOF, "<p>Paragraph 1</p>\n+<p>Paragraph 2</p>"],
+        ];
+    }
+
+    /**
+     * @dataProvider getIndentationTests
+     */
+    public function testStripsCommonIndentation(string $body, string $expected)
+    {
+        $runtime = new MarkdownRuntime(new class implements MarkdownInterface {
+            public function convert(string $body): string
+            {
+                return $body;
+            }
+        });
+
+        $this->assertSame($expected, $runtime->convert($body));
+    }
+
+    public static function getIndentationTests()
+    {
+        return [
+            'leading blank line keeps blank lines' => ["\nParagraph 1\n\nParagraph 2", "\nParagraph 1\n\nParagraph 2"],
+            'common indentation is removed' => ["\n    Hello\n    =====\n\n    Great!\n", "\nHello\n=====\n\nGreat!\n"],
+            'minimal common indentation is removed' => ["    a\n      b\n", "a\n  b\n"],
+            'indented code block before non-indented prose is preserved' => ["    Code\n\nParagraph\n", "    Code\n\nParagraph\n"],
+            'tab indentation is removed' => ["\tHello\n\tGreat!\n", "Hello\nGreat!\n"],
+            'mixed tabs and spaces are left untouched' => ["\ta\n    b\n", "\ta\n    b\n"],
+            'blank lines are ignored when computing indentation' => ["    a\n\n    b\n", "a\n\nb\n"],
         ];
     }
 

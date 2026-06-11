@@ -13,8 +13,11 @@ namespace Twig\Tests\Node\Expression;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Expression\Variable\TemplateVariable;
 
 class MacroReferenceTest extends TestCase
@@ -36,5 +39,30 @@ class MacroReferenceTest extends TestCase
         yield 'contains semicolon' => ['foo;bar'];
         yield 'PHP injection payload' => ['macro_foo + 1; trigger_error("BAD") //'];
         yield 'contains NUL byte' => ["foo\x00bar"];
+    }
+
+    public function testConstructorAcceptsAnExpressionAsName()
+    {
+        $node = new MacroReferenceExpression(new TemplateVariable('foo', 1), new ContextVariable('name', 1), new ArrayExpression([], 1), 1);
+
+        $this->assertTrue($node->hasNode('name'));
+        $this->assertNull($node->getAttribute('name'));
+    }
+
+    public function testDynamicNamePrefixesMacroAtRuntime()
+    {
+        $env = new Environment(new ArrayLoader());
+        $compiler = new \Twig\Compiler($env);
+
+        $node = new MacroReferenceExpression(
+            new TemplateVariable('mac', 1),
+            new ContextVariable('name', 1),
+            new ArrayExpression([], 1),
+            1,
+        );
+        $compiler->compile($node);
+
+        $this->assertStringContainsString("getTemplateForMacro(\$_v0 = 'macro_'.", $compiler->getSource());
+        $this->assertStringContainsString('->{$_v0}(...', $compiler->getSource());
     }
 }

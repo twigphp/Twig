@@ -1,0 +1,20 @@
+--TEST--
+"defined" support for macros called with a dynamic name
+--TEMPLATE--
+{% import _self as macros %}
+
+{% set known = 'hello' %}
+{% set unknown = 'missing' %}
+{{~ macros.(known) is defined ? 'OK' : 'KO' }}
+{{~ macros.(known)() is defined ? 'OK' : 'KO' }}
+{{~ macros.(unknown) is not defined ? 'OK' : 'KO' }}
+{{~ macros.(unknown)() is not defined ? 'OK' : 'KO' }}
+
+{% macro hello(name) %}{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+OK
+OK
+OK
+OK

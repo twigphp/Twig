@@ -1,0 +1,20 @@
+--TEST--
+nested macro calls with dynamic names use distinct compiled variables
+--TEMPLATE--
+{% import _self as m %}
+
+{% macro wrap(x) -%}
+    [{{ x }}]
+{%- endmacro %}
+
+{% macro value() -%}
+    V
+{%- endmacro %}
+
+{% set outer = 'wrap' %}
+{% set inner = 'value' %}
+{{ m.(outer)(m.(inner)()) }}
+--DATA--
+return []
+--EXPECT--
+[V]

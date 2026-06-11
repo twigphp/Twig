@@ -20,6 +20,7 @@ namespace Twig\Tests\Node;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Node\TextNode;
 use Twig\Test\NodeTestCase;
 
@@ -38,5 +39,25 @@ class TextTest extends NodeTestCase
         $tests[] = [new TextNode('foo', 1), "// line 1\nyield \"foo\";"];
 
         return $tests;
+    }
+
+    /**
+     * @dataProvider getIsBlankData
+     */
+    #[DataProvider('getIsBlankData')]
+    public function testIsBlank($blank)
+    {
+        $this->assertTrue((new TextNode($blank, 1))->isBlank());
+        $this->assertTrue((new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$blank, 1))->isBlank());
+    }
+
+    public static function getIsBlankData()
+    {
+        return [
+            [' '],
+            ["\t"],
+            ["\n"],
+            ["\n\t\n   "],
+        ];
     }
 }

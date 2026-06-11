@@ -1,0 +1,14 @@
+--TEST--
+"extends" tag in a macro after a parent has been defined
+--TEMPLATE--
+{% extends "base.twig" %}
+
+{% macro foo() %}
+    {% extends "foo.twig" %}
+{% endmacro %}
+--TEMPLATE(base.twig)--
+--TEMPLATE(foo.twig)--
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Cannot use "extend" in a macro in "index.twig" at line 5.

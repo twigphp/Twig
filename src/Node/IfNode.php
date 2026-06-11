@@ -33,7 +33,7 @@ class IfNode extends Node
             $test = $tests->getNode((string) $i);
             if (!$test instanceof ReturnPrimitiveTypeInterface) {
                 /** @var AbstractExpression $test */
-                $tests->setNode($i, new TrueTest($test, new TwigTest('true'), null, $test->getTemplateLine()));
+                $tests->setNode($i, new TrueTest($test, new TwigTest('true', null, ['always_allowed_in_sandbox' => true]), null, $test->getTemplateLine()));
             }
         }
         $nodes = ['tests' => $tests];

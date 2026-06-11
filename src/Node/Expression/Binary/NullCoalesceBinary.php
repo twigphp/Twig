@@ -32,12 +32,12 @@ final class NullCoalesceBinary extends AbstractBinary implements OperatorEscapeI
     {
         parent::__construct($left, $right, $lineno);
 
-        $test = new DefinedTest(clone $left, new TwigTest('defined'), new EmptyNode(), $left->getTemplateLine());
+        $test = new DefinedTest(clone $left, new TwigTest('defined', null, ['always_allowed_in_sandbox' => true]), new EmptyNode(), $left->getTemplateLine());
         // for "block()", we don't need the null test as the return value is always a string
         if (!$left instanceof BlockReferenceExpression) {
             $test = new AndBinary(
                 $test,
-                new NotUnary(new NullTest($left, new TwigTest('null'), new EmptyNode(), $left->getTemplateLine()), $left->getTemplateLine()),
+                new NotUnary(new NullTest($left, new TwigTest('null', null, ['always_allowed_in_sandbox' => true]), new EmptyNode(), $left->getTemplateLine()), $left->getTemplateLine()),
                 $left->getTemplateLine(),
             );
         }

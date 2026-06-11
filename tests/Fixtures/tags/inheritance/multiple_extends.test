@@ -1,0 +1,11 @@
+--TEST--
+Multiple "extends" tags are forbidden
+--TEMPLATE--
+{% extends "base.twig" %}
+{% extends "other.twig" %}
+--TEMPLATE(base.twig)--
+--TEMPLATE(other.twig)--
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Multiple extends tags are forbidden in "index.twig" at line 3.
