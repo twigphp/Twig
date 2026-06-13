@@ -8,9 +8,25 @@ Twig outputs 0 nodes correctly
 {% if spaces|trim %}KO{% else %}ok{% endif %}
 
 {% set bar %}    {% endset %}{{ bar|trim ? 'KO' : 'ok' }}
+{% if bar|trim and bar|trim %}KO{% else %}ok{% endif %}{{- "\n" -}}
+{% if bar|trim or empty|trim %}KO{% else %}ok{% endif %}{{- "\n" -}}
+{% if bar|trim xor empty|trim %}KO{% else %}ok{% endif %}{{- "\n" -}}
+{% if not bar|trim %}ok{% else %}KO{% endif %}{{- "\n" -}}
+{{ bar|trim ?: 'ok' }}
+{{ (bar|trim and bar|trim) ? 'KO' : 'ok' }}
+{{ (bar|trim and bar|trim) ?: 'ok' }}
+{{ (bar|trim and bar|trim) ?: (bar|trim ?: 'ok') }}
 --DATA--
 return ['spaces' => new Twig\Markup('    ', 'UTF-8'), 'empty' => new Twig\Markup('', 'UTF-8')]
 --EXPECT--
+ok
+ok
+ok
+ok
+ok
+ok
+ok
+ok
 ok
 ok
 ok

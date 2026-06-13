@@ -14,6 +14,7 @@ namespace Twig\Node\Expression\Binary;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
+use Twig\Node\Expression\Test\TrueTest;
 use Twig\Node\Node;
 
 final class ElvisBinary extends AbstractBinary implements OperatorEscapeInterface
@@ -26,7 +27,7 @@ final class ElvisBinary extends AbstractBinary implements OperatorEscapeInterfac
     {
         parent::__construct($left, $right, $lineno);
 
-        $this->setNode('test', clone $left);
+        $this->setNode('test', TrueTest::wrap(clone $left));
         $left->setAttribute('always_defined', true);
     }
 
