@@ -435,7 +435,7 @@ class Lexer
                 while ($i + 1 < $length && ctype_digit($str[$i + 1]) && $str[$i + 1] < '8' && \strlen($octal) < 3) {
                     $octal .= $str[++$i];
                 }
-                $result .= \chr(octdec($octal));
+                $result .= \chr(octdec($octal) % 256);
             } else {
                 trigger_deprecation('twig/twig', '3.12', 'Character "%s" should not be escaped; the "\" character is ignored in Twig 3 but will not be in Twig 4. Please remove the extra "\" character at position %d in "%s" at line %d.', $nextChar, $i + 1, $this->source->getName(), $this->lineno);
                 $result .= $nextChar;
