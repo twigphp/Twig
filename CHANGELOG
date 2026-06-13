@@ -1,5 +1,6 @@
 # 3.28.0 (2026-XX-XX)
 
+ * Fix empty Markup values being treated as truthy in and, or, xor, not, ternary, and elvis expressions
  * Fix a PHP 8.5 `chr()` deprecation when decoding an octal string escape sequence larger than `\377` (such as `"\777"`)
  * Mark `Twig\Markup` as `@final`; it will be final in Twig 4.0
  * Reduce memory usage and speed up the context restoration compiled at the end of `for` loops
