@@ -108,3 +108,7 @@ inclusion. The first template that exists will be included:
 
 If ``ignore missing`` is given, it will fall back to rendering nothing if none
 of the templates exist, otherwise it will throw an exception.
+
+.. seealso::
+
+    :doc:`embed<../tags/embed>` allows you to include another template's contents like ``include``, but also allows you to override blocks defined inside the included template.
