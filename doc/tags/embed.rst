@@ -178,13 +178,13 @@ The ``embed`` tag takes the exact same arguments as the ``include`` tag:
 
         {% set name = 'Fabien' %}
 
-        {# "name" is undefined inside the block #}
         {% embed "base" only %}
+            {# "name" is undefined inside the block #}
             {% block content %}{{ name }}{% endblock %}
         {% endembed %}
 
-        {# "name" is passed explicitly and is available #}
         {% embed "base" with {'name': name} only %}
+            {# "name" is passed explicitly and is available #}
             {% block content %}{{ name }}{% endblock %}
         {% endembed %}
 

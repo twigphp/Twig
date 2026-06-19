@@ -111,4 +111,6 @@ of the templates exist, otherwise it will throw an exception.
 
 .. seealso::
 
-    :doc:`embed<../tags/embed>` allows you to include another template's contents like ``include``, but also allows you to override blocks defined inside the included template.
+    :doc:`embed<../tags/embed>` allows you to include another template's
+    contents like ``include``, but also allows you to override blocks defined
+    inside the included template.
