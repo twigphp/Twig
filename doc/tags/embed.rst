@@ -73,7 +73,7 @@ two boxes side by side:
     ┌─── page layout ─────────────────────┐
     │                                     │
     │           ┌── block "content" ──┐   │
-    │           │                     │   │    
+    │           │                     │   │
     │           │ ┌ block ┐ ┌ block ┐ │   │
     │           │ │"left" │ │"right"│ │   │
     │           │ │       │ │       │ │   │
@@ -163,6 +163,30 @@ The ``embed`` tag takes the exact same arguments as the ``include`` tag:
     {% embed "base" ignore missing %}
         ...
     {% endembed %}
+
+.. note::
+
+    Blocks you override inside an ``embed`` are evaluated in the embedded
+    template's context, not the context of the template containing the
+    ``embed`` tag. As with ``include``, embedded templates have access to the
+    variables of the active context. You can disable access to the context by
+    appending the ``only`` keyword. This prevents override blocks
+    from accessing the surrounding context, so any variable they need must also
+    be passed explicitly through ``with``:
+
+    .. code-block:: twig
+
+        {% set name = 'Fabien' %}
+
+        {# "name" is undefined inside the block #}
+        {% embed "base" only %}
+            {% block content %}{{ name }}{% endblock %}
+        {% endembed %}
+
+        {# "name" is passed explicitly and is available #}
+        {% embed "base" with {'name': name} only %}
+            {% block content %}{{ name }}{% endblock %}
+        {% endembed %}
 
 .. warning::
 
