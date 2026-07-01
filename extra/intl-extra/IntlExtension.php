@@ -56,6 +56,40 @@ final class IntlExtension extends AbstractExtension
         return $formats;
     }
 
+    private static function availableListTypes(): array
+    {
+        static $types = null;
+
+        if (null !== $types) {
+            return $types;
+        }
+
+        $types = [
+            'and' => \IntlListFormatter::TYPE_AND,
+            'or' => \IntlListFormatter::TYPE_OR,
+            'units' => \IntlListFormatter::TYPE_UNITS,
+        ];
+
+        return $types;
+    }
+
+    private static function availableListWidths(): array
+    {
+        static $widths = null;
+
+        if (null !== $widths) {
+            return $widths;
+        }
+
+        $widths = [
+            'wide' => \IntlListFormatter::WIDTH_WIDE,
+            'short' => \IntlListFormatter::WIDTH_SHORT,
+            'narrow' => \IntlListFormatter::WIDTH_NARROW,
+        ];
+
+        return $widths;
+    }
+
     private const TIME_FORMATS = [
         'none' => \IntlDateFormatter::NONE,
         'short' => \IntlDateFormatter::SHORT,
@@ -149,6 +183,7 @@ final class IntlExtension extends AbstractExtension
 
     private $dateFormatters = [];
     private $numberFormatters = [];
+    private $listFormatters = [];
     private $dateFormatterPrototype;
     private $numberFormatterPrototype;
 
@@ -176,6 +211,7 @@ final class IntlExtension extends AbstractExtension
             new TwigFilter('format_datetime', [$this, 'formatDateTime'], ['needs_environment' => true]),
             new TwigFilter('format_date', [$this, 'formatDate'], ['needs_environment' => true]),
             new TwigFilter('format_time', [$this, 'formatTime'], ['needs_environment' => true]),
+            new TwigFilter('format_list', [$this, 'formatList']),
         ];
     }
 
@@ -406,6 +442,18 @@ final class IntlExtension extends AbstractExtension
         return $this->formatDateTime($env, $date, 'none', $timeFormat, $pattern, $timezone, $calendar, $locale);
     }
 
+    /**
+     * @param array<string|\Stringable> $strings A list of items to be joined into a formatted list
+     */
+    public function formatList(array $strings, string $type = 'and', string $width = 'wide', ?string $locale = null): string
+    {
+        if (!class_exists('IntlListFormatter')) {
+            throw new RuntimeError('The "format_list" filter requires the "IntlListFormatter" class, which is available since PHP 8.5.');
+        }
+
+        return $this->createListFormatter($locale, $type, $width)->format($strings);
+    }
+
     private function createDateFormatter(?string $locale, ?string $dateFormat, ?string $timeFormat, string $pattern, ?\DateTimeZone $timezone, string $calendar): \IntlDateFormatter
     {
         $dateFormats = self::availableDateFormats();
@@ -529,5 +577,38 @@ final class IntlExtension extends AbstractExtension
         }
 
         return $this->numberFormatters[$hash];
+    }
+
+    private function createListFormatter(?string $locale, string $type, string $width): \IntlListFormatter
+    {
+        $listTypes = self::availableListTypes();
+
+        if (!isset($listTypes[$type])) {
+            throw new RuntimeError(\sprintf('The list type "%s" does not exist, known types are: "%s".', $type, implode('", "', array_keys($listTypes))));
+        }
+
+        $listWidths = self::availableListWidths();
+
+        if (!isset($listWidths[$width])) {
+            throw new RuntimeError(\sprintf('The list width "%s" does not exist, known widths are: "%s".', $width, implode('", "', array_keys($listWidths))));
+        }
+
+        if (null === $locale) {
+            $locale = \Locale::getDefault();
+        }
+
+        $listTypeValue = $listTypes[$type];
+        $listWidthValue = $listWidths[$width];
+
+        $hash = $locale.'|'.$listTypeValue.'|'.$listWidthValue;
+
+        if (!isset($this->listFormatters[$hash])) {
+            if (\count($this->listFormatters) >= self::MAX_CACHED_FORMATTERS) {
+                array_shift($this->listFormatters);
+            }
+            $this->listFormatters[$hash] = new \IntlListFormatter($locale, $listTypeValue, $listWidthValue);
+        }
+
+        return $this->listFormatters[$hash];
     }
 }

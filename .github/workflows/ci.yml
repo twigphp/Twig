@@ -23,6 +23,7 @@ jobs:
                     - '8.2'
                     - '8.3'
                     - '8.4'
+                    - '8.5'
 
         steps:
             - name: "Checkout code"
@@ -68,6 +69,7 @@ jobs:
                     - '8.2'
                     - '8.3'
                     - '8.4'
+                    - '8.5'
 
         steps:
             - name: "Checkout code"
@@ -119,6 +121,7 @@ jobs:
                     - '8.2'
                     - '8.3'
                     - '8.4'
+                    - '8.5'
                 extension:
                     - 'cache-extra'
                     - 'cssinliner-extra'
@@ -183,7 +186,7 @@ jobs:
         strategy:
             matrix:
                 php-version:
-                    - '8.4'
+                    - '8.5'
 
         steps:
             - name: "Checkout code"

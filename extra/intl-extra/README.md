@@ -14,7 +14,8 @@ This package is a Twig extension that provides the following:
  * [`format_number`][9] filter: formats a number;
  * [`format_datetime`][10] filter: formats a date time;
  * [`format_date`][11] filter: formats a date;
- * [`format_time`][12] filter: formats a time.
+ * [`format_time`][12] filter: formats a time;
+ * [`format_list`][13] filter: formats a list of strings as a single, locale-aware string.
 
 [1]: https://twig.symfony.com/country_name
 [2]: https://twig.symfony.com/currency_name
@@ -28,3 +29,4 @@ This package is a Twig extension that provides the following:
 [10]: https://twig.symfony.com/format_datetime
 [11]: https://twig.symfony.com/format_date
 [12]: https://twig.symfony.com/format_time
+[13]: https://twig.symfony.com/format_list

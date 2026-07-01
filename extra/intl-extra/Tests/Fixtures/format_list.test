@@ -1,0 +1,10 @@
+--TEST--
+"format_list" filter
+--CONDITION--
+PHP_VERSION_ID < 80500
+--TEMPLATE--
+{{ ['Alice', 'Bob', 'Carol']|format_list() }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: The "format_list" filter requires the "IntlListFormatter" class, which is available since PHP 8.5 in "index.twig" at line 2.

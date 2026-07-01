@@ -24,6 +24,7 @@ Filters
     format_currency
     format_date
     format_datetime
+    format_list
     format_number
     format_time
     html_attr_merge
