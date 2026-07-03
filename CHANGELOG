@@ -1,4 +1,4 @@
-# 3.28.0 (2026-XX-XX)
+# 3.28.0 (2026-07-03)
 
  * Render backed enums using their backing value in the `html_attr` function
  * Fix empty Markup values being treated as truthy in and, or, xor, not, ternary, and elvis expressions
