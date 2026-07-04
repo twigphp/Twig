@@ -87,6 +87,14 @@ final class SecurityPolicy implements SecurityPolicyInterface
         $this->strict = $strict;
     }
 
+    /**
+     * @internal
+     */
+    public function isStrict(): bool
+    {
+        return $this->strict;
+    }
+
     public function checkSecurity($tags, $filters, $functions, array $tests = []): void
     {
         if (\func_num_args() < 4) {

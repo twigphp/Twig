@@ -21,6 +21,7 @@ Functions
     parent
     random
     range
+    render_sandboxed
     source
     country_timezones
     country_names

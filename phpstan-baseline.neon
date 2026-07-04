@@ -7,6 +7,12 @@ parameters:
 			path: src/Sandbox/SecurityPolicyInterface.php
 
 
+		- # The "$tests" argument will be part of the signature in 4.0; 3-parameter implementations are detected and called with 3 arguments
+			message: '#^Method Twig\\Sandbox\\SecurityPolicyInterface\:\:checkSecurity\(\) invoked with 4 parameters, 3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Sandbox/SecurityChecker.php
+
 		- # 2 parameters will be required
 			message: '#^Method Twig\\Node\\IncludeNode\:\:addGetTemplate\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count

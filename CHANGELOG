@@ -1,5 +1,11 @@
 # 3.29.0 (2026-XX-XX)
 
+ * Add the `Twig\Sandbox\SandboxInterface` interface and `Twig\Sandbox\Sandbox` class to render untrusted templates through a dedicated, always-sandboxed environment crafted for it
+ * Add the `Twig\Extension\SandboxBridgeExtension` to render sandboxed templates from trusted templates with an explicit output escaping strategy
+ * Extract the sandbox runtime enforcement into a new internal `Twig\Sandbox\SecurityChecker` class used by compiled templates and `CoreExtension`
+ * Mark `SandboxExtension` as internal, use `Twig\Sandbox\Sandbox` instead
+ * Deprecate the `sandboxed` argument of the `include` function, use `Twig\Sandbox\Sandbox` instead
+ * Deprecate `SandboxExtension::enableSandbox()`, `disableSandbox()`, and `isSandboxedGlobally()`
  * Normalize destructuring variable AST nodes as assignment targets
  * Fix `IntlExtension` ignoring explicit date/time formats and the `format_date`/`format_time` filters when a date formatter prototype is configured
  * Add a `format_list` filter to `IntlExtension` to format a list of strings using PHP 8.5's `IntlListFormatter`
