@@ -1,0 +1,8 @@
+--TEST--
+macro with a duplicated argument name matching a reserved variable name
+--TEMPLATE--
+{% macro test(context, context) %}{% endmacro %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Argument "context" is defined twice for macro "test" in "index.twig" at line 2.

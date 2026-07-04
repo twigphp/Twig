@@ -15,6 +15,7 @@ use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\TempNameExpression;
 use Twig\Node\Expression\Variable\LocalVariable;
 
 /**
@@ -47,10 +48,16 @@ class MacroNode extends Node
             $arguments = $args;
         }
 
+        $seen = [];
         foreach ($arguments->getKeyValuePairs() as $pair) {
-            if ("\u{035C}".self::VARARGS_NAME === $pair['key']->getAttribute('name')) {
+            $argName = $pair['key']->getAttribute('name');
+            if (TempNameExpression::RESERVED_NAME_PREFIX.self::VARARGS_NAME === $argName) {
                 throw new SyntaxError(\sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments.', self::VARARGS_NAME, $name, self::VARARGS_NAME), $pair['value']->getTemplateLine(), $pair['value']->getSourceContext());
             }
+            if (isset($seen[$argName])) {
+                throw new SyntaxError(\sprintf('Argument "%s" is defined twice for macro "%s".', $this->stripReservedPrefix($argName), $name), $pair['value']->getTemplateLine(), $pair['value']->getSourceContext());
+            }
+            $seen[$argName] = true;
         }
 
         parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name], $lineno);
@@ -88,10 +95,7 @@ class MacroNode extends Node
 
         foreach ($arguments->getKeyValuePairs() as $pair) {
             $name = $pair['key'];
-            $var = $name->getAttribute('name');
-            if (str_starts_with($var, "\u{035C}")) {
-                $var = substr($var, \strlen("\u{035C}"));
-            }
+            $var = $this->stripReservedPrefix($name->getAttribute('name'));
             $compiler
                 ->write('')
                 ->string($var)
@@ -117,5 +121,10 @@ class MacroNode extends Node
             ->outdent()
             ->write("}\n\n")
         ;
+    }
+
+    private function stripReservedPrefix(string $name): string
+    {
+        return str_starts_with($name, TempNameExpression::RESERVED_NAME_PREFIX) ? substr($name, \strlen(TempNameExpression::RESERVED_NAME_PREFIX)) : $name;
     }
 }
