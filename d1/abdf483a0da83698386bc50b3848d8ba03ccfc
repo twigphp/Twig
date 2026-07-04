@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-04T09:19:10Z
+
+**📋 PR Summary**
+
+This PR changes Twig's macro compilation so that defining a macro argument twice raises a proper SyntaxError instead of a PHP fatal error. It updates MacroNode to detect duplicate argument names, adjusts TempNameExpression, and adds test fixtures covering duplicate and duplicate-reserved argument cases.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **Macro argument validation** | |
+| `src/Node/MacroNode.php` | Adds detection of duplicate macro argument names and throws a SyntaxError instead of allowing a PHP fatal error. |
+| `src/Node/Expression/TempNameExpression.php` | Minor adjustment supporting the macro argument handling change. |
+| **Tests** | |
+| `tests/Fixtures/macros/duplicate_argument.test` | New fixture verifying a SyntaxError is thrown when a macro argument is defined twice. |
+| `tests/Fixtures/macros/duplicate_reserved_argument.test` | New fixture verifying a SyntaxError is thrown for duplicate reserved argument names. |
+| **Changelog** | |
+| `CHANGELOG` | Documents the new SyntaxError behavior for duplicate macro arguments. |
+
+</details>
