@@ -1,6 +1,6 @@
 # 3.28.1 (2026-XX-XX)
 
- * n/a
+ * Fix duplicated macro argument names triggering a PHP fatal error instead of a `SyntaxError`
 
 # 3.28.0 (2026-07-03)
 
