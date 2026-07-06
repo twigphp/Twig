@@ -284,6 +284,29 @@ class TemplateTest extends TestCase
         yield 'strict' => [true];
     }
 
+    /**
+     * @dataProvider getStrictVariablesModes
+     */
+    #[DataProvider('getStrictVariablesModes')]
+    public function testArrayAccessWithObjectKeyKeepsTheObjectKey(bool $strict)
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[object] }}']), [
+            'strict_variables' => $strict,
+            'autoescape' => false,
+        ]);
+
+        $object = new class implements \Stringable {
+            public function __toString(): string
+            {
+                return 'string';
+            }
+        };
+        $data = new \SplObjectStorage();
+        $data[$object] = 'value';
+
+        $this->assertSame('value', $twig->render('index', ['data' => $data, 'object' => $object]));
+    }
+
     public function testArrayAccessWithStringableKeyIsCheckedBySandbox()
     {
         $object = new class implements \Stringable {
