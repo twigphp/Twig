@@ -303,7 +303,7 @@ Templates
 
 * Using a ``macro``, ``extends``, or ``use`` tag outside the root of a template
   (for instance nested under an ``if`` or inside a ``block`` or ``macro``) is
-  deprecated as of Twig 3.27 and will throw in Twig 4.0. These tags have a
+  deprecated as of Twig 3.28 and will throw in Twig 4.0. These tags have a
   global effect on the template and must be declared at the root of its body.
 
 Filters
