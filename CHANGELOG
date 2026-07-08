@@ -1,3 +1,7 @@
+# 3.29.0 (2026-XX-XX)
+
+ * Add a `format_list` filter to `IntlExtension` to format a list of strings using PHP 8.5's `IntlListFormatter`
+
 # 3.28.1 (2026-XX-XX)
 
  * Fix array access with a `Stringable` key coercing the key to string for `ArrayAccess` objects that use object keys (such as `SplObjectStorage`)

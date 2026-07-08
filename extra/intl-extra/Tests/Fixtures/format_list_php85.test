@@ -1,0 +1,34 @@
+--TEST--
+"format_list" filter
+--CONDITION--
+PHP_VERSION_ID >= 80500
+--TEMPLATE--
+{{ ['Alice', 'Bob', 'Carol']|format_list() }}
+{{ ['Alice', 'Bob', 'Carol']|format_list(width='short')|raw }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('or') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list(locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('and', 'short', locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('and', 'narrow', locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('or', 'wide', locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('or', 'short', locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('or', 'narrow', locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('units', 'wide', locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('units', 'short', locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('units', 'narrow', locale='fr') }}
+{{ ['Alice', 'Bob', 'Carol']|format_list('units', 'narrow', locale='de') }}
+--DATA--
+return [];
+--EXPECT--
+Alice, Bob, and Carol
+Alice, Bob, & Carol
+Alice, Bob, or Carol
+Alice, Bob et Carol
+Alice, Bob et Carol
+Alice, Bob, Carol
+Alice, Bob ou Carol
+Alice, Bob ou Carol
+Alice, Bob ou Carol
+Alice, Bob et Carol
+Alice, Bob et Carol
+Alice Bob Carol
+Alice, Bob und Carol
