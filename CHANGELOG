@@ -1,5 +1,6 @@
 # 3.28.1 (2026-XX-XX)
 
+ * Fix array access with a `Stringable` key coercing the key to string for `ArrayAccess` objects that use object keys (such as `SplObjectStorage`)
  * Fix duplicated macro argument names triggering a PHP fatal error instead of a `SyntaxError`
 
 # 3.28.0 (2026-07-03)
