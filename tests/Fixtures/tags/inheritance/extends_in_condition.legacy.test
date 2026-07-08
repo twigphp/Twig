@@ -1,7 +1,7 @@
 --TEST--
 "extends" tag in a condition
 --DEPRECATION--
-Since twig/twig 3.27: Using the "extends" tag outside the root of a template is deprecated in index.twig at line 3.
+Since twig/twig 3.28: Using the "extends" tag outside the root of a template is deprecated in index.twig at line 3.
 --TEMPLATE--
 {% if false %}
     {% extends "base.twig" %}

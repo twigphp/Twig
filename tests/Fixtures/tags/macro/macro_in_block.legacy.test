@@ -1,7 +1,7 @@
 --TEST--
 "macro" tag in a block
 --DEPRECATION--
-Since twig/twig 3.27: Using the "macro" tag outside the root of a template is deprecated in index.twig at line 3.
+Since twig/twig 3.28: Using the "macro" tag outside the root of a template is deprecated in index.twig at line 3.
 --TEMPLATE--
 {% block foo %}
     {% macro input(name, value, type, size) %}
