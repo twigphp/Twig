@@ -246,6 +246,42 @@ class HtmlAttrTest extends TestCase
                 ['value' => new StringableStub('stringable-object')],
             ],
         ];
+
+        // Backed enums are rendered using their backing value
+        yield 'string-backed enum renders its value' => [
+            'class="card"',
+            [
+                ['class' => StringBackedStub::CARD],
+            ],
+        ];
+
+        yield 'int-backed enum renders its value' => [
+            'tabindex="10"',
+            [
+                ['tabindex' => IntBackedStub::HIGH],
+            ],
+        ];
+
+        yield 'string-backed enum in data-* attribute renders its value without JSON encoding' => [
+            'data-view="card"',
+            [
+                ['data-view' => StringBackedStub::CARD],
+            ],
+        ];
+
+        yield 'int-backed enum in data-* attribute renders its value' => [
+            'data-level="10"',
+            [
+                ['data-level' => IntBackedStub::HIGH],
+            ],
+        ];
+
+        yield 'backed enum in aria-* attribute renders its value' => [
+            'aria-label="card"',
+            [
+                ['aria-label' => StringBackedStub::CARD],
+            ],
+        ];
     }
 
     public function testIterableObjectCastedToArray()
@@ -315,4 +351,16 @@ class AttributeValueStub implements AttributeValueInterface
     {
         return $this->value;
     }
+}
+
+enum StringBackedStub: string
+{
+    case CARD = 'card';
+    case TABLE = 'table';
+}
+
+enum IntBackedStub: int
+{
+    case LOW = 1;
+    case HIGH = 10;
 }

@@ -202,6 +202,18 @@ class LexerTest extends TestCase
             EOF,
             "\065\x64",
         ];
+        yield 'octal escape overflowing a single byte is constrained with % 256' => [
+            <<<'EOF'
+            {{ '\777' }}
+            EOF,
+            "\xff",
+        ];
+        yield 'octal escape exactly equal to 256 wraps around to a NUL byte' => [
+            <<<'EOF'
+            {{ '\400' }}
+            EOF,
+            "\x00",
+        ];
         yield [
             <<<'EOF'
             {{ 'App\\Test' }}

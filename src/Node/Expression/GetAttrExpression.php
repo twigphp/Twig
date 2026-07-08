@@ -66,7 +66,7 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
                     ->raw($var)
                     ->raw('[')
                 ;
-                $this->compileArrayKey($compiler);
+                $this->compileArrayKey($compiler, $var);
                 $compiler->raw('] ?? null) : null)');
 
                 return;
@@ -83,7 +83,7 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
                 ->raw($var)
                 ->raw('[')
             ;
-            $this->compileArrayKey($compiler);
+            $this->compileArrayKey($compiler, $var);
             $compiler->raw('] ?? null) : ');
         }
 
@@ -179,9 +179,11 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
 
     /**
      * Coerces a Stringable array key to string so the optimized path matches
-     * CoreExtension::getAttribute(); scalars are left to PHP's native offset coercion.
+     * CoreExtension::getAttribute(): only arrays coerce the key, while ArrayAccess
+     * objects (e.g. SplObjectStorage) receive it untouched. Scalars are left to
+     * PHP's native offset coercion.
      */
-    private function compileArrayKey(Compiler $compiler): void
+    private function compileArrayKey(Compiler $compiler, string $var): void
     {
         $attribute = $this->getNode('attribute');
 
@@ -195,7 +197,7 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
         $compiler
             ->raw('(('.$key.' = ')
             ->subcompile($attribute)
-            ->raw(') instanceof \Stringable ? (string) '.$key.' : '.$key.')')
+            ->raw(') instanceof \Stringable && is_array('.$var.') ? (string) '.$key.' : '.$key.')')
         ;
     }
 

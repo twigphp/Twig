@@ -1,0 +1,8 @@
+--TEST--
+macro with a duplicated argument name
+--TEMPLATE--
+{% macro test(a, b, a) %}{% endmacro %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Argument "a" is defined twice for macro "test" in "index.twig" at line 2.

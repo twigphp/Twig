@@ -200,6 +200,10 @@ final class HtmlExtension extends AbstractExtension
         $runtime = $env->getRuntime(EscaperRuntime::class);
 
         foreach ($attr as $name => $value) {
+            if ($value instanceof \BackedEnum) {
+                $value = $value->value;
+            }
+
             if (str_starts_with($name, 'aria-')) {
                 // For aria-*, convert booleans to "true" and "false" strings
                 if (true === $value) {

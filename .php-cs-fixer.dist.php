@@ -35,7 +35,7 @@ return (new Config())
                         return false;
                     }
 
-                    return !str_contains($file->getRelativePathname(), '/tests/');
+                    return !preg_match('#(^|/)tests/#', $file->getRelativePathname());
                 },
             ];
         }
