@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-07T06:02:00Z
+
+**📋 PR Summary**
+
+This PR fixes array access in Twig's GetAttrExpression so that a Stringable object used as a key is handled correctly when accessing ArrayAccess objects. It updates the attribute-resolution logic and adds test coverage for the object-key scenario.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **Array access — Stringable key handling** | |
+| `src/Node/Expression/GetAttrExpression.php` | Adjusts attribute-resolution logic so a Stringable object key is correctly resolved when indexing into ArrayAccess objects. |
+| `tests/TemplateTest.php` | Adds tests covering array access with a Stringable/object key on ArrayAccess objects. |
+| **Docs** | |
+| `CHANGELOG` | Adds a changelog entry describing the fix. |
+
+</details>
