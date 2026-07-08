@@ -15,7 +15,6 @@ use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\Variable\LocalVariable;
 
 /**
  * Represents a macro node.
@@ -31,20 +30,6 @@ class MacroNode extends Node
 
     public function __construct(string $name, BodyNode $body, ArrayExpression $arguments, int $lineno)
     {
-        if (!$body instanceof BodyNode) {
-            trigger_deprecation('twig/twig', '3.12', \sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated ("%s" given).', BodyNode::class, static::class, $body::class));
-        }
-
-        if (!$arguments instanceof ArrayExpression) {
-            trigger_deprecation('twig/twig', '3.15', \sprintf('Not passing a "%s" instance as the "arguments" argument of the "%s" constructor is deprecated ("%s" given).', ArrayExpression::class, static::class, $arguments::class));
-
-            $args = new ArrayExpression([], $arguments->getTemplateLine());
-            foreach ($arguments as $n => $default) {
-                $args->addElement($default, new LocalVariable($n, $default->getTemplateLine()));
-            }
-            $arguments = $args;
-        }
-
         $seen = [];
         foreach ($arguments->getKeyValuePairs() as $pair) {
             $argName = $pair['key']->getAttribute('name');
