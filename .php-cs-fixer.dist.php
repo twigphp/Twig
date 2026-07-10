@@ -34,12 +34,13 @@ return (new Config())
                         return false;
                     }
 
-                    return !preg_match('#(^|/)tests/#', $file->getRelativePathname());
+                    return !preg_match('#(^|/)tests/#i', $file->getRelativePathname());
                 },
             ];
         }
     })
     ->setRiskyAllowed(true)
-    ->setParallelConfig(ParallelConfigFactory::detect())
+    // the void_return customiser above is dropped by parallel workers, so run sequentially
+    ->setParallelConfig(ParallelConfigFactory::sequential())
     ->setFinder((new Finder())->in(__DIR__))
 ;
