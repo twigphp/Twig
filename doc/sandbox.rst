@@ -57,6 +57,22 @@ Everything else won't be allowed and will generate a
     Note that native array-like classes (like ``ArrayObject``) are always
     allowed, you don't need to configure them.
 
+.. note::
+
+    When an attribute resolves through a PHP magic ``__call()`` method (the
+    class has no real method or property with that name), the sandbox checks
+    the **virtual method name written in the template**, not ``__call``. For
+    example, ``{{ article.slug }}`` on an object that handles ``slug`` via
+    ``__call()`` requires ``slug`` in the method allow-list::
+
+        $methods = [
+            'Article' => ['slug'],
+        ];
+
+    Allow-listing ``__call`` itself has no effect: it would only match a
+    template that literally writes ``{{ article.__call }}``. Allow each virtual
+    method by its own name so the policy stays granular.
+
 .. caution::
 
     The ``extends`` and ``use`` tags, the ``parent``, ``block``, and

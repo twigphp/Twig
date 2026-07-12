@@ -771,6 +771,54 @@ class SandboxTest extends TestCase
         }
     }
 
+    public function testSandboxAllowedMagicCallMethod(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ o.hello }}'], [], [], [MagicCallObject::class => 'hello']);
+        $this->assertSame('call:hello', $twig->load('index')->render(['o' => new MagicCallObject()]), 'Sandbox allows a virtual method routed through __call() when its name is allowed');
+    }
+
+    public function testSandboxUnallowedMagicCallMethod(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ o.hello }}']);
+        try {
+            $twig->load('index')->render(['o' => new MagicCallObject()]);
+            $this->fail('Sandbox throws a SecurityError exception if a virtual method routed through __call() is not allowed');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertEquals(MagicCallObject::class, $e->getClassName());
+            $this->assertEquals('hello', $e->getPropertyName());
+        }
+    }
+
+    public function testSandboxUnallowedMagicCallMethodWithMethodSyntax(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ o.hello() }}']);
+        try {
+            $twig->load('index')->render(['o' => new MagicCallObject()]);
+            $this->fail('Sandbox throws a SecurityError exception if a virtual method routed through __call() is not allowed');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals(MagicCallObject::class, $e->getClassName());
+            $this->assertEquals('hello', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxAllowingCallLiteralDoesNotAllowMagicCallMethod(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ o.hello }}'], [], [], [MagicCallObject::class => '__call']);
+        try {
+            $twig->load('index')->render(['o' => new MagicCallObject()]);
+            $this->fail('Sandbox does not allow every virtual method just because "__call" is allowed');
+        } catch (SecurityNotAllowedPropertyError $e) {
+            $this->assertEquals(MagicCallObject::class, $e->getClassName());
+            $this->assertEquals('hello', $e->getPropertyName());
+        }
+    }
+
+    public function testSandboxFallsBackToMagicCallMethodForUnallowedProperty(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ o.secret }}'], [], [], [MagicCallObject::class => 'secret']);
+        $this->assertSame('call:secret', $twig->load('index')->render(['o' => new MagicCallObject()]), 'Sandbox falls back to __call() when a real property is not allowed but the method is');
+    }
+
     /**
      * @dataProvider getSandboxUnallowedToStringTests
      */
@@ -2557,6 +2605,16 @@ class MagicObject
     public function __isset($name): bool
     {
         throw new \BadMethodCallException(\sprintf('__isset(%s) should not be called inside the sandbox.', $name));
+    }
+}
+
+class MagicCallObject
+{
+    public $secret = 'secret';
+
+    public function __call($name, $arguments)
+    {
+        return 'call:'.$name;
     }
 }
 
