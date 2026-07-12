@@ -237,7 +237,7 @@ function twig_tests_filter_all(string $charset, Environment $env, array $context
 
 class ChildMagicCallStub extends ParentMagicCallStub
 {
-    public static function identifier()
+    public static function identifier(): string
     {
         return 'child';
     }
@@ -245,7 +245,7 @@ class ChildMagicCallStub extends ParentMagicCallStub
 
 class ParentMagicCallStub
 {
-    public static function identifier(): void
+    public static function identifier(): string
     {
         throw new \Exception('Identifier has not been defined.');
     }
