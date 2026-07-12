@@ -550,7 +550,7 @@ class ExpressionParserTest extends TestCase
         $this->assertStringContainsString('$this->env->getFilter(\'*_foo_*_bar\')->getCallable()("foo", "bar", "a")', $env->compile($env->parse($env->tokenize(new Source($env->getLoader()->getSourceContext('index')->getCode(), 'index')))));
     }
 
-    public function testTwoWordTestPrecedence()
+    public function testTwoWordTestPrecedence(): void
     {
         // a "empty element" test must have precedence over "empty"
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);

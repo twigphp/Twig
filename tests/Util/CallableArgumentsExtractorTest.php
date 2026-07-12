@@ -34,7 +34,7 @@ use Twig\Util\CallableArgumentsExtractor;
 
 class CallableArgumentsExtractorTest extends TestCase
 {
-    public function testGetArguments()
+    public function testGetArguments(): void
     {
         $this->assertEquals(['U', null], $this->getArguments('date', 'date', ['format' => 'U', 'timestamp' => null]));
     }
@@ -114,7 +114,7 @@ class CallableArgumentsExtractorTest extends TestCase
         yield ['aBC', 'a_b_c'];
     }
 
-    public function testGetArgumentsConversionForVariadics()
+    public function testGetArgumentsConversionForVariadics(): void
     {
         $this->assertEquals([
             new ConstantExpression('a', 0),

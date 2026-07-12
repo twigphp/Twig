@@ -36,8 +36,6 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      *
      * @param string                                            $strategy The strategy name that should be used as a strategy in the escape call
      * @param callable(string $string, string $charset): string $callable A valid PHP callable
-     *
-     * @return void
      */
     public function setEscaper($strategy, callable $callable): void
     {
@@ -56,8 +54,6 @@ final class EscaperRuntime implements RuntimeExtensionInterface
 
     /**
      * @param array<class-string<\Stringable>, string[]> $safeClasses
-     *
-     * @return void
      */
     public function setSafeClasses(array $safeClasses = []): void
     {
@@ -71,8 +67,6 @@ final class EscaperRuntime implements RuntimeExtensionInterface
     /**
      * @param class-string<\Stringable> $class
      * @param string[]                  $strategies
-     *
-     * @return void
      */
     public function addSafeClass(string $class, array $strategies): void
     {

@@ -18,7 +18,7 @@ use Twig\Extra\Html\Cva;
 class CvaTest extends TestCase
 {
     #[DataProvider('recipeProvider')]
-    public function testRecipes(array $recipe, array $recipes, string $expected)
+    public function testRecipes(array $recipe, array $recipes, string $expected): void
     {
         $recipeClass = new Cva($recipe['base'] ?? '', $recipe['variants'] ?? [], $recipe['compounds'] ?? [], $recipe['defaultVariants'] ?? []);
 
@@ -620,7 +620,7 @@ class CvaTest extends TestCase
     }
 
     #[DataProvider('provideAdditionalClassesCases')]
-    public function testAdditionalClasses(string|array $base, array|string $additionals, string $expected)
+    public function testAdditionalClasses(string|array $base, array|string $additionals, string $expected): void
     {
         $cva = new Cva($base);
         if (!$additionals) {

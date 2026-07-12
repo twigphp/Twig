@@ -49,7 +49,7 @@ use Twig\TwigTest;
 
 class EnvironmentTest extends TestCase
 {
-    public function testVersionConstants()
+    public function testVersionConstants(): void
     {
         $version = Environment::VERSION;
         $exploded = explode('-', $version);
@@ -462,7 +462,7 @@ class EnvironmentTest extends TestCase
         $this->assertSame('dynamic', $parser->getTag());
     }
 
-    public function testLegacyEchoingNode()
+    public function testLegacyEchoingNode(): void
     {
         $loader = new ArrayLoader(['echo_bar' => 'A{% set v %}B{% test %}C{% endset %}D{% test %}E{{ v }}F{% set w %}{% test %}{% endset %}G{{ w }}H']);
 

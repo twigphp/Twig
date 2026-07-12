@@ -31,7 +31,7 @@ use Twig\Token;
 
 class LexerTest extends TestCase
 {
-    public function testNameLabelForTag()
+    public function testNameLabelForTag(): void
     {
         $template = '{% § %}';
 
@@ -262,7 +262,7 @@ class LexerTest extends TestCase
         ];
     }
 
-    public function testStringWithInterpolation()
+    public function testStringWithInterpolation(): void
     {
         $template = 'foo {{ "bar #{ baz + 1 }" }}';
 

@@ -72,9 +72,6 @@ final class ExtensionSet
         $this->staging = new StagingExtension();
     }
 
-    /**
-     * @return void
-     */
     public function initRuntime(): void
     {
         $this->runtimeInitialized = true;

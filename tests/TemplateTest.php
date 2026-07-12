@@ -191,7 +191,7 @@ class TemplateTest extends TestCase
         $template->renderBlock('unknown', []);
     }
 
-    public function testRenderBlockWithUndefinedParentBlock()
+    public function testRenderBlockWithUndefinedParentBlock(): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig, 'parent.twig');
@@ -353,7 +353,7 @@ class TemplateTest extends TestCase
     }
 
     #[DataProvider('provideNonStringPrintValues')]
-    public function testPrintingANonStringReportsTheErrorAtThePrintLocation($value, string $expectedMessage)
+    public function testPrintingANonStringReportsTheErrorAtThePrintLocation($value, string $expectedMessage): void
     {
         $twig = new Environment(new ArrayLoader(['index' => "foo\n{{ value }}\nbar"]));
 

@@ -23,7 +23,7 @@ use Twig\Loader\ArrayLoader;
 class HtmlAttrTest extends TestCase
 {
     #[DataProvider('htmlAttrProvider')]
-    public function testPrintingAttributes(string $expected, array $inputs)
+    public function testPrintingAttributes(string $expected, array $inputs): void
     {
         $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), ...$inputs);
 

@@ -18,7 +18,7 @@ use Twig\Runtime\LoopIterator;
 class LoopIteratorTest extends TestCase
 {
     #[DataProvider('provideIterablesForNext')]
-    public function testNextWhenValid(iterable $iterable)
+    public function testNextWhenValid(iterable $iterable): void
     {
         $iterator = new LoopIterator($iterable);
         $iterator->next();
@@ -29,7 +29,7 @@ class LoopIteratorTest extends TestCase
     }
 
     #[DataProvider('provideIterablesForNext')]
-    public function testNextWhenNotValid(iterable $iterable)
+    public function testNextWhenNotValid(iterable $iterable): void
     {
         $iterator = new LoopIterator($iterable);
         $iterator->next();
@@ -48,7 +48,7 @@ class LoopIteratorTest extends TestCase
     }
 
     #[DataProvider('provideIterablesForRewind')]
-    public function testRewind(iterable $iterable)
+    public function testRewind(iterable $iterable): void
     {
         $iterator = new LoopIterator($iterable);
         $iterator->next();

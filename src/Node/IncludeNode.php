@@ -79,9 +79,6 @@ class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenTo
         }
     }
 
-    /**
-     * @return void
-     */
     protected function addGetTemplate(Compiler $compiler/* , string $template = '' */): void
     {
         $compiler
@@ -93,9 +90,6 @@ class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenTo
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function addTemplateArguments(Compiler $compiler): void
     {
         if (!$this->hasNode('variables')) {

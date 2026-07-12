@@ -32,7 +32,7 @@ use Twig\Sandbox\SecurityPolicyInterface;
  */
 class SandboxStateChangeTest extends TestCase
 {
-    public function testEnableSandboxAfterFirstRender()
+    public function testEnableSandboxAfterFirstRender(): void
     {
         [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], new SecurityPolicy(allowedFilters: []), false);
 
@@ -94,7 +94,7 @@ class SandboxStateChangeTest extends TestCase
         $this->assertSame('FOO', $twig->render('t'));
     }
 
-    public function testPreWarmedParentTemplateThroughExtends()
+    public function testPreWarmedParentTemplateThroughExtends(): void
     {
         $templates = [
             'parent.twig' => '{% block c %}default{% endblock %}{{ "hi"|upper }}',
@@ -163,7 +163,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('caller.twig');
     }
 
-    public function testTagBypassThroughPreWarmedParent()
+    public function testTagBypassThroughPreWarmedParent(): void
     {
         $templates = [
             'parent.twig' => '{% block c %}{% for i in 1..2 %}{{ i }}{% endfor %}{% endblock %}',

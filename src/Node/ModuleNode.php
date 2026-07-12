@@ -57,9 +57,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         $this->setSourceContext($source);
     }
 
-    /**
-     * @return void
-     */
     public function setIndex($index): void
     {
         $this->setAttribute('index', $index);

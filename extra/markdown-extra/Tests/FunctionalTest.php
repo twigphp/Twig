@@ -27,7 +27,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 class FunctionalTest extends TestCase
 {
     #[DataProvider('getMarkdownTests')]
-    public function testMarkdown(string $template, string $expected)
+    public function testMarkdown(string $template, string $expected): void
     {
         foreach ([LeagueMarkdown::class, ErusevMarkdown::class, /* MichelfMarkdown::class, */ DefaultMarkdown::class] as $class) {
             $twig = new Environment(new ArrayLoader([

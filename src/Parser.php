@@ -292,9 +292,6 @@ class Parser
         $this->traits[] = $trait;
     }
 
-    /**
-     * @return void
-     */
     public function embedTemplate(ModuleNode $template): void
     {
         $template->setIndex(++$this->lastEmbedIndex);

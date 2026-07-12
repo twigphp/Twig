@@ -25,7 +25,7 @@ use Twig\Extension\EscaperExtension;
 
 class EscaperTest extends TestCase
 {
-    public function testLastModified()
+    public function testLastModified(): void
     {
         $this->assertGreaterThan(1000000000, (new EscaperExtension())->getLastModified());
     }

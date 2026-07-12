@@ -111,7 +111,7 @@ abstract class IntegrationTestCase extends TestCase
      * @return void
      */
     #[DataProvider('getTests')]
-    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
+    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
@@ -122,7 +122,7 @@ abstract class IntegrationTestCase extends TestCase
      * @return void
      */
     #[DataProvider('getLegacyTests'), IgnoreDeprecations]
-    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
+    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
@@ -183,9 +183,6 @@ abstract class IntegrationTestCase extends TestCase
         return self::assembleTests(true);
     }
 
-    /**
-     * @return void
-     */
     protected function doIntegrationTest($file, $message, $condition, $templateSources, $exception, $outputs, $deprecation = ''): void
     {
         if (!$outputs) {

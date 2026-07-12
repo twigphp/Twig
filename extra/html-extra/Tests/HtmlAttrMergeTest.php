@@ -20,7 +20,7 @@ use Twig\Extra\Html\HtmlExtension;
 class HtmlAttrMergeTest extends TestCase
 {
     #[DataProvider('htmlAttrProvider')]
-    public function testMerge(array $expected, array $inputs)
+    public function testMerge(array $expected, array $inputs): void
     {
         $result = HtmlExtension::htmlAttrMerge(...$inputs);
 

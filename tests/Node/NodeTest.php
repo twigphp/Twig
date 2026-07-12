@@ -30,7 +30,7 @@ use Twig\TwigTest;
 
 class NodeTest extends TestCase
 {
-    public function testToString()
+    public function testToString(): void
     {
         // callable is not a supported type for a Node attribute, but Drupal uses some apparently
         $node = new NodeForTest([], ['value' => static function () { return '1'; }], 1);
@@ -80,7 +80,7 @@ EOF, (string) $node);
     }
 
     #[IgnoreDeprecations]
-    public function testAttributeDeprecationWithoutAlternative()
+    public function testAttributeDeprecationWithoutAlternative(): void
     {
         $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0'));
@@ -90,7 +90,7 @@ EOF, (string) $node);
     }
 
     #[IgnoreDeprecations]
-    public function testAttributeDeprecationWithAlternative()
+    public function testAttributeDeprecationWithAlternative(): void
     {
         $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
@@ -108,7 +108,7 @@ EOF, (string) $node);
     }
 
     #[IgnoreDeprecations]
-    public function testNodeDeprecationWithoutAlternative()
+    public function testNodeDeprecationWithoutAlternative(): void
     {
         $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0'));
@@ -118,7 +118,7 @@ EOF, (string) $node);
     }
 
     #[IgnoreDeprecations]
-    public function testNodeAttributeDeprecationWithAlternative()
+    public function testNodeAttributeDeprecationWithAlternative(): void
     {
         $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
