@@ -73,9 +73,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         $this->setSourceContext($source);
     }
 
-    /**
-     * @return void
-     */
     public function setIndex($index): void
     {
         $this->setAttribute('index', $index);
@@ -96,9 +93,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         return $this->hasNode('parent') ? ['parent'] : [];
     }
 
-    /**
-     * @return void
-     */
     protected function compileTemplate(Compiler $compiler): void
     {
         if (!$this->getAttribute('index')) {
@@ -128,9 +122,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         $this->compileClassFooter($compiler);
     }
 
-    /**
-     * @return void
-     */
     protected function compileGetParent(Compiler $compiler): void
     {
         if (!$this->hasNode('parent')) {
@@ -164,9 +155,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function compileClassHeader(Compiler $compiler): void
     {
         $compiler
@@ -206,9 +194,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function compileConstructor(Compiler $compiler): void
     {
         $compiler
@@ -346,9 +331,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function compileDisplay(Compiler $compiler): void
     {
         $compiler
@@ -394,9 +376,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function compileClassFooter(Compiler $compiler): void
     {
         $compiler
@@ -406,17 +385,11 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function compileMacros(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('macros'));
     }
 
-    /**
-     * @return void
-     */
     protected function compileGetTemplateName(Compiler $compiler): void
     {
         $compiler
@@ -433,9 +406,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function compileIsTraitable(Compiler $compiler): void
     {
         // A template can be used as a trait if:
@@ -483,9 +453,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function compileDebugInfo(Compiler $compiler): void
     {
         $compiler
@@ -500,9 +467,6 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
     }
 
-    /**
-     * @return void
-     */
     protected function compileGetSourceContext(Compiler $compiler): void
     {
         $compiler

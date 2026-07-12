@@ -318,9 +318,6 @@ class Parser
         return \count($this->traits) > 0;
     }
 
-    /**
-     * @return void
-     */
     public function embedTemplate(ModuleNode $template): void
     {
         $template->setIndex(++$this->lastEmbedIndex);

@@ -55,9 +55,6 @@ class FunctionExpression extends CallExpression implements SupportDefinedTestInt
         }
     }
 
-    /**
-     * @return void
-     */
     public function compile(Compiler $compiler): void
     {
         $name = $this->getAttribute('name');

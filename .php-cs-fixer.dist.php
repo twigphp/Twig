@@ -2,7 +2,6 @@
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
-use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 return (new Config())
     ->setRules([
