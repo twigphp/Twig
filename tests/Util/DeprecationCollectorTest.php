@@ -29,7 +29,7 @@ use Twig\Util\DeprecationCollector;
 
 class DeprecationCollectorTest extends TestCase
 {
-    public function testCollect()
+    public function testCollect(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->addFunction(new TwigFunction('deprec', [$this, 'deprec'], ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.1')]));
@@ -40,7 +40,7 @@ class DeprecationCollectorTest extends TestCase
         $this->assertEquals(['Since foo/bar 1.1: Twig Function "deprec" is deprecated in deprec.twig at line 1.'], $deprecations);
     }
 
-    public function deprec()
+    public function deprec(): void
     {
     }
 }

@@ -60,7 +60,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
     /**
      * @return void
      */
-    public function setIndex($index)
+    public function setIndex($index): void
     {
         $this->setAttribute('index', $index);
     }

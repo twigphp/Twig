@@ -26,7 +26,7 @@ use Twig\Test\NodeTestCase;
 
 class FloorDivTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $left = new ConstantExpression(1, 1);
         $right = new ConstantExpression(2, 1);

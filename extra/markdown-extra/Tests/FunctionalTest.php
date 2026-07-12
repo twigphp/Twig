@@ -91,7 +91,7 @@ EOF, "<p>Paragraph 1</p>\n+<p>Paragraph 2</p>"],
     /**
      * @dataProvider getIndentationTests
      */
-    public function testStripsCommonIndentation(string $body, string $expected)
+    public function testStripsCommonIndentation(string $body, string $expected): void
     {
         $runtime = new MarkdownRuntime(new class implements MarkdownInterface {
             public function convert(string $body): string
@@ -116,7 +116,7 @@ EOF, "<p>Paragraph 1</p>\n+<p>Paragraph 2</p>"],
         ];
     }
 
-    public function testMarkdownToHtmlIsNotSafeInJsContext()
+    public function testMarkdownToHtmlIsNotSafeInJsContext(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => "{% autoescape 'js' %}{{ '# Hello'|markdown_to_html }}{% endautoescape %}",

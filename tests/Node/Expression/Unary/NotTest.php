@@ -26,7 +26,7 @@ use Twig\Test\NodeTestCase;
 
 class NotTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr = new ConstantExpression(1, 1);
         $node = new NotUnary($expr, 1);

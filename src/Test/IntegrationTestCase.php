@@ -186,7 +186,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return void
      */
-    protected function doIntegrationTest($file, $message, $condition, $templateSources, $exception, $outputs, $deprecation = '')
+    protected function doIntegrationTest($file, $message, $condition, $templateSources, $exception, $outputs, $deprecation = ''): void
     {
         if (!$outputs) {
             // dummy test added by assembleTests() when there is no (legacy) test to run

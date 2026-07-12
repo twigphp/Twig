@@ -39,7 +39,7 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->assertEquals(['U', null], $this->getArguments('date', 'date', ['format' => 'U', 'timestamp' => null]));
     }
 
-    public function testGetArgumentsWhenPositionalArgumentsAfterNamedArguments()
+    public function testGetArgumentsWhenPositionalArgumentsAfterNamedArguments(): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Positional arguments cannot be used after named arguments for function "date" in "test.twig" at line 2.');
@@ -47,7 +47,7 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('date', 'date', ['timestamp' => 123456, 'Y-m-d']);
     }
 
-    public function testGetArgumentsWhenArgumentIsDefinedTwice()
+    public function testGetArgumentsWhenArgumentIsDefinedTwice(): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Argument "format" is defined twice for function "date" in "test.twig" at line 2.');
@@ -55,7 +55,7 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('date', 'date', ['Y-m-d', 'format' => 'U']);
     }
 
-    public function testGetArgumentsWithWrongNamedArgumentName()
+    public function testGetArgumentsWithWrongNamedArgumentName(): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown argument "unknown" for function "date(format, timestamp)".');
@@ -63,7 +63,7 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('date', 'date', ['Y-m-d', 'timestamp' => null, 'unknown' => '']);
     }
 
-    public function testGetArgumentsWithWrongNamedArgumentNames()
+    public function testGetArgumentsWithWrongNamedArgumentNames(): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Unknown arguments "unknown1", "unknown2" for function "date(format, timestamp)".');
@@ -71,7 +71,7 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('date', 'date', ['Y-m-d', 'timestamp' => null, 'unknown1' => '', 'unknown2' => '']);
     }
 
-    public function testResolveArgumentsWithMissingValueForOptionalArgument()
+    public function testResolveArgumentsWithMissingValueForOptionalArgument(): void
     {
         if (\PHP_VERSION_ID >= 80000) {
             $this->markTestSkipped('substr_compare() has a default value in 8.0, so the test does not work anymore, one should find another PHP built-in function for this test to work in PHP 8.');
@@ -83,18 +83,18 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('substr_compare', 'substr_compare', ['abcd', 'bc', 'offset' => 1, 'case_sensitivity' => true]);
     }
 
-    public function testResolveArgumentsOnlyNecessaryArgumentsForCustomFunction()
+    public function testResolveArgumentsOnlyNecessaryArgumentsForCustomFunction(): void
     {
         $this->assertEquals(['arg1'], $this->getArguments('custom_function', [$this, 'customFunction'], ['arg1' => 'arg1']));
     }
 
-    public function testGetArgumentsForStaticMethod()
+    public function testGetArgumentsForStaticMethod(): void
     {
         $this->assertEquals(['arg1'], $this->getArguments('custom_static_function', __CLASS__.'::customStaticFunction', ['arg1' => 'arg1']));
     }
 
     #[DataProvider('getGetArgumentsConversionData')]
-    public function testGetArgumentsConversion($arg1, $arg2)
+    public function testGetArgumentsConversion($arg1, $arg2): void
     {
         $this->assertEquals([null], $this->getArguments('custom', eval("return fn (\$$arg1) => '';"), [$arg1 => null]));
         $this->assertEquals([null], $this->getArguments('custom', eval("return fn (\$$arg2) => '';"), [$arg2 => null]));
@@ -126,7 +126,7 @@ class CallableArgumentsExtractorTest extends TestCase
         ], $this->getArguments('custom', eval("return fn (string \$someText, int \$some_number, ...\$args) => '';"), ['some_text' => 'a', 'someNumber' => 12, 'some_text_variadic' => 'a', 'someNumberVariadic' => 12], true));
     }
 
-    public function testGetArgumentsError()
+    public function testGetArgumentsError(): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Value for argument "some_name" is required for function "custom_static_function" in "test.twig" at line 2.');
@@ -134,7 +134,7 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('custom_static_function', [$this, 'customFunctionSnakeCamel'], ['someCity' => 'Paris']);
     }
 
-    public function testResolveArgumentsWithMissingParameterForArbitraryArguments()
+    public function testResolveArgumentsWithMissingParameterForArbitraryArguments(): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('The last parameter of "Twig\Tests\Util\CallableArgumentsExtractorTest::customFunctionWithArbitraryArguments" for function "foo" must be an array with default value, eg. "array $arg = []".');
@@ -142,14 +142,14 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('foo', [$this, 'customFunctionWithArbitraryArguments'], [], true);
     }
 
-    public function testGetArgumentsWithInvalidCallable()
+    public function testGetArgumentsWithInvalidCallable(): void
     {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Callback for function "foo" is not callable in the current scope.');
         $this->getArguments('foo', '<not-a-callable>', [], true);
     }
 
-    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction(): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Util\\\\custom_call_test_function" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
@@ -157,7 +157,7 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('foo', 'Twig\Tests\Util\custom_call_test_function', [], true);
     }
 
-    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject(): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessageMatches('#^The last parameter of "Twig\\\\Tests\\\\Util\\\\CallableTestClass\\:\\:__invoke" for function "foo" must be an array with default value, eg\\. "array \\$arg \\= \\[\\]"\\.$#');
@@ -165,19 +165,19 @@ class CallableArgumentsExtractorTest extends TestCase
         $this->getArguments('foo', new CallableTestClass(), [], true);
     }
 
-    public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = [])
+    public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = []): void
     {
     }
 
-    public function customFunction($arg1, $arg2 = 'default', $arg3 = [])
+    public function customFunction($arg1, $arg2 = 'default', $arg3 = []): void
     {
     }
 
-    public function customFunctionSnakeCamel($someName, $some_city)
+    public function customFunctionSnakeCamel($someName, $some_city): void
     {
     }
 
-    public function customFunctionWithArbitraryArguments()
+    public function customFunctionWithArbitraryArguments(): void
     {
     }
 
@@ -205,11 +205,11 @@ class ExpressionCall extends FunctionExpression
 
 class CallableTestClass
 {
-    public function __invoke($required)
+    public function __invoke($required): void
     {
     }
 }
 
-function custom_call_test_function($required)
+function custom_call_test_function($required): void
 {
 }

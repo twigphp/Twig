@@ -32,7 +32,7 @@ use Twig\TwigTest;
 
 class TestTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr = new ConstantExpression('foo', 1);
         $name = 'test_name';
@@ -95,6 +95,6 @@ class TestTest extends NodeTestCase
     }
 }
 
-function twig_tests_test_barbar($string, $arg1 = null, $arg2 = null, array $args = [])
+function twig_tests_test_barbar($string, $arg1 = null, $arg2 = null, array $args = []): void
 {
 }

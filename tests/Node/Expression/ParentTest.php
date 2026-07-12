@@ -25,7 +25,7 @@ use Twig\Test\NodeTestCase;
 
 class ParentTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $node = new ParentExpression('foo', 1);
 

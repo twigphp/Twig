@@ -36,7 +36,7 @@ class CorrectnessTest extends TestCase
      * @dataProvider getFilterBodyNodesData
      */
     #[DataProvider('getFilterBodyNodesData')]
-    public function testFilterBodyNodes($input, $expected)
+    public function testFilterBodyNodes($input, $expected): void
     {
         $this->assertEquals($expected, $this->traverse($input, $expected));
     }
@@ -59,7 +59,7 @@ class CorrectnessTest extends TestCase
      * @dataProvider getFilterBodyNodesDataThrowsException
      */
     #[DataProvider('getFilterBodyNodesDataThrowsException')]
-    public function testFilterBodyNodesThrowsException($input)
+    public function testFilterBodyNodesThrowsException($input): void
     {
         $this->expectException(SyntaxError::class);
         $this->traverse($input, new EmptyNode());
@@ -79,7 +79,7 @@ class CorrectnessTest extends TestCase
      * @dataProvider getFilterBodyNodesWithBOMData
      */
     #[DataProvider('getFilterBodyNodesWithBOMData')]
-    public function testFilterBodyNodesWithBOM($emptyText)
+    public function testFilterBodyNodesWithBOM($emptyText): void
     {
         $input = new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$emptyText, 1);
 

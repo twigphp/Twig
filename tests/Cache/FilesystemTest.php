@@ -45,7 +45,7 @@ class FilesystemTest extends TestCase
         }
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
 
@@ -62,7 +62,7 @@ class FilesystemTest extends TestCase
         $this->assertTrue(class_exists($this->className, false));
     }
 
-    public function testLoadMissing()
+    public function testLoadMissing(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
 
@@ -73,7 +73,7 @@ class FilesystemTest extends TestCase
         $this->assertFalse(class_exists($this->className, false));
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
@@ -88,7 +88,7 @@ class FilesystemTest extends TestCase
         $this->assertSame(file_get_contents($key), $content);
     }
 
-    public function testWriteFailMkdir()
+    public function testWriteFailMkdir(): void
     {
         if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Read-only directories not possible on Windows.');
@@ -109,7 +109,7 @@ class FilesystemTest extends TestCase
         $this->cache->write($key, $content);
     }
 
-    public function testWriteFailDirWritable()
+    public function testWriteFailDirWritable(): void
     {
         if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Read-only directories not possible on Windows.');
@@ -132,7 +132,7 @@ class FilesystemTest extends TestCase
         $this->cache->write($key, $content);
     }
 
-    public function testWriteFailWriteFile()
+    public function testWriteFailWriteFile(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
@@ -149,7 +149,7 @@ class FilesystemTest extends TestCase
         $this->cache->write($key, $content);
     }
 
-    public function testGetTimestamp()
+    public function testGetTimestamp(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
 
@@ -163,7 +163,7 @@ class FilesystemTest extends TestCase
         $this->assertSame(1234567890, $this->cache->getTimestamp($key));
     }
 
-    public function testGetTimestampMissingFile()
+    public function testGetTimestampMissingFile(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
         $this->assertSame(0, $this->cache->getTimestamp($key));
@@ -173,7 +173,7 @@ class FilesystemTest extends TestCase
      * Test file cache is tolerant towards trailing (back)slashes on the configured cache directory.
      */
     #[DataProvider('provideDirectories')]
-    public function testGenerateKey($expected, $input)
+    public function testGenerateKey($expected, $input): void
     {
         $cache = new FilesystemCache($input);
         $this->assertMatchesRegularExpression($expected, $cache->generateKey('_test_', static::class));

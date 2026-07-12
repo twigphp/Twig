@@ -26,7 +26,7 @@ use Twig\Test\NodeTestCase;
 
 class ArrayTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $elements = [new ConstantExpression('foo', 1), $foo = new ConstantExpression('bar', 1)];
         $node = new ArrayExpression($elements, 1);

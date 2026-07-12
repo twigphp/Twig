@@ -20,7 +20,7 @@ use Twig\Source;
 
 class GuardTokenParserTest extends TestCase
 {
-    public function testUndefinedHandlers()
+    public function testUndefinedHandlers(): void
     {
         $this->expectNotToPerformAssertions();
 

@@ -25,7 +25,7 @@ use Twig\Test\NodeTestCase;
 
 class AssignContextVariableTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $node = new AssignContextVariable('foo', 1);
 

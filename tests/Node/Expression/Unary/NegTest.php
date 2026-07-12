@@ -26,7 +26,7 @@ use Twig\Test\NodeTestCase;
 
 class NegTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr = new ConstantExpression(1, 1);
         $node = new NegUnary($expr, 1);

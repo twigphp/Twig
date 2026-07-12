@@ -28,7 +28,7 @@ use Twig\Test\NodeTestCase;
 
 class ImportTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $macro = new ConstantExpression('foo.twig', 1);
         $node = new ImportNode($macro, new AssignTemplateVariable(new TemplateVariable('macro', 1), true), 1);

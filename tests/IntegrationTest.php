@@ -363,7 +363,7 @@ class TwigTestExtension extends AbstractExtension
  */
 class MagicCallStub
 {
-    public function __call($name, $args)
+    public function __call($name, $args): void
     {
         throw new \Exception('__call shall not be called.');
     }

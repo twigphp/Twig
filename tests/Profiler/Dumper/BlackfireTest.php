@@ -24,7 +24,7 @@ use Twig\Profiler\Dumper\BlackfireDumper;
 
 class BlackfireTest extends ProfilerTestCase
 {
-    public function testDump()
+    public function testDump(): void
     {
         $dumper = new BlackfireDumper();
 

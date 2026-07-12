@@ -295,7 +295,7 @@ class Parser
     /**
      * @return void
      */
-    public function embedTemplate(ModuleNode $template)
+    public function embedTemplate(ModuleNode $template): void
     {
         $template->setIndex(++$this->lastEmbedIndex);
 
@@ -510,7 +510,7 @@ class Parser
         return $body;
     }
 
-    private function checkPrecedenceDeprecations(ExpressionParserInterface $expressionParser, AbstractExpression $expr)
+    private function checkPrecedenceDeprecations(ExpressionParserInterface $expressionParser, AbstractExpression $expr): void
     {
         $this->expressionRefs[$expr] = $expressionParser;
         $precedenceChanges = $this->parsers->getPrecedenceChanges();

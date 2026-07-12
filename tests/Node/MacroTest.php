@@ -33,7 +33,7 @@ use Twig\Test\NodeTestCase;
 
 class MacroTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $body = new BodyNode([new TextNode('foo', 1)]);
         $arguments = new ArrayExpression([new ContextVariable('foo', 1), new ConstantExpression(null, 1)], 1);

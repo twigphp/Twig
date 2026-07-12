@@ -18,7 +18,7 @@ use Twig\Loader\ArrayLoader;
 
 class FunctionalTest extends TestCase
 {
-    public function testInlineCssIsNotSafeInJsContext()
+    public function testInlineCssIsNotSafeInJsContext(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => "{% autoescape 'js' %}{% apply inline_css %}<p>x</p>{% endapply %}{% endautoescape %}",
@@ -32,7 +32,7 @@ class FunctionalTest extends TestCase
         $this->assertMatchesRegularExpression('{\\\\u003[Cc]p\\\\u003[Ee]x\\\\u003[Cc]\\\\/p\\\\u003[Ee]}', $output);
     }
 
-    public function testInlineCssPreEscapesUnsafeInput()
+    public function testInlineCssPreEscapesUnsafeInput(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => '{{ payload|inline_css }}',

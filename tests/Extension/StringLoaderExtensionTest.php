@@ -19,7 +19,7 @@ use Twig\Loader\ArrayLoader;
 
 class StringLoaderExtensionTest extends TestCase
 {
-    public function testIncludeWithTemplateStringAndNoSandbox()
+    public function testIncludeWithTemplateStringAndNoSandbox(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->addExtension(new StringLoaderExtension());

@@ -24,7 +24,7 @@ use Twig\Profiler\Dumper\TextDumper;
 
 class TextTest extends ProfilerTestCase
 {
-    public function testDump()
+    public function testDump(): void
     {
         $dumper = new TextDumper();
         $this->assertStringMatchesFormat(<<<EOF

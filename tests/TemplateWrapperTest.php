@@ -26,7 +26,7 @@ use Twig\Loader\ArrayLoader;
 
 class TemplateWrapperTest extends TestCase
 {
-    public function testHasGetBlocks()
+    public function testHasGetBlocks(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => '{% block foo %}{% endblock %}',
@@ -52,7 +52,7 @@ class TemplateWrapperTest extends TestCase
         $this->assertEquals(['foo', 'extended'], $wrapper->getBlockNames());
     }
 
-    public function testRenderBlock()
+    public function testRenderBlock(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => '{% block foo %}{{ foo }}{{ bar }}{% endblock %}',
@@ -63,7 +63,7 @@ class TemplateWrapperTest extends TestCase
         $this->assertEquals('FOOBAR', $wrapper->renderBlock('foo', ['foo' => 'FOO']));
     }
 
-    public function testDisplayBlock()
+    public function testDisplayBlock(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => '{% block foo %}{{ foo }}{{ bar }}{% endblock %}',

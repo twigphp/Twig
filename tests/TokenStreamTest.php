@@ -44,7 +44,7 @@ class TokenStreamTest extends TestCase
         ];
     }
 
-    public function testNext()
+    public function testNext(): void
     {
         $stream = new TokenStream(self::$tokens, new Source('', ''));
         $repr = [];
@@ -56,7 +56,7 @@ class TokenStreamTest extends TestCase
         $this->assertEquals('1, 2, 3, 4, 5, 6, 7', implode(', ', $repr), '->next() advances the pointer and returns the current token');
     }
 
-    public function testEndOfTemplateNext()
+    public function testEndOfTemplateNext(): void
     {
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, 1, 1),
@@ -70,7 +70,7 @@ class TokenStreamTest extends TestCase
         }
     }
 
-    public function testEndOfTemplateLook()
+    public function testEndOfTemplateLook(): void
     {
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, 1, 1),

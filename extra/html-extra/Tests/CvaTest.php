@@ -25,7 +25,7 @@ class CvaTest extends TestCase
         $this->assertEquals($expected, $recipeClass->apply($recipes));
     }
 
-    public function testApply()
+    public function testApply(): void
     {
         $recipe = new Cva('font-semibold border rounded', [
             'colors' => [
@@ -48,7 +48,7 @@ class CvaTest extends TestCase
         $this->assertEquals('font-semibold border rounded text-primary text-sm text-red-500', $recipe->apply(['colors' => 'primary', 'sizes' => 'sm']));
     }
 
-    public function testApplyWithNullString()
+    public function testApplyWithNullString(): void
     {
         $recipe = new Cva('font-semibold border rounded', [
             'colors' => [

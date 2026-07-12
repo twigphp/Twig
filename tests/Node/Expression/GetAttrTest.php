@@ -29,7 +29,7 @@ use Twig\Test\NodeTestCase;
 
 class GetAttrTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr = new ContextVariable('foo', 1);
         $attr = new ConstantExpression('bar', 1);

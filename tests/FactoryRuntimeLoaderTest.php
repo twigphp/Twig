@@ -25,14 +25,14 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class FactoryRuntimeLoaderTest extends TestCase
 {
-    public function testLoad()
+    public function testLoad(): void
     {
         $loader = new FactoryRuntimeLoader(['stdClass' => '\Twig\Tests\getRuntime']);
 
         $this->assertInstanceOf('stdClass', $loader->load('stdClass'));
     }
 
-    public function testLoadReturnsNullForUnmappedRuntime()
+    public function testLoadReturnsNullForUnmappedRuntime(): void
     {
         $loader = new FactoryRuntimeLoader();
 

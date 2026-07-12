@@ -27,7 +27,7 @@ use Twig\TwigTest;
 class AttributeExtensionTest extends TestCase
 {
     #[DataProvider('provideFilters')]
-    public function testFilter(string $name, string $method, array $options)
+    public function testFilter(string $name, string $method, array $options): void
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);
         foreach ($extension->getFilters() as $filter) {
@@ -56,7 +56,7 @@ class AttributeExtensionTest extends TestCase
     }
 
     #[DataProvider('provideFunctions')]
-    public function testFunction(string $name, string $method, array $options)
+    public function testFunction(string $name, string $method, array $options): void
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);
         foreach ($extension->getFunctions() as $function) {
@@ -85,7 +85,7 @@ class AttributeExtensionTest extends TestCase
     }
 
     #[DataProvider('provideTests')]
-    public function testTest(string $name, string $method, array $options)
+    public function testTest(string $name, string $method, array $options): void
     {
         $extension = new AttributeExtension(ExtensionWithAttributes::class);
         foreach ($extension->getTests() as $test) {
@@ -112,7 +112,7 @@ class AttributeExtensionTest extends TestCase
         yield 'deprecated positional' => ['deprecated_positional_test', 'deprecatedPositionalTest', ['deprecation_info' => new DeprecatedCallableInfo('foo/bar', '1.2')]];
     }
 
-    public function testFilterRequireOneArgument()
+    public function testFilterRequireOneArgument(): void
     {
         $extension = new AttributeExtension(FilterWithoutValue::class);
 
@@ -122,7 +122,7 @@ class AttributeExtensionTest extends TestCase
         $extension->getTests();
     }
 
-    public function testTestRequireOneArgument()
+    public function testTestRequireOneArgument(): void
     {
         $extension = new AttributeExtension(TestWithoutValue::class);
 
@@ -132,14 +132,14 @@ class AttributeExtensionTest extends TestCase
         $extension->getTests();
     }
 
-    public function testLastModifiedWithObject()
+    public function testLastModifiedWithObject(): void
     {
         $extension = new AttributeExtension(\stdClass::class);
 
         $this->assertSame(filemtime((new \ReflectionClass(AttributeExtension::class))->getFileName()), $extension->getLastModified());
     }
 
-    public function testLastModifiedWithClass()
+    public function testLastModifiedWithClass(): void
     {
         $extension = new AttributeExtension('__CLASS_FOR_TEST_LAST_MODIFIED__');
 
@@ -154,7 +154,7 @@ class AttributeExtensionTest extends TestCase
         }
     }
 
-    public function testMultipleRegistrations()
+    public function testMultipleRegistrations(): void
     {
         $extensionSet = new ExtensionSet();
         $extensionSet->addExtension($extension1 = new AttributeExtension(ExtensionWithAttributes::class));

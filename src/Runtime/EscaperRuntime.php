@@ -39,7 +39,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      *
      * @return void
      */
-    public function setEscaper($strategy, callable $callable)
+    public function setEscaper($strategy, callable $callable): void
     {
         $this->escapers[$strategy] = $callable;
     }
@@ -59,7 +59,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      *
      * @return void
      */
-    public function setSafeClasses(array $safeClasses = [])
+    public function setSafeClasses(array $safeClasses = []): void
     {
         $this->safeClasses = [];
         $this->safeLookup = [];
@@ -74,7 +74,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      *
      * @return void
      */
-    public function addSafeClass(string $class, array $strategies)
+    public function addSafeClass(string $class, array $strategies): void
     {
         $class = ltrim($class, '\\');
         if (!isset($this->safeClasses[$class])) {

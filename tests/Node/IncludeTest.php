@@ -28,7 +28,7 @@ use Twig\Test\NodeTestCase;
 
 class IncludeTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr = new ConstantExpression('foo.twig', 1);
         $node = new IncludeNode($expr, null, false, false, 1);

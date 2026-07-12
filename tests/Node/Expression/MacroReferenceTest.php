@@ -23,7 +23,7 @@ use Twig\Node\Expression\Variable\TemplateVariable;
 class MacroReferenceTest extends TestCase
 {
     #[DataProvider('provideInvalidMacroNames')]
-    public function testConstructorRejectsNonIdentifierName(string $name)
+    public function testConstructorRejectsNonIdentifierName(string $name): void
     {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage(\sprintf('Macro name "%s" is not a valid PHP identifier.', $name));
@@ -41,7 +41,7 @@ class MacroReferenceTest extends TestCase
         yield 'contains NUL byte' => ["foo\x00bar"];
     }
 
-    public function testConstructorAcceptsAnExpressionAsName()
+    public function testConstructorAcceptsAnExpressionAsName(): void
     {
         $node = new MacroReferenceExpression(new TemplateVariable('foo', 1), new ContextVariable('name', 1), new ArrayExpression([], 1), 1);
 
@@ -49,7 +49,7 @@ class MacroReferenceTest extends TestCase
         $this->assertNull($node->getAttribute('name'));
     }
 
-    public function testDynamicNamePrefixesMacroAtRuntime()
+    public function testDynamicNamePrefixesMacroAtRuntime(): void
     {
         $env = new Environment(new ArrayLoader());
         $compiler = new \Twig\Compiler($env);

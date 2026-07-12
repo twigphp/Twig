@@ -64,7 +64,7 @@ class EnvironmentTest extends TestCase
         $this->assertEquals(Environment::VERSION_ID, Environment::MAJOR_VERSION * 10000 + Environment::MINOR_VERSION * 100 + Environment::RELEASE_VERSION);
     }
 
-    public function testAutoescapeOption()
+    public function testAutoescapeOption(): void
     {
         $loader = new ArrayLoader([
             'html' => '{{ foo }} {{ foo }}',
@@ -86,7 +86,7 @@ class EnvironmentTest extends TestCase
         return $name;
     }
 
-    public function testGlobals()
+    public function testGlobals(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $loader->expects($this->any())->method('getSourceContext')->willReturn(new Source('', ''));
@@ -184,7 +184,7 @@ class EnvironmentTest extends TestCase
         }
     }
 
-    public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate()
+    public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate(): void
     {
         $cache = new FilesystemCache($dir = sys_get_temp_dir().'/twig');
         $options = ['cache' => $cache, 'auto_reload' => false, 'debug' => false];
@@ -219,7 +219,7 @@ class EnvironmentTest extends TestCase
         FilesystemHelper::removeDir($dir);
     }
 
-    public function testAutoReloadCacheMiss()
+    public function testAutoReloadCacheMiss(): void
     {
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
@@ -246,7 +246,7 @@ class EnvironmentTest extends TestCase
         $twig->load($templateName);
     }
 
-    public function testAutoReloadCacheHit()
+    public function testAutoReloadCacheHit(): void
     {
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
@@ -274,7 +274,7 @@ class EnvironmentTest extends TestCase
         $twig->load($templateName);
     }
 
-    public function testAutoReloadOutdatedCacheHit()
+    public function testAutoReloadOutdatedCacheHit(): void
     {
         $templateName = __FUNCTION__;
         $templateContent = __FUNCTION__;
@@ -302,7 +302,7 @@ class EnvironmentTest extends TestCase
         $twig->load($templateName);
     }
 
-    public function testHasGetExtensionByClassName()
+    public function testHasGetExtensionByClassName(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->addExtension($ext = new EnvironmentTest_Extension());
@@ -310,7 +310,7 @@ class EnvironmentTest extends TestCase
         $this->assertSame($ext, $twig->getExtension(EnvironmentTest_Extension::class));
     }
 
-    public function testAddExtension()
+    public function testAddExtension(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->addExtension(new EnvironmentTest_Extension());
@@ -334,7 +334,7 @@ class EnvironmentTest extends TestCase
         $this->assertTrue($found);
     }
 
-    public function testAddMockExtension()
+    public function testAddMockExtension(): void
     {
         $extension = $this->createMock(ExtensionInterface::class);
         $loader = new ArrayLoader(['page' => 'hey']);
@@ -346,7 +346,7 @@ class EnvironmentTest extends TestCase
         $this->assertTrue($twig->isTemplateFresh('page', time()));
     }
 
-    public function testOverrideExtension()
+    public function testOverrideExtension(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->addExtension(new EnvironmentTest_Extension());
@@ -357,7 +357,7 @@ class EnvironmentTest extends TestCase
         $twig->addExtension(new EnvironmentTest_Extension());
     }
 
-    public function testAddRuntimeLoader()
+    public function testAddRuntimeLoader(): void
     {
         $runtimeLoader = new FactoryRuntimeLoader([
             EnvironmentTest_Runtime::class => static function () { return new EnvironmentTest_Runtime(); },
@@ -384,7 +384,7 @@ class EnvironmentTest extends TestCase
         $this->assertEquals('foo', $twig->render('func_string_named_args'));
     }
 
-    public function testFailLoadTemplate()
+    public function testFailLoadTemplate(): void
     {
         $template = 'testFailLoadTemplate.twig';
         $twig = new Environment(new ArrayLoader([$template => false]));
@@ -395,7 +395,7 @@ class EnvironmentTest extends TestCase
         $twig->loadTemplate($twig->getTemplateClass($template), $template, 112233);
     }
 
-    public function testUndefinedFunctionCallback()
+    public function testUndefinedFunctionCallback(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->registerUndefinedFunctionCallback(static function (string $name) {
@@ -411,7 +411,7 @@ class EnvironmentTest extends TestCase
         $this->assertSame('dynamic', $function->getName());
     }
 
-    public function testUndefinedFilterCallback()
+    public function testUndefinedFilterCallback(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->registerUndefinedFilterCallback(static function (string $name) {
@@ -427,7 +427,7 @@ class EnvironmentTest extends TestCase
         $this->assertSame('dynamic', $filter->getName());
     }
 
-    public function testUndefinedTestCallback()
+    public function testUndefinedTestCallback(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->registerUndefinedTestCallback(static function (string $name) {
@@ -443,7 +443,7 @@ class EnvironmentTest extends TestCase
         $this->assertSame('dynamic', $test->getName());
     }
 
-    public function testUndefinedTokenParserCallback()
+    public function testUndefinedTokenParserCallback(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->registerUndefinedTokenParserCallback(function (string $name) {
@@ -490,7 +490,7 @@ class EnvironmentTest extends TestCase
         return $loader;
     }
 
-    public function testResettingGlobals()
+    public function testResettingGlobals(): void
     {
         $twig = new Environment(new ArrayLoader(['index' => '']));
         $twig->addExtension(new class extends AbstractExtension implements GlobalsInterface {
@@ -517,7 +517,7 @@ class EnvironmentTest extends TestCase
         $this->assertNotSame($g3['global_ext'], $g2['global_ext']);
     }
 
-    public function testHotCache()
+    public function testHotCache(): void
     {
         $dir = sys_get_temp_dir().'/twig-hot-cache-test';
         if (is_dir($dir)) {

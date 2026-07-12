@@ -179,7 +179,7 @@ class HtmlAttrMergeTest extends TestCase
         ];
     }
 
-    public function testIncompatibleValuesMergeThrowsException()
+    public function testIncompatibleValuesMergeThrowsException(): void
     {
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Cannot merge incompatible values for key "test"');

@@ -26,7 +26,7 @@ use Twig\Loader\ArrayLoader;
 
 class ArrayTest extends TestCase
 {
-    public function testGetSourceContextWhenTemplateDoesNotExist()
+    public function testGetSourceContextWhenTemplateDoesNotExist(): void
     {
         $loader = new ArrayLoader();
 
@@ -34,14 +34,14 @@ class ArrayTest extends TestCase
         $loader->getSourceContext('foo');
     }
 
-    public function testGetCacheKey()
+    public function testGetCacheKey(): void
     {
         $loader = new ArrayLoader(['foo' => 'bar']);
 
         $this->assertEquals('foo:bar', $loader->getCacheKey('foo'));
     }
 
-    public function testGetCacheKeyWhenTemplateHasDuplicateContent()
+    public function testGetCacheKeyWhenTemplateHasDuplicateContent(): void
     {
         $loader = new ArrayLoader([
             'foo' => 'bar',
@@ -52,7 +52,7 @@ class ArrayTest extends TestCase
         $this->assertEquals('baz:bar', $loader->getCacheKey('baz'));
     }
 
-    public function testGetCacheKeyIsProtectedFromEdgeCollisions()
+    public function testGetCacheKeyIsProtectedFromEdgeCollisions(): void
     {
         $loader = new ArrayLoader([
             'foo__' => 'bar',
@@ -63,7 +63,7 @@ class ArrayTest extends TestCase
         $this->assertEquals('foo:__bar', $loader->getCacheKey('foo'));
     }
 
-    public function testGetCacheKeyWhenTemplateDoesNotExist()
+    public function testGetCacheKeyWhenTemplateDoesNotExist(): void
     {
         $loader = new ArrayLoader();
 
@@ -71,7 +71,7 @@ class ArrayTest extends TestCase
         $loader->getCacheKey('foo');
     }
 
-    public function testSetTemplate()
+    public function testSetTemplate(): void
     {
         $loader = new ArrayLoader();
         $loader->setTemplate('foo', 'bar');
@@ -79,13 +79,13 @@ class ArrayTest extends TestCase
         $this->assertEquals('bar', $loader->getSourceContext('foo')->getCode());
     }
 
-    public function testIsFresh()
+    public function testIsFresh(): void
     {
         $loader = new ArrayLoader(['foo' => 'bar']);
         $this->assertTrue($loader->isFresh('foo', time()));
     }
 
-    public function testIsFreshWhenTemplateDoesNotExist()
+    public function testIsFreshWhenTemplateDoesNotExist(): void
     {
         $loader = new ArrayLoader();
 

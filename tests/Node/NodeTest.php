@@ -43,7 +43,7 @@ EOF, (string) $node
         );
     }
 
-    public function testToStringWithTwigCallables()
+    public function testToStringWithTwigCallables(): void
     {
         $node = new NodeForTest([], [
             'function' => new TwigFunction('a_function'),
@@ -60,7 +60,7 @@ Twig\Tests\Node\NodeForTest
 EOF, (string) $node);
     }
 
-    public function testToStringWithTag()
+    public function testToStringWithTag(): void
     {
         $node = new NodeForTest();
         $node->setNodeTag('tag');
@@ -71,7 +71,7 @@ Twig\Tests\Node\NodeForTest
 EOF, (string) $node);
     }
 
-    public function testAttributeDeprecationIgnore()
+    public function testAttributeDeprecationIgnore(): void
     {
         $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
@@ -99,7 +99,7 @@ EOF, (string) $node);
         $this->assertFalse($node->getAttribute('foo'));
     }
 
-    public function testNodeDeprecationIgnore()
+    public function testNodeDeprecationIgnore(): void
     {
         $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0'));

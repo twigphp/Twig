@@ -25,7 +25,7 @@ use Twig\Test\NodeTestCase;
 
 class BlockReferenceTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $node = new BlockReferenceNode('foo', 1);
 

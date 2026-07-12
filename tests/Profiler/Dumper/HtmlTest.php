@@ -25,7 +25,7 @@ use Twig\Profiler\Profile;
 
 class HtmlTest extends ProfilerTestCase
 {
-    public function testDump()
+    public function testDump(): void
     {
         $dumper = new HtmlDumper();
         $this->assertStringMatchesFormat(<<<EOF
@@ -41,7 +41,7 @@ class HtmlTest extends ProfilerTestCase
 EOF, $dumper->dump($this->getProfile()));
     }
 
-    public function testDumpEscapesTemplateAndProfileNames()
+    public function testDumpEscapesTemplateAndProfileNames(): void
     {
         $root = new Profile('main');
         $child = new Profile('<img src=x onerror=alert(1)>', Profile::TEMPLATE);
@@ -60,7 +60,7 @@ EOF, $dumper->dump($this->getProfile()));
         $this->assertStringContainsString('&lt;img src=x onerror=alert(3)&gt;', $output);
     }
 
-    public function testDumpEscapesRootProfileName()
+    public function testDumpEscapesRootProfileName(): void
     {
         $root = new Profile('template-name', Profile::ROOT, '<img src=x onerror=alert(1)>');
 

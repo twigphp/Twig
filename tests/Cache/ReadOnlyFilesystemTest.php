@@ -46,7 +46,7 @@ class ReadOnlyFilesystemTest extends TestCase
         }
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $key = $this->directory.'/cache/ro-cachefile.php';
 
@@ -63,7 +63,7 @@ class ReadOnlyFilesystemTest extends TestCase
         $this->assertTrue(class_exists($this->className, false));
     }
 
-    public function testLoadMissing()
+    public function testLoadMissing(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
 
@@ -74,7 +74,7 @@ class ReadOnlyFilesystemTest extends TestCase
         $this->assertFalse(class_exists($this->className, false));
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
         $content = $this->generateSource();
@@ -88,7 +88,7 @@ class ReadOnlyFilesystemTest extends TestCase
         $this->assertFileDoesNotExist($key);
     }
 
-    public function testGetTimestamp()
+    public function testGetTimestamp(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
 
@@ -102,7 +102,7 @@ class ReadOnlyFilesystemTest extends TestCase
         $this->assertSame(1234567890, $this->cache->getTimestamp($key));
     }
 
-    public function testGetTimestampMissingFile()
+    public function testGetTimestampMissingFile(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
         $this->assertSame(0, $this->cache->getTimestamp($key));
@@ -112,7 +112,7 @@ class ReadOnlyFilesystemTest extends TestCase
      * Test file cache is tolerant towards trailing (back)slashes on the configured cache directory.
      */
     #[DataProvider('provideDirectories')]
-    public function testGenerateKey($expected, $input)
+    public function testGenerateKey($expected, $input): void
     {
         $cache = new ReadOnlyFilesystemCache($input);
         $this->assertMatchesRegularExpression($expected, $cache->generateKey('_test_', static::class));

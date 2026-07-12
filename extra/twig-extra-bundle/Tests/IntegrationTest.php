@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class IntegrationTest extends KernelTestCase
 {
-    public function testCommonMarkRendering()
+    public function testCommonMarkRendering(): void
     {
         self::bootKernel();
 

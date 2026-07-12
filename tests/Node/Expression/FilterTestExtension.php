@@ -33,11 +33,11 @@ class FilterTestExtension extends AbstractExtension
         ];
     }
 
-    public static function staticMethod()
+    public static function staticMethod(): void
     {
     }
 
-    public function objectMethod()
+    public function objectMethod(): void
     {
     }
 }

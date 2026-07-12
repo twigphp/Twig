@@ -34,14 +34,14 @@ use Twig\Source;
 
 class OptimizerTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->expectNotToPerformAssertions();
 
         new OptimizerNodeVisitor(OptimizerNodeVisitor::OPTIMIZE_FOR);
     }
 
-    public function testRenderBlockOptimizer()
+    public function testRenderBlockOptimizer(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
 
@@ -53,7 +53,7 @@ class OptimizerTest extends TestCase
         $this->assertTrue($node->getAttribute('output'));
     }
 
-    public function testRenderParentBlockOptimizer()
+    public function testRenderParentBlockOptimizer(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
 
@@ -65,7 +65,7 @@ class OptimizerTest extends TestCase
         $this->assertTrue($node->getAttribute('output'));
     }
 
-    public function testForVarOptimizer()
+    public function testForVarOptimizer(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
 
@@ -77,7 +77,7 @@ class OptimizerTest extends TestCase
         }
     }
 
-    public function checkForVarConfiguration(Node $node, $target)
+    public function checkForVarConfiguration(Node $node, $target): void
     {
         foreach ($node as $n) {
             if (ContextVariable::class === $n::class && $target === $n->getAttribute('name')) {
@@ -89,7 +89,7 @@ class OptimizerTest extends TestCase
     }
 
     #[DataProvider('getTestsForForLoopOptimizer')]
-    public function testForLoopOptimizer($template, $expected)
+    public function testForLoopOptimizer($template, $expected): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false]);
 
