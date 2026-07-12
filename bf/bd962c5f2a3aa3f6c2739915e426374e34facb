@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-12T08:28:29Z
+
+**📋 PR Summary**
+
+This PR documents how the Twig sandbox handles attribute access that resolves through PHP's magic `__call()` method and adds tests covering the allowed, unallowed, method-syntax, and `__call`-literal cases. It touches only documentation (`doc/sandbox.rst`) and tests (`tests/Extension/SandboxTest.php`), with no production code changes.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **documentation** | |
+| `doc/sandbox.rst` | Adds a note explaining that the sandbox checks the virtual method name written in the template (not `__call`) when an attribute resolves through `__call()`, and that allow-listing `__call` itself has no effect. |
+| **tests** | |
+| `tests/Extension/SandboxTest.php` | Adds five tests and a `MagicCallObject` fixture covering sandbox behavior for `__call()`-routed virtual methods: allowed, unallowed (property and method syntax), the `__call` literal not granting access, and the property→`__call` fallback. |
+
+</details>
