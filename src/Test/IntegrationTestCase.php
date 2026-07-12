@@ -118,8 +118,6 @@ abstract class IntegrationTestCase extends TestCase
 
     /**
      * @group legacy
-     *
-     * @return void
      */
     #[DataProvider('getLegacyTests'), IgnoreDeprecations]
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
