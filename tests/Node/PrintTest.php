@@ -30,7 +30,7 @@ use Twig\Test\NodeTestCase;
 
 class PrintTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr = new ConstantExpression('foo', 1);
         $node = new PrintNode($expr, 1);

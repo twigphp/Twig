@@ -29,7 +29,7 @@ use Twig\Test\NodeTestCase;
 
 class IfTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $t = new Nodes([
             new ConstantExpression(true, 1),

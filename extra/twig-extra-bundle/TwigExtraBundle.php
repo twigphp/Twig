@@ -29,8 +29,7 @@ if (method_exists(KernelInterface::class, 'getShareDir')) {
 } else {
     class TwigExtraBundle extends Bundle
     {
-        /** @return void */
-        public function build(ContainerBuilder $container)
+        public function build(ContainerBuilder $container): void
         {
             parent::build($container);
 

@@ -21,7 +21,7 @@ use function Twig\Extra\CssInliner\twig_inline_css;
  */
 class LegacyFunctionsTest extends TestCase
 {
-    public function testInlineCss()
+    public function testInlineCss(): void
     {
         $this->assertSame(CssInlinerExtension::inlineCss('<p>body</p>', 'p { color: red }'), twig_inline_css('<p>body</p>', 'p { color: red }'));
     }

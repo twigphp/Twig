@@ -25,7 +25,7 @@ use Twig\Test\NodeTestCase;
 
 class ConstantTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $node = new ConstantExpression('foo', 1);
 

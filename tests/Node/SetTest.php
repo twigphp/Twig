@@ -33,7 +33,7 @@ use Twig\Test\NodeTestCase;
 
 class SetTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $names = new Nodes([new AssignContextVariable('foo', 1)], 1);
         $values = new Nodes([new ConstantExpression('foo', 1)], 1);

@@ -18,7 +18,7 @@ use Twig\Test\NodeTestCase;
 
 class EmbedTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $node = new EmbedNode('foo.twig', 0, null, false, false, 1);
 

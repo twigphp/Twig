@@ -27,7 +27,7 @@ use Twig\Loader\ArrayLoader;
 
 class CompilerTest extends TestCase
 {
-    public function testStringEncodesSingleQuotesAsHexEscape()
+    public function testStringEncodesSingleQuotesAsHexEscape(): void
     {
         $compiler = new Compiler(new Environment(new ArrayLoader()));
 
@@ -45,7 +45,7 @@ class CompilerTest extends TestCase
         $this->assertSame("it's \"a\" test", $decoded);
     }
 
-    public function testReprNumericValueWithLocale()
+    public function testReprNumericValueWithLocale(): void
     {
         $compiler = new Compiler(new Environment(new ArrayLoader()));
 

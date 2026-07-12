@@ -30,7 +30,7 @@ use Twig\Test\NodeTestCase;
 
 class ForTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $keyTarget = new AssignContextVariable('key', 1);
         $valueTarget = new AssignContextVariable('item', 1);

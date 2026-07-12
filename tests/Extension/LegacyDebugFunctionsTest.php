@@ -23,7 +23,7 @@ use Twig\Loader\ArrayLoader;
 #[Group('legacy')]
 class LegacyDebugFunctionsTest extends TestCase
 {
-    public function testDump()
+    public function testDump(): void
     {
         $env = new Environment(new ArrayLoader());
 

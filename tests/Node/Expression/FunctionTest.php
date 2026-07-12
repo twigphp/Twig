@@ -31,7 +31,7 @@ use Twig\TwigFunction;
 
 class FunctionTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $name = 'function';
         $args = new EmptyNode();
@@ -126,10 +126,10 @@ class FunctionTest extends NodeTestCase
     }
 }
 
-function twig_tests_function_dummy()
+function twig_tests_function_dummy(): void
 {
 }
 
-function twig_tests_function_barbar($arg1 = null, $arg2 = null, array $args = [])
+function twig_tests_function_barbar($arg1 = null, $arg2 = null, array $args = []): void
 {
 }

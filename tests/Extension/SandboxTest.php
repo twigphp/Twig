@@ -112,7 +112,7 @@ class SandboxTest extends TestCase
      * @dataProvider getSandboxedForCoreTagsTests
      */
     #[DataProvider('getSandboxedForCoreTagsTests')]
-    public function testSandboxForCoreTags(string $tag, string $template)
+    public function testSandboxForCoreTags(string $tag, string $template): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, []);
 
@@ -151,7 +151,7 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[DataProvider('getSandboxedForExtendsAndUseTagsTests'), Group('legacy')]
-    public function testSandboxForExtendsAndUseTags(string $tag, string $template)
+    public function testSandboxForExtendsAndUseTags(string $tag, string $template): void
     {
         $this->expectDeprecation(\sprintf('Since twig/twig 3.12: The "%s" tag is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).', $tag));
 
@@ -171,7 +171,7 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[DataProvider('getSandboxedForParserCallableFunctionsTests'), Group('legacy')]
-    public function testSandboxForParserCallableFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $context, string $expected)
+    public function testSandboxForParserCallableFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $context, string $expected): void
     {
         $this->expectDeprecation(\sprintf('Since twig/twig 3.27: The "%s" function is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).', $function));
 
@@ -232,7 +232,7 @@ class SandboxTest extends TestCase
      * @dataProvider getAllowedParserCallableFunctionsTests
      */
     #[DataProvider('getAllowedParserCallableFunctionsTests')]
-    public function testSandboxWithAllowedParserCallableFunctions(string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $allowedFunctions, array $context, string $expected)
+    public function testSandboxWithAllowedParserCallableFunctions(string $templateName, array $extraTemplates, array $allowedTags, array $allowedMethods, array $allowedProperties, array $allowedFunctions, array $context, string $expected): void
     {
         $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], $allowedMethods, $allowedProperties, $allowedFunctions);
         $this->assertSame($expected, $twig->load($templateName)->render($context));
@@ -272,7 +272,7 @@ class SandboxTest extends TestCase
      * @dataProvider getStrictSandboxRejectsGrandfatheredTagsTests
      */
     #[DataProvider('getStrictSandboxRejectsGrandfatheredTagsTests')]
-    public function testStrictSandboxRejectsGrandfatheredTags(string $tag, string $template)
+    public function testStrictSandboxRejectsGrandfatheredTags(string $tag, string $template): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], [], null, true);
 
@@ -292,7 +292,7 @@ class SandboxTest extends TestCase
      * @dataProvider getStrictSandboxRejectsGrandfatheredFunctionsTests
      */
     #[DataProvider('getStrictSandboxRejectsGrandfatheredFunctionsTests')]
-    public function testStrictSandboxRejectsGrandfatheredFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $context)
+    public function testStrictSandboxRejectsGrandfatheredFunctions(string $function, string $templateName, array $extraTemplates, array $allowedTags, array $context): void
     {
         $twig = $this->getEnvironment(true, [], $extraTemplates, $allowedTags, [], [], [], [], null, true);
 
@@ -332,7 +332,7 @@ class SandboxTest extends TestCase
         ];
     }
 
-    public function testStrictSandboxStillAllowsExplicitlyAllowedGrandfatheredNames()
+    public function testStrictSandboxStillAllowsExplicitlyAllowedGrandfatheredNames(): void
     {
         $twig = $this->getEnvironment(
             true,
@@ -353,7 +353,7 @@ class SandboxTest extends TestCase
         $this->assertSame('PARENT CHILD - OK', $twig->load('child')->render(['data' => ['x' => 'OK']]));
     }
 
-    public function testStrictModeCanBeEnabledViaSetterAfterConstruction()
+    public function testStrictModeCanBeEnabledViaSetterAfterConstruction(): void
     {
         $policy = new SecurityPolicy([], [], [], [], []);
         $policy->setStrict(true);
@@ -366,7 +366,7 @@ class SandboxTest extends TestCase
      * @dataProvider getAlwaysAllowedCoreTests
      */
     #[DataProvider('getAlwaysAllowedCoreTests')]
-    public function testSandboxAllowsAlwaysAllowedCoreTests(string $template)
+    public function testSandboxAllowsAlwaysAllowedCoreTests(string $template): void
     {
         // the safe built-in tests are always allowed in a sandbox (they carry
         // the `always_allowed_in_sandbox` flag), so they need neither an
@@ -396,7 +396,7 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSandboxForConstantTest()
+    public function testSandboxForConstantTest(): void
     {
         // unlike the other built-in tests, "constant" reaches into the PHP
         // runtime, so it is not always allowed and is deprecated until 4.0
@@ -410,7 +410,7 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSandboxForUserDefinedTest()
+    public function testSandboxForUserDefinedTest(): void
     {
         $this->expectDeprecation('Since twig/twig 3.28: The "unsafe" test is always allowed in sandboxes, but won\'t be in 4.0, please enable it explicitly in your sandbox policy if needed (or enable strict mode on the security policy to opt-in to the 4.0 behavior now).');
 
@@ -426,7 +426,7 @@ class SandboxTest extends TestCase
         $this->assertSame(1, $called);
     }
 
-    public function testSandboxAllowsAllowListedTest()
+    public function testSandboxAllowsAllowListedTest(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "x" is unsafe ? "y" }}'], [], [], [], [], [], null, false, ['unsafe']);
         $twig->addTest(new TwigTest('unsafe', static fn ($v): bool => true));
@@ -434,7 +434,7 @@ class SandboxTest extends TestCase
         $this->assertSame('y', $twig->load('index')->render([]));
     }
 
-    public function testStrictSandboxRejectsConstantTest()
+    public function testStrictSandboxRejectsConstantTest(): void
     {
         // "constant" is the only built-in test that is not always allowed
         $twig = $this->getEnvironment(true, [], ['index' => '{{ 1 is constant("PHP_INT_MAX") ? "y" }}'], [], [], [], [], [], null, true);
@@ -445,14 +445,14 @@ class SandboxTest extends TestCase
         $twig->load('index')->render([]);
     }
 
-    public function testStrictSandboxStillAllowsAllowListedTest()
+    public function testStrictSandboxStillAllowsAllowListedTest(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ 1 is constant("PHP_INT_MAX") ? "y" : "n" }}'], [], [], [], [], [], null, true, ['constant']);
 
         $this->assertSame('n', $twig->load('index')->render([]));
     }
 
-    public function testStrictSandboxRejectsUserDefinedTest()
+    public function testStrictSandboxRejectsUserDefinedTest(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "x" is unsafe ? "y" }}'], [], [], [], [], [], null, true);
         $twig->addTest(new TwigTest('unsafe', static fn ($v): bool => true));
@@ -463,7 +463,7 @@ class SandboxTest extends TestCase
         $twig->load('index')->render([]);
     }
 
-    public function testImplicitBooleanCoercionDoesNotRequireAllowListingTests()
+    public function testImplicitBooleanCoercionDoesNotRequireAllowListingTests(): void
     {
         // `{% if %}`, ternary, `?:`, `??`, and `|default` conditions are coerced
         // to a boolean through `true`/`defined`/`null` tests that the compiler
@@ -475,7 +475,7 @@ class SandboxTest extends TestCase
         $this->assertSame('acdef', $twig->load('index')->render(['x' => true, 'y' => false]));
     }
 
-    public function testStrictSandboxRejectedTestCarriesSourceAndLine()
+    public function testStrictSandboxRejectedTestCarriesSourceAndLine(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => "{{ 1 }}\n{{ 1 is constant('PHP_INT_MAX') ? 'y' }}"], [], [], [], [], [], null, true);
 
@@ -489,7 +489,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testStrictModeRejectsTestsViaSetter()
+    public function testStrictModeRejectsTestsViaSetter(): void
     {
         $policy = new SecurityPolicy([], [], [], [], []);
         $policy->setStrict(true);
@@ -498,7 +498,7 @@ class SandboxTest extends TestCase
         $policy->checkSecurity([], [], [], ['empty']);
     }
 
-    public function testAllowedTestsCanBeUpdatedViaSetter()
+    public function testAllowedTestsCanBeUpdatedViaSetter(): void
     {
         $policy = new SecurityPolicy([], [], [], [], []);
         $policy->setStrict(true);
@@ -515,7 +515,7 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testLegacySecurityPolicyWithoutTestsParameterTriggersDeprecation()
+    public function testLegacySecurityPolicyWithoutTestsParameterTriggersDeprecation(): void
     {
         $this->expectDeprecation('Since twig/twig 3.28: The "Twig\Tests\Extension\LegacySandboxSecurityPolicy::checkSecurity()" method will take a 4th "array $tests" argument in 4.0; not declaring it is deprecated.');
 
@@ -532,7 +532,7 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testLegacyCheckSecurityCallWithSourceAs4thArgumentTriggersDeprecation()
+    public function testLegacyCheckSecurityCallWithSourceAs4thArgumentTriggersDeprecation(): void
     {
         $this->expectDeprecation('Since twig/twig 3.28: Passing a "Twig\Source" as the 4th argument of "Twig\Extension\SandboxExtension::checkSecurity()" is deprecated; pass an array of tests instead.');
 
@@ -545,7 +545,7 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testLegacyCheckSecurityNodeWithoutUsedTestsTriggersDeprecation()
+    public function testLegacyCheckSecurityNodeWithoutUsedTestsTriggersDeprecation(): void
     {
         $this->expectDeprecation('Since twig/twig 3.28: Not passing the "$usedTests" argument to "Twig\Node\CheckSecurityNode::__construct()" is deprecated; it will be required in 4.0.');
 
@@ -556,14 +556,14 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testLegacySecurityPolicyCheckSecurityWithoutTestsArgTriggersDeprecation()
+    public function testLegacySecurityPolicyCheckSecurityWithoutTestsArgTriggersDeprecation(): void
     {
         $this->expectDeprecation('Since twig/twig 3.28: Not passing the "$tests" argument to "Twig\Sandbox\SecurityPolicy::checkSecurity()" is deprecated; it will be required in 4.0.');
 
         (new SecurityPolicy([], [], [], [], []))->checkSecurity([], [], []);
     }
 
-    public function testSandboxWithInheritance()
+    public function testSandboxWithInheritance(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, ['extends', 'block']);
 
@@ -573,13 +573,13 @@ class SandboxTest extends TestCase
         $twig->load('1_child')->render([]);
     }
 
-    public function testSandboxGloballySet()
+    public function testSandboxGloballySet(): void
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
         $this->assertEquals('FOO', $twig->load('1_basic')->render(self::$params), 'Sandbox does nothing if it is disabled globally');
     }
 
-    public function testSandboxUnallowedPropertyAccessor()
+    public function testSandboxUnallowedPropertyAccessor(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates);
         try {
@@ -591,7 +591,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxUnallowedArrayIndexAccessor()
+    public function testSandboxUnallowedArrayIndexAccessor(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates);
 
@@ -611,7 +611,7 @@ class SandboxTest extends TestCase
      * @dataProvider provideNonStringArrayAccessKeys
      */
     #[DataProvider('provideNonStringArrayAccessKeys')]
-    public function testSandboxNonStringKeyAccessDoesNotTriggerImplicitConversionDeprecation(string $template, string $expectedKey)
+    public function testSandboxNonStringKeyAccessDoesNotTriggerImplicitConversionDeprecation(string $template, string $expectedKey): void
     {
         $loader = new ArrayLoader(['t' => $template]);
         $twig = new Environment($loader);
@@ -670,7 +670,7 @@ class SandboxTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testIfSandBoxIsDisabledAfterSyntaxErrorLegacy()
+    public function testIfSandBoxIsDisabledAfterSyntaxErrorLegacy(): void
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
         try {
@@ -682,7 +682,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testIfSandBoxIsDisabledAfterSyntaxError()
+    public function testIfSandBoxIsDisabledAfterSyntaxError(): void
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
         try {
@@ -694,7 +694,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxGloballyFalseUnallowedFilterWithIncludeTemplateFromStringSandboxed()
+    public function testSandboxGloballyFalseUnallowedFilterWithIncludeTemplateFromStringSandboxed(): void
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
         $twig->addExtension(new StringLoaderExtension());
@@ -706,7 +706,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxGloballyTrueUnallowedFilterWithIncludeTemplateFromStringSandboxed()
+    public function testSandboxGloballyTrueUnallowedFilterWithIncludeTemplateFromStringSandboxed(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], ['include', 'template_from_string']);
         $twig->addExtension(new StringLoaderExtension());
@@ -718,14 +718,14 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxGloballyFalseUnallowedFilterWithIncludeTemplateFromStringNotSandboxed()
+    public function testSandboxGloballyFalseUnallowedFilterWithIncludeTemplateFromStringNotSandboxed(): void
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
         $twig->addExtension(new StringLoaderExtension());
         $this->assertSame('FABIEN', $twig->load('1_basic2_include_template_from_string')->render(self::$params));
     }
 
-    public function testSandboxGloballyTrueUnallowedFilterWithIncludeTemplateFromStringNotSandboxed()
+    public function testSandboxGloballyTrueUnallowedFilterWithIncludeTemplateFromStringNotSandboxed(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], ['include', 'template_from_string']);
         $twig->addExtension(new StringLoaderExtension());
@@ -737,7 +737,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxUnallowedFilter()
+    public function testSandboxUnallowedFilter(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates);
         try {
@@ -748,7 +748,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxUnallowedTag()
+    public function testSandboxUnallowedTag(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates);
         try {
@@ -759,7 +759,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxUnallowedProperty()
+    public function testSandboxUnallowedProperty(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates);
         try {
@@ -775,7 +775,7 @@ class SandboxTest extends TestCase
      * @dataProvider getSandboxUnallowedToStringTests
      */
     #[DataProvider('getSandboxUnallowedToStringTests')]
-    public function testSandboxUnallowedToString($template)
+    public function testSandboxUnallowedToString($template): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['if', 'do', 'for', 'set'], ['upper', 'join', 'replace', 'format', 'split'], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject'], [], ['random', 'range', 'my_func']);
         $twig->addFunction(new TwigFunction('my_func', static fn ($a) => (string) $a));
@@ -864,7 +864,7 @@ class SandboxTest extends TestCase
         ];
     }
 
-    public function testSandboxBlocksToStringOnFunctionReturn()
+    public function testSandboxBlocksToStringOnFunctionReturn(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ make_obj() }}'], [], [], [], [], ['make_obj']);
         $twig->addFunction(new TwigFunction('make_obj', static fn () => new FooObject()));
@@ -877,7 +877,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnFilterReturn()
+    public function testSandboxBlocksToStringOnFilterReturn(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "x"|to_obj }}'], [], ['to_obj']);
         $twig->addFilter(new TwigFilter('to_obj', static fn () => new FooObject()));
@@ -890,7 +890,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnDynamicAttributeName()
+    public function testSandboxBlocksToStringOnDynamicAttributeName(): void
     {
         $twig = $this->getEnvironment(true, ['strict_variables' => true], ['index' => '{{ arr[obj] }}'], [], [], ['Twig\Tests\Extension\FooObject' => 'getAnotherFooObject']);
         try {
@@ -902,7 +902,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnDynamicMacroName()
+    public function testSandboxBlocksToStringOnDynamicMacroName(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => <<<EOF
             {% import _self as macros %}
@@ -919,7 +919,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnIncludeTemplateName()
+    public function testSandboxBlocksToStringOnIncludeTemplateName(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% include obj %}'], ['include']);
         try {
@@ -931,7 +931,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnExtendsTemplateName()
+    public function testSandboxBlocksToStringOnExtendsTemplateName(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% extends obj %}'], ['extends']);
         try {
@@ -943,7 +943,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnBlockFunctionTemplateName()
+    public function testSandboxBlocksToStringOnBlockFunctionTemplateName(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ block("content", obj) }}'], [], [], [], [], ['block']);
         try {
@@ -955,7 +955,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnEmbedTemplateName()
+    public function testSandboxBlocksToStringOnEmbedTemplateName(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% embed obj %}{% endembed %}'], ['embed', 'extends']);
         try {
@@ -967,7 +967,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnIsConstantTestArgument()
+    public function testSandboxBlocksToStringOnIsConstantTestArgument(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% if "x" is constant(obj) %}LEAK{% endif %}'], ['if'], [], [], [], [], null, false, ['constant']);
         try {
@@ -979,7 +979,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxBlocksToStringOnDeprecatedMessage()
+    public function testSandboxBlocksToStringOnDeprecatedMessage(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% deprecated obj %}'], ['deprecated']);
         $previous = set_error_handler(static fn () => true, \E_USER_DEPRECATED);
@@ -994,7 +994,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxKeepsSelfImportShortcut()
+    public function testSandboxKeepsSelfImportShortcut(): void
     {
         $tpl = "{% macro local_lower(s) %}{{ s|lower }}{% endmacro %}{% from _self import local_lower %}{{ local_lower('A') }}";
         $twig = $this->getEnvironment(true, [], ['index' => $tpl], ['from', 'macro', 'import'], ['lower']);
@@ -1006,7 +1006,7 @@ class SandboxTest extends TestCase
      * @dataProvider getSandboxAllowedToStringTests
      */
     #[DataProvider('getSandboxAllowedToStringTests')]
-    public function testSandboxAllowedToString($template, $output)
+    public function testSandboxAllowedToString($template, $output): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['set', 'do'], [], ['Twig\Tests\Extension\FooObject' => ['foo', 'getAnotherFooObject']], [], [], null, false, ['constant']);
         $this->assertEquals($output, $twig->load('index')->render(self::$params));
@@ -1031,7 +1031,7 @@ class SandboxTest extends TestCase
         ];
     }
 
-    public function testSandboxAllowMethodToString()
+    public function testSandboxAllowMethodToString(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['Twig\Tests\Extension\FooObject' => '__toString']);
         FooObject::reset();
@@ -1039,7 +1039,7 @@ class SandboxTest extends TestCase
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
     }
 
-    public function testSandboxAllowsArrayDynamicKeyWhenToStringAllowed()
+    public function testSandboxAllowsArrayDynamicKeyWhenToStringAllowed(): void
     {
         $twig = $this->getEnvironment(true, [], [
             'index' => '{% set arr = {(obj): "v", (obj.anotherFooObject): "v2"} %}{{ arr|keys|join(",") }}',
@@ -1048,7 +1048,7 @@ class SandboxTest extends TestCase
         $this->assertSame('foo', $twig->load('index')->render(self::$params));
     }
 
-    public function testSandboxAllowMethodToStringDisabled()
+    public function testSandboxAllowMethodToStringDisabled(): void
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
         FooObject::reset();
@@ -1056,7 +1056,7 @@ class SandboxTest extends TestCase
         $this->assertEquals(1, FooObject::$called['__toString'], 'Sandbox only calls method once');
     }
 
-    public function testSandboxUnallowedFunction()
+    public function testSandboxUnallowedFunction(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates);
         try {
@@ -1067,7 +1067,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxUnallowedRangeOperator()
+    public function testSandboxUnallowedRangeOperator(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates);
         try {
@@ -1078,7 +1078,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxAllowMethodFoo()
+    public function testSandboxAllowMethodFoo(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['Twig\Tests\Extension\FooObject' => 'foo']);
         FooObject::reset();
@@ -1086,25 +1086,25 @@ class SandboxTest extends TestCase
         $this->assertEquals(1, FooObject::$called['foo'], 'Sandbox only calls method once');
     }
 
-    public function testSandboxAllowFilter()
+    public function testSandboxAllowFilter(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], ['upper']);
         $this->assertEquals('FABIEN', $twig->load('1_basic2')->render(self::$params), 'Sandbox allow some filters');
     }
 
-    public function testSandboxAllowTag()
+    public function testSandboxAllowTag(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, ['if']);
         $this->assertEquals('foo', $twig->load('1_basic3')->render(self::$params), 'Sandbox allow some tags');
     }
 
-    public function testSandboxAllowProperty()
+    public function testSandboxAllowProperty(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], ['Twig\Tests\Extension\FooObject' => 'bar']);
         $this->assertEquals('bar', $twig->load('1_basic4')->render(self::$params), 'Sandbox allow some properties');
     }
 
-    public function testSandboxAllowDestructuring()
+    public function testSandboxAllowDestructuring(): void
     {
         $template = '{% do {bar: x, foo: y} = obj %}{{ x }}-{{ y }}';
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['do'], [], ['Twig\Tests\Extension\FooObject' => 'foo'], ['Twig\Tests\Extension\FooObject' => 'bar']);
@@ -1112,7 +1112,7 @@ class SandboxTest extends TestCase
         $this->assertSame('bar-foo', $twig->load('index')->render(self::$params), 'Sandbox allows destructuring when properties and methods are allowed');
     }
 
-    public function testSandboxUnallowedDestructuringProperty()
+    public function testSandboxUnallowedDestructuringProperty(): void
     {
         $template = '{% do {bar: x} = obj %}{{ x }}';
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['do']);
@@ -1125,7 +1125,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxUnallowedDestructuringMethod()
+    public function testSandboxUnallowedDestructuringMethod(): void
     {
         $template = '{% do {foo: y} = obj %}{{ y }}';
         $twig = $this->getEnvironment(true, [], ['index' => $template], ['do'], [], [], ['Twig\Tests\Extension\FooObject' => 'foo']);
@@ -1138,19 +1138,19 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxAllowFunction()
+    public function testSandboxAllowFunction(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], ['cycle']);
         $this->assertEquals('bar', $twig->load('1_basic7')->render(self::$params), 'Sandbox allow some functions');
     }
 
-    public function testSandboxAllowRangeOperator()
+    public function testSandboxAllowRangeOperator(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], ['range']);
         $this->assertEquals('1', $twig->load('1_range_operator')->render(self::$params), 'Sandbox allow the range operator');
     }
 
-    public function testSandboxAllowMethodsCaseInsensitive()
+    public function testSandboxAllowMethodsCaseInsensitive(): void
     {
         foreach (['getfoobar', 'getFoobar', 'getFooBar'] as $name) {
             $twig = $this->getEnvironment(true, [], self::$templates, [], [], ['Twig\Tests\Extension\FooObject' => $name]);
@@ -1162,7 +1162,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testSandboxLocallySetForAnInclude()
+    public function testSandboxLocallySetForAnInclude(): void
     {
         self::$templates = [
             '2_basic' => '{{ obj.foo }}{% include "2_included" %}{{ obj.foo }}',
@@ -1186,7 +1186,7 @@ class SandboxTest extends TestCase
         }
     }
 
-    public function testMacrosInASandbox()
+    public function testMacrosInASandbox(): void
     {
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
 {%- import _self as macros %}
@@ -1200,7 +1200,7 @@ EOF
         $this->assertEquals('<p>username</p>', $twig->load('index')->render([]));
     }
 
-    public function testSelfMacroReferenceWithStringLiteralDoesNotInjectPhp()
+    public function testSelfMacroReferenceWithStringLiteralDoesNotInjectPhp(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ _self.(\'foo + 1; trigger_error("BAD-MACRO-REF") //\') }}']);
 
@@ -1228,7 +1228,7 @@ EOF
         $this->assertFalse($triggered, 'No PHP from the template literal must execute.');
     }
 
-    public function testImportedTemplateMacroReferenceWithBadIdentifierDoesNotInjectPhp()
+    public function testImportedTemplateMacroReferenceWithBadIdentifierDoesNotInjectPhp(): void
     {
         $payload = '{% import "m" as m %}{{ m.(\'foo + 1; trigger_error("BAD-IMPORT-REF") //\') }}';
         $twig = $this->getEnvironment(true, [], [
@@ -1258,7 +1258,7 @@ EOF
         $this->assertFalse($triggered, 'No PHP from the template literal must execute.');
     }
 
-    public function testSelfMacroReferenceWithValidIdentifierStillWorks()
+    public function testSelfMacroReferenceWithValidIdentifierStillWorks(): void
     {
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
             {%- macro greet(n) %}Hi {{ n }}{% endmacro %}
@@ -1269,7 +1269,7 @@ EOF
         $this->assertSame('Hi World', $twig->load('index')->render([]));
     }
 
-    public function testSandboxDisabledAfterIncludeFunctionError()
+    public function testSandboxDisabledAfterIncludeFunctionError(): void
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
 
@@ -1289,7 +1289,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSandboxTagIncludeWithPreloadedTemplate()
+    public function testSandboxTagIncludeWithPreloadedTemplate(): void
     {
         $twig = $this->getEnvironment(false, [], [
             'index' => '{% sandbox %}{% include "included" %}{% endsandbox %}',
@@ -1307,7 +1307,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSandboxTagIncludeIgnoreMissingWithPreloadedTemplate()
+    public function testSandboxTagIncludeIgnoreMissingWithPreloadedTemplate(): void
     {
         $twig = $this->getEnvironment(false, [], [
             'index' => '{% sandbox %}{% include "included" ignore missing %}{% endsandbox %}',
@@ -1321,7 +1321,7 @@ EOF
         $twig->load('index')->render([]);
     }
 
-    public function testSandboxWithNoClosureFilter()
+    public function testSandboxWithNoClosureFilter(): void
     {
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
 {{ ["foo", "bar", ""]|filter("trim")|join(", ") }}
@@ -1334,7 +1334,7 @@ EOF
         $twig->load('index')->render([]);
     }
 
-    public function testSandboxWithClosureFilter()
+    public function testSandboxWithClosureFilter(): void
     {
         $twig = $this->getEnvironment(true, ['autoescape' => 'html'], ['index' => <<<EOF
 {{ ["foo", "bar", ""]|filter(v => v != "")|join(", ") }}
@@ -1344,7 +1344,7 @@ EOF
         $this->assertSame('foo, bar', $twig->load('index')->render([]));
     }
 
-    public function testMultipleClassMatchesViaInheritanceInAllowedMethods()
+    public function testMultipleClassMatchesViaInheritanceInAllowedMethods(): void
     {
         $twig_child_first = $this->getEnvironment(true, [], self::$templates, [], [], [
             'Twig\Tests\Extension\ChildClass' => ['ChildMethod'],
@@ -1382,7 +1382,7 @@ EOF
         $this->expectNotToPerformAssertions();
     }
 
-    public function testSandboxAllowsColumnFilterOnAllowedProperty()
+    public function testSandboxAllowsColumnFilterOnAllowedProperty(): void
     {
         $params = ['obj' => new ColumnObject()];
         $twig = $this->getEnvironment(true, [], ['index' => "{{ [obj]|column('bar')|first }}"], [], ['column', 'first'], [], ['Twig\Tests\Extension\ColumnObject' => ['bar']]);
@@ -1390,7 +1390,7 @@ EOF
         $this->assertSame('bar', $twig->load('index')->render($params));
     }
 
-    public function testSandboxBlocksColumnFilterOnDisallowedProperty()
+    public function testSandboxBlocksColumnFilterOnDisallowedProperty(): void
     {
         $params = ['obj' => new ColumnObject()];
         $twig = $this->getEnvironment(true, [], ['index' => "{{ [obj]|column('bar')|first }}"], [], ['column', 'first']);
@@ -1404,7 +1404,7 @@ EOF
         }
     }
 
-    public function testSandboxBlocksColumnFilterOnDisallowedIndex()
+    public function testSandboxBlocksColumnFilterOnDisallowedIndex(): void
     {
         $params = ['obj' => new ColumnObject()];
         $twig = $this->getEnvironment(true, [], ['index' => "{{ [obj]|column('bar', 'foo')|keys|first }}"], [], ['column', 'first', 'keys'], [], ['Twig\Tests\Extension\ColumnObject' => ['bar']]);
@@ -1418,7 +1418,7 @@ EOF
         }
     }
 
-    public function testSandboxBlocksColumnFilterOnMagicGetter()
+    public function testSandboxBlocksColumnFilterOnMagicGetter(): void
     {
         $params = ['magic' => new MagicObject()];
         $twig = $this->getEnvironment(true, [], ['index' => "{{ [magic]|column('anything')|first }}"], [], ['column', 'first']);
@@ -1436,7 +1436,7 @@ EOF
      * @dataProvider getStringableTraversableBypassTemplates
      */
     #[DataProvider('getStringableTraversableBypassTemplates')]
-    public function testSandboxBlocksToStringInStringableTraversable(string $template)
+    public function testSandboxBlocksToStringInStringableTraversable(string $template): void
     {
         $twig = $this->getEnvironment(
             true,
@@ -1468,7 +1468,7 @@ EOF
      * @dataProvider getStringableTraversableBypassTemplates
      */
     #[DataProvider('getStringableTraversableBypassTemplates'), Group('legacy')]
-    public function testSourcePolicySandboxBlocksToStringInStringableTraversable(string $template)
+    public function testSourcePolicySandboxBlocksToStringInStringableTraversable(string $template): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -1500,7 +1500,7 @@ EOF
         }
     }
 
-    public function testSandboxAllowsPrintingStringableTraversableWhenToStringAllowed()
+    public function testSandboxAllowsPrintingStringableTraversableWhenToStringAllowed(): void
     {
         // Printing the container itself yields its `__toString()` value. The
         // sandbox materialises the iterable to also policy-check the elements
@@ -1524,7 +1524,7 @@ EOF
      * @dataProvider getCyclicTraversableTemplates
      */
     #[DataProvider('getCyclicTraversableTemplates')]
-    public function testSandboxHandlesCyclicTraversableWithoutStackOverflow(string $template)
+    public function testSandboxHandlesCyclicTraversableWithoutStackOverflow(string $template): void
     {
         // A self-referencing IteratorAggregate must not cause the sandbox policy
         // walker to recurse infinitely when materialising the iterable. PHP itself
@@ -1554,7 +1554,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSourcePolicySandboxBlocksToStringInTraversableJoin()
+    public function testSourcePolicySandboxBlocksToStringInTraversableJoin(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -1580,7 +1580,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSourcePolicySandboxBlocksToStringInTraversableReplace()
+    public function testSourcePolicySandboxBlocksToStringInTraversableReplace(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -1602,7 +1602,7 @@ EOF
         }
     }
 
-    public function testSandboxPreservesTraversableArgumentIdentity()
+    public function testSandboxPreservesTraversableArgumentIdentity(): void
     {
         // Regression for https://github.com/twigphp/Twig/issues/4820:
         // a typed Traversable argument (e.g. Symfony's FormView) must reach
@@ -1630,7 +1630,7 @@ EOF
         $this->assertSame('stringable-traversable', $twig->load('index')->render($params));
     }
 
-    public function testSandboxStillBlocksDisallowedToStringInTraversableArgument()
+    public function testSandboxStillBlocksDisallowedToStringInTraversableArgument(): void
     {
         // The container is returned as-is, but yielded elements must still
         // be policy-checked since host code can string-coerce them.
@@ -1883,7 +1883,7 @@ EOF
         $this->assertSame('ok', $twig->load('index')->render(['n' => 42]));
     }
 
-    public function testColumnFilterUnaffectedOutsideSandbox()
+    public function testColumnFilterUnaffectedOutsideSandbox(): void
     {
         $params = ['obj' => new ColumnObject()];
         $twig = $this->getEnvironment(false, [], ['index' => "{{ [obj]|column('bar')|first }}"]);
@@ -1895,7 +1895,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedProperty()
+    public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedProperty(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -1922,7 +1922,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedIndex()
+    public function testSourcePolicySandboxBlocksColumnFilterOnDisallowedIndex(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -1949,7 +1949,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSourcePolicySandboxAllowsColumnFilterOnAllowedProperty()
+    public function testSourcePolicySandboxAllowsColumnFilterOnAllowedProperty(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -1970,7 +1970,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSourcePolicySandboxBlocksColumnFilterOnMagicGetter()
+    public function testSourcePolicySandboxBlocksColumnFilterOnMagicGetter(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -2008,7 +2008,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSandboxSourcePolicyEnableReturningFalse()
+    public function testSandboxSourcePolicyEnableReturningFalse(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -2025,7 +2025,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSandboxSourcePolicyEnableReturningTrue()
+    public function testSandboxSourcePolicyEnableReturningTrue(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -2043,7 +2043,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables()
+    public function testSandboxSourcePolicyFalseDoesntOverrideOtherEnables(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -2063,7 +2063,7 @@ EOF
      * @dataProvider provideSourcePolicyArrowBlockedTemplates
      */
     #[DataProvider('provideSourcePolicyArrowBlockedTemplates'), Group('legacy')]
-    public function testSourcePolicyBlocksNonClosureCallableInArrow(string $template)
+    public function testSourcePolicyBlocksNonClosureCallableInArrow(string $template): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -2096,7 +2096,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSourcePolicyAllowsClosureInArrow()
+    public function testSourcePolicyAllowsClosureInArrow(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -2115,7 +2115,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testNonSandboxedSourcePolicyAllowsNonClosureCallable()
+    public function testNonSandboxedSourcePolicyAllowsNonClosureCallable(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
         $this->expectDeprecation('Since twig/twig 3.15: Passing a callable that is not a PHP \Closure as an argument to the "sort" filter is deprecated.');
@@ -2131,7 +2131,7 @@ EOF
         $this->assertSame('a,b', $twig->load('1_basic')->render([]));
     }
 
-    public function testNeedsIsSandboxedFilterReceivesTrueWhenSandboxed()
+    public function testNeedsIsSandboxedFilterReceivesTrueWhenSandboxed(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo"|sandbox_aware }}'], [], ['sandbox_aware']);
         $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
@@ -2141,7 +2141,7 @@ EOF
         $this->assertSame('foo:on', $twig->load('index')->render([]));
     }
 
-    public function testNeedsIsSandboxedFilterReceivesFalseWhenNotSandboxed()
+    public function testNeedsIsSandboxedFilterReceivesFalseWhenNotSandboxed(): void
     {
         $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo"|sandbox_aware }}']);
         $twig->addFilter(new TwigFilter('sandbox_aware', static function (bool $isSandboxed, string $value) {
@@ -2155,7 +2155,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testNeedsIsSandboxedFilterFollowsSourcePolicy()
+    public function testNeedsIsSandboxedFilterFollowsSourcePolicy(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -2176,7 +2176,7 @@ EOF
         $this->assertSame('foo:off', $twig->load('out')->render([]));
     }
 
-    public function testNeedsIsSandboxedFunctionWithoutSandboxExtension()
+    public function testNeedsIsSandboxedFunctionWithoutSandboxExtension(): void
     {
         $loader = new ArrayLoader(['index' => '{{ sandbox_aware("foo") }}']);
         $twig = new Environment($loader, ['debug' => true, 'cache' => false, 'autoescape' => false]);
@@ -2187,7 +2187,7 @@ EOF
         $this->assertSame('foo:off', $twig->load('index')->render([]));
     }
 
-    public function testNeedsIsSandboxedTestReceivesTrueWhenSandboxed()
+    public function testNeedsIsSandboxedTestReceivesTrueWhenSandboxed(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}'], [], [], [], [], [], null, false, ['sandbox_aware']);
         $twig->addTest(new TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
@@ -2197,7 +2197,7 @@ EOF
         $this->assertSame('on', $twig->load('index')->render([]));
     }
 
-    public function testNeedsIsSandboxedTestReceivesFalseWhenNotSandboxed()
+    public function testNeedsIsSandboxedTestReceivesFalseWhenNotSandboxed(): void
     {
         $twig = $this->getEnvironment(false, [], ['index' => '{{ "foo" is sandbox_aware ? "on" : "off" }}']);
         $twig->addTest(new TwigTest('sandbox_aware', static function (bool $isSandboxed, string $value) {
@@ -2211,7 +2211,7 @@ EOF
      * @group legacy
      */
     #[Group('legacy')]
-    public function testNeedsIsSandboxedHelperTriggersDeprecationForCustomImplementation()
+    public function testNeedsIsSandboxedHelperTriggersDeprecationForCustomImplementation(): void
     {
         $callable = new LegacyTwigCallableWithoutNeedsIsSandboxed();
 
@@ -2220,7 +2220,7 @@ EOF
         $this->assertFalse(CallExpression::needsIsSandboxed($callable));
     }
 
-    public function testAlwaysAllowedInSandboxFilterBypassesAllowList()
+    public function testAlwaysAllowedInSandboxFilterBypassesAllowList(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "fabien"|safe_upper }}']);
         $twig->addFilter(new TwigFilter('safe_upper', 'strtoupper', ['always_allowed_in_sandbox' => true]));
@@ -2228,7 +2228,7 @@ EOF
         $this->assertSame('FABIEN', $twig->load('index')->render([]));
     }
 
-    public function testAlwaysAllowedInSandboxFilterStillEnforcedWhenFlagNotSet()
+    public function testAlwaysAllowedInSandboxFilterStillEnforcedWhenFlagNotSet(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "fabien"|gated_upper }}']);
         $twig->addFilter(new TwigFilter('gated_upper', 'strtoupper'));
@@ -2238,7 +2238,7 @@ EOF
         $twig->load('index')->render([]);
     }
 
-    public function testAlwaysAllowedInSandboxFunctionBypassesAllowList()
+    public function testAlwaysAllowedInSandboxFunctionBypassesAllowList(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ safe_greet("fabien") }}']);
         $twig->addFunction(new TwigFunction('safe_greet', static fn (string $name) => "hi $name", ['always_allowed_in_sandbox' => true]));
@@ -2246,7 +2246,7 @@ EOF
         $this->assertSame('hi fabien', $twig->load('index')->render([]));
     }
 
-    public function testAlwaysAllowedInSandboxFunctionStillEnforcedWhenFlagNotSet()
+    public function testAlwaysAllowedInSandboxFunctionStillEnforcedWhenFlagNotSet(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ gated_greet("fabien") }}']);
         $twig->addFunction(new TwigFunction('gated_greet', static fn (string $name) => "hi $name"));
@@ -2256,7 +2256,7 @@ EOF
         $twig->load('index')->render([]);
     }
 
-    public function testAlwaysAllowedInSandboxTestBypassesAllowList()
+    public function testAlwaysAllowedInSandboxTestBypassesAllowList(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ 4 is safe_even ? "yes" : "no" }}'], [], [], [], [], [], null, true);
         $twig->addTest(new TwigTest('safe_even', static fn ($value) => 0 === $value % 2, ['always_allowed_in_sandbox' => true]));
@@ -2264,7 +2264,7 @@ EOF
         $this->assertSame('yes', $twig->load('index')->render([]));
     }
 
-    public function testAlwaysAllowedInSandboxTestStillEnforcedWhenFlagNotSet()
+    public function testAlwaysAllowedInSandboxTestStillEnforcedWhenFlagNotSet(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ 4 is gated_even ? "yes" : "no" }}'], [], [], [], [], [], null, true);
         $twig->addTest(new TwigTest('gated_even', static fn ($value) => 0 === $value % 2));
@@ -2274,7 +2274,7 @@ EOF
         $twig->load('index')->render([]);
     }
 
-    public function testAlwaysAllowedInSandboxFunctionAlsoCoversRangeOperator()
+    public function testAlwaysAllowedInSandboxFunctionAlsoCoversRangeOperator(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ (1..2)[0] }}']);
         // override the built-in `range` function with one that is always allowed
@@ -2283,7 +2283,7 @@ EOF
         $this->assertSame('1', $twig->load('index')->render([]));
     }
 
-    public function testAlwaysAllowedInSandboxFilterFromUndefinedCallbackUsesParsedCallable()
+    public function testAlwaysAllowedInSandboxFilterFromUndefinedCallbackUsesParsedCallable(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ "fabien"|callback_upper }}']);
         $callbackCalled = false;
@@ -2299,7 +2299,7 @@ EOF
         $this->assertSame('FABIEN', $twig->load('index')->render([]));
     }
 
-    public function testAlwaysAllowedInSandboxFunctionFromUndefinedCallbackUsesParsedCallable()
+    public function testAlwaysAllowedInSandboxFunctionFromUndefinedCallbackUsesParsedCallable(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ callback_upper("fabien") }}']);
         $callbackCalled = false;
@@ -2315,7 +2315,7 @@ EOF
         $this->assertSame('FABIEN', $twig->load('index')->render([]));
     }
 
-    public function testAlwaysAllowedInSandboxParserCallableFunctionFromUndefinedCallbackUsesParsedCallable()
+    public function testAlwaysAllowedInSandboxParserCallableFunctionFromUndefinedCallbackUsesParsedCallable(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ callback_literal() }}']);
         $callbackCalled = false;
@@ -2334,7 +2334,7 @@ EOF
         $this->assertSame('literal', $twig->load('index')->render([]));
     }
 
-    public function testAlwaysAllowedInSandboxTagBypassesAllowList()
+    public function testAlwaysAllowedInSandboxTagBypassesAllowList(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% always_allowed_tag %}']);
         $twig->addTokenParser(new AlwaysAllowedSandboxTokenParser());
@@ -2342,7 +2342,7 @@ EOF
         $this->assertSame('always-allowed', $twig->load('index')->render([]));
     }
 
-    public function testAlwaysAllowedInSandboxTagStillEnforcedWhenFlagNotSet()
+    public function testAlwaysAllowedInSandboxTagStillEnforcedWhenFlagNotSet(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% gated_tag %}']);
         $twig->addTokenParser(new GatedSandboxTokenParser());
@@ -2352,7 +2352,7 @@ EOF
         $twig->load('index')->render([]);
     }
 
-    public function testAlwaysAllowedInSandboxFilterStillEnforcesToStringPolicyOnArguments()
+    public function testAlwaysAllowedInSandboxFilterStillEnforcesToStringPolicyOnArguments(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ obj|safe_upper }}']);
         $twig->addFilter(new TwigFilter('safe_upper', static fn (string $s) => strtoupper($s), ['always_allowed_in_sandbox' => true]));
@@ -2362,7 +2362,7 @@ EOF
         $twig->load('index')->render(['obj' => new FooObject()]);
     }
 
-    public function testAlwaysAllowedInSandboxFunctionStillEnforcesToStringPolicyOnArguments()
+    public function testAlwaysAllowedInSandboxFunctionStillEnforcesToStringPolicyOnArguments(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ safe_greet(obj) }}']);
         $twig->addFunction(new TwigFunction('safe_greet', static fn (string $s) => "hi $s", ['always_allowed_in_sandbox' => true]));
@@ -2375,7 +2375,7 @@ EOF
     /**
      * @group legacy
      */
-    public function testCustomTokenParserWithoutIsAlwaysAllowedInSandboxTriggersDeprecation()
+    public function testCustomTokenParserWithoutIsAlwaysAllowedInSandboxTriggersDeprecation(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% legacy_tag %}'], tags: ['legacy_tag']);
         $twig->addTokenParser(new LegacyTokenParserWithoutIsAlwaysAllowedInSandbox());
@@ -2477,13 +2477,13 @@ class LegacyTwigCallableWithoutNeedsIsSandboxed implements TwigCallableInterface
 
 class ParentClass
 {
-    public function ParentMethod()
+    public function ParentMethod(): void
     {
     }
 }
 class ChildClass extends ParentClass
 {
-    public function ChildMethod()
+    public function ChildMethod(): void
     {
     }
 }
@@ -2494,7 +2494,7 @@ class FooObject
 
     public $bar = 'bar';
 
-    public static function reset()
+    public static function reset(): void
     {
         self::$called = ['__toString' => 0, 'foo' => 0, 'getFooBar' => 0];
     }

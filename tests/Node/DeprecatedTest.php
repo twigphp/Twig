@@ -35,7 +35,7 @@ use Twig\TwigFunction;
 
 class DeprecatedTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr = new ConstantExpression('foo', 1);
         $node = new DeprecatedNode($expr, 1);
@@ -99,6 +99,6 @@ EOF, $environment];
     }
 }
 
-function foo()
+function foo(): void
 {
 }

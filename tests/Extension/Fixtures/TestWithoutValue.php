@@ -16,7 +16,7 @@ use Twig\Attribute\AsTwigTest;
 class TestWithoutValue
 {
     #[AsTwigTest('my_test')]
-    public function myTest()
+    public function myTest(): void
     {
     }
 }

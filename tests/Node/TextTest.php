@@ -26,7 +26,7 @@ use Twig\Test\NodeTestCase;
 
 class TextTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $node = new TextNode('foo', 1);
 
@@ -45,7 +45,7 @@ class TextTest extends NodeTestCase
      * @dataProvider getIsBlankData
      */
     #[DataProvider('getIsBlankData')]
-    public function testIsBlank($blank)
+    public function testIsBlank($blank): void
     {
         $this->assertTrue((new TextNode($blank, 1))->isBlank());
         $this->assertTrue((new TextNode(\chr(0xEF).\chr(0xBB).\chr(0xBF).$blank, 1))->isBlank());

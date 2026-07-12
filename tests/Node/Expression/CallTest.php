@@ -33,13 +33,13 @@ use Twig\TwigFunction;
 #[Group('legacy')]
 class CallTest extends TestCase
 {
-    public function testGetArguments()
+    public function testGetArguments(): void
     {
         $node = $this->createFunctionExpression('date', 'date');
         $this->assertEquals(['U', null], $this->getArguments($node, ['date', ['format' => 'U', 'timestamp' => null]]));
     }
 
-    public function testGetArgumentsWhenPositionalArgumentsAfterNamedArguments()
+    public function testGetArgumentsWhenPositionalArgumentsAfterNamedArguments(): void
     {
         $node = $this->createFunctionExpression('date', 'date');
 
@@ -49,7 +49,7 @@ class CallTest extends TestCase
         $this->getArguments($node, ['date', ['timestamp' => 123456, 'Y-m-d']]);
     }
 
-    public function testGetArgumentsWhenArgumentIsDefinedTwice()
+    public function testGetArgumentsWhenArgumentIsDefinedTwice(): void
     {
         $node = $this->createFunctionExpression('date', 'date');
 
@@ -59,7 +59,7 @@ class CallTest extends TestCase
         $this->getArguments($node, ['date', ['Y-m-d', 'format' => 'U']]);
     }
 
-    public function testGetArgumentsWithWrongNamedArgumentName()
+    public function testGetArgumentsWithWrongNamedArgumentName(): void
     {
         $node = $this->createFunctionExpression('date', 'date');
 
@@ -69,7 +69,7 @@ class CallTest extends TestCase
         $this->getArguments($node, ['date', ['Y-m-d', 'timestamp' => null, 'unknown' => '']]);
     }
 
-    public function testGetArgumentsWithWrongNamedArgumentNames()
+    public function testGetArgumentsWithWrongNamedArgumentNames(): void
     {
         $node = $this->createFunctionExpression('date', 'date');
 
@@ -79,7 +79,7 @@ class CallTest extends TestCase
         $this->getArguments($node, ['date', ['Y-m-d', 'timestamp' => null, 'unknown1' => '', 'unknown2' => '']]);
     }
 
-    public function testResolveArgumentsWithMissingValueForOptionalArgument()
+    public function testResolveArgumentsWithMissingValueForOptionalArgument(): void
     {
         if (\PHP_VERSION_ID >= 80000) {
             $this->markTestSkipped('substr_compare() has a default value in 8.0, so the test does not work anymore, one should find another PHP built-in function for this test to work in PHP 8.');
@@ -93,19 +93,19 @@ class CallTest extends TestCase
         $this->getArguments($node, ['substr_compare', ['abcd', 'bc', 'offset' => 1, 'case_sensitivity' => true]]);
     }
 
-    public function testResolveArgumentsOnlyNecessaryArgumentsForCustomFunction()
+    public function testResolveArgumentsOnlyNecessaryArgumentsForCustomFunction(): void
     {
         $node = $this->createFunctionExpression('custom_function', [$this, 'customFunction']);
         $this->assertEquals(['arg1'], $this->getArguments($node, [[$this, 'customFunction'], ['arg1' => 'arg1']]));
     }
 
-    public function testGetArgumentsForStaticMethod()
+    public function testGetArgumentsForStaticMethod(): void
     {
         $node = $this->createFunctionExpression('custom_static_function', __CLASS__.'::customStaticFunction');
         $this->assertEquals(['arg1'], $this->getArguments($node, [__CLASS__.'::customStaticFunction', ['arg1' => 'arg1']]));
     }
 
-    public function testResolveArgumentsWithMissingParameterForArbitraryArguments()
+    public function testResolveArgumentsWithMissingParameterForArbitraryArguments(): void
     {
         $node = $this->createFunctionExpression('foo', [$this, 'customFunctionWithArbitraryArguments'], true);
 
@@ -115,7 +115,7 @@ class CallTest extends TestCase
         $this->getArguments($node, [[$this, 'customFunctionWithArbitraryArguments'], []]);
     }
 
-    public function testGetArgumentsWithInvalidCallable()
+    public function testGetArgumentsWithInvalidCallable(): void
     {
         $node = $this->createFunctionExpression('foo', '<not-a-callable>', true);
 
@@ -125,7 +125,7 @@ class CallTest extends TestCase
         $this->getArguments($node, ['<not-a-callable>', []]);
     }
 
-    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction()
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnFunction(): void
     {
         $node = $this->createFunctionExpression('foo', 'Twig\Tests\Node\Expression\custom_call_test_function', true);
 
@@ -135,7 +135,7 @@ class CallTest extends TestCase
         $this->getArguments($node, ['Twig\Tests\Node\Expression\custom_call_test_function', []]);
     }
 
-    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject()
+    public function testResolveArgumentsWithMissingParameterForArbitraryArgumentsOnObject(): void
     {
         $node = $this->createFunctionExpression('foo', new CallableTestClass(), true);
 
@@ -145,15 +145,15 @@ class CallTest extends TestCase
         $this->getArguments($node, [new CallableTestClass(), []]);
     }
 
-    public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = [])
+    public static function customStaticFunction($arg1, $arg2 = 'default', $arg3 = []): void
     {
     }
 
-    public function customFunction($arg1, $arg2 = 'default', $arg3 = [])
+    public function customFunction($arg1, $arg2 = 'default', $arg3 = []): void
     {
     }
 
-    public function customFunctionWithArbitraryArguments()
+    public function customFunctionWithArbitraryArguments(): void
     {
     }
 
@@ -176,11 +176,11 @@ class Node_Expression_Call extends FunctionExpression
 
 class CallableTestClass
 {
-    public function __invoke($required)
+    public function __invoke($required): void
     {
     }
 }
 
-function custom_call_test_function($required)
+function custom_call_test_function($required): void
 {
 }

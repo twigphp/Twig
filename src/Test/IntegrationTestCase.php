@@ -127,7 +127,7 @@ abstract class IntegrationTestCase extends TestCase
      * @return void
      */
     #[DataProvider('provideTests')]
-    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
+    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
@@ -140,7 +140,7 @@ abstract class IntegrationTestCase extends TestCase
      * @return void
      */
     #[DataProvider('provideLegacyTests'), Group('legacy')]
-    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
+    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
@@ -230,7 +230,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return void
      */
-    protected function doIntegrationTest($file, $message, $condition, $templateSources, $exception, $outputs, $deprecation = '')
+    protected function doIntegrationTest($file, $message, $condition, $templateSources, $exception, $outputs, $deprecation = ''): void
     {
         if (!$outputs) {
             // dummy test added by assembleTests() when there is no (legacy) test to run

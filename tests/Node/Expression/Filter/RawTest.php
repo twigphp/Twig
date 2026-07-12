@@ -26,7 +26,7 @@ use Twig\Test\NodeTestCase;
 
 class RawTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $filter = new RawFilter($node = new ConstantExpression('foo', 12));
 

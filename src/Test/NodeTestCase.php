@@ -53,7 +53,7 @@ abstract class NodeTestCase extends TestCase
      * @return void
      */
     #[DataProvider('provideTests')]
-    public function testCompile($node, $source, $environment = null, $isPattern = false)
+    public function testCompile($node, $source, $environment = null, $isPattern = false): void
     {
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
@@ -61,7 +61,7 @@ abstract class NodeTestCase extends TestCase
     /**
      * @return void
      */
-    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = false)
+    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = false): void
     {
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);

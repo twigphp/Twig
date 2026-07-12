@@ -20,7 +20,7 @@ use Twig\Extra\TwigExtraBundle\Extensions;
 
 class TwigExtraExtensionTest extends TestCase
 {
-    public function testDefaultConfiguration()
+    public function testDefaultConfiguration(): void
     {
         $container = new ContainerBuilder(new ParameterBag([
             'kernel.debug' => false,

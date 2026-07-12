@@ -38,7 +38,7 @@ class SandboxStateChangeTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public function testEnableSandboxAfterFirstRender()
+    public function testEnableSandboxAfterFirstRender(): void
     {
         [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], new SecurityPolicy(allowedFilters: []), false);
 
@@ -51,7 +51,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('t');
     }
 
-    public function testDisableSandboxAfterFirstRender()
+    public function testDisableSandboxAfterFirstRender(): void
     {
         // Use enableSandbox() to toggle a non-global sandbox so disableSandbox() actually has an effect.
         [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], new SecurityPolicy(allowedFilters: []), false);
@@ -69,7 +69,7 @@ class SandboxStateChangeTest extends TestCase
         $this->assertSame('FOO', $twig->render('t'));
     }
 
-    public function testSetSecurityPolicyTightening()
+    public function testSetSecurityPolicyTightening(): void
     {
         $permissive = new SecurityPolicy(allowedFilters: ['upper', 'escape']);
         [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], $permissive, true);
@@ -83,7 +83,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('t');
     }
 
-    public function testSetSecurityPolicyLoosening()
+    public function testSetSecurityPolicyLoosening(): void
     {
         $strict = new SecurityPolicy(allowedFilters: []);
         [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], $strict, true);
@@ -104,7 +104,7 @@ class SandboxStateChangeTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSourcePolicyDecisionFlip()
+    public function testSourcePolicyDecisionFlip(): void
     {
         $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
 
@@ -127,7 +127,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('t');
     }
 
-    public function testPreWarmedParentTemplateThroughExtends()
+    public function testPreWarmedParentTemplateThroughExtends(): void
     {
         $templates = [
             'parent.twig' => '{% block c %}default{% endblock %}{{ "hi"|upper }}',
@@ -149,7 +149,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('child.twig');
     }
 
-    public function testPreWarmedSharedViaSandboxedInclude()
+    public function testPreWarmedSharedViaSandboxedInclude(): void
     {
         $templates = [
             'top' => '{{ include("user", sandboxed=true) }}',
@@ -174,7 +174,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('top');
     }
 
-    public function testMacroFromPreWarmedTemplate()
+    public function testMacroFromPreWarmedTemplate(): void
     {
         $templates = [
             'macros.twig' => '{% macro greet(name) %}{{ name|upper }}{% endmacro %}',
@@ -200,7 +200,7 @@ class SandboxStateChangeTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSandboxTagAroundIncludeOfPreWarmedTemplate()
+    public function testSandboxTagAroundIncludeOfPreWarmedTemplate(): void
     {
         $this->expectDeprecation('Since twig/twig 3.15: The "sandbox" tag is deprecated in "wrapper" at line 1.');
 
@@ -222,7 +222,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('wrapper');
     }
 
-    public function testTagBypassThroughPreWarmedParent()
+    public function testTagBypassThroughPreWarmedParent(): void
     {
         $templates = [
             'parent.twig' => '{% block c %}{% for i in 1..2 %}{{ i }}{% endfor %}{% endblock %}',
@@ -244,7 +244,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('child.twig');
     }
 
-    public function testFunctionBypassThroughPreWarmedParent()
+    public function testFunctionBypassThroughPreWarmedParent(): void
     {
         $templates = [
             'parent.twig' => '{% block c %}{{ range(1, 2)|first }}{% endblock %}',
@@ -266,7 +266,7 @@ class SandboxStateChangeTest extends TestCase
         $twig->render('child.twig');
     }
 
-    public function testDynamicParentFilterRejectedWhenReachedViaMacroImport()
+    public function testDynamicParentFilterRejectedWhenReachedViaMacroImport(): void
     {
         // Regression: getTemplateForMacro() walks getParent() to find the
         // macro on a parent template. When the imported template has a
@@ -300,7 +300,7 @@ class SandboxStateChangeTest extends TestCase
         $this->assertSame(0, $evilCalls, 'The forbidden filter must not be invoked before the security check runs.');
     }
 
-    public function testDynamicParentFunctionRejectedWhenReachedViaMacroImport()
+    public function testDynamicParentFunctionRejectedWhenReachedViaMacroImport(): void
     {
         // Same root cause as the filter case, but for functions called from
         // within the dynamic parent expression.
@@ -330,7 +330,7 @@ class SandboxStateChangeTest extends TestCase
         $this->assertSame(0, $evilCalls, 'The forbidden function must not be invoked before the security check runs.');
     }
 
-    public function testDynamicParentFilterRejectedOnPreWarmedTemplate()
+    public function testDynamicParentFilterRejectedOnPreWarmedTemplate(): void
     {
         // Same bypass, but reached after the template has been pre-warmed
         // outside the sandbox (which would have otherwise short-circuited
@@ -366,7 +366,7 @@ class SandboxStateChangeTest extends TestCase
         $this->assertSame(1, $evilCalls, 'The forbidden filter must not be invoked after the sandbox is enabled.');
     }
 
-    public function testRepeatedRendersInStableSandboxedStateRunCheckEachTime()
+    public function testRepeatedRendersInStableSandboxedStateRunCheckEachTime(): void
     {
         $counter = new CountingSecurityPolicy(new SecurityPolicy(allowedFilters: ['upper']));
         [$twig] = $this->build(['t' => '{{ "x"|upper }}'], $counter, true);
@@ -380,7 +380,7 @@ class SandboxStateChangeTest extends TestCase
         $this->assertGreaterThanOrEqual(5, $counter->callCount);
     }
 
-    public function testNoCheckWhenSandboxRemainsOff()
+    public function testNoCheckWhenSandboxRemainsOff(): void
     {
         $counter = new CountingSecurityPolicy(new SecurityPolicy());
         [$twig] = $this->build(['t' => '{{ "x"|upper }}'], $counter, false);

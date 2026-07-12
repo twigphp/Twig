@@ -157,7 +157,7 @@ class Environment
      *
      * @return void
      */
-    public function enableDebug()
+    public function enableDebug(): void
     {
         $this->debug = true;
         $this->updateOptionsHash();
@@ -168,7 +168,7 @@ class Environment
      *
      * @return void
      */
-    public function disableDebug()
+    public function disableDebug(): void
     {
         $this->debug = false;
         $this->updateOptionsHash();
@@ -189,7 +189,7 @@ class Environment
      *
      * @return void
      */
-    public function enableAutoReload()
+    public function enableAutoReload(): void
     {
         $this->autoReload = true;
     }
@@ -199,7 +199,7 @@ class Environment
      *
      * @return void
      */
-    public function disableAutoReload()
+    public function disableAutoReload(): void
     {
         $this->autoReload = false;
     }
@@ -219,7 +219,7 @@ class Environment
      *
      * @return void
      */
-    public function enableStrictVariables()
+    public function enableStrictVariables(): void
     {
         $this->strictVariables = true;
         $this->updateOptionsHash();
@@ -230,7 +230,7 @@ class Environment
      *
      * @return void
      */
-    public function disableStrictVariables()
+    public function disableStrictVariables(): void
     {
         $this->strictVariables = false;
         $this->updateOptionsHash();
@@ -281,7 +281,7 @@ class Environment
      *
      * @return void
      */
-    public function setCache($cache)
+    public function setCache($cache): void
     {
         if (\is_string($cache)) {
             $this->originalCache = $cache;
@@ -519,7 +519,7 @@ class Environment
     /**
      * @return void
      */
-    public function setLexer(Lexer $lexer)
+    public function setLexer(Lexer $lexer): void
     {
         $this->lexer = $lexer;
     }
@@ -539,7 +539,7 @@ class Environment
     /**
      * @return void
      */
-    public function setParser(Parser $parser)
+    public function setParser(Parser $parser): void
     {
         $this->parser = $parser;
     }
@@ -561,7 +561,7 @@ class Environment
     /**
      * @return void
      */
-    public function setCompiler(Compiler $compiler)
+    public function setCompiler(Compiler $compiler): void
     {
         $this->compiler = $compiler;
     }
@@ -598,7 +598,7 @@ class Environment
     /**
      * @return void
      */
-    public function setLoader(LoaderInterface $loader)
+    public function setLoader(LoaderInterface $loader): void
     {
         $this->loader = $loader;
     }
@@ -611,7 +611,7 @@ class Environment
     /**
      * @return void
      */
-    public function setCharset(string $charset)
+    public function setCharset(string $charset): void
     {
         if ('UTF8' === $charset = strtoupper($charset ?: '')) {
             // iconv on Windows requires "UTF-8" instead of "UTF8"
@@ -634,7 +634,7 @@ class Environment
     /**
      * @return void
      */
-    public function addRuntimeLoader(RuntimeLoaderInterface $loader)
+    public function addRuntimeLoader(RuntimeLoaderInterface $loader): void
     {
         $this->runtimeLoaders[] = $loader;
     }
@@ -684,7 +684,7 @@ class Environment
     /**
      * @return void
      */
-    public function addExtension(ExtensionInterface $extension)
+    public function addExtension(ExtensionInterface $extension): void
     {
         $this->extensionSet->addExtension($extension);
         $this->updateOptionsHash();
@@ -695,7 +695,7 @@ class Environment
      *
      * @return void
      */
-    public function setExtensions(array $extensions)
+    public function setExtensions(array $extensions): void
     {
         $this->extensionSet->setExtensions($extensions);
         $this->updateOptionsHash();
@@ -712,7 +712,7 @@ class Environment
     /**
      * @return void
      */
-    public function addTokenParser(TokenParserInterface $parser)
+    public function addTokenParser(TokenParserInterface $parser): void
     {
         $this->extensionSet->addTokenParser($parser);
     }
@@ -746,7 +746,7 @@ class Environment
     /**
      * @return void
      */
-    public function addNodeVisitor(NodeVisitorInterface $visitor)
+    public function addNodeVisitor(NodeVisitorInterface $visitor): void
     {
         $this->extensionSet->addNodeVisitor($visitor);
     }
@@ -764,7 +764,7 @@ class Environment
     /**
      * @return void
      */
-    public function addFilter(TwigFilter $filter)
+    public function addFilter(TwigFilter $filter): void
     {
         $this->extensionSet->addFilter($filter);
     }
@@ -804,7 +804,7 @@ class Environment
     /**
      * @return void
      */
-    public function addTest(TwigTest $test)
+    public function addTest(TwigTest $test): void
     {
         $this->extensionSet->addTest($test);
     }
@@ -838,7 +838,7 @@ class Environment
     /**
      * @return void
      */
-    public function addFunction(TwigFunction $function)
+    public function addFunction(TwigFunction $function): void
     {
         $this->extensionSet->addFunction($function);
     }
@@ -885,7 +885,7 @@ class Environment
      *
      * @return void
      */
-    public function addGlobal(string $name, $value)
+    public function addGlobal(string $name, $value): void
     {
         if ($this->extensionSet->isInitialized() && !\array_key_exists($name, $this->getGlobals())) {
             throw new \LogicException(\sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));

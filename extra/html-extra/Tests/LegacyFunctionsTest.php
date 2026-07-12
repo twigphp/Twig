@@ -19,7 +19,7 @@ use Twig\Extra\Html\HtmlExtension;
  */
 class LegacyFunctionsTest extends TestCase
 {
-    public function testHtmlToMarkdown()
+    public function testHtmlToMarkdown(): void
     {
         $this->assertSame(HtmlExtension::htmlClasses(['charset' => 'utf-8']), twig_html_classes(['charset' => 'utf-8']));
     }

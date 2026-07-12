@@ -37,7 +37,7 @@ use Twig\TokenStream;
 
 class ParserTest extends TestCase
 {
-    public function testUnknownTag()
+    public function testUnknownTag(): void
     {
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, '', 1),
@@ -53,7 +53,7 @@ class ParserTest extends TestCase
         $parser->parse($stream);
     }
 
-    public function testUnknownTagWithoutSuggestions()
+    public function testUnknownTagWithoutSuggestions(): void
     {
         $stream = new TokenStream([
             new Token(Token::BLOCK_START_TYPE, '', 1),
@@ -69,7 +69,7 @@ class ParserTest extends TestCase
         $parser->parse($stream);
     }
 
-    public function testParseIsReentrant()
+    public function testParseIsReentrant(): void
     {
         $twig = new Environment(new ArrayLoader(), [
             'autoescape' => false,
@@ -93,7 +93,7 @@ class ParserTest extends TestCase
         $this->assertNull($p->getValue($parser));
     }
 
-    public function testGetVarName()
+    public function testGetVarName(): void
     {
         $twig = new Environment(new ArrayLoader(), [
             'autoescape' => false,
@@ -113,7 +113,7 @@ EOF, 'index')));
         $this->addToAssertionCount(1);
     }
 
-    public function testImplicitMacroArgumentDefaultValues()
+    public function testImplicitMacroArgumentDefaultValues(): void
     {
         $template = '{% macro marco (po, lo = true) %}{% endmacro %}';
         $lexer = new Lexer(new Environment(new ArrayLoader()));
@@ -147,7 +147,7 @@ EOF, 'index')));
         $this->assertSame(2, $embeds->getNode(1)->getAttribute('index'));
     }
 
-    public function testBodyForChildTemplates()
+    public function testBodyForChildTemplates(): void
     {
         $twig = new Environment(new ArrayLoader());
         $node = $twig->parse($twig->tokenize(new Source(<<<EOF
@@ -171,7 +171,7 @@ EOF, 'index')));
         $this->assertSame('set', $body->getNode('4')->getNodeTag());
     }
 
-    public function testCleanupBodyForChildTemplatesWithASingleNodeBody()
+    public function testCleanupBodyForChildTemplatesWithASingleNodeBody(): void
     {
         $twig = new Environment(new ArrayLoader());
         $twig->addTokenParser(new ParentSettingTokenParser());
@@ -182,7 +182,7 @@ EOF, 'index')));
         $this->assertInstanceOf(EmptyNode::class, $body);
     }
 
-    public function testBodyForParentTemplates()
+    public function testBodyForParentTemplates(): void
     {
         $twig = new Environment(new ArrayLoader());
         $node = $twig->parse($twig->tokenize(new Source(<<<EOF

@@ -19,14 +19,14 @@ class CvaTest extends TestCase
     /**
      * @dataProvider recipeProvider
      */
-    public function testRecipes(array $recipe, array $recipes, string $expected)
+    public function testRecipes(array $recipe, array $recipes, string $expected): void
     {
         $recipeClass = new Cva($recipe['base'] ?? '', $recipe['variants'] ?? [], $recipe['compounds'] ?? [], $recipe['defaultVariants'] ?? []);
 
         $this->assertEquals($expected, $recipeClass->apply($recipes));
     }
 
-    public function testApply()
+    public function testApply(): void
     {
         $recipe = new Cva('font-semibold border rounded', [
             'colors' => [
@@ -49,7 +49,7 @@ class CvaTest extends TestCase
         $this->assertEquals('font-semibold border rounded text-primary text-sm text-red-500', $recipe->apply(['colors' => 'primary', 'sizes' => 'sm']));
     }
 
-    public function testApplyWithNullString()
+    public function testApplyWithNullString(): void
     {
         $recipe = new Cva('font-semibold border rounded', [
             'colors' => [
@@ -623,7 +623,7 @@ class CvaTest extends TestCase
     /**
      * @dataProvider provideAdditionalClassesCases
      */
-    public function testAdditionalClasses(string|array $base, array|string $additionals, string $expected)
+    public function testAdditionalClasses(string|array $base, array|string $additionals, string $expected): void
     {
         $cva = new Cva($base);
         if (!$additionals) {

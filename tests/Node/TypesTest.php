@@ -31,7 +31,7 @@ class TypesTest extends NodeTestCase
         ];
     }
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $types = self::getValidMapping();
         $node = new TypesNode($types, 1);

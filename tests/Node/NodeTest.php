@@ -33,7 +33,7 @@ class NodeTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public function testToString()
+    public function testToString(): void
     {
         // callable is not a supported type for a Node attribute, but Drupal uses some apparently
         $node = new NodeForTest([], ['value' => static function () { return '1'; }], 1);
@@ -46,7 +46,7 @@ EOF, (string) $node
         );
     }
 
-    public function testToStringWithTwigCallables()
+    public function testToStringWithTwigCallables(): void
     {
         $node = new NodeForTest([], [
             'function' => new TwigFunction('a_function'),
@@ -63,7 +63,7 @@ Twig\Tests\Node\NodeForTest
 EOF, (string) $node);
     }
 
-    public function testToStringWithTag()
+    public function testToStringWithTag(): void
     {
         $node = new NodeForTest();
         $node->setNodeTag('tag');
@@ -74,7 +74,7 @@ Twig\Tests\Node\NodeForTest
 EOF, (string) $node);
     }
 
-    public function testAttributeDeprecationIgnore()
+    public function testAttributeDeprecationIgnore(): void
     {
         $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
@@ -86,7 +86,7 @@ EOF, (string) $node);
      * @group legacy
      */
     #[Group('legacy')]
-    public function testAttributeDeprecationWithoutAlternative()
+    public function testAttributeDeprecationWithoutAlternative(): void
     {
         $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0'));
@@ -99,7 +99,7 @@ EOF, (string) $node);
      * @group legacy
      */
     #[Group('legacy')]
-    public function testAttributeDeprecationWithAlternative()
+    public function testAttributeDeprecationWithAlternative(): void
     {
         $node = new NodeForTest([], ['foo' => false]);
         $node->deprecateAttribute('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));
@@ -108,7 +108,7 @@ EOF, (string) $node);
         $this->assertFalse($node->getAttribute('foo'));
     }
 
-    public function testNodeDeprecationIgnore()
+    public function testNodeDeprecationIgnore(): void
     {
         $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0'));
@@ -120,7 +120,7 @@ EOF, (string) $node);
      * @group legacy
      */
     #[Group('legacy')]
-    public function testNodeDeprecationWithoutAlternative()
+    public function testNodeDeprecationWithoutAlternative(): void
     {
         $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0'));
@@ -133,7 +133,7 @@ EOF, (string) $node);
      * @group legacy
      */
     #[Group('legacy')]
-    public function testNodeAttributeDeprecationWithAlternative()
+    public function testNodeAttributeDeprecationWithAlternative(): void
     {
         $node = new NodeForTest(['foo' => $foo = new NodeForTest()]);
         $node->deprecateNode('foo', new NameDeprecation('foo/bar', '2.0', 'bar'));

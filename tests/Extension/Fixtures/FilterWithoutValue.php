@@ -16,7 +16,7 @@ use Twig\Attribute\AsTwigFilter;
 class FilterWithoutValue
 {
     #[AsTwigFilter('my_filter')]
-    public function myFilter()
+    public function myFilter(): void
     {
     }
 }

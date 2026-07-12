@@ -21,7 +21,7 @@ class HtmlAttrMergeTest extends TestCase
     /**
      * @dataProvider htmlAttrProvider
      */
-    public function testMerge(array $expected, array $inputs)
+    public function testMerge(array $expected, array $inputs): void
     {
         $result = HtmlExtension::htmlAttrMerge(...$inputs);
 
@@ -180,7 +180,7 @@ class HtmlAttrMergeTest extends TestCase
         ];
     }
 
-    public function testIncompatibleValuesMergeThrowsException()
+    public function testIncompatibleValuesMergeThrowsException(): void
     {
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Cannot merge incompatible values for key "test"');

@@ -26,7 +26,7 @@ use Twig\Test\NodeTestCase;
 
 class ConditionalTernaryTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $test = new ConstantExpression(1, 1);
         $left = new ConstantExpression(2, 1);

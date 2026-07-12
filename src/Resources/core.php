@@ -536,7 +536,7 @@ function twig_array_every(Environment $env, $array, $arrow)
  *
  * @deprecated since Twig 3.9
  */
-function twig_check_arrow_in_sandbox(Environment $env, $arrow, $thing, $type)
+function twig_check_arrow_in_sandbox(Environment $env, $arrow, $thing, $type): void
 {
     trigger_deprecation('twig/twig', '3.9', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 

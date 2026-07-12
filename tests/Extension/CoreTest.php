@@ -41,7 +41,7 @@ class CoreTest extends TestCase
      * @dataProvider provideCycleCases
      */
     #[DataProvider('provideCycleCases')]
-    public function testCycleFunction($values, $position, $expected)
+    public function testCycleFunction($values, $position, $expected): void
     {
         $this->assertSame($expected, CoreExtension::cycle($values, $position));
     }
@@ -65,7 +65,7 @@ class CoreTest extends TestCase
      * @dataProvider provideCycleInvalidCases
      */
     #[DataProvider('provideCycleInvalidCases')]
-    public function testCycleFunctionThrowRuntimeError($values, mixed $position = null)
+    public function testCycleFunctionThrowRuntimeError($values, mixed $position = null): void
     {
         $this->expectException(RuntimeError::class);
         CoreExtension::cycle($values, $position ?? 0);
@@ -84,7 +84,7 @@ class CoreTest extends TestCase
      * @dataProvider getRandomFunctionTestData
      */
     #[DataProvider('getRandomFunctionTestData')]
-    public function testRandomFunction(array $expectedInArray, $value1, $value2 = null)
+    public function testRandomFunction(array $expectedInArray, $value1, $value2 = null): void
     {
         for ($i = 0; $i < 100; ++$i) {
             $this->assertTrue(\in_array(CoreExtension::random('UTF-8', $value1, $value2), $expectedInArray, true)); // assertContains() would not consider the type
@@ -140,7 +140,7 @@ class CoreTest extends TestCase
         ];
     }
 
-    public function testRandomFunctionWithoutParameter()
+    public function testRandomFunctionWithoutParameter(): void
     {
         $max = mt_getrandmax();
 
@@ -150,7 +150,7 @@ class CoreTest extends TestCase
         }
     }
 
-    public function testRandomFunctionReturnsAsIs()
+    public function testRandomFunctionReturnsAsIs(): void
     {
         $this->assertSame('', CoreExtension::random('UTF-8', ''));
 
@@ -158,13 +158,13 @@ class CoreTest extends TestCase
         $this->assertSame($instance, CoreExtension::random('UTF-8', $instance));
     }
 
-    public function testRandomFunctionOfEmptyArrayThrowsException()
+    public function testRandomFunctionOfEmptyArrayThrowsException(): void
     {
         $this->expectException(RuntimeError::class);
         CoreExtension::random('UTF-8', []);
     }
 
-    public function testRandomFunctionOnNonUTF8String()
+    public function testRandomFunctionOnNonUTF8String(): void
     {
         $text = iconv('UTF-8', 'ISO-8859-1', 'Äé');
         for ($i = 0; $i < 30; ++$i) {
@@ -173,7 +173,7 @@ class CoreTest extends TestCase
         }
     }
 
-    public function testReverseFilterOnNonUTF8String()
+    public function testReverseFilterOnNonUTF8String(): void
     {
         $input = iconv('UTF-8', 'ISO-8859-1', 'Äé');
         $output = iconv('ISO-8859-1', 'UTF-8', CoreExtension::reverse('ISO-8859-1', $input));
@@ -185,7 +185,7 @@ class CoreTest extends TestCase
      * @dataProvider provideTwigFirstCases
      */
     #[DataProvider('provideTwigFirstCases')]
-    public function testTwigFirst($expected, $input)
+    public function testTwigFirst($expected, $input): void
     {
         $this->assertSame($expected, CoreExtension::first('UTF-8', $input));
     }
@@ -207,7 +207,7 @@ class CoreTest extends TestCase
      * @dataProvider provideTwigLastCases
      */
     #[DataProvider('provideTwigLastCases')]
-    public function testTwigLast($expected, $input)
+    public function testTwigLast($expected, $input): void
     {
         $this->assertSame($expected, CoreExtension::last('UTF-8', $input));
     }
@@ -229,7 +229,7 @@ class CoreTest extends TestCase
      * @dataProvider provideArrayKeyCases
      */
     #[DataProvider('provideArrayKeyCases')]
-    public function testArrayKeysFilter(array $expected, $input)
+    public function testArrayKeysFilter(array $expected, $input): void
     {
         $this->assertSame($expected, CoreExtension::keys($input));
     }
@@ -253,7 +253,7 @@ class CoreTest extends TestCase
      * @dataProvider provideInFilterCases
      */
     #[DataProvider('provideInFilterCases')]
-    public function testInFilter($expected, $value, $compare)
+    public function testInFilter($expected, $value, $compare): void
     {
         $this->assertSame($expected, CoreExtension::inFilter($value, $compare));
     }
@@ -282,7 +282,7 @@ class CoreTest extends TestCase
      * @dataProvider provideSliceFilterCases
      */
     #[DataProvider('provideSliceFilterCases')]
-    public function testSliceFilter($expected, $input, $start, $length = null, $preserveKeys = false)
+    public function testSliceFilter($expected, $input, $start, $length = null, $preserveKeys = false): void
     {
         $this->assertSame($expected, CoreExtension::slice('UTF-8', $input, $start, $length, $preserveKeys));
     }
@@ -312,13 +312,13 @@ class CoreTest extends TestCase
      * @dataProvider provideCompareCases
      */
     #[DataProvider('provideCompareCases')]
-    public function testCompare($expected, $a, $b)
+    public function testCompare($expected, $a, $b): void
     {
         $this->assertSame($expected, CoreExtension::compare($a, $b));
         $this->assertSame($expected, -CoreExtension::compare($b, $a));
     }
 
-    public function testCompareNAN()
+    public function testCompareNAN(): void
     {
         $this->assertSame(1, CoreExtension::compare(\NAN, 'NAN'));
         $this->assertSame(1, CoreExtension::compare('NAN', \NAN));
@@ -384,7 +384,7 @@ class CoreTest extends TestCase
         ];
     }
 
-    public function testSandboxedInclude()
+    public function testSandboxedInclude(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => '{{ include("included", sandboxed: true) }}',
@@ -399,7 +399,7 @@ class CoreTest extends TestCase
         $twig->render('index');
     }
 
-    public function testSandboxedIncludeWithPreloadedTemplate()
+    public function testSandboxedIncludeWithPreloadedTemplate(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => '{{ include("included", sandboxed: true) }}',
@@ -418,7 +418,7 @@ class CoreTest extends TestCase
         $twig->render('index');
     }
 
-    public function testSandboxedIncludeResultStaysEscapedWhenAssigned()
+    public function testSandboxedIncludeResultStaysEscapedWhenAssigned(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => "{% set body = include('included', sandboxed: true) %}[{{ body }}]",
@@ -429,7 +429,7 @@ class CoreTest extends TestCase
         $this->assertSame('[&lt;script&gt;]', $twig->render('index', ['evil' => '<script>']));
     }
 
-    public function testIncludeReturnsMarkupForRenderedContent()
+    public function testIncludeReturnsMarkupForRenderedContent(): void
     {
         $twig = new Environment(new ArrayLoader(['included' => 'content']));
 
@@ -439,21 +439,21 @@ class CoreTest extends TestCase
         $this->assertSame('content', (string) $result);
     }
 
-    public function testIncludeReturnsAnEmptyStringForEmptyContent()
+    public function testIncludeReturnsAnEmptyStringForEmptyContent(): void
     {
         $twig = new Environment(new ArrayLoader(['included' => '']));
 
         $this->assertSame('', CoreExtension::include($twig, [], 'included'));
     }
 
-    public function testIncludeReturnsAnEmptyStringForIgnoredMissingTemplate()
+    public function testIncludeReturnsAnEmptyStringForIgnoredMissingTemplate(): void
     {
         $twig = new Environment(new ArrayLoader([]));
 
         $this->assertSame('', CoreExtension::include($twig, [], 'missing', ignoreMissing: true));
     }
 
-    public function testLastModified()
+    public function testLastModified(): void
     {
         $this->assertGreaterThan(1000000000, (new CoreExtension())->getLastModified());
     }
@@ -462,7 +462,7 @@ class CoreTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testCycleWithArrayAccessAndTraversableButNotCountable()
+    public function testCycleWithArrayAccessAndTraversableButNotCountable(): void
     {
         $this->expectDeprecation('Since twig/twig 3.12: Passing a non-countable sequence of values to "Twig\Extension\CoreExtension::cycle()" is deprecated.');
 

@@ -19,7 +19,7 @@ use Twig\Loader\ArrayLoader;
 
 class IntlExtensionTest extends TestCase
 {
-    public function testFormatterWithoutProto()
+    public function testFormatterWithoutProto(): void
     {
         $ext = new IntlExtension();
         $env = new Environment(new ArrayLoader());
@@ -31,7 +31,7 @@ class IntlExtensionTest extends TestCase
         );
     }
 
-    public function testFormatterWithoutProtoFallsBackToCoreExtensionTimezone()
+    public function testFormatterWithoutProtoFallsBackToCoreExtensionTimezone(): void
     {
         $ext = new IntlExtension();
         $env = new Environment(new ArrayLoader());
@@ -45,7 +45,7 @@ class IntlExtensionTest extends TestCase
         );
     }
 
-    public function testFormatterWithoutProtoSkipTimezoneConverter()
+    public function testFormatterWithoutProtoSkipTimezoneConverter(): void
     {
         $ext = new IntlExtension();
         $env = new Environment(new ArrayLoader());
@@ -59,7 +59,7 @@ class IntlExtensionTest extends TestCase
         );
     }
 
-    public function testFormatterProto()
+    public function testFormatterProto(): void
     {
         $dateFormatterProto = new \IntlDateFormatter('fr', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, new \DateTimeZone('Europe/Paris'));
         $numberFormatterProto = new \NumberFormatter('fr', \NumberFormatter::DECIMAL);
@@ -78,7 +78,7 @@ class IntlExtensionTest extends TestCase
         );
     }
 
-    public function testFormatterOverridenProto()
+    public function testFormatterOverridenProto(): void
     {
         $dateFormatterProto = new \IntlDateFormatter('fr', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, new \DateTimeZone('Europe/Paris'));
         $numberFormatterProto = new \NumberFormatter('fr', \NumberFormatter::DECIMAL);
@@ -97,7 +97,7 @@ class IntlExtensionTest extends TestCase
         );
     }
 
-    public function testDateFormatterCacheIsBounded()
+    public function testDateFormatterCacheIsBounded(): void
     {
         $ext = new IntlExtension();
         $env = new Environment(new ArrayLoader());
@@ -115,7 +115,7 @@ class IntlExtensionTest extends TestCase
         );
     }
 
-    public function testNumberFormatterCacheIsBounded()
+    public function testNumberFormatterCacheIsBounded(): void
     {
         $ext = new IntlExtension();
 

@@ -30,7 +30,7 @@ class FileExtensionEscapingStrategyTest extends TestCase
      * @dataProvider getGuessData
      */
     #[DataProvider('getGuessData')]
-    public function testGuess($strategy, $filename)
+    public function testGuess($strategy, $filename): void
     {
         $this->assertSame($strategy, FileExtensionEscapingStrategy::guess($filename));
     }

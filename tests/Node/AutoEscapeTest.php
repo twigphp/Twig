@@ -27,7 +27,7 @@ use Twig\Test\NodeTestCase;
 
 class AutoEscapeTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $body = new Nodes([new TextNode('foo', 1)]);
         $node = new AutoEscapeNode(true, $body, 1);

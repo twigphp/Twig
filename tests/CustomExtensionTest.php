@@ -35,7 +35,7 @@ class CustomExtensionTest extends TestCase
      * @dataProvider provideInvalidExtensions
      */
     #[DataProvider('provideInvalidExtensions'), Group('legacy')]
-    public function testGetInvalidOperators(ExtensionInterface $extension, $expectedExceptionMessage)
+    public function testGetInvalidOperators(ExtensionInterface $extension, $expectedExceptionMessage): void
     {
         $env = new Environment(new ArrayLoader());
         $env->addExtension($extension);

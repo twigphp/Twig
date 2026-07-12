@@ -38,7 +38,7 @@ use Twig\Source;
 
 class SandboxTest extends TestCase
 {
-    public function testGeneratorExpression()
+    public function testGeneratorExpression(): void
     {
         $env = new Environment(new ArrayLoader());
         $expr = new ContextVariable('foo', 1);
@@ -51,7 +51,7 @@ class SandboxTest extends TestCase
         $this->assertSame("// line 1\nyield from (\$context[\"foo\"] ?? null);\n", $env->compile($node->getNode('body')));
     }
 
-    public function testCustomNodeImplementingCoercesChildrenToStringInterfaceIsWrapped()
+    public function testCustomNodeImplementingCoercesChildrenToStringInterfaceIsWrapped(): void
     {
         $env = new Environment(new ArrayLoader());
         $custom = new CustomCoercingExpression(new ContextVariable('foo', 1), new ContextVariable('bar', 1), 1);
@@ -66,7 +66,7 @@ class SandboxTest extends TestCase
         $this->assertInstanceOf(CheckToStringNode::class, $custom->getNode('right'));
     }
 
-    public function testCustomNonExpressionNodeImplementingCoercesChildrenToStringInterfaceIsWrapped()
+    public function testCustomNonExpressionNodeImplementingCoercesChildrenToStringInterfaceIsWrapped(): void
     {
         $env = new Environment(new ArrayLoader());
         $custom = new CustomCoercingNode(['expr' => new ContextVariable('foo', 1)], [], 1);
@@ -78,7 +78,7 @@ class SandboxTest extends TestCase
         $this->assertInstanceOf(CheckToStringNode::class, $custom->getNode('expr'));
     }
 
-    public function testSelfIsNeverWrapped()
+    public function testSelfIsNeverWrapped(): void
     {
         $env = new Environment(new ArrayLoader());
         $self = new ContextVariable('_self', 1);

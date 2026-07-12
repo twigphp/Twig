@@ -143,7 +143,7 @@ final class CoreExtension extends AbstractExtension
      * @param string|null $format             The default date format string
      * @param string|null $dateIntervalFormat The default date interval format string
      */
-    public function setDateFormat($format = null, $dateIntervalFormat = null)
+    public function setDateFormat($format = null, $dateIntervalFormat = null): void
     {
         if (null !== $format) {
             $this->dateFormats[0] = $format;
@@ -169,7 +169,7 @@ final class CoreExtension extends AbstractExtension
      *
      * @param \DateTimeZone|string $timezone The default timezone string or a \DateTimeZone object
      */
-    public function setTimezone($timezone)
+    public function setTimezone($timezone): void
     {
         $this->timezone = $timezone instanceof \DateTimeZone ? $timezone : new \DateTimeZone($timezone);
     }
@@ -195,7 +195,7 @@ final class CoreExtension extends AbstractExtension
      * @param string $decimalPoint the character(s) to use for the decimal point
      * @param string $thousandSep  the character(s) to use for the thousands separator
      */
-    public function setNumberFormat($decimal, $decimalPoint, $thousandSep)
+    public function setNumberFormat($decimal, $decimalPoint, $thousandSep): void
     {
         $this->numberFormat = [$decimal, $decimalPoint, $thousandSep];
     }
@@ -2115,7 +2115,7 @@ final class CoreExtension extends AbstractExtension
     /**
      * @internal
      */
-    public static function checkArrow(bool $isSandboxed, $arrow, $thing, $type)
+    public static function checkArrow(bool $isSandboxed, $arrow, $thing, $type): void
     {
         if ($arrow instanceof \Closure) {
             return;

@@ -23,7 +23,7 @@ class CheckSecurityCallNode extends Node
     /**
      * @return void
      */
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler
             ->write("\$this->sandbox = \$this->extensions[SandboxExtension::class];\n")

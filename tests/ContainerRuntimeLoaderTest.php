@@ -26,7 +26,7 @@ use Twig\RuntimeLoader\ContainerRuntimeLoader;
 
 class ContainerRuntimeLoaderTest extends TestCase
 {
-    public function testLoad()
+    public function testLoad(): void
     {
         $container = $this->createMock(ContainerInterface::class);
         $container->expects($this->once())->method('has')->with('stdClass')->willReturn(true);
@@ -37,7 +37,7 @@ class ContainerRuntimeLoaderTest extends TestCase
         $this->assertInstanceOf('stdClass', $loader->load('stdClass'));
     }
 
-    public function testLoadUnknownRuntimeReturnsNull()
+    public function testLoadUnknownRuntimeReturnsNull(): void
     {
         $container = $this->createMock(ContainerInterface::class);
         $container->expects($this->once())->method('has')->with('Foo');

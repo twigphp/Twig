@@ -37,7 +37,7 @@ class EscaperTest extends TestCase
      * @group legacy
      */
     #[DataProvider('provideCustomEscaperCases'), Group('legacy')]
-    public function testCustomEscaper($expected, $string, $strategy)
+    public function testCustomEscaper($expected, $string, $strategy): void
     {
         $twig = new Environment(new ArrayLoader());
         $escaperExt = $twig->getExtension(EscaperExtension::class);
@@ -60,7 +60,7 @@ class EscaperTest extends TestCase
      * @group legacy
      */
     #[DataProvider('provideCustomEscaperCases'), Group('legacy')]
-    public function testCustomEscaperWithoutCallingSetEscaperRuntime($expected, $string, $strategy)
+    public function testCustomEscaperWithoutCallingSetEscaperRuntime($expected, $string, $strategy): void
     {
         $twig = new Environment(new ArrayLoader());
         $escaperExt = $twig->getExtension(EscaperExtension::class);
@@ -72,7 +72,7 @@ class EscaperTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testCustomEscapersOnMultipleEnvs()
+    public function testCustomEscapersOnMultipleEnvs(): void
     {
         $env1 = new Environment(new ArrayLoader());
         $escaperExt1 = $env1->getExtension(EscaperExtension::class);
@@ -90,7 +90,7 @@ class EscaperTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testSafeClassesUseCustomRuntimeLoader()
+    public function testSafeClassesUseCustomRuntimeLoader(): void
     {
         $runtime = new EscaperRuntime();
         $twig = new Environment(new ArrayLoader());
@@ -105,7 +105,7 @@ class EscaperTest extends TestCase
         $this->assertArrayHasKey('ThisClassIsSafe', $runtime->safeClasses);
     }
 
-    public function testLastModified()
+    public function testLastModified(): void
     {
         $this->assertGreaterThan(1000000000, (new EscaperExtension())->getLastModified());
     }

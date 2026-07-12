@@ -16,7 +16,7 @@ use Twig\Source;
 
 class SourceTest extends TestCase
 {
-    public function testGetColumn()
+    public function testGetColumn(): void
     {
         $source = new Source("foo\nbarbaz\nqux", 'index');
 

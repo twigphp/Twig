@@ -23,7 +23,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 class FunctionalTest extends TestCase
 {
-    public function testIsCached()
+    public function testIsCached(): void
     {
         $cache = new ArrayAdapter();
         $twig = $this->createEnvironment(['index' => '{% cache "city;v1" %}{{- city -}}{% endcache %}'], $cache);
@@ -33,7 +33,7 @@ class FunctionalTest extends TestCase
         $this->assertSame('Paris', $value);
     }
 
-    public function testTtlNoArgs()
+    public function testTtlNoArgs(): void
     {
         $twig = $this->createEnvironment(['index' => '{% cache "ttl_no_args" ttl() %}{% endcache %}']);
         $this->expectException(SyntaxError::class);
@@ -41,7 +41,7 @@ class FunctionalTest extends TestCase
         $twig->render('index');
     }
 
-    public function testTtlTooManyArgs()
+    public function testTtlTooManyArgs(): void
     {
         $twig = $this->createEnvironment(['index' => '{% cache "ttl_too_many_args" ttl(0, 1) %}{% endcache %}']);
         $this->expectException(SyntaxError::class);
@@ -49,7 +49,7 @@ class FunctionalTest extends TestCase
         $twig->render('index');
     }
 
-    public function testTagsNoArgs()
+    public function testTagsNoArgs(): void
     {
         $twig = $this->createEnvironment(['index' => '{% cache "tags_no_args" tags() %}{% endcache %}']);
         $this->expectException(SyntaxError::class);
@@ -57,7 +57,7 @@ class FunctionalTest extends TestCase
         $twig->render('index');
     }
 
-    public function testTagsTooManyArgs()
+    public function testTagsTooManyArgs(): void
     {
         $twig = $this->createEnvironment(['index' => '{% cache "tags_too_many_args" tags(["foo"], 1) %}{% endcache %}']);
         $this->expectException(SyntaxError::class);

@@ -30,7 +30,7 @@ class DeprecatedCallableInfoTest extends TestCase
      * @dataProvider provideTestsForTriggerDeprecation
      */
     #[DataProvider('provideTestsForTriggerDeprecation')]
-    public function testTriggerDeprecation($expected, DeprecatedCallableInfo $info)
+    public function testTriggerDeprecation($expected, DeprecatedCallableInfo $info): void
     {
         $info->setType('function');
         $info->setName('foo');
@@ -61,7 +61,7 @@ class DeprecatedCallableInfoTest extends TestCase
         yield ['Since foo/bar 1.1: Twig Function "foo" is deprecated; use "alt_foo" instead in foo.twig at line 1.', new DeprecatedCallableInfo('foo/bar', '1.1', 'alt_foo')];
     }
 
-    public function testTriggerDeprecationWithoutFileOrLine()
+    public function testTriggerDeprecationWithoutFileOrLine(): void
     {
         $info = new DeprecatedCallableInfo('foo/bar', '1.1');
         $info->setType('function');

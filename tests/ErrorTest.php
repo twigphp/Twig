@@ -39,7 +39,7 @@ use Twig\TokenParser\AbstractTokenParser;
 
 class ErrorTest extends TestCase
 {
-    public function testErrorWithObjectFilename()
+    public function testErrorWithObjectFilename(): void
     {
         $error = new Error('foo');
         $error->setSourceContext(new Source('', new \SplFileInfo(__FILE__)));
@@ -47,7 +47,7 @@ class ErrorTest extends TestCase
         $this->assertStringContainsString('tests'.\DIRECTORY_SEPARATOR.'ErrorTest.php', $error->getMessage());
     }
 
-    public function testTwigExceptionGuessWithMissingVarAndArrayLoader()
+    public function testTwigExceptionGuessWithMissingVarAndArrayLoader(): void
     {
         $loader = new ArrayLoader([
             'base.html' => '{% block content %}{% endblock %}',
@@ -76,7 +76,7 @@ EOHTML,
         }
     }
 
-    public function testTwigExceptionGuessWithExceptionAndArrayLoader()
+    public function testTwigExceptionGuessWithExceptionAndArrayLoader(): void
     {
         $loader = new ArrayLoader([
             'base.html' => '{% block content %}{% endblock %}',
@@ -104,7 +104,7 @@ EOHTML,
         }
     }
 
-    public function testTwigExceptionGuessWithMissingVarAndFilesystemLoader()
+    public function testTwigExceptionGuessWithMissingVarAndFilesystemLoader(): void
     {
         $loader = new FilesystemLoader(__DIR__.'/Fixtures/errors');
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
@@ -123,7 +123,7 @@ EOHTML,
         }
     }
 
-    public function testTwigExceptionGuessWithExceptionAndFilesystemLoader()
+    public function testTwigExceptionGuessWithExceptionAndFilesystemLoader(): void
     {
         $loader = new FilesystemLoader(__DIR__.'/Fixtures/errors');
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
@@ -146,7 +146,7 @@ EOHTML,
      * @dataProvider getErroredTemplates
      */
     #[DataProvider('getErroredTemplates')]
-    public function testTwigExceptionAddsFileAndLine($templates, $name, $line)
+    public function testTwigExceptionAddsFileAndLine($templates, $name, $line): void
     {
         $loader = new ArrayLoader($templates);
         $twig = new Environment($loader, ['strict_variables' => true, 'debug' => true, 'cache' => false]);
@@ -174,7 +174,7 @@ EOHTML,
         }
     }
 
-    public function testTwigArrayFilterThrowsRuntimeExceptions()
+    public function testTwigArrayFilterThrowsRuntimeExceptions(): void
     {
         $loader = new ArrayLoader([
             'filter-null.html' => <<<EOHTML
@@ -201,7 +201,7 @@ EOHTML,
         }
     }
 
-    public function testTwigArrayMapThrowsRuntimeExceptions()
+    public function testTwigArrayMapThrowsRuntimeExceptions(): void
     {
         $loader = new ArrayLoader([
             'map-null.html' => <<<EOHTML
@@ -228,7 +228,7 @@ EOHTML,
         }
     }
 
-    public function testTwigArrayReduceThrowsRuntimeExceptions()
+    public function testTwigArrayReduceThrowsRuntimeExceptions(): void
     {
         $loader = new ArrayLoader([
             'reduce-null.html' => <<<EOHTML
@@ -253,7 +253,7 @@ EOHTML,
         }
     }
 
-    public function testTwigExceptionUpdateFileAndLineTogether()
+    public function testTwigExceptionUpdateFileAndLineTogether(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => "\n\n\n\n{{ foo() }}",
@@ -275,7 +275,7 @@ EOHTML,
      * @dataProvider getErrorWithoutLineAndContextData
      */
     #[DataProvider('getErrorWithoutLineAndContextData')]
-    public function testErrorWithoutLineAndContext(LoaderInterface $loader, bool $debug, bool $addDebugInfo, bool $exceptionWithLineAndContext, int $errorLine)
+    public function testErrorWithoutLineAndContext(LoaderInterface $loader, bool $debug, bool $addDebugInfo, bool $exceptionWithLineAndContext, int $errorLine): void
     {
         $twig = new Environment($loader, ['debug' => $debug, 'cache' => false]);
         $twig->removeCache('no_line_and_context_exception.twig');
@@ -455,7 +455,7 @@ EOHTML,
         ];
     }
 
-    public function testErrorFromArrayLoader()
+    public function testErrorFromArrayLoader(): void
     {
         $templates = [
             'index.twig' => '{% include "include.twig" %}',
@@ -478,7 +478,7 @@ EOHTML,
         }
     }
 
-    public function testErrorFromFilesystemLoader()
+    public function testErrorFromFilesystemLoader(): void
     {
         $twig = new Environment(new FilesystemLoader([$dir = __DIR__.'/Fixtures/errors/extends']), ['debug' => true, 'cache' => false]);
         $include = file_get_contents($dir.'/include.twig');
@@ -496,7 +496,7 @@ EOHTML,
 
 class ErrorTest_Foo
 {
-    public function bar()
+    public function bar(): void
     {
         throw new \Exception('Runtime error...');
     }

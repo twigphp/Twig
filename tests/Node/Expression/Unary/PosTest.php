@@ -26,7 +26,7 @@ use Twig\Test\NodeTestCase;
 
 class PosTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr = new ConstantExpression(1, 1);
         $node = new PosUnary($expr, 1);

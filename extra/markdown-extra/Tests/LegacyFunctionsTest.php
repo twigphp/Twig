@@ -22,7 +22,7 @@ use Twig\Extra\Markdown\MarkdownExtension;
  */
 class LegacyFunctionsTest extends TestCase
 {
-    public function testHtmlToMarkdown()
+    public function testHtmlToMarkdown(): void
     {
         $this->assertSame(MarkdownExtension::htmlToMarkdown('<p>foo</p>'), html_to_markdown('<p>foo</p>'));
     }

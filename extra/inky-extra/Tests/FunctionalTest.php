@@ -18,7 +18,7 @@ use Twig\Loader\ArrayLoader;
 
 class FunctionalTest extends TestCase
 {
-    public function testInkyToHtmlPreEscapesUnsafeInput()
+    public function testInkyToHtmlPreEscapesUnsafeInput(): void
     {
         $twig = new Environment(new ArrayLoader([
             'index' => '{{ payload|inky_to_html }}',

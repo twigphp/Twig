@@ -28,7 +28,7 @@ use Twig\Test\NodeTestCase;
 
 class BlockTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $body = new TextNode('foo', 1);
         $node = new BlockNode('foo', $body, 1);

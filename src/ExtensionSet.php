@@ -77,7 +77,7 @@ final class ExtensionSet
     /**
      * @return void
      */
-    public function initRuntime()
+    public function initRuntime(): void
     {
         $this->runtimeInitialized = true;
     }

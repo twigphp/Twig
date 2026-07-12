@@ -29,7 +29,7 @@ use Twig\Loader\LoaderInterface;
 
 class ChainTest extends TestCase
 {
-    public function testGetSourceContext()
+    public function testGetSourceContext(): void
     {
         $path = __DIR__.'/../Fixtures';
         $loader = new ChainLoader([
@@ -50,7 +50,7 @@ class ChainTest extends TestCase
         $this->assertNotEquals('baz', $loader->getSourceContext('errors/base.html')->getCode());
     }
 
-    public function testGetSourceContextWhenTemplateDoesNotExist()
+    public function testGetSourceContextWhenTemplateDoesNotExist(): void
     {
         $loader = new ChainLoader([]);
 
@@ -58,7 +58,7 @@ class ChainTest extends TestCase
         $loader->getSourceContext('foo');
     }
 
-    public function testGetCacheKey()
+    public function testGetCacheKey(): void
     {
         $loader = new ChainLoader([
             new ArrayLoader(['foo' => 'bar']),
@@ -69,7 +69,7 @@ class ChainTest extends TestCase
         $this->assertEquals('bar:foo', $loader->getCacheKey('bar'));
     }
 
-    public function testGetCacheKeyWhenTemplateDoesNotExist()
+    public function testGetCacheKeyWhenTemplateDoesNotExist(): void
     {
         $loader = new ChainLoader([]);
 
@@ -77,7 +77,7 @@ class ChainTest extends TestCase
         $loader->getCacheKey('foo');
     }
 
-    public function testAddLoader()
+    public function testAddLoader(): void
     {
         $fooLoader = new ArrayLoader(['foo' => 'foo:code']);
         $barLoader = new ArrayLoader(['bar' => 'bar:code']);
@@ -105,7 +105,7 @@ class ChainTest extends TestCase
         ], $loader->getLoaders());
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $loader1 = $this->createMock(LoaderInterface::class);
         $loader1->expects($this->once())->method('exists')->willReturn(false);

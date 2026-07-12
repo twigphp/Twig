@@ -40,7 +40,7 @@ use Twig\Test\NodeTestCase;
 
 class ModuleTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $body = new BodyNode([new TextNode('foo', 1)]);
         $parent = new ConstantExpression('layout.twig', 1);
@@ -57,7 +57,7 @@ class ModuleTest extends NodeTestCase
         $this->assertEquals($source->getName(), $node->getTemplateName());
     }
 
-    public function testUseTagTemplateNameDoesNotInjectPhpInCompiledOutput()
+    public function testUseTagTemplateNameDoesNotInjectPhpInCompiledOutput(): void
     {
         $evilName = "evil' . print('BAD-EOL') . '.twig";
         $loader = new ArrayLoader([

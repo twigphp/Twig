@@ -25,7 +25,7 @@ use Twig\Profiler\Profile;
 
 class ProfileTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $profile = new Profile('template', 'type', 'name');
 
@@ -34,7 +34,7 @@ class ProfileTest extends TestCase
         $this->assertEquals('name', $profile->getName());
     }
 
-    public function testIsRoot()
+    public function testIsRoot(): void
     {
         $profile = new Profile('template', Profile::ROOT);
         $this->assertTrue($profile->isRoot());
@@ -43,7 +43,7 @@ class ProfileTest extends TestCase
         $this->assertFalse($profile->isRoot());
     }
 
-    public function testIsTemplate()
+    public function testIsTemplate(): void
     {
         $profile = new Profile('template', Profile::TEMPLATE);
         $this->assertTrue($profile->isTemplate());
@@ -52,7 +52,7 @@ class ProfileTest extends TestCase
         $this->assertFalse($profile->isTemplate());
     }
 
-    public function testIsBlock()
+    public function testIsBlock(): void
     {
         $profile = new Profile('template', Profile::BLOCK);
         $this->assertTrue($profile->isBlock());
@@ -61,7 +61,7 @@ class ProfileTest extends TestCase
         $this->assertFalse($profile->isBlock());
     }
 
-    public function testIsMacro()
+    public function testIsMacro(): void
     {
         $profile = new Profile('template', Profile::MACRO);
         $this->assertTrue($profile->isMacro());
@@ -70,7 +70,7 @@ class ProfileTest extends TestCase
         $this->assertFalse($profile->isMacro());
     }
 
-    public function testGetAddProfile()
+    public function testGetAddProfile(): void
     {
         $profile = new Profile();
         $profile->addProfile($a = new Profile());
@@ -80,7 +80,7 @@ class ProfileTest extends TestCase
         $this->assertSame([$a, $b], iterator_to_array($profile));
     }
 
-    public function testGetDuration()
+    public function testGetDuration(): void
     {
         $profile = new Profile();
         usleep(1);
@@ -89,7 +89,7 @@ class ProfileTest extends TestCase
         $this->assertTrue($profile->getDuration() > 0, \sprintf('Expected duration > 0, got: %f', $profile->getDuration()));
     }
 
-    public function testTimeAccessors()
+    public function testTimeAccessors(): void
     {
         $current = microtime(true);
         $profile = new Profile();
@@ -98,7 +98,7 @@ class ProfileTest extends TestCase
         $this->assertSame(0.0, $profile->getEndTime());
     }
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $profile = new Profile('template', 'type', 'name');
         $profile1 = new Profile('template1', 'type1', 'name1');
@@ -121,7 +121,7 @@ class ProfileTest extends TestCase
         $this->assertEquals($profile1->getName(), $profile3->getName());
     }
 
-    public function testUnserializeDoesNotInstantiateArbitraryClasses()
+    public function testUnserializeDoesNotInstantiateArbitraryClasses(): void
     {
         $payload = serialize([
             'template',
@@ -138,7 +138,7 @@ class ProfileTest extends TestCase
         $this->assertFalse(ProfileTestProbe::$wakeupCalled, 'Magic unserialize methods must not be called on arbitrary classes');
     }
 
-    public function testReset()
+    public function testReset(): void
     {
         $profile = new Profile();
         usleep(1);

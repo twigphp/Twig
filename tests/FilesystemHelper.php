@@ -22,7 +22,7 @@ namespace Twig\Tests;
 
 class FilesystemHelper
 {
-    public static function removeDir($dir)
+    public static function removeDir($dir): void
     {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $filename => $fileInfo) {

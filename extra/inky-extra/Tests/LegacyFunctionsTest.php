@@ -21,7 +21,7 @@ use function Twig\Extra\Inky\twig_inky;
  */
 class LegacyFunctionsTest extends TestCase
 {
-    public function testInlineCss()
+    public function testInlineCss(): void
     {
         $this->assertSame(InkyExtension::inky('<p>Foo</p>'), twig_inky('<p>Foo</p>'));
     }

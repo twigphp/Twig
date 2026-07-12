@@ -35,7 +35,7 @@ use Twig\TemplateWrapper;
 
 class TemplateTest extends TestCase
 {
-    public function testDisplayBlocksAcceptTemplateOnlyAsBlocks()
+    public function testDisplayBlocksAcceptTemplateOnlyAsBlocks(): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
@@ -48,7 +48,7 @@ class TemplateTest extends TestCase
      * @dataProvider getAttributeExceptions
      */
     #[DataProvider('getAttributeExceptions')]
-    public function testGetAttributeExceptions($template, $message)
+    public function testGetAttributeExceptions($template, $message): void
     {
         $templates = ['index' => $template];
         $env = new Environment(new ArrayLoader($templates), ['strict_variables' => true]);
@@ -99,7 +99,7 @@ class TemplateTest extends TestCase
      * @dataProvider getGetAttributeWithSandbox
      */
     #[DataProvider('getGetAttributeWithSandbox')]
-    public function testGetAttributeWithSandbox($object, $item, $allowed)
+    public function testGetAttributeWithSandbox($object, $item, $allowed): void
     {
         $twig = new Environment(new ArrayLoader());
         $policy = new SecurityPolicy([], [], [/* method */], [/* prop */], []);
@@ -139,7 +139,7 @@ class TemplateTest extends TestCase
      * @dataProvider getRenderTemplateWithoutOutputData
      */
     #[DataProvider('getRenderTemplateWithoutOutputData')]
-    public function testRenderTemplateWithoutOutput(string $template)
+    public function testRenderTemplateWithoutOutput(string $template): void
     {
         $twig = new Environment(new ArrayLoader(['index' => $template]));
         $this->assertSame('', $twig->render('index'));
@@ -158,7 +158,7 @@ class TemplateTest extends TestCase
      * @dataProvider getNullCoalesceWithImportedMacroData
      */
     #[DataProvider('getNullCoalesceWithImportedMacroData')]
-    public function testNullCoalesceWithImportedMacro(array $templates, string $expected)
+    public function testNullCoalesceWithImportedMacro(array $templates, string $expected): void
     {
         $twig = new Environment(new ArrayLoader($templates));
 
@@ -192,7 +192,7 @@ class TemplateTest extends TestCase
         ];
     }
 
-    public function testRenderBlockWithUndefinedBlock()
+    public function testRenderBlockWithUndefinedBlock(): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig, 'index.twig');
@@ -203,7 +203,7 @@ class TemplateTest extends TestCase
         $template->renderBlock('unknown', []);
     }
 
-    public function testDisplayBlockWithUndefinedBlock()
+    public function testDisplayBlockWithUndefinedBlock(): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig, 'index.twig');
@@ -214,7 +214,7 @@ class TemplateTest extends TestCase
         $template->displayBlock('unknown', []);
     }
 
-    public function testDisplayBlockWithUndefinedParentBlock()
+    public function testDisplayBlockWithUndefinedParentBlock(): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig, 'parent.twig');
@@ -225,7 +225,7 @@ class TemplateTest extends TestCase
         $template->displayBlock('foo', [], ['foo' => [new TemplateForTest($twig, 'index.twig'), 'block_foo']], false);
     }
 
-    public function testGetAttributeOnArrayWithConfusableKey()
+    public function testGetAttributeOnArrayWithConfusableKey(): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
@@ -261,7 +261,7 @@ class TemplateTest extends TestCase
      * @dataProvider getStrictVariablesModes
      */
     #[DataProvider('getStrictVariablesModes')]
-    public function testArrayAccessWithStringableKeyIsConsistentAcrossStrictModes(bool $strict)
+    public function testArrayAccessWithStringableKeyIsConsistentAcrossStrictModes(bool $strict): void
     {
         $twig = new Environment(new ArrayLoader(['index' => '{{ array[object] }}']), [
             'strict_variables' => $strict,
@@ -288,7 +288,7 @@ class TemplateTest extends TestCase
      * @dataProvider getStrictVariablesModes
      */
     #[DataProvider('getStrictVariablesModes')]
-    public function testArrayAccessWithObjectKeyKeepsTheObjectKey(bool $strict)
+    public function testArrayAccessWithObjectKeyKeepsTheObjectKey(bool $strict): void
     {
         $twig = new Environment(new ArrayLoader(['index' => '{{ data[object] }}']), [
             'strict_variables' => $strict,
@@ -307,7 +307,7 @@ class TemplateTest extends TestCase
         $this->assertSame('value', $twig->render('index', ['data' => $data, 'object' => $object]));
     }
 
-    public function testArrayAccessWithStringableKeyIsCheckedBySandbox()
+    public function testArrayAccessWithStringableKeyIsCheckedBySandbox(): void
     {
         $object = new class implements \Stringable {
             public function __toString(): string
@@ -337,7 +337,7 @@ class TemplateTest extends TestCase
      * @dataProvider getGetAttributeTests
      */
     #[DataProvider('getGetAttributeTests')]
-    public function testGetAttribute($defined, $value, $object, $item, $arguments, $type)
+    public function testGetAttribute($defined, $value, $object, $item, $arguments, $type): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
@@ -349,7 +349,7 @@ class TemplateTest extends TestCase
      * @dataProvider getGetAttributeTests
      */
     #[DataProvider('getGetAttributeTests')]
-    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null)
+    public function testGetAttributeStrict($defined, $value, $object, $item, $arguments, $type, $exceptionMessage = null): void
     {
         $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
         $template = new TemplateForTest($twig);
@@ -369,7 +369,7 @@ class TemplateTest extends TestCase
      * @dataProvider getGetAttributeTests
      */
     #[DataProvider('getGetAttributeTests')]
-    public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type)
+    public function testGetAttributeDefined($defined, $value, $object, $item, $arguments, $type): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
@@ -381,7 +381,7 @@ class TemplateTest extends TestCase
      * @dataProvider getGetAttributeTests
      */
     #[DataProvider('getGetAttributeTests')]
-    public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type)
+    public function testGetAttributeDefinedStrict($defined, $value, $object, $item, $arguments, $type): void
     {
         $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
         $template = new TemplateForTest($twig);
@@ -389,7 +389,7 @@ class TemplateTest extends TestCase
         $this->assertEquals($defined, CoreExtension::getAttribute($twig, $template->getSourceContext(), $object, $item, $arguments, $type, true));
     }
 
-    public function testGetAttributeCallExceptions()
+    public function testGetAttributeCallExceptions(): void
     {
         $twig = new Environment(new ArrayLoader());
         $template = new TemplateForTest($twig);
@@ -402,7 +402,7 @@ class TemplateTest extends TestCase
     /**
      * @dataProvider provideNonStringPrintValues
      */
-    public function testPrintingANonStringReportsTheErrorAtThePrintLocation($value, string $expectedMessage)
+    public function testPrintingANonStringReportsTheErrorAtThePrintLocation($value, string $expectedMessage): void
     {
         $twig = new Environment(new ArrayLoader(['index' => "foo\n{{ value }}\nbar"]));
 
@@ -568,7 +568,7 @@ class TemplateTest extends TestCase
         return $tests;
     }
 
-    public function testGetIsMethods()
+    public function testGetIsMethods(): void
     {
         $twig = new Environment(new ArrayLoader());
 
@@ -635,7 +635,7 @@ class TemplateForTest extends Template
     {
     }
 
-    public function block_name($context, array $blocks = [])
+    public function block_name($context, array $blocks = []): void
     {
     }
 }
@@ -799,7 +799,7 @@ class TemplateMethodObject
         return 0;
     }
 
-    public function getNull()
+    public function getNull(): void
     {
     }
 
@@ -856,11 +856,11 @@ class TemplateMethodObject
 
 class TemplateGetIsMethods
 {
-    public function get()
+    public function get(): void
     {
     }
 
-    public function is()
+    public function is(): void
     {
     }
 }
@@ -928,7 +928,7 @@ class TemplateMagicMethodObject
 
 class TemplateMagicMethodExceptionObject
 {
-    public function __call($method, $arguments)
+    public function __call($method, $arguments): void
     {
         throw new \BadMethodCallException(\sprintf('Unknown method "%s".', $method));
     }

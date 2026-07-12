@@ -24,7 +24,7 @@ class HtmlAttrTest extends TestCase
     /**
      * @dataProvider htmlAttrProvider
      */
-    public function testPrintingAttributes(string $expected, array $inputs)
+    public function testPrintingAttributes(string $expected, array $inputs): void
     {
         $result = HtmlExtension::htmlAttr(new Environment(new ArrayLoader()), ...$inputs);
 
@@ -285,7 +285,7 @@ class HtmlAttrTest extends TestCase
         ];
     }
 
-    public function testIterableObjectCastedToArray()
+    public function testIterableObjectCastedToArray(): void
     {
         /*
             This test case demonstrates how objects could e. g. implement helper logic
@@ -307,7 +307,7 @@ class HtmlAttrTest extends TestCase
         self::assertSame('data-controller="dropdown tooltip" data-action="click-&gt;dropdown#toggle mouseover-&gt;tooltip#show"', $result);
     }
 
-    public function testDataAttributeWithNonJsonEncodableValueThrowsRuntimeError()
+    public function testDataAttributeWithNonJsonEncodableValueThrowsRuntimeError(): void
     {
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('The "data-bad" attribute value cannot be JSON encoded.');
@@ -318,7 +318,7 @@ class HtmlAttrTest extends TestCase
         );
     }
 
-    public function testNonStringableObjectAsAttributeValueThrowsRuntimeError()
+    public function testNonStringableObjectAsAttributeValueThrowsRuntimeError(): void
     {
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('The "title" attribute value should be a scalar, an iterable, or an object implementing "Stringable"');

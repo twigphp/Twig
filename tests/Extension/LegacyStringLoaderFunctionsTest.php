@@ -23,7 +23,7 @@ use Twig\Loader\ArrayLoader;
 #[Group('legacy')]
 class LegacyStringLoaderFunctionsTest extends TestCase
 {
-    public function testTemplateFromString()
+    public function testTemplateFromString(): void
     {
         $env = new Environment(new ArrayLoader());
 

@@ -59,7 +59,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider getFailingTestsForAssignment
      */
     #[DataProvider('getFailingTestsForAssignment')]
-    public function testCanOnlyAssignToNames($template)
+    public function testCanOnlyAssignToNames($template): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -90,7 +90,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider getTestsForSequence
      */
     #[DataProvider('getTestsForSequence')]
-    public function testSequenceExpression($template, $expected)
+    public function testSequenceExpression($template, $expected): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $stream = $env->tokenize($source = new Source($template, ''));
@@ -104,7 +104,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider getFailingTestsForSequence
      */
     #[DataProvider('getFailingTestsForSequence')]
-    public function testSequenceSyntaxError($template)
+    public function testSequenceSyntaxError($template): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -230,7 +230,7 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    public function testStringExpressionDoesNotConcatenateTwoConsecutiveStrings()
+    public function testStringExpressionDoesNotConcatenateTwoConsecutiveStrings(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
         $stream = $env->tokenize(new Source('{{ "a" "b" }}', 'index'));
@@ -240,7 +240,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($stream);
     }
 
-    public function testSequenceCompilationError()
+    public function testSequenceCompilationError(): void
     {
         $env = new Environment(new ArrayLoader(['index' => '{{ [1,,2] }}']), ['cache' => false, 'autoescape' => false]);
 
@@ -253,7 +253,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider getTestsForString
      */
     #[DataProvider('getTestsForString')]
-    public function testStringExpression($template, $expected)
+    public function testStringExpression($template, $expected): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false, 'optimizations' => 0]);
         $stream = $env->tokenize($source = new Source($template, ''));
@@ -311,7 +311,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider getTestsForNullSafeOperator
      */
     #[DataProvider('getTestsForNullSafeOperator')]
-    public function testNullSafeOperator($template, $data, $expected)
+    public function testNullSafeOperator($template, $data, $expected): void
     {
         $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);
 
@@ -384,7 +384,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider getTestForInvalidNullSafeOperatorShortCircuiting
      */
     #[DataProvider('getTestForInvalidNullSafeOperatorShortCircuiting')]
-    public function testInvalidNullSafeOperatorShortCircuiting(string $template, array $data, string $expectedMessage)
+    public function testInvalidNullSafeOperatorShortCircuiting(string $template, array $data, string $expectedMessage): void
     {
         $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);
 
@@ -408,7 +408,7 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    public function testMacroDefinitionDoesNotSupportNonNameVariableName()
+    public function testMacroDefinitionDoesNotSupportNonNameVariableName(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -423,7 +423,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider             getMacroDefinitionDoesNotSupportNonConstantDefaultValues
      */
     #[DataProvider('getMacroDefinitionDoesNotSupportNonConstantDefaultValues')]
-    public function testMacroDefinitionDoesNotSupportNonConstantDefaultValues($template)
+    public function testMacroDefinitionDoesNotSupportNonConstantDefaultValues($template): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -446,7 +446,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider getMacroDefinitionSupportsConstantDefaultValues
      */
     #[DataProvider('getMacroDefinitionSupportsConstantDefaultValues')]
-    public function testMacroDefinitionSupportsConstantDefaultValues($template)
+    public function testMacroDefinitionSupportsConstantDefaultValues($template): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -471,7 +471,7 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
-    public function testUnknownFunction()
+    public function testUnknownFunction(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -482,7 +482,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source('{{ cycl() }}', 'index')));
     }
 
-    public function testUnknownFunctionWithoutSuggestions()
+    public function testUnknownFunctionWithoutSuggestions(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -493,7 +493,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source('{{ foobar() }}', 'index')));
     }
 
-    public function testUnknownFilter()
+    public function testUnknownFilter(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -504,7 +504,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source('{{ 1|lowe }}', 'index')));
     }
 
-    public function testUnknownFilterWithoutSuggestions()
+    public function testUnknownFilterWithoutSuggestions(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -515,7 +515,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source('{{ 1|foobar }}', 'index')));
     }
 
-    public function testUnknownTest()
+    public function testUnknownTest(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -527,7 +527,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($stream);
     }
 
-    public function testUnknownTestWithoutSuggestions()
+    public function testUnknownTestWithoutSuggestions(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $parser = new Parser($env);
@@ -538,7 +538,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source('{{ 1 is foobar }}', 'index')));
     }
 
-    public function testCompiledCodeForDynamicTest()
+    public function testCompiledCodeForDynamicTest(): void
     {
         $env = new Environment(new ArrayLoader(['index' => '{{ "a" is foo_foo_bar_bar }}']), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class extends AbstractExtension {
@@ -553,7 +553,7 @@ class ExpressionParserTest extends TestCase
         $this->assertStringContainsString('$this->env->getTest(\'*_foo_*_bar\')->getCallable()("foo", "bar", "a")', $env->compile($env->parse($env->tokenize(new Source($env->getLoader()->getSourceContext('index')->getCode(), 'index')))));
     }
 
-    public function testCompiledCodeForDynamicFunction()
+    public function testCompiledCodeForDynamicFunction(): void
     {
         $env = new Environment(new ArrayLoader(['index' => '{{ foo_foo_bar_bar("a") }}']), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class extends AbstractExtension {
@@ -568,7 +568,7 @@ class ExpressionParserTest extends TestCase
         $this->assertStringContainsString('$this->env->getFunction(\'*_foo_*_bar\')->getCallable()("foo", "bar", "a")', $env->compile($env->parse($env->tokenize(new Source($env->getLoader()->getSourceContext('index')->getCode(), 'index')))));
     }
 
-    public function testCompiledCodeForDynamicFilter()
+    public function testCompiledCodeForDynamicFilter(): void
     {
         $env = new Environment(new ArrayLoader(['index' => '{{ "a"|foo_foo_bar_bar }}']), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class extends AbstractExtension {
@@ -583,7 +583,7 @@ class ExpressionParserTest extends TestCase
         $this->assertStringContainsString('$this->env->getFilter(\'*_foo_*_bar\')->getCallable()("foo", "bar", "a")', $env->compile($env->parse($env->tokenize(new Source($env->getLoader()->getSourceContext('index')->getCode(), 'index')))));
     }
 
-    public function testNotReadyFunctionWithNoConstructor()
+    public function testNotReadyFunctionWithNoConstructor(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addFunction(new TwigFunction('foo', 'foo', ['node_class' => NotReadyFunctionExpressionWithNoConstructor::class]));
@@ -593,7 +593,7 @@ class ExpressionParserTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testNotReadyFilterWithNoConstructor()
+    public function testNotReadyFilterWithNoConstructor(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addFilter(new TwigFilter('foo', 'foo', ['node_class' => NotReadyFilterExpressionWithNoConstructor::class]));
@@ -603,7 +603,7 @@ class ExpressionParserTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testNotReadyTestWithNoConstructor()
+    public function testNotReadyTestWithNoConstructor(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addTest(new TwigTest('foo', 'foo', ['node_class' => NotReadyTestExpressionWithNoConstructor::class]));
@@ -617,7 +617,7 @@ class ExpressionParserTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testNotReadyFunction()
+    public function testNotReadyFunction(): void
     {
         $this->expectDeprecation('Since twig/twig 3.12: Twig node "Twig\Tests\NotReadyFunctionExpression" is not marked as ready for passing a "TwigFunction" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.');
         $this->expectDeprecation('Since twig/twig 3.12: Not passing an instance of "TwigFunction" when creating a "foo" function of type "Twig\Tests\NotReadyFunctionExpression" is deprecated.');
@@ -633,7 +633,7 @@ class ExpressionParserTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testNotReadyFilter()
+    public function testNotReadyFilter(): void
     {
         $this->expectDeprecation('Since twig/twig 3.12: Twig node "Twig\Tests\NotReadyFilterExpression" is not marked as ready for passing a "TwigFilter" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.');
         $this->expectDeprecation('Since twig/twig 3.12: Not passing an instance of "TwigFilter" when creating a "foo" filter of type "Twig\Tests\NotReadyFilterExpression" is deprecated.');
@@ -649,7 +649,7 @@ class ExpressionParserTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
-    public function testNotReadyTest()
+    public function testNotReadyTest(): void
     {
         $this->expectDeprecation('Since twig/twig 3.12: Twig node "Twig\Tests\NotReadyTestExpression" is not marked as ready for passing a "TwigTest" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.');
         $this->expectDeprecation('Since twig/twig 3.12: Not passing an instance of "TwigTest" when creating a "foo" test of type "Twig\Tests\NotReadyTestExpression" is deprecated.');
@@ -661,7 +661,7 @@ class ExpressionParserTest extends TestCase
         $parser->parse($env->tokenize(new Source('{{ 1 is foo }}', 'index')));
     }
 
-    public function testReadyFunction()
+    public function testReadyFunction(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addFunction(new TwigFunction('foo', 'foo', ['node_class' => ReadyFunctionExpression::class]));
@@ -671,7 +671,7 @@ class ExpressionParserTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testReadyFilter()
+    public function testReadyFilter(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addFilter(new TwigFilter('foo', 'foo', ['node_class' => ReadyFilterExpression::class]));
@@ -681,7 +681,7 @@ class ExpressionParserTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testReadyTest()
+    public function testReadyTest(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addTest(new TwigTest('foo', 'foo', ['node_class' => ReadyTestExpression::class]));
@@ -691,7 +691,7 @@ class ExpressionParserTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testTwoWordTestPrecedence()
+    public function testTwoWordTestPrecedence(): void
     {
         // a "empty element" test must have precedence over "empty"
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -702,7 +702,7 @@ class ExpressionParserTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testUnaryPrecedenceChange()
+    public function testUnaryPrecedenceChange(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
         $env->addExtension(new class extends AbstractExtension {
@@ -730,7 +730,7 @@ class ExpressionParserTest extends TestCase
      * @dataProvider getBindingPowerTests
      */
     #[DataProvider('getBindingPowerTests')]
-    public function testBindingPower(string $expression, string $expectedExpression, mixed $expectedResult, array $context = [])
+    public function testBindingPower(string $expression, string $expectedExpression, mixed $expectedResult, array $context = []): void
     {
         $env = new Environment(new ArrayLoader([
             'expression' => $expression,
@@ -814,7 +814,7 @@ class ExpressionParserTest extends TestCase
         yield '= stronger than ternary' => ['{% do c = 4 ? 0 : -1 %}{{ c }}', '{% do c = (4 ? 0 : -1) %}{{ c }}', eval('return 4 ? 0 : -1;')];
     }
 
-    public function testLiteralExpressionParserGetOperatorTokensReturnsEmptyArray()
+    public function testLiteralExpressionParserGetOperatorTokensReturnsEmptyArray(): void
     {
         $env = new Environment(new ArrayLoader());
         $parser = $env->getExpressionParsers()->getByClass(LiteralExpressionParser::class);
@@ -823,7 +823,7 @@ class ExpressionParserTest extends TestCase
         $this->assertSame('literal', $parser->getName());
     }
 
-    public function testExpressionParserGetOperatorTokensDefaultBehavior()
+    public function testExpressionParserGetOperatorTokensDefaultBehavior(): void
     {
         $env = new Environment(new ArrayLoader());
 
@@ -836,7 +836,7 @@ class ExpressionParserTest extends TestCase
         }
     }
 
-    public function testLiteralIsNotRegisteredAsOperator()
+    public function testLiteralIsNotRegisteredAsOperator(): void
     {
         // Ensure "literal" is not in the operator registry
         $env = new Environment(new ArrayLoader());

@@ -31,7 +31,7 @@ use Twig\Test\NodeTestCase;
 #[Group('legacy')]
 class ConditionalTest extends NodeTestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $expr1 = new ConstantExpression(1, 1);
         $expr2 = new ConstantExpression(2, 1);
