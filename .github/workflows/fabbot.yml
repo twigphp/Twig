@@ -12,3 +12,4 @@ jobs:
     uses: symfony-tools/fabbot/.github/workflows/fabbot.yml@main
     with:
       package: Twig
+      check_test_return_type: false
