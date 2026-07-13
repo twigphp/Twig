@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-12T11:05:43Z
+
+**📋 PR Summary**
+
+This PR resolves #3845 by ensuring the date formatter prototype's pattern only falls back when no explicit date/time formats are given, so explicit formats are honored. The incremental change expands the explanatory comment and adds tests confirming that `format_date`/`format_time` intentionally ignore a prototype's custom pattern (since they pass `'none'` for the other part).
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **prototype pattern fallback** | |
+| `extra/intl-extra/IntlExtension.php` | Extends the comment explaining why a prototype pattern is only applied when both date and time formats are unset, clarifying that a full-datetime pattern cannot be honored by format_date/format_time. |
+| `extra/intl-extra/Tests/IntlExtensionTest.php` | Adds assertions verifying that formatDate/formatTime with a custom-pattern prototype fall back to standard formatting rather than the prototype pattern. |
+
+</details>
