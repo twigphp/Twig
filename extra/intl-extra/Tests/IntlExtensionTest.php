@@ -97,6 +97,32 @@ class IntlExtensionTest extends TestCase
         );
     }
 
+    public function testFormatterProtoDoesNotOverrideExplicitFormats(): void
+    {
+        $dateFormatterProto = new \IntlDateFormatter('nl_NL', \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM, new \DateTimeZone('Europe/Amsterdam'));
+        $ext = new IntlExtension($dateFormatterProto);
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2020-02-20T22:22:00+00:00', new \DateTimeZone('UTC'));
+
+        $this->assertSame('20 feb 2020', $ext->formatDate($env, $date));
+        $this->assertSame('22:22:00', $ext->formatTime($env, $date));
+        $this->assertSame('donderdag 20 februari 2020', $ext->formatDateTime($env, $date, 'full', 'none'));
+    }
+
+    public function testFormatterProtoWithCustomPatternIsUsedByDefault(): void
+    {
+        $dateFormatterProto = new \IntlDateFormatter('nl_NL', \IntlDateFormatter::MEDIUM, \IntlDateFormatter::MEDIUM, new \DateTimeZone('Europe/Amsterdam'), \IntlDateFormatter::GREGORIAN, 'yyyy-MM-dd');
+        $ext = new IntlExtension($dateFormatterProto);
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2020-02-20T22:22:00+00:00', new \DateTimeZone('UTC'));
+
+        $this->assertSame('2020-02-20', $ext->formatDateTime($env, $date));
+        $this->assertSame('20 feb 2020', $ext->formatDate($env, $date, 'medium'));
+        // the prototype pattern describes a full datetime rendering, so format_date/format_time ignore it
+        $this->assertSame('20 feb 2020', $ext->formatDate($env, $date));
+        $this->assertSame('22:22:00', $ext->formatTime($env, $date));
+    }
+
     public function testDateFormatterCacheIsBounded(): void
     {
         $ext = new IntlExtension();
