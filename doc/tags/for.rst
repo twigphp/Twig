@@ -80,6 +80,25 @@ Variable              Description
     ``loop.last`` variables are only available for PHP arrays, or objects that
     implement the ``Countable`` interface.
 
+When loops are nested, you can access the parent loop context via the
+``parent`` key of the ``loop`` variable:
+
+.. code-block:: twig
+
+    {% for topic, messages in topics %}
+       * {{ loop.index }} : {{ topic }}
+        {% for message in messages %}
+            - {{ loop.parent.loop.index }}.{{ loop.index }}: {{ message }}
+        {% endfor %}
+    {% endfor %}
+
+In the inner loop, ``loop.parent`` gives access to the context of the
+enclosing loop. So, the index of the current topic (defined in the outer
+``for`` loop) is available in the inner loop via
+``loop.parent.loop.index``.
+
+See also :doc:`the recipe on accessing the parent context in nested loops <recipes>`.
+
 The ``else`` Clause
 -------------------
 
