@@ -115,13 +115,11 @@ class FilterTest extends NodeTestCase
         $node = self::createFilter($environment, $string, 'barbar', ['arg2' => new ConstantExpression('bar', 1)]);
         $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_barbar($context, "abc", null, "bar")', $environment];
 
-        if (\PHP_VERSION_ID >= 80111) {
-            $node = self::createFilter($environment, $string, 'first_class_callable_static');
-            $tests[] = [$node, 'Twig\Tests\Node\Expression\FilterTestExtension::staticMethod("abc")', $environment];
+        $node = self::createFilter($environment, $string, 'first_class_callable_static');
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\FilterTestExtension::staticMethod("abc")', $environment];
 
-            $node = self::createFilter($environment, $string, 'first_class_callable_object');
-            $tests[] = [$node, '$this->extensions[\'Twig\Tests\Node\Expression\FilterTestExtension\']->objectMethod("abc")', $environment];
-        }
+        $node = self::createFilter($environment, $string, 'first_class_callable_object');
+        $tests[] = [$node, '$this->extensions[\'Twig\Tests\Node\Expression\FilterTestExtension\']->objectMethod("abc")', $environment];
 
         $node = self::createFilter($environment, $string, 'barbar', [
             new ConstantExpression('1', 1),
@@ -189,9 +187,7 @@ class FilterTest extends NodeTestCase
         $env->addFilter(new TwigFilter('bar_sandbox', 'Twig\Tests\Node\Expression\twig_tests_filter_sandbox', ['needs_is_sandboxed' => true]));
         $env->addFilter(new TwigFilter('bar_all', 'Twig\Tests\Node\Expression\twig_tests_filter_all', ['needs_charset' => true, 'needs_environment' => true, 'needs_context' => true, 'needs_is_sandboxed' => true]));
         $env->addFilter(new TwigFilter('magic_static', __NAMESPACE__.'\ChildMagicCallStub::magicStaticCall'));
-        if (\PHP_VERSION_ID >= 80111) {
-            $env->addExtension(new FilterTestExtension());
-        }
+        $env->addExtension(new FilterTestExtension());
         $env->addExtension(self::createExtension());
 
         return $env;

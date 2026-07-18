@@ -44,19 +44,11 @@ class NameExpression extends AbstractExpression implements SupportDefinedTestInt
         if ($this->definedTest) {
             if (isset($this->specialVars[$name]) || $this->getAttribute('always_defined')) {
                 $compiler->repr(true);
-            } elseif (\PHP_VERSION_ID >= 70400) {
+            } else {
                 $compiler
                     ->raw('array_key_exists(')
                     ->string($name)
                     ->raw(', $context)')
-                ;
-            } else {
-                $compiler
-                    ->raw('(isset($context[')
-                    ->string($name)
-                    ->raw(']) || array_key_exists(')
-                    ->string($name)
-                    ->raw(', $context))')
                 ;
             }
         } elseif (isset($this->specialVars[$name])) {
@@ -76,9 +68,7 @@ class NameExpression extends AbstractExpression implements SupportDefinedTestInt
                 ;
             } else {
                 $compiler
-                    ->raw('(isset($context[')
-                    ->string($name)
-                    ->raw(']) || array_key_exists(')
+                    ->raw('(array_key_exists(')
                     ->string($name)
                     ->raw(', $context) ? $context[')
                     ->string($name)
