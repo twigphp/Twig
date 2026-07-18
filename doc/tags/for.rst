@@ -74,6 +74,11 @@ Variable              Description
         {{ loop.index }} - {{ user.username }}
     {% endfor %}
 
+    {% set user = {'name': 'Fabien'} %}
+    {% for user in users %}
+        {{ loop.parent.user.name }} - {{ user.username }}
+    {% endfor %}
+
 .. note::
 
     The ``loop.length``, ``loop.revindex``, ``loop.revindex0``, and
