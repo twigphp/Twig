@@ -13,13 +13,13 @@
 namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ReturnBoolInterface;
 use Twig\Node\Expression\Test\TrueTest;
-use Twig\Node\Node;
 
 class XorBinary extends AbstractBinary implements ReturnBoolInterface
 {
-    public function __construct(Node $left, Node $right, int $lineno)
+    public function __construct(AbstractExpression $left, AbstractExpression $right, int $lineno)
     {
         parent::__construct(TrueTest::wrap($left), TrueTest::wrap($right), $lineno);
     }

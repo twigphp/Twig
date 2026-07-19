@@ -14,6 +14,7 @@ namespace Twig\Node;
 
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Test\TrueTest;
 
 /**
@@ -27,7 +28,9 @@ class IfNode extends Node
     public function __construct(Node $tests, ?Node $else, int $lineno)
     {
         for ($i = 0, $count = \count($tests); $i < $count; $i += 2) {
-            $tests->setNode($i, TrueTest::wrap($tests->getNode((string) $i)));
+            /** @var AbstractExpression $test */
+            $test = $tests->getNode((string) $i);
+            $tests->setNode($i, TrueTest::wrap($test));
         }
         $nodes = ['tests' => $tests];
         if (null !== $else) {
