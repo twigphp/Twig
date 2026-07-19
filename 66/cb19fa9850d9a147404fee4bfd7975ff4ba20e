@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-19T16:21:29Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR fixes PHPStan errors on the 4.x branch by tightening parameter type declarations from the generic `Node` to `AbstractExpression` in several expression/binary/unary node constructors and in `TrueTest::wrap`, and by removing a now-redundant `array_map` in `Environment::resolveTemplate`. The changes align the enforced runtime types with the existing docblock intent and add a `@var` annotation in `IfNode` to satisfy static analysis.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **type-hint tightening** | |
+| `src/Node/Expression/Binary/AndBinary.php` | Narrows constructor params from `Node` to `AbstractExpression`, swapping the import accordingly. |
+| `src/Node/Expression/Binary/OrBinary.php` | Narrows constructor params from `Node` to `AbstractExpression`. |
+| `src/Node/Expression/Binary/XorBinary.php` | Narrows constructor params from `Node` to `AbstractExpression`. |
+| `src/Node/Expression/Binary/ElvisBinary.php` | Replaces `Node` params (plus redundant docblock) with `AbstractExpression` type hints. |
+| `src/Node/Expression/Unary/NotUnary.php` | Narrows the constructor param from `Node` to `AbstractExpression`. |
+| `src/Node/Expression/Test/TrueTest.php` | Changes `wrap()` signature and return type from `Node` to `AbstractExpression`. |
+| `src/Node/IfNode.php` | Adds an `@var AbstractExpression` annotation for the test node before passing it to `TrueTest::wrap`. |
+| **dead-code removal** | |
+| `src/Environment.php` | Drops the `array_map` handling of `TemplateWrapper` in the error message, imploding `$names` directly. |
+
+</details>
