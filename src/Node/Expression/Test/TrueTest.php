@@ -12,9 +12,9 @@
 namespace Twig\Node\Expression\Test;
 
 use Twig\Compiler;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ReturnPrimitiveTypeInterface;
 use Twig\Node\Expression\TestExpression;
-use Twig\Node\Node;
 use Twig\TwigTest;
 
 /**
@@ -26,7 +26,7 @@ use Twig\TwigTest;
  */
 class TrueTest extends TestExpression
 {
-    public static function wrap(Node $node): Node
+    public static function wrap(AbstractExpression $node): AbstractExpression
     {
         if ($node instanceof ReturnPrimitiveTypeInterface) {
             return $node;

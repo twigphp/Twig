@@ -481,7 +481,7 @@ class Environment
             return $this->load($name);
         }
 
-        throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "', array_map(static fn ($name) => $name instanceof TemplateWrapper ? $name->getTemplateName() : $name, $names))));
+        throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
     }
 
     public function setLexer(Lexer $lexer): void
