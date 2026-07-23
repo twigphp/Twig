@@ -40,6 +40,19 @@ Declare optional variables by adding a ``?`` suffix:
         score?: 'number',
     } %}
 
+.. versionadded:: 3.29
+
+    The ``docs`` option was added in Twig 3.29.
+
+Document a variable by adding a ``docs`` option after its type:
+
+.. code-block:: twig
+
+    {% types {
+        is_correct: 'boolean' docs="Whether the answer is correct",
+        score?: 'number' docs="The score of the answer",
+    } %}
+
 By default, this tag does not affect the template compilation or runtime behavior.
 
 Its purpose is to enable designers and developers to document and specify the

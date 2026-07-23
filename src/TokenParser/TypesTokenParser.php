@@ -20,7 +20,7 @@ use Twig\TokenStream;
 /**
  * Declare variable types.
  *
- *  {% types {foo: 'number', bar?: 'string'} %}
+ *  {% types {foo: 'number', bar?: 'string', baz: 'string' docs="Some description"} %}
  *
  * @author Jeroen Versteeg <jeroen@alisqi.com>
  *
@@ -38,7 +38,7 @@ final class TypesTokenParser extends AbstractTokenParser
     }
 
     /**
-     * @return array<string, array{type: string, optional: bool}>
+     * @return array<string, array{type: string, optional: bool, docs: string|null}>
      *
      * @throws SyntaxError
      */
@@ -69,9 +69,16 @@ final class TypesTokenParser extends AbstractTokenParser
 
             $valueToken = $stream->expect(Token::STRING_TYPE);
 
+            $docs = null;
+            if ($stream->nextIf(Token::NAME_TYPE, 'docs')) {
+                $stream->expect(Token::OPERATOR_TYPE, '=', 'The "docs" option must be followed by an equal sign (=)');
+                $docs = $stream->expect(Token::STRING_TYPE)->getValue();
+            }
+
             $types[$nameToken->getValue()] = [
                 'type' => $valueToken->getValue(),
                 'optional' => $isOptional,
+                'docs' => $docs,
             ];
         }
 

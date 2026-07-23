@@ -38,7 +38,17 @@ final class BlockTokenParser extends AbstractTokenParser
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
         $name = $stream->expect(Token::NAME_TYPE)->getValue();
-        $this->parser->setBlock($name, $block = new BlockNode($name, new EmptyNode(), $lineno));
+
+        // "docs" followed by "=" is the docs option; "docs" alone might be an
+        // expression used as the shortcut syntax for the block body
+        $docs = null;
+        if ($stream->test(Token::NAME_TYPE, 'docs') && $stream->look()->test(Token::OPERATOR_TYPE, '=')) {
+            $stream->next();
+            $stream->next();
+            $docs = $stream->expect(Token::STRING_TYPE)->getValue();
+        }
+
+        $this->parser->setBlock($name, $block = new BlockNode($name, new EmptyNode(), $lineno, $docs));
         $this->parser->pushLocalScope();
         $this->parser->pushBlockStack($name);
 

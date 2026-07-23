@@ -14,6 +14,7 @@ namespace Twig\Tests\TokenParser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
 use Twig\Parser;
 use Twig\Source;
@@ -33,6 +34,18 @@ class TypesTokenParserTest extends TestCase
         self::assertEquals($expected, $typesNode->getAttribute('mapping'));
     }
 
+    public function testDocsOptionRequiresAnEqualSign(): void
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+        $stream = $env->tokenize(new Source('{% types {foo: "bar" docs "Some description"} %}', ''));
+        $parser = new Parser($env);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('The "docs" option must be followed by an equal sign (=)');
+
+        $parser->parse($stream);
+    }
+
     public static function getMappingTests(): array
     {
         return [
@@ -46,7 +59,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo: "bar"} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => false],
+                    'foo' => ['type' => 'bar', 'optional' => false, 'docs' => null],
                 ],
             ],
 
@@ -54,7 +67,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo: "bar",} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => false],
+                    'foo' => ['type' => 'bar', 'optional' => false, 'docs' => null],
                 ],
             ],
 
@@ -62,7 +75,7 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo?: "bar"} %}',
                 [
-                    'foo' => ['type' => 'bar', 'optional' => true],
+                    'foo' => ['type' => 'bar', 'optional' => true, 'docs' => null],
                 ],
             ],
 
@@ -70,9 +83,9 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types {foo: "foo", bar?: "foo", baz: "baz"} %}',
                 [
-                    'foo' => ['type' => 'foo', 'optional' => false],
-                    'bar' => ['type' => 'foo', 'optional' => true],
-                    'baz' => ['type' => 'baz', 'optional' => false],
+                    'foo' => ['type' => 'foo', 'optional' => false, 'docs' => null],
+                    'bar' => ['type' => 'foo', 'optional' => true, 'docs' => null],
+                    'baz' => ['type' => 'baz', 'optional' => false, 'docs' => null],
                 ],
             ],
 
@@ -80,8 +93,33 @@ class TypesTokenParserTest extends TestCase
             [
                 '{% types foo: "foo", bar: "bar" %}',
                 [
-                    'foo' => ['type' => 'foo', 'optional' => false],
-                    'bar' => ['type' => 'bar', 'optional' => false],
+                    'foo' => ['type' => 'foo', 'optional' => false, 'docs' => null],
+                    'bar' => ['type' => 'bar', 'optional' => false, 'docs' => null],
+                ],
+            ],
+
+            // docs option
+            [
+                '{% types {foo: "bar" docs="Some description"} %}',
+                [
+                    'foo' => ['type' => 'bar', 'optional' => false, 'docs' => 'Some description'],
+                ],
+            ],
+
+            // docs option on an optional name, with a trailing comma
+            [
+                '{% types {foo?: "bar" docs="Some description",} %}',
+                [
+                    'foo' => ['type' => 'bar', 'optional' => true, 'docs' => 'Some description'],
+                ],
+            ],
+
+            // docs option on some entries only, without {} enclosing
+            [
+                '{% types foo: "foo" docs="Some description", bar: "bar" %}',
+                [
+                    'foo' => ['type' => 'foo', 'optional' => false, 'docs' => 'Some description'],
+                    'bar' => ['type' => 'bar', 'optional' => false, 'docs' => null],
                 ],
             ],
         ];
