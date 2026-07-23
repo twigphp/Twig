@@ -47,6 +47,7 @@ final class Token
         private $value,
         private int $lineno,
         private ?int $offset = null,
+        private ?string $documentation = null,
     ) {
         if (self::ARROW_TYPE === $type) {
             trigger_deprecation('twig/twig', '3.21', 'The "%s" token type is deprecated, "arrow" is now an operator.', self::ARROW_TYPE);
@@ -139,6 +140,11 @@ final class Token
     public function getOffset(): ?int
     {
         return $this->offset;
+    }
+
+    public function getDocumentation(): ?string
+    {
+        return $this->documentation;
     }
 
     /**

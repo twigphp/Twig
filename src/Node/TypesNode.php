@@ -27,7 +27,12 @@ class TypesNode extends Node
      */
     public function __construct(array $types, int $lineno)
     {
-        parent::__construct([], ['mapping' => $types], $lineno);
+        $nodes = [];
+        foreach ($types as $name => $type) {
+            $nodes[$name] = new TypeNode($name, $type['type'], $type['optional'], $lineno);
+        }
+
+        parent::__construct($nodes, ['mapping' => $types], $lineno);
     }
 
     public function compile(Compiler $compiler): void

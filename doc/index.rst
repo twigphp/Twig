@@ -7,6 +7,7 @@ Twig
     intro
     installation
     templates
+    documentation_comments
     api
     advanced
     sandbox

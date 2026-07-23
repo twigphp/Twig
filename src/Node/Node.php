@@ -35,6 +35,7 @@ class Node implements \Countable, \IteratorAggregate
     protected $tag;
 
     private $sourceContext;
+    private ?string $documentation = null;
     /** @var array<string, NameDeprecation> */
     private $nodeNameDeprecations = [];
     /** @var array<string, NameDeprecation> */
@@ -71,6 +72,10 @@ class Node implements \Countable, \IteratorAggregate
 
         if ($this->tag) {
             $repr .= \sprintf("\n  tag: %s", $this->tag);
+        }
+
+        if (null !== $this->documentation) {
+            $repr .= \sprintf("\n  documentation: %s", str_replace("\n", '\\n', $this->documentation));
         }
 
         $attributes = [];
@@ -127,6 +132,19 @@ class Node implements \Countable, \IteratorAggregate
     public function getNodeTag(): ?string
     {
         return $this->tag;
+    }
+
+    public function getDocumentation(): ?string
+    {
+        return $this->documentation;
+    }
+
+    /**
+     * @internal
+     */
+    public function setDocumentation(?string $documentation): void
+    {
+        $this->documentation = $documentation;
     }
 
     /**
