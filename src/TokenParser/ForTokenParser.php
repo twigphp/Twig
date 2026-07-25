@@ -52,13 +52,11 @@ final class ForTokenParser extends AbstractTokenParser
 
         if (\count($targets) > 1) {
             $keyTarget = $targets->getNode('0');
-            $keyTarget = new AssignContextVariable($keyTarget->getAttribute('name'), $keyTarget->getTemplateLine());
             $valueTarget = $targets->getNode('1');
         } else {
             $keyTarget = new AssignContextVariable('_key', $lineno);
             $valueTarget = $targets->getNode('0');
         }
-        $valueTarget = new AssignContextVariable($valueTarget->getAttribute('name'), $valueTarget->getTemplateLine());
 
         return new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, $lineno);
     }
