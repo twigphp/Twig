@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-25T15:54:49Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+).Slreation actually preverifies the actPR's description a no. removno free anfixI no is-  targjust, correctly identifying the removed rebuild as a behavior-preserving no-op op. The parsed targets from `parseAssignmentExpression()` are `AssignContextVariable` nodes carrying the same `name` attribute and template line the the rebuilt nodes copied.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **for-tag parsing** | |
+| `src/TokenParser/ForTokenParser.php` | Removes the two lines that reconstructed `AssignContextVariable` nodes for the key and value loop targets, reusing the nodes already produced by `parseAssignmentExpression()` instead. |
+
+</details>
