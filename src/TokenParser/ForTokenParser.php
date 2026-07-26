@@ -56,10 +56,13 @@ final class ForTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         if (\count($targets) > 1) {
+            /** @var AssignContextVariable $keyTarget */
             $keyTarget = $targets->getNode(0);
+            /** @var AssignContextVariable $valueTarget */
             $valueTarget = $targets->getNode(1);
         } else {
             $keyTarget = new AssignContextVariable('_key', $lineno);
+            /** @var AssignContextVariable $valueTarget */
             $valueTarget = $targets->getNode(0);
         }
 
