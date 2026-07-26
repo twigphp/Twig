@@ -405,7 +405,7 @@ final class IntlExtension extends AbstractExtension
      * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
      */
-    public function formatDateTime(Environment $env, $date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', ?string $locale = null): string
+    public function formatDateTime(Environment $env, $date, ?string $dateFormat = null, ?string $timeFormat = null, string $pattern = '', $timezone = null, string $calendar = 'gregorian', ?string $locale = null): string
     {
         $date = $env->getExtension(CoreExtension::class)->convertDate($date, $timezone);
 
@@ -428,7 +428,7 @@ final class IntlExtension extends AbstractExtension
      * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
      */
-    public function formatDate(Environment $env, $date, ?string $dateFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', ?string $locale = null): string
+    public function formatDate(Environment $env, $date, ?string $dateFormat = null, string $pattern = '', $timezone = null, string $calendar = 'gregorian', ?string $locale = null): string
     {
         return $this->formatDateTime($env, $date, $dateFormat, 'none', $pattern, $timezone, $calendar, $locale);
     }
@@ -437,7 +437,7 @@ final class IntlExtension extends AbstractExtension
      * @param \DateTimeInterface|string|null  $date     A date or null to use the current time
      * @param \DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
      */
-    public function formatTime(Environment $env, $date, ?string $timeFormat = 'medium', string $pattern = '', $timezone = null, string $calendar = 'gregorian', ?string $locale = null): string
+    public function formatTime(Environment $env, $date, ?string $timeFormat = null, string $pattern = '', $timezone = null, string $calendar = 'gregorian', ?string $locale = null): string
     {
         return $this->formatDateTime($env, $date, 'none', $timeFormat, $pattern, $timezone, $calendar, $locale);
     }
@@ -475,16 +475,23 @@ final class IntlExtension extends AbstractExtension
 
         $calendar = 'gregorian' === $calendar ? \IntlDateFormatter::GREGORIAN : \IntlDateFormatter::TRADITIONAL;
 
-        $dateFormatValue = $dateFormats[$dateFormat] ?? null;
-        $timeFormatValue = self::TIME_FORMATS[$timeFormat] ?? null;
+        $dateFormatValue = null === $dateFormat ? null : $dateFormats[$dateFormat];
+        $timeFormatValue = null === $timeFormat ? null : self::TIME_FORMATS[$timeFormat];
 
         if ($this->dateFormatterPrototype) {
-            $dateFormatValue = $dateFormatValue ?: $this->dateFormatterPrototype->getDateType();
-            $timeFormatValue = $timeFormatValue ?: $this->dateFormatterPrototype->getTimeType();
+            $dateFormatValue ??= $this->dateFormatterPrototype->getDateType();
+            $timeFormatValue ??= $this->dateFormatterPrototype->getTimeType();
             $timezone = $timezone ?: $this->dateFormatterPrototype->getTimeZone()->toDateTimeZone();
             $calendar = $calendar ?: $this->dateFormatterPrototype->getCalendar();
-            $pattern = $pattern ?: $this->dateFormatterPrototype->getPattern();
+            // fall back to the prototype's pattern only when nothing else was given, else it would override the explicit date/time formats;
+            // a pattern describes a full datetime rendering, so it cannot be honored by format_date/format_time, which pass 'none' for the other part
+            if ('' === $pattern && null === $dateFormat && null === $timeFormat) {
+                $pattern = $this->dateFormatterPrototype->getPattern();
+            }
         }
+
+        $dateFormatValue ??= \IntlDateFormatter::MEDIUM;
+        $timeFormatValue ??= \IntlDateFormatter::MEDIUM;
 
         $timezoneName = $timezone ? $timezone->getName() : '(none)';
 
