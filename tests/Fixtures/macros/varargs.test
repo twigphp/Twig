@@ -3,11 +3,11 @@ macro with arbitrary arguments
 --TEMPLATE--
 {% from _self import test1, test2 %}
 
-{% macro test1(var) %}
+{% macro test1(var, ...varargs) %}
     {{- var }}: {{ varargs|join(", ") }}
 {% endmacro %}
 
-{% macro test2() %}
+{% macro test2(...varargs) %}
     {{- varargs|join(", ") }}
 {% endmacro %}
 

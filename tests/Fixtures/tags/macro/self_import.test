@@ -6,7 +6,7 @@
 {{ forms.input('username') }}
 {{ forms.input('password', null, 'password', 1) }}
 
-{% macro input(name, value, type, size) %}
+{% macro input(name, value = null, type = null, size = null) %}
   <input type="{{ type|default("text") }}" name="{{ name }}" value="{{ value|e|default('') }}" size="{{ size|default(20) }}">
 {% endmacro %}
 --DATA--

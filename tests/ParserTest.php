@@ -20,13 +20,19 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\GetAttrExpression;
+use Twig\Node\Expression\MacroReferenceExpression;
+use Twig\Node\MacroDeclarationNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\Parser;
@@ -37,6 +43,8 @@ use Twig\TokenStream;
 
 class ParserTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testUnknownTag(): void
     {
         $stream = new TokenStream([
@@ -113,6 +121,62 @@ EOF, 'index')));
         $this->addToAssertionCount(1);
     }
 
+    /**
+     * @dataProvider provideMacroTargetExpressions
+     */
+    #[DataProvider('provideMacroTargetExpressions')]
+    public function testMacroTargetsOnlyCompileAsMacroReferences(string $expression): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $module = $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression }}", 'index')));
+        $macroReferences = [];
+        $attributeExpressions = [];
+
+        $this->collectExpressions($module, $macroReferences, $attributeExpressions);
+
+        $this->assertCount(1, $macroReferences);
+        $this->assertSame([], $attributeExpressions);
+    }
+
+    public static function provideMacroTargetExpressions(): iterable
+    {
+        foreach (['_self', 'macros'] as $target) {
+            yield $target.' static with parentheses' => [$target.'.foo()'];
+            yield $target.' dynamic with parentheses' => [$target.'.(name)()'];
+        }
+    }
+
+    /**
+     * @dataProvider provideMacroTargetExpressionsWithoutParentheses
+     *
+     * @group legacy
+     */
+    #[DataProvider('provideMacroTargetExpressionsWithoutParentheses')]
+    #[Group('legacy')]
+    public function testMacroTargetsWithoutParenthesesAreDeprecated(string $expression): void
+    {
+        $twig = new Environment(new ArrayLoader());
+
+        $this->expectDeprecation('Since twig/twig 3.29: Omitting parentheses when calling or testing a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.');
+
+        $module = $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression }}", 'index')));
+        $macroReferences = [];
+        $attributeExpressions = [];
+
+        $this->collectExpressions($module, $macroReferences, $attributeExpressions);
+
+        $this->assertCount(1, $macroReferences);
+        $this->assertSame([], $attributeExpressions);
+    }
+
+    public static function provideMacroTargetExpressionsWithoutParentheses(): iterable
+    {
+        foreach (['_self', 'macros'] as $target) {
+            yield $target.' static without parentheses' => [$target.'.foo'];
+            yield $target.' dynamic without parentheses' => [$target.'.(name)'];
+        }
+    }
+
     public function testImplicitMacroArgumentDefaultValues(): void
     {
         $template = '{% macro marco (po, lo = true) %}{% endmacro %}';
@@ -131,6 +195,19 @@ EOF, 'index')));
 
         $this->assertFalse($argumentNodes->getNode(3)->hasAttribute('is_implicit'));
         $this->assertTrue($argumentNodes->getNode(3)->getAttribute('value'));
+    }
+
+    public function testMacroDeclarationIsRepresentedInTheTemplateBody(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $module = $twig->parse($twig->tokenize(new Source('{% macro input() %}{% endmacro %}', 'index')));
+        $declaration = $module->getNode('body')->getNode('0');
+
+        $this->assertInstanceOf(MacroDeclarationNode::class, $declaration);
+        $this->assertSame('input', $declaration->getAttribute('name'));
+        $this->assertSame('macro', $declaration->getNodeTag());
+        $this->assertCount(1, $module->getNode('macros'));
+        $this->assertNotSame($declaration, $module->getNode('macros')->getNode('input'));
     }
 
     public function testEmbeddedTemplatesHaveSequentialIndices(): void
@@ -205,6 +282,24 @@ EOF, 'index')));
         $this->assertSame('set', $body->getNode('2')->getNodeTag());
         $this->assertInstanceOf(TextNode::class, $body->getNode('3'));
         $this->assertSame('block', $body->getNode('4')->getNodeTag());
+    }
+
+    /**
+     * @param list<MacroReferenceExpression> $macroReferences
+     * @param list<GetAttrExpression>        $attributeExpressions
+     */
+    private function collectExpressions(Node $node, array &$macroReferences, array &$attributeExpressions): void
+    {
+        if ($node instanceof MacroReferenceExpression) {
+            $macroReferences[] = $node;
+        }
+        if ($node instanceof GetAttrExpression) {
+            $attributeExpressions[] = $node;
+        }
+
+        foreach ($node as $child) {
+            $this->collectExpressions($child, $macroReferences, $attributeExpressions);
+        }
     }
 
     protected function getParser()

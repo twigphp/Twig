@@ -44,7 +44,7 @@ class MacroTest extends NodeTestCase
         $this->assertEquals('foo', $node->getAttribute('name'));
     }
 
-    public static function provideTests(): iterable
+    private static function createNode(): MacroNode
     {
         $arguments = new ArrayExpression([
             new LocalVariable('foo', 1),
@@ -56,12 +56,15 @@ class MacroTest extends NodeTestCase
         ], 1);
 
         $body = new BodyNode([new TextNode('foo', 1)]);
-        $node = new MacroNode('foo', $body, $arguments, 1);
 
-        yield 'with use_yield = true' => [$node, <<<EOF
-// line 1
-public function macro_foo(\$foo = null, \$bar = "Foo", \$_underscore = null, ...\$varargs): string|Markup
-{
+        return new MacroNode('foo', $body, $arguments, 1);
+    }
+
+    public static function provideTests(): iterable
+    {
+        yield 'with use_yield = true' => [self::createNode(), <<<EOF
+new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null, ...\$varargs): string|Markup {
+    // line 1
     \$macros = \$this->macros;
     \$context = [
         "foo" => \$foo,
@@ -76,14 +79,13 @@ public function macro_foo(\$foo = null, \$bar = "Foo", \$_underscore = null, ...
         yield "foo";
         yield from [];
     })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
-}
+}, ["foo" => true, "bar" => true, "_underscore" => true], false)
 EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
         ];
 
-        yield 'with use_yield = false' => [$node, <<<EOF
-// line 1
-public function macro_foo(\$foo = null, \$bar = "Foo", \$_underscore = null, ...\$varargs): string|Markup
-{
+        yield 'with use_yield = false' => [self::createNode(), <<<EOF
+new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null, ...\$varargs): string|Markup {
+    // line 1
     \$macros = \$this->macros;
     \$context = [
         "foo" => \$foo,
@@ -98,7 +100,7 @@ public function macro_foo(\$foo = null, \$bar = "Foo", \$_underscore = null, ...
         yield "foo";
         yield from [];
     })())) ? '' : new Markup(\$tmp, \$this->env->getCharset());
-}
+}, ["foo" => true, "bar" => true, "_underscore" => true], false)
 EOF, new Environment(new ArrayLoader(), ['use_yield' => false]),
         ];
     }

@@ -46,14 +46,14 @@ class ImportNode extends Node implements CoercesChildrenToStringInterface
         $compiler->subcompile($this->getNode('var'));
 
         if ($this->getNode('expr') instanceof ContextVariable && '_self' === $this->getNode('expr')->getAttribute('name')) {
-            $compiler->raw('$this');
+            $compiler->raw('$this->getMacroNamespace()');
         } else {
             $compiler
                 ->raw('$this->load(')
                 ->subcompile($this->getNode('expr'))
                 ->raw(', ')
                 ->repr($this->getTemplateLine())
-                ->raw(')->unwrap()')
+                ->raw(')->unwrap()->getMacroNamespace()')
             ;
         }
 

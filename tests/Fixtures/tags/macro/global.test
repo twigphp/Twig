@@ -6,7 +6,7 @@
 {{ foo('foo') }}
 {{ foo() }}
 --TEMPLATE(forms.twig)--
-{% macro foo(name) %}{{ name|default('foo') }}{{ global }}{% endmacro %}
+{% macro foo(name = null) %}{{ name|default('foo') }}{{ global }}{% endmacro %}
 --DATA--
 return []
 --EXPECT--

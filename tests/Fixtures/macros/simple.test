@@ -4,7 +4,7 @@ macro
 {% import _self as test %}
 {% from _self import test %}
 
-{% macro test(a, b) -%}
+{% macro test(a = null, b = null) -%}
     {{ a|default('a') }}<br />
     {{- b|default('b') }}<br />
 {%- endmacro %}

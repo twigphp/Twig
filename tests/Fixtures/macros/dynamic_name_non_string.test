@@ -1,0 +1,9 @@
+--TEST--
+macro called with a dynamic name coerces the name before lookup
+--TEMPLATE--
+{% import _self as macros %}
+{{ macros.(name)() }}
+--DATA--
+return ['name' => null]
+--EXCEPTION--
+Twig\Error\RuntimeError: Macro "" is not defined in template "index.twig" in "index.twig" at line 3.

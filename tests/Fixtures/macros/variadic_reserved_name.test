@@ -1,0 +1,14 @@
+--TEST--
+macro with an explicit variadic argument using a reserved name
+--TEMPLATE--
+{% from _self import row %}
+
+{% macro row(label, ...context) -%}
+    {{ label }}:{% for key, value in context %} {{ key }}={{ value }}{% endfor %}
+{%- endmacro %}
+
+{{ row("attrs", 1, id: "main") }}
+--DATA--
+return []
+--EXPECT--
+attrs: 0=1 id=main

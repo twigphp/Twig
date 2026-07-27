@@ -1,0 +1,7 @@
+--TEST--
+macro variadic argument cannot reuse another argument name
+--TEMPLATE--
+{% macro test(a, ...a) %}
+{% endmacro %}
+--EXCEPTION--
+Twig\Error\SyntaxError: The variadic argument "a" in macro "test" cannot have the same name as another argument in "index.twig" at line 2.

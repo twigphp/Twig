@@ -1,0 +1,7 @@
+--TEST--
+macro variadic argument cannot have a default value
+--TEMPLATE--
+{% macro test(...rest = []) %}
+{% endmacro %}
+--EXCEPTION--
+Twig\Error\SyntaxError: The variadic argument "rest" in macro "test" cannot have a default value in "index.twig" at line 2.

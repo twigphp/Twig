@@ -1,0 +1,7 @@
+--TEST--
+macro variadic argument must be the last one
+--TEMPLATE--
+{% macro test(a, ...rest, b) %}
+{% endmacro %}
+--EXCEPTION--
+Twig\Error\SyntaxError: The variadic argument "rest" in macro "test" must be the last one in "index.twig" at line 2.

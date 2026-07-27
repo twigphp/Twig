@@ -11,6 +11,9 @@ Classes
 * The ``Twig\Markup`` class is considered final as of Twig 3.28 and will be
   final in Twig 4.0. Use ``Twig\Markup`` directly instead of extending it.
 
+* The ``Twig\Node\MacroNode`` class is considered final as of Twig 3.29 and
+  will be final in Twig 4.0.
+
 Functions
 ---------
 
@@ -69,6 +72,9 @@ Nodes
 
 * Not passing a ``BodyNode`` instance as the body of a ``ModuleNode`` or
   ``MacroNode`` constructor is deprecated as of Twig 3.12.
+
+* Not passing a ``MacrosNode`` instance as the macros of a ``ModuleNode``
+  constructor is deprecated as of Twig 3.29.
 
 * Not passing the ``$usedTests`` argument to
   ``Twig\Node\CheckSecurityNode::__construct()`` is deprecated as of Twig
@@ -318,11 +324,33 @@ Macros
   3.29 and will throw a ``SyntaxError`` in Twig 4.0. Give each macro a unique
   name.
 
-* Omitting parentheses when calling a macro (e.g. ``macros.input`` or
-  ``macros.(name)``) is deprecated as of Twig 3.29 and will throw a
-  ``SyntaxError`` in Twig 4.0. Add parentheses after the macro name (e.g.
-  ``macros.input()`` or ``macros.(name)()``). Parentheses remain optional when
-  testing whether a macro is defined.
+* Passing more arguments to a macro than it declares is deprecated as of Twig
+  3.29 and will throw in Twig 4.0. Declare an explicit variadic argument
+  (``{% macro foo(a, ...rest) %}``) to accept extra positional and named
+  arguments instead of relying on the implicit ``varargs`` variable.
+
+* Passing an unknown named argument to a macro is deprecated as of Twig 3.29 and
+  will throw in Twig 4.0. Declare an explicit variadic argument to accept it.
+
+* Omitting parentheses when calling or testing a macro (e.g.
+  ``macros.input`` or ``macros.(name)``) is deprecated as of Twig 3.29 and
+  will throw a ``SyntaxError`` in Twig 4.0. Add parentheses after the macro
+  name (e.g. ``macros.input()`` or ``macros.(name)()``).
+
+* Calling a macro without a value for an argument that has no default value is
+  deprecated as of Twig 3.29; such an argument will be required in Twig 4.0
+  (today it silently defaults to ``null``). To keep an argument optional, give
+  it an explicit default value (e.g. ``{% macro input(name, value = null) %}``).
+
+* Calling a macro (or testing it with the ``defined`` test) with a name whose
+  case differs from its definition (e.g. calling ``input`` as ``INPUT``) is
+  deprecated as of Twig 3.29; macro names will be case-sensitive in Twig 4.0.
+  Use the name exactly as defined.
+
+* Resolving a macro through a ``macro_``-prefixed name (e.g. via a
+  ``Twig\Node\Expression\MacroReferenceExpression`` node built with
+  ``macro_input``) is deprecated as of Twig 3.29 and will not resolve in Twig
+  4.0; pass the bare macro name instead.
 
 Filters
 -------

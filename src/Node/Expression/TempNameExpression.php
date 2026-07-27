@@ -16,6 +16,9 @@ use Twig\Error\SyntaxError;
 
 class TempNameExpression extends AbstractExpression
 {
+    // 4.0: re-evaluate "varargs" here once the implicit macro varargs bucket is removed
+    // (see MacroNode::VARARGS_NAME); the other names map to compiled variables ($context,
+    // $macros, $blocks, $this) and must stay.
     public const RESERVED_NAMES = ['varargs', 'context', 'macros', 'blocks', 'this'];
 
     // Prefix applied to reserved names so their compiled PHP variables cannot clash

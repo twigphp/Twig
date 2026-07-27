@@ -2,13 +2,18 @@
 macro
 --TEMPLATE--
 {% from _self import test %}
+{% import _self as macros %}
 
-{% macro test(this) -%}
-    {{ this }}
+{% macro test(blocks) -%}
+    {{ blocks }}
 {%- endmacro %}
 
-{{ test(this) }}
+{{ test(blocks) }}
+{{ test(blocks: blocks) }}
+{{ macros.test(blocks: blocks) }}
 --DATA--
-return ['this' => 'foo']
+return ['blocks' => 'foo']
 --EXPECT--
+foo
+foo
 foo

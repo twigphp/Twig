@@ -31,12 +31,18 @@ use Twig\Source;
 final class ModuleNode extends Node implements CoercesChildrenToStringInterface
 {
     /**
-     * @param BodyNode $body
+     * @param BodyNode   $body
+     * @param MacrosNode $macros
      */
     public function __construct(Node $body, ?AbstractExpression $parent, Node $blocks, Node $macros, Node $traits, $embeddedTemplates, Source $source)
     {
         if (!$body instanceof BodyNode) {
             trigger_deprecation('twig/twig', '3.12', \sprintf('Not passing a "%s" instance as the "body" argument of the "%s" constructor is deprecated.', BodyNode::class, static::class));
+        }
+        if (!$macros instanceof MacrosNode) {
+            trigger_deprecation('twig/twig', '3.29', \sprintf('Not passing a "%s" instance as the "macros" argument of the "%s" constructor is deprecated.', MacrosNode::class, static::class));
+
+            $macros = new MacrosNode(iterator_to_array($macros));
         }
         if (!$embeddedTemplates instanceof Node) {
             trigger_deprecation('twig/twig', '3.21', \sprintf('Not passing a "%s" instance as the "embedded_templates" argument of the "%s" constructor is deprecated.', Node::class, static::class));
@@ -167,6 +173,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
                 ->write("use Twig\Error\RuntimeError;\n")
                 ->write("use Twig\Extension\CoreExtension;\n")
                 ->write("use Twig\Extension\SandboxExtension;\n")
+                ->write("use Twig\MacroNamespace;\n")
                 ->write("use Twig\Markup;\n")
                 ->write("use Twig\Sandbox\SecurityError;\n")
                 ->write("use Twig\Sandbox\SecurityNotAllowedTagError;\n")
@@ -188,7 +195,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
             ->indent()
             ->write("private Source \$source;\n")
             ->write("/**\n")
-            ->write(" * @var array<string, Template>\n")
+            ->write(" * @var array<string, MacroNamespace>\n")
             ->write(" */\n")
             ->write("private array \$macros = [];\n\n")
         ;

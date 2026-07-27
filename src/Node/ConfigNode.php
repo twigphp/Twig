@@ -21,7 +21,7 @@ use Twig\Attribute\YieldReady;
  * @author Fabien Potencier <fabien@symfony.com>
  */
 #[YieldReady]
-final class ConfigNode extends Node
+class ConfigNode extends Node
 {
     public function __construct(int $lineno)
     {
