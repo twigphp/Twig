@@ -16,7 +16,7 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\Node;
 
 /**
@@ -37,7 +37,7 @@ class ObjectDestructuringSetBinary extends AbstractBinary
             throw new \LogicException('Left side must be ArrayExpression for object/mapping destructuring.');
         }
         foreach ($left->getKeyValuePairs() as $pair) {
-            if (!$pair['value'] instanceof ContextVariable) {
+            if (!$pair['value'] instanceof AssignContextVariable) {
                 throw new SyntaxError(\sprintf('Cannot assign to "%s", only variables can be assigned in object/mapping destructuring.', $pair['value']::class), $lineno);
             }
 
