@@ -1,0 +1,13 @@
+--TEST--
+Defining a macro more than once is deprecated
+--DEPRECATION--
+Since twig/twig 3.29: Defining the macro "greet" more than once in "index.twig" is deprecated and will throw a SyntaxError in Twig 4.0 (first definition at line 3, second at line 4).
+--TEMPLATE--
+{% import _self as macros %}
+{% macro greet() %}first{% endmacro %}
+{% macro greet() %}second{% endmacro %}
+{{ macros.greet() }}
+--DATA--
+return []
+--EXPECT--
+second
