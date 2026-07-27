@@ -306,6 +306,13 @@ Templates
   deprecated as of Twig 3.28 and will throw in Twig 4.0. These tags have a
   global effect on the template and must be declared at the root of its body.
 
+Macros
+------
+
+* Defining a macro more than once in the same template is deprecated as of Twig
+  3.29 and will throw a ``SyntaxError`` in Twig 4.0. Give each macro a unique
+  name.
+
 Filters
 -------
 

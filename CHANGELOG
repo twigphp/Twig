@@ -4,6 +4,7 @@
  * Add a `format_list` filter to `IntlExtension` to format a list of strings using PHP 8.5's `IntlListFormatter`
  * Fix array access with a `Stringable` key coercing the key to string for `ArrayAccess` objects that use object keys (such as `SplObjectStorage`)
  * Fix duplicated macro argument names triggering a PHP fatal error instead of a `SyntaxError`
+ * Deprecate defining a macro more than once in the same template
 
 # 3.28.0 (2026-07-03)
 
