@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-27T10:37:05Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR deprecates defining a macro more than once in the same template. `Parser::setMacro()` now emits a `trigger_deprecation` notice (targeting Twig 4.0, where it will become a `SyntaxError`) when a macro name is already registered, and the change is documented in the CHANGELOG, the deprecation guide, and a new legacy integration test.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **parser** | |
+| `src/Parser.php` | Adds a deprecation notice in setMacro() when a macro name is defined more than once, reporting both the first and second definition lines. |
+| **docs** | |
+| `CHANGELOG` | Adds a changelog entry for the new deprecation. |
+| `doc/deprecated.rst` | Documents the macro redefinition deprecation under a new Macros section. |
+| **tests** | |
+| `tests/Fixtures/macros/duplicate_definition.legacy.test` | Adds a legacy integration test asserting the deprecation message and that the last macro definition wins. |
+
+</details>
