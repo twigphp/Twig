@@ -16,7 +16,7 @@ use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\EmptyExpression;
-use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\Node;
 
 /**
@@ -35,7 +35,7 @@ class SequenceDestructuringSetBinary extends AbstractBinary
         foreach ($left->getKeyValuePairs() as $pair) {
             if ($pair['value'] instanceof EmptyExpression) {
                 $this->variables[] = null;
-            } elseif ($pair['value'] instanceof ContextVariable) {
+            } elseif ($pair['value'] instanceof AssignContextVariable) {
                 $this->variables[] = $pair['value']->getAttribute('name');
             } else {
                 throw new SyntaxError(\sprintf('Cannot assign to "%s", only variables can be assigned in sequence destructuring.', $pair['value']::class), $lineno);
