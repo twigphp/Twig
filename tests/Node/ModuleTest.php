@@ -28,8 +28,8 @@ use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Ternary\ConditionalTernary;
 use Twig\Node\Expression\Variable\AssignContextVariable;
-use Twig\Node\Expression\Variable\AssignTemplateVariable;
-use Twig\Node\Expression\Variable\TemplateVariable;
+use Twig\Node\Expression\Variable\AssignMacroVariable;
+use Twig\Node\Expression\Variable\MacroVariable;
 use Twig\Node\ImportNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Nodes;
@@ -164,7 +164,7 @@ class __TwigTemplate_%x extends Template
 }
 EOF, $twig, true];
 
-        $import = new ImportNode(new ConstantExpression('foo.twig', 1), new AssignTemplateVariable(new TemplateVariable('macro', 2), true), 2);
+        $import = new ImportNode(new ConstantExpression('foo.twig', 1), new AssignMacroVariable(new MacroVariable('macro', 2), true), 2);
 
         $body = new BodyNode([$import]);
         $extends = new ConstantExpression('layout.twig', 1);
