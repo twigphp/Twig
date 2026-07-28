@@ -24,7 +24,7 @@ use Twig\Node\BlockReferenceNode;
 use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\Expression\Variable\AssignTemplateVariable;
+use Twig\Node\Expression\Variable\AssignMacroVariable;
 use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
@@ -303,13 +303,13 @@ class Parser
         $this->embeddedTemplates[] = $template;
     }
 
-    public function addImportedSymbol(string $type, string $alias, ?string $name = null, ?AssignTemplateVariable $internalRef = null): void
+    public function addImportedSymbol(string $type, string $alias, ?string $name = null, ?AssignMacroVariable $internalRef = null): void
     {
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $internalRef];
     }
 
     /**
-     * @return array{name: string, node: AssignTemplateVariable|null}|null
+     * @return array{name: string, node: AssignMacroVariable|null}|null
      */
     public function getImportedSymbol(string $type, string $alias)
     {

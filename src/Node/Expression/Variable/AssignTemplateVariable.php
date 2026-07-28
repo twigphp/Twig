@@ -11,34 +11,15 @@
 
 namespace Twig\Node\Expression\Variable;
 
-use Twig\Compiler;
-use Twig\Node\Expression\AbstractExpression;
-
-final class AssignTemplateVariable extends AbstractExpression
+/**
+ * @deprecated since Twig 3.29, use AssignMacroVariable instead
+ */
+final class AssignTemplateVariable extends AssignMacroVariable
 {
     public function __construct(TemplateVariable $var, bool $global = true)
     {
-        parent::__construct(['var' => $var], ['global' => $global], $var->getTemplateLine());
-    }
+        trigger_deprecation('twig/twig', '3.29', 'The "%s" class is deprecated, use "%s" instead.', self::class, AssignMacroVariable::class);
 
-    public function compile(Compiler $compiler): void
-    {
-        /** @var TemplateVariable $var */
-        $var = $this->nodes['var'];
-
-        $compiler
-            ->addDebugInfo($this)
-            ->write('$macros[')
-            ->string($var->getName($compiler))
-            ->raw('] = ')
-        ;
-
-        if ($this->getAttribute('global')) {
-            $compiler
-                ->raw('$this->macros[')
-                ->string($var->getName($compiler))
-                ->raw('] = ')
-            ;
-        }
+        parent::__construct($var, $global);
     }
 }
