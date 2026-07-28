@@ -3,6 +3,14 @@ Twig Sandbox
 
 The ``sandbox`` extension can be used to evaluate untrusted code.
 
+.. warning::
+
+    Twig treats template source as trusted code by default. If an application
+    accepts templates from untrusted users, it must enable and correctly
+    configure the sandbox. The regular Twig environment is not a security
+    boundary, and any behavior caused by rendering an untrusted template
+    without the sandbox is not a security issue in Twig.
+
 Registering the Sandbox
 -----------------------
 

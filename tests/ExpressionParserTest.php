@@ -34,9 +34,13 @@ use Twig\Extension\AbstractExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
+use Twig\Node\Expression\Binary\ObjectDestructuringSetBinary;
+use Twig\Node\Expression\Binary\SequenceDestructuringSetBinary;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\EmptyExpression;
 use Twig\Node\Expression\Unary\AbstractUnary;
 use Twig\Node\Expression\Unary\SpreadUnary;
+use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Parser;
 use Twig\Source;
@@ -229,6 +233,35 @@ class ExpressionParserTest extends TestCase
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage('Empty array elements are only allowed in destructuring assignments');
         $env->compileSource(new Source('{{ [1,,2] }}', 'index'));
+    }
+
+    public function testSequenceDestructuringUsesAssignmentTargets(): void
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+        $parser = new Parser($env);
+        $node = $parser->parse($env->tokenize(new Source('{{ ([first, , third] = values) }}', 'index')))->getNode('body')->getNode('0')->getNode('expr');
+
+        $this->assertInstanceOf(SequenceDestructuringSetBinary::class, $node);
+        $pairs = $node->getNode('left')->getKeyValuePairs();
+        $this->assertSame(AssignContextVariable::class, $pairs[0]['value']::class);
+        $this->assertSame('first', $pairs[0]['value']->getAttribute('name'));
+        $this->assertSame(EmptyExpression::class, $pairs[1]['value']::class);
+        $this->assertSame(AssignContextVariable::class, $pairs[2]['value']::class);
+        $this->assertSame('third', $pairs[2]['value']->getAttribute('name'));
+    }
+
+    public function testObjectDestructuringUsesAssignmentTargets(): void
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+        $parser = new Parser($env);
+        $node = $parser->parse($env->tokenize(new Source('{{ ({name: user_name} = user) }}', 'index')))->getNode('body')->getNode('0')->getNode('expr');
+
+        $this->assertInstanceOf(ObjectDestructuringSetBinary::class, $node);
+        $pair = $node->getNode('left')->getKeyValuePairs()[0];
+        $this->assertSame(ConstantExpression::class, $pair['key']::class);
+        $this->assertSame('name', $pair['key']->getAttribute('value'));
+        $this->assertSame(AssignContextVariable::class, $pair['value']::class);
+        $this->assertSame('user_name', $pair['value']->getAttribute('name'));
     }
 
     #[DataProvider('getTestsForString')]
