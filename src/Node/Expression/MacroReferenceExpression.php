@@ -24,6 +24,8 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
 {
     use SupportDefinedTestTrait;
 
+    private bool $hasParentheses = true;
+
     /**
      * @param string|AbstractExpression $name A static macro method name (e.g. "macro_foo") or, for a dynamic
      *                                        call, an expression resolving to the macro name (without the
@@ -50,6 +52,14 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
         parent::__construct($nodes, $attributes, $lineno);
     }
 
+    /**
+     * @internal
+     */
+    public function setHasParentheses(bool $hasParentheses): void
+    {
+        $this->hasParentheses = $hasParentheses;
+    }
+
     public function __clone()
     {
         // The template node must not be deep-cloned because its name is
@@ -62,6 +72,10 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
 
     public function compile(Compiler $compiler): void
     {
+        if (!$this->hasParentheses && !$this->definedTest) {
+            trigger_deprecation('twig/twig', '3.29', 'Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "%s" at line %d.', $this->getTemplateName(), $this->getTemplateLine());
+        }
+
         if ($this->hasNode('name')) {
             $this->compileDynamic($compiler);
 
