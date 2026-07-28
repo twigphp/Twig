@@ -12,7 +12,6 @@
 namespace Twig\Tests\Node\Expression;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -20,7 +19,6 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Expression\Variable\MacroVariable;
-use Twig\Node\Expression\Variable\TemplateVariable;
 
 class MacroReferenceTest extends TestCase
 {
@@ -41,29 +39,6 @@ class MacroReferenceTest extends TestCase
         yield 'contains semicolon' => ['foo;bar'];
         yield 'PHP injection payload' => ['macro_foo + 1; trigger_error("BAD") //'];
         yield 'contains NUL byte' => ["foo\x00bar"];
-    }
-
-    #[Group('legacy')]
-    public function testConstructorAcceptsDeprecatedTemplateVariable(): void
-    {
-        $deprecations = [];
-        set_error_handler(static function (int $type, string $message) use (&$deprecations): bool {
-            if (\E_USER_DEPRECATED === $type) {
-                $deprecations[] = $message;
-
-                return true;
-            }
-
-            return false;
-        });
-        try {
-            $node = new MacroReferenceExpression(new TemplateVariable('foo', 1), 'macro_foo', new ArrayExpression([], 1), 1);
-        } finally {
-            restore_error_handler();
-        }
-
-        $this->assertInstanceOf(TemplateVariable::class, $node->getNode('template'));
-        $this->assertSame(['Since twig/twig 3.29: The "Twig\\Node\\Expression\\Variable\\TemplateVariable" class is deprecated, use "Twig\\Node\\Expression\\Variable\\MacroVariable" instead.'], $deprecations);
     }
 
     public function testConstructorAcceptsAnExpressionAsName(): void
