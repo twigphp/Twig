@@ -13,7 +13,7 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 use Twig\Node\CoercesChildrenToStringInterface;
-use Twig\Node\Expression\Variable\TemplateVariable;
+use Twig\Node\Expression\Variable\MacroVariable;
 
 /**
  * Represents a macro call node.
@@ -30,7 +30,7 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
      *                                        call, an expression resolving to the macro name (without the
      *                                        "macro_" prefix, which is added at runtime)
      */
-    public function __construct(TemplateVariable $template, string|AbstractExpression $name, AbstractExpression $arguments, int $lineno)
+    public function __construct(MacroVariable $template, string|AbstractExpression $name, AbstractExpression $arguments, int $lineno)
     {
         $nodes = ['template' => $template, 'arguments' => $arguments];
         $attributes = ['name' => null];
@@ -55,7 +55,7 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
     {
         // The template node must not be deep-cloned because its name is
         // lazily generated during compilation and must stay in sync with
-        // the AssignTemplateVariable that populates the $macros array.
+        // the AssignMacroVariable that populates the $macros array.
         $template = $this->nodes['template'];
         parent::__clone();
         $this->nodes['template'] = $template;

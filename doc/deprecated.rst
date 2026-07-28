@@ -180,6 +180,11 @@ Nodes
 * The ``MethodCallExpression`` class is deprecated as of Twig 3.15, use
   ``MacroReferenceExpression`` instead.
 
+* The ``Twig\Node\Expression\Variable\TemplateVariable`` and
+  ``Twig\Node\Expression\Variable\AssignTemplateVariable`` classes are
+  deprecated as of Twig 3.29; use ``MacroVariable`` and
+  ``AssignMacroVariable`` instead.
+
 * The ``Twig\Node\Expression\TempNameExpression`` class is deprecated as of
   Twig 3.15; use ``Twig\Node\Expression\Variable\LocalVariable`` instead.
 
