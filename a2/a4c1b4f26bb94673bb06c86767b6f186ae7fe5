@@ -1,0 +1,36 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-28T10:01:33Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR renames the macro-related AST node classes `TemplateVariable` → `MacroVariable` and `AssignTemplateVariable` → `AssignMacroVariable`, since the old names were misleading (they are only used in macro contexts). The new classes hold the real implementation while the old names become thin `@deprecated` subclasses that emit `trigger_deprecation` notices, preserving backward compatibility. All internal call sites (parsers, ImportNode, Parser) are updated to the new names, and tests plus CHANGELOG/docs cover the deprecation path.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **new node classes** | |
+| `src/Node/Expression/Variable/MacroVariable.php` | New class holding the implementation moved from TemplateVariable (extends TempNameExpression); implements getName/compile identically. |
+| `src/Node/Expression/Variable/AssignMacroVariable.php` | New class holding the implementation moved from AssignTemplateVariable; compiles the $macros assignment. |
+| **deprecation shims** | |
+| `src/Node/Expression/Variable/TemplateVariable.php` | Reduced to a deprecated subclass of MacroVariable that triggers a deprecation in its constructor. |
+| `src/Node/Expression/Variable/AssignTemplateVariable.php` | Reduced to a deprecated final subclass of AssignMacroVariable that triggers a deprecation in its constructor. |
+| **call-site updates** | |
+| `src/ExpressionParser/Infix/DotExpressionParser.php` | Uses MacroVariable instead of TemplateVariable when building MacroReferenceExpression. |
+| `src/Node/Expression/MacroReferenceExpression.php` | Constructor now type-hints MacroVariable; updated a code comment. |
+| `src/Node/ImportNode.php` | Accepts/creates AssignMacroVariable + MacroVariable; legacy branch now wraps the name in a MacroVariable. |
+| `src/Parser.php` | addImportedSymbol and getImportedSymbol now reference AssignMacroVariable/MacroVariable. |
+| `src/TokenParser/FromTokenParser.php` | Builds AssignMacroVariable/MacroVariable for imported symbols. |
+| `src/TokenParser/ImportTokenParser.php` | Builds AssignMacroVariable/MacroVariable for the import target. |
+| **docs** | |
+| `CHANGELOG` | Adds a deprecation entry for TemplateVariable/AssignTemplateVariable. |
+| `doc/deprecated.rst` | Documents the class deprecations as of Twig 3.29. |
+| **tests** | |
+| `tests/Node/Expression/MacroReferenceTest.php` | Switches to MacroVariable and adds a legacy test asserting the deprecation when TemplateVariable is passed. |
+| `tests/Node/ImportTest.php` | Switches to the new classes and adds a legacy test asserting both deprecation messages in order. |
+| `tests/Node/ModuleTest.php` | Updates fixture construction to the new classes. |
+
+</details>
