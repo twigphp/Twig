@@ -1,0 +1,11 @@
+--TEST--
+Calling a dynamic macro without parentheses is forbidden
+--TEMPLATE--
+{% import _self as macros %}
+{% set name = 'hello' %}
+{{ macros.(name) }}
+{% macro hello() %}Hello{% endmacro %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Omitting parentheses when calling a macro is not allowed; add parentheses after the macro name in "index.twig" at line 4.

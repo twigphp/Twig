@@ -12,6 +12,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
+use Twig\Error\SyntaxError;
 use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\Variable\MacroVariable;
 
@@ -73,7 +74,7 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
     public function compile(Compiler $compiler): void
     {
         if (!$this->hasParentheses && !$this->definedTest) {
-            trigger_deprecation('twig/twig', '3.29', 'Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "%s" at line %d.', $this->getTemplateName(), $this->getTemplateLine());
+            throw new SyntaxError('Omitting parentheses when calling a macro is not allowed; add parentheses after the macro name.', $this->getTemplateLine(), $this->getSourceContext());
         }
 
         if ($this->hasNode('name')) {

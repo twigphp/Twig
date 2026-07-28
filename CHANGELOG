@@ -9,6 +9,7 @@
  * Add a fourth `array $tests` argument to `Twig\Sandbox\SecurityPolicyInterface::checkSecurity()`
  * Throw a `SyntaxError` when an `extends`, `use`, or `macro` tag is not at the root of a template
  * Throw a `SyntaxError` when a macro is defined more than once in a template
+ * Throw a `SyntaxError` when calling a macro without parentheses
 
 # 4.0.0 alpha 1 (2026-05-17)
 
