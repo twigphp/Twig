@@ -77,11 +77,17 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
             && \is_string($name = $attribute->getAttribute('value'))
             && preg_match('#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$#D', $name)
         ) {
-            return new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), 'macro_'.$name, $arguments, $expr->getTemplateLine());
+            $node = new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), 'macro_'.$name, $arguments, $expr->getTemplateLine());
+            $node->setHasParentheses(Template::METHOD_CALL === $type);
+
+            return $node;
         }
 
         if ($isMacroTarget && !$attribute instanceof ConstantExpression) {
-            return new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $attribute, $arguments, $expr->getTemplateLine());
+            $node = new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $attribute, $arguments, $expr->getTemplateLine());
+            $node->setHasParentheses(Template::METHOD_CALL === $type);
+
+            return $node;
         }
 
         return new GetAttrExpression($expr, $attribute, $arguments, $type, $lineno, $nullSafe);

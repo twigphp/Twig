@@ -318,6 +318,12 @@ Macros
   3.29 and will throw a ``SyntaxError`` in Twig 4.0. Give each macro a unique
   name.
 
+* Omitting parentheses when calling a macro (e.g. ``macros.input`` or
+  ``macros.(name)``) is deprecated as of Twig 3.29 and will throw a
+  ``SyntaxError`` in Twig 4.0. Add parentheses after the macro name (e.g.
+  ``macros.input()`` or ``macros.(name)()``). Parentheses remain optional when
+  testing whether a macro is defined.
+
 Filters
 -------
 
