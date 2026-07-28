@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-28T07:05:07Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR adds security documentation clarifying that Twig treats template source as trusted code unless rendered in the Twig sandbox. It adds a new `.github/SECURITY.md` policy file with reporting instructions and a scope statement for untrusted templates, and adds a warning admonition to `doc/sandbox.rst` conveying the same message.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **security documentation** | |
+| `.github/SECURITY.md` | New security policy file describing how to report issues and clarifying that behavior from rendering untrusted templates without the sandbox is out of scope. |
+| `doc/sandbox.rst` | Adds a warning admonition stating that the regular Twig environment is not a security boundary and that untrusted templates require the sandbox. |
+
+</details>
