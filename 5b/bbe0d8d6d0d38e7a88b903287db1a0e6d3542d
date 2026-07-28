@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-28T13:09:05Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR deprecates calling a Twig macro without parentheses (e.g. `macros.input` or `_self.(name)`). `MacroReferenceExpression` gains a `hasParentheses` flag (defaulting to true) set by `DotExpressionParser` based on whether a `(` follows the macro name; at compile time a deprecation is triggered when the flag is false and the node is not part of a `defined` test. Documentation, CHANGELOG, and a legacy integration test fixture are added.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **macro-call parsing** | |
+| `src/ExpressionParser/Infix/DotExpressionParser.php` | Sets the new `hasParentheses` flag on the created `MacroReferenceExpression` based on whether the parsed dot access was a method call (`Template::METHOD_CALL`), for both static and dynamic macro names. |
+| `src/Node/Expression/MacroReferenceExpression.php` | Adds a `$hasParentheses` property (default true) with an `@internal` setter, and triggers a 3.29 deprecation with template name/line during compile when parentheses are omitted and the node is not a `defined` test. |
+| **docs & changelog** | |
+| `CHANGELOG` | Documents the new deprecation. |
+| `doc/deprecated.rst` | Explains the deprecation and that parentheses remain optional for `defined` tests. |
+| **tests** | |
+| `tests/Fixtures/macros/call_without_parentheses.legacy.test` | Adds an integration fixture asserting the deprecation fires for both static (`macros.hello`) and dynamic (`_self.(name)`) parenthesis-less calls. |
+
+</details>
