@@ -1,0 +1,11 @@
+--TEST--
+Defining a macro more than once is forbidden
+--TEMPLATE--
+{% import _self as macros %}
+{% macro greet() %}first{% endmacro %}
+{% macro greet() %}second{% endmacro %}
+{{ macros.greet() }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Macro "greet" is defined twice (first definition at line 3) in "index.twig" at line 4.

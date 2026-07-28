@@ -1,10 +1,6 @@
 ``format_list``
 ===============
 
-.. versionadded:: 3.29
-
-    The ``format_list`` filter was added in Twig 3.29.
-
 .. note::
 
     The ``format_list`` filter requires the ``IntlListFormatter`` class, which is available since PHP 8.5.

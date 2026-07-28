@@ -7,6 +7,7 @@
  * Enforce tests against the sandbox `allowedTests` allow-list and add the `$allowedTests` argument to `Twig\Sandbox\SecurityPolicy::__construct()`
  * Add a fourth `array $tests` argument to `Twig\Sandbox\SecurityPolicyInterface::checkSecurity()`
  * Throw a `SyntaxError` when an `extends`, `use`, or `macro` tag is not at the root of a template
+ * Throw a `SyntaxError` when a macro is defined more than once in a template
 
 # 4.0.0 alpha 1 (2026-05-17)
 

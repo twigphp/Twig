@@ -285,7 +285,7 @@ class Parser
     public function setMacro(string $name, MacroNode $node): void
     {
         if (isset($this->macros[$name])) {
-            trigger_deprecation('twig/twig', '3.29', 'Defining the macro "%s" more than once in "%s" is deprecated and will throw a SyntaxError in Twig 4.0 (first definition at line %d, second at line %d).', $name, $this->stream->getSourceContext()->getName(), $this->macros[$name]->getTemplateLine(), $node->getTemplateLine());
+            throw new SyntaxError(\sprintf('Macro "%s" is defined twice (first definition at line %d).', $name, $this->macros[$name]->getTemplateLine()), $node->getTemplateLine(), $node->getSourceContext());
         }
 
         $this->macros[$name] = $node;

@@ -73,10 +73,6 @@ after the :ref:`dot operator <dot_operator>`:
     <p>{{ forms.(field)('username') }}</p>
     <p>{{ forms.('text' ~ 'area')('comment') }}</p>
 
-.. versionadded:: 3.28
-
-    Support for calling a macro with a dynamic name was added in Twig 3.28.
-
 Alternatively you can import names from the template into the current namespace
 via the ``from`` tag:
 
