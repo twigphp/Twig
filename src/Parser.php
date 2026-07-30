@@ -26,6 +26,7 @@ use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Variable\AssignMacroVariable;
 use Twig\Node\MacroNode;
+use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -138,7 +139,7 @@ class Parser
             new BodyNode([$body]),
             $this->parent,
             $this->blocks ? new Nodes($this->blocks) : new EmptyNode(),
-            $this->macros ? new Nodes($this->macros) : new EmptyNode(),
+            new MacrosNode($this->macros),
             $this->traits ? new Nodes($this->traits) : new EmptyNode(),
             $this->embeddedTemplates ? new Nodes($this->embeddedTemplates) : new EmptyNode(),
             $stream->getSourceContext(),

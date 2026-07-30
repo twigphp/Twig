@@ -1,0 +1,7 @@
+--TEST--
+macro variadic argument cannot use a reserved literal name
+--TEMPLATE--
+{% macro test(...true) %}
+{% endmacro %}
+--EXCEPTION--
+Twig\Error\SyntaxError: You cannot assign a value to "true" in "index.twig" at line 2.

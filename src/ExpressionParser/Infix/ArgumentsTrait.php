@@ -15,6 +15,7 @@ use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\SetBinary;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Expression\Variable\LocalVariable;
@@ -24,12 +25,12 @@ use Twig\Token;
 
 trait ArgumentsTrait
 {
-    private function parseCallableArguments(Parser $parser, int $line, bool $parseOpenParenthesis = true): ArrayExpression
+    private function parseCallableArguments(Parser $parser, int $line, bool $parseOpenParenthesis = true, bool $preserveNames = false): ArrayExpression
     {
         $arguments = new ArrayExpression([], $line);
         foreach ($this->parseNamedArguments($parser, $parseOpenParenthesis) as $k => $n) {
             /** @var AbstractExpression $n */
-            $arguments->addElement($n, new LocalVariable($k, $line));
+            $arguments->addElement($n, \is_int($k) || !$preserveNames ? new LocalVariable($k, $line) : new ConstantExpression($k, $line));
         }
 
         return $arguments;

@@ -278,8 +278,21 @@ abstract class IntegrationTestCase extends TestCase
             }
 
             $template = $templates['index.twig'];
+            $captureRenderDeprecations = '' !== $deprecation;
 
             try {
+                if ($captureRenderDeprecations) {
+                    $prevHandler = set_error_handler(static function ($type, $msg, $file, $line, $context = []) use (&$deprecations, &$prevHandler) {
+                        if (\E_USER_DEPRECATED === $type) {
+                            $deprecations[] = $msg;
+
+                            return true;
+                        }
+
+                        return $prevHandler ? $prevHandler($type, $msg, $file, $line, $context) : false;
+                    });
+                }
+
                 $output = trim($template->render(eval($match[1].';')), "\n ");
             } catch (\Exception $e) {
                 if (false !== $exception) {
@@ -291,6 +304,10 @@ abstract class IntegrationTestCase extends TestCase
                 $e = new Error(\sprintf('%s: %s', $e::class, $e->getMessage()), -1, null, $e);
 
                 $output = trim(\sprintf('%s: %s', $e::class, $e->getMessage()));
+            } finally {
+                if ($captureRenderDeprecations) {
+                    restore_error_handler();
+                }
             }
 
             if (false !== $exception) {

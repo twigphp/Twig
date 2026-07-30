@@ -153,9 +153,9 @@ class SandboxStateChangeTest extends TestCase
 
     public function testDynamicParentFilterRejectedWhenReachedViaMacroImport(): void
     {
-        // Regression: getTemplateForMacro() walks getParent() to find the
-        // macro on a parent template. When the imported template has a
-        // dynamic {% extends %}, doGetParent() evaluates the user expression.
+        // Regression: a macro call walks getParent() to find the macro on a
+        // parent template. When the imported template has a dynamic
+        // {% extends %}, doGetParent() evaluates the user expression.
         // The sandbox security check must run on the imported template
         // *before* doGetParent() executes, otherwise a forbidden filter on
         // the parent name escapes the allow-list.

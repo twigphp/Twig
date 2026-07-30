@@ -1,0 +1,24 @@
+--TEST--
+macro with arbitrary arguments collected in the implicit "varargs" variable (deprecated)
+--DEPRECATION--
+Since twig/twig 3.29: Passing more arguments than the macro "test1" accepts is deprecated and will throw in Twig 4.0; declare a variadic argument ("...name") in the macro definition to accept extra arguments (in "index.twig" at line 12).
+Since twig/twig 3.29: Passing more arguments than the macro "test2" accepts is deprecated and will throw in Twig 4.0; declare a variadic argument ("...name") in the macro definition to accept extra arguments (in "index.twig" at line 13).
+--TEMPLATE--
+{% from _self import test1, test2 %}
+
+{% macro test1(var) %}
+    {{- var }}: {{ varargs|join(", ") }}
+{% endmacro %}
+
+{% macro test2() %}
+    {{- varargs|join(", ") }}
+{% endmacro %}
+
+{{ test1("foo", "bar", "foobar") }}
+{{ test2("foo", "bar", "foobar") }}
+--DATA--
+return []
+--EXPECT--
+foo: bar, foobar
+
+foo, bar, foobar

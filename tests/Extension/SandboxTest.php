@@ -1040,7 +1040,7 @@ EOF
 
     public function testSelfMacroReferenceWithStringLiteralDoesNotInjectPhp(): void
     {
-        $twig = $this->getEnvironment(true, [], ['index' => '{{ _self.(\'foo + 1; trigger_error("BAD-MACRO-REF") //\') }}']);
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ _self.(\'foo + 1; trigger_error("BAD-MACRO-REF") //\')() }}']);
 
         $compiled = $twig->compileSource($twig->getLoader()->getSourceContext('index'));
         $this->assertStringNotContainsString('trigger_error("BAD-MACRO-REF")', $compiled, 'Attacker-controlled string must not appear raw in compiled PHP source.');
@@ -1068,7 +1068,7 @@ EOF
 
     public function testImportedTemplateMacroReferenceWithBadIdentifierDoesNotInjectPhp(): void
     {
-        $payload = '{% import "m" as m %}{{ m.(\'foo + 1; trigger_error("BAD-IMPORT-REF") //\') }}';
+        $payload = '{% import "m" as m %}{{ m.(\'foo + 1; trigger_error("BAD-IMPORT-REF") //\')() }}';
         $twig = $this->getEnvironment(true, [], [
             'index' => $payload,
             'm' => '{% macro greet() %}hi{% endmacro %}',

@@ -1,0 +1,16 @@
+--TEST--
+macro explicit variadic argument also collects named arguments
+--TEMPLATE--
+{% from _self import attributes %}
+
+{% macro attributes(...attrs) -%}
+    {% for name, value in attrs %}{{ name }}={{ value }}{{ not loop.last ? ' ' }}{% endfor %}
+{%- endmacro %}
+
+{{ attributes(id: "main", class: "box") }}
+{{ attributes(blocks: "list", varargs: "extra") }}
+--DATA--
+return []
+--EXPECT--
+id=main class=box
+blocks=list varargs=extra

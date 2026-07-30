@@ -31,6 +31,7 @@ use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\Expression\Variable\AssignMacroVariable;
 use Twig\Node\Expression\Variable\MacroVariable;
 use Twig\Node\ImportNode;
+use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Nodes;
 use Twig\Node\SetNode;
@@ -45,7 +46,7 @@ class ModuleTest extends NodeTestCase
         $body = new BodyNode([new TextNode('foo', 1)]);
         $parent = new ConstantExpression('layout.twig', 1);
         $blocks = new EmptyNode();
-        $macros = new EmptyNode();
+        $macros = new MacrosNode();
         $traits = new EmptyNode();
         $source = new Source('{{ foo }}', 'foo.twig');
         $node = new ModuleNode($body, $parent, $blocks, $macros, $traits, new EmptyNode(), $source);
@@ -89,7 +90,7 @@ class ModuleTest extends NodeTestCase
         $body = new BodyNode([new TextNode('foo', 1)]);
         $extends = null;
         $blocks = new EmptyNode();
-        $macros = new EmptyNode();
+        $macros = new MacrosNode();
         $traits = new EmptyNode();
         $source = new Source('{{ foo }}', 'foo.twig');
 
@@ -102,6 +103,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
+use Twig\MacroNamespace;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
@@ -117,7 +119,7 @@ class __TwigTemplate_%x extends Template
 {
     private Source \$source;
     /**
-     * @var array<string, Template>
+     * @var array<string, MacroNamespace>
      */
     private array \$macros = [];
 
@@ -154,7 +156,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  43 => 1,);
+        return array (  44 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -178,6 +180,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
+use Twig\MacroNamespace;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
@@ -193,7 +196,7 @@ class __TwigTemplate_%x extends Template
 {
     private Source \$source;
     /**
-     * @var array<string, Template>
+     * @var array<string, MacroNamespace>
      */
     private array \$macros = [];
 
@@ -217,7 +220,7 @@ class __TwigTemplate_%x extends Template
     {
         \$macros = \$this->macros;
         // line 2
-        \$macros["macro"] = \$this->macros["macro"] = \$this->load("foo.twig", 2)->unwrap();
+        \$macros["macro"] = \$this->macros["macro"] = \$this->load("foo.twig", 2)->unwrap()->getMacroNamespace();
         // line 1
         \$this->parent = \$this->load("layout.twig", 1);
         yield from \$this->parent->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
@@ -244,7 +247,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  49 => 1,  47 => 2,  40 => 1,);
+        return array (  50 => 1,  48 => 2,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -273,6 +276,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
+use Twig\MacroNamespace;
 use Twig\Markup;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
@@ -288,7 +292,7 @@ class __TwigTemplate_%x extends Template
 {
     private Source \$source;
     /**
-     * @var array<string, Template>
+     * @var array<string, MacroNamespace>
      */
     private array \$macros = [];
 
@@ -338,7 +342,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  49 => 2,  47 => 4,  40 => 2,);
+        return array (  50 => 2,  48 => 4,  41 => 2,);
     }
 
     public function getSourceContext(): Source

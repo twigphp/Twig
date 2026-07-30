@@ -60,34 +60,25 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
             }
         }
 
-        if ($stream->test(Token::OPERATOR_TYPE, '(')) {
-            $type = Template::METHOD_CALL;
-            $arguments = $this->parseCallableArguments($parser, $token->getLine());
-        }
-
         $isMacroTarget = $expr instanceof ContextVariable
             && (
                 null !== $parser->getImportedSymbol('template', $expr->getAttribute('name'))
                 || '_self' === $expr->getAttribute('name')
             );
 
-        if (
-            $isMacroTarget
-            && $attribute instanceof ConstantExpression
-            && \is_string($name = $attribute->getAttribute('value'))
-            && preg_match('#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$#D', $name)
-        ) {
-            $node = new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), 'macro_'.$name, $arguments, $expr->getTemplateLine());
-            $node->setHasParentheses(Template::METHOD_CALL === $type);
-
-            return $node;
+        if ($stream->test(Token::OPERATOR_TYPE, '(')) {
+            $type = Template::METHOD_CALL;
+            $arguments = $this->parseCallableArguments($parser, $token->getLine(), preserveNames: $isMacroTarget);
         }
 
-        if ($isMacroTarget && !$attribute instanceof ConstantExpression) {
-            $node = new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $attribute, $arguments, $expr->getTemplateLine());
-            $node->setHasParentheses(Template::METHOD_CALL === $type);
+        if ($isMacroTarget) {
+            if (Template::METHOD_CALL !== $type) {
+                throw new SyntaxError('Omitting parentheses when calling a macro is not allowed; add parentheses after the macro name.', $expr->getTemplateLine(), $stream->getSourceContext());
+            }
 
-            return $node;
+            $name = $attribute instanceof ConstantExpression ? (string) $attribute->getAttribute('value') : $attribute;
+
+            return new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $name, $arguments, $expr->getTemplateLine());
         }
 
         return new GetAttrExpression($expr, $attribute, $arguments, $type, $lineno, $nullSafe);

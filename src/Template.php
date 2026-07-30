@@ -39,6 +39,8 @@ abstract class Template
     protected $extensions = [];
     protected $sandbox;
 
+    private ?MacroNamespace $macroNamespace = null;
+
     public function __construct(
         protected Environment $env,
     ) {
@@ -90,8 +92,8 @@ abstract class Template
         // functions, method calls) when the parent name is dynamic. Make sure
         // the sandbox security check runs first so those expressions cannot
         // bypass the allow-list when getParent() is reached before the first
-        // ensureSecurityChecked() call on this template (e.g. via
-        // getTemplateForMacro() or yieldBlock() into a pre-warmed instance).
+        // ensureSecurityChecked() call on this template (e.g. via a macro call
+        // resolved against a parent, or yieldBlock() into a pre-warmed instance).
         $this->ensureSecurityChecked();
 
         if (!$parent = $this->doGetParent($context)) {
@@ -441,37 +443,20 @@ abstract class Template
         }
     }
 
-    protected function hasMacro(string $name, array $context): bool
+    /**
+     * @internal
+     */
+    public function getMacroNamespace(): MacroNamespace
     {
-        if (method_exists($this, $name)) {
-            return true;
-        }
-
-        if (!$parent = $this->getParent($context)) {
-            return false;
-        }
-
-        return $parent->hasMacro($name, $context);
+        return $this->macroNamespace ??= new MacroNamespace($this, $this->loadDeclaredMacros());
     }
 
-    protected function getTemplateForMacro(string $name, array $context, int $line, Source $source): self
+    /**
+     * @return array<string, TwigMacro>
+     */
+    protected function loadDeclaredMacros(): array
     {
-        if (method_exists($this, $name)) {
-            $this->ensureSecurityChecked();
-
-            return $this;
-        }
-
-        $parent = $this;
-        while ($parent = $parent->getParent($context)) {
-            if (method_exists($parent, $name)) {
-                $parent->ensureSecurityChecked();
-
-                return $parent;
-            }
-        }
-
-        throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', substr($name, \strlen('macro_')), $this->getTemplateName()), $line, $source);
+        return [];
     }
 
     /**

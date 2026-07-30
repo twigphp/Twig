@@ -11,7 +11,6 @@
 
 namespace Twig\Tests\Node\Expression;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -22,25 +21,6 @@ use Twig\Node\Expression\Variable\MacroVariable;
 
 class MacroReferenceTest extends TestCase
 {
-    #[DataProvider('provideInvalidMacroNames')]
-    public function testConstructorRejectsNonIdentifierName(string $name): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage(\sprintf('Macro name "%s" is not a valid PHP identifier.', $name));
-
-        new MacroReferenceExpression(new MacroVariable('foo', 1), $name, new ArrayExpression([], 1), 1);
-    }
-
-    public static function provideInvalidMacroNames(): iterable
-    {
-        yield 'empty' => [''];
-        yield 'starts with digit' => ['1foo'];
-        yield 'contains space' => ['foo bar'];
-        yield 'contains semicolon' => ['foo;bar'];
-        yield 'PHP injection payload' => ['macro_foo + 1; trigger_error("BAD") //'];
-        yield 'contains NUL byte' => ["foo\x00bar"];
-    }
-
     public function testConstructorAcceptsAnExpressionAsName(): void
     {
         $node = new MacroReferenceExpression(new MacroVariable('foo', 1), new ContextVariable('name', 1), new ArrayExpression([], 1), 1);
@@ -49,7 +29,7 @@ class MacroReferenceTest extends TestCase
         $this->assertNull($node->getAttribute('name'));
     }
 
-    public function testDynamicNamePrefixesMacroAtRuntime(): void
+    public function testDynamicNameResolvesMacroAtRuntime(): void
     {
         $env = new Environment(new ArrayLoader());
         $compiler = new \Twig\Compiler($env);
@@ -62,7 +42,8 @@ class MacroReferenceTest extends TestCase
         );
         $compiler->compile($node);
 
-        $this->assertStringContainsString("getTemplateForMacro(\$_v0 = 'macro_'.", $compiler->getSource());
-        $this->assertStringContainsString('->{$_v0}(...', $compiler->getSource());
+        $this->assertStringContainsString('->call(', $compiler->getSource());
+        $this->assertStringContainsString('($context["name"] ?? null), [], $context, 1, $this->getSourceContext())', $compiler->getSource());
+        $this->assertStringNotContainsString("'macro_'.", $compiler->getSource());
     }
 }

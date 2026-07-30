@@ -20,6 +20,7 @@ use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
+use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -101,7 +102,7 @@ class CorrectnessTest extends TestCase
     private function traverse(Node $input, Node $expected): Node
     {
         $source = new Source('', 'index');
-        $input = new ModuleNode(new BodyNode([$input]), new ConstantExpression('parent', 1), new EmptyNode(), new EmptyNode(), new EmptyNode(), new EmptyNode(), $source);
+        $input = new ModuleNode(new BodyNode([$input]), new ConstantExpression('parent', 1), new EmptyNode(), new MacrosNode(), new EmptyNode(), new EmptyNode(), $source);
         $expected->setSourceContext($source);
 
         $env = new Environment(new ArrayLoader(['index' => '']));

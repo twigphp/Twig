@@ -29,6 +29,7 @@ use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
@@ -43,7 +44,7 @@ class SandboxTest extends TestCase
         $env = new Environment(new ArrayLoader());
         $expr = new ContextVariable('foo', 1);
         $expr->setAttribute('is_generator', true);
-        $node = new ModuleNode(new BodyNode([new PrintNode($expr, 1)]), null, new EmptyNode(), new EmptyNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
+        $node = new ModuleNode(new BodyNode([new PrintNode($expr, 1)]), null, new EmptyNode(), new MacrosNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
         $traverser = new NodeTraverser($env, [new SandboxNodeVisitor($env)]);
         $node = $traverser->traverse($node);
 
@@ -57,7 +58,7 @@ class SandboxTest extends TestCase
         $custom = new CustomCoercingExpression(new ContextVariable('foo', 1), new ContextVariable('bar', 1), 1);
         // wrap inside a PrintNode so it lives in a module; the wrapping must happen on the
         // custom node itself regardless of the print context
-        $node = new ModuleNode(new BodyNode([new PrintNode($custom, 1)]), null, new EmptyNode(), new EmptyNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
+        $node = new ModuleNode(new BodyNode([new PrintNode($custom, 1)]), null, new EmptyNode(), new MacrosNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
         $traverser = new NodeTraverser($env, [new SandboxNodeVisitor($env)]);
         $node = $traverser->traverse($node);
 
@@ -70,7 +71,7 @@ class SandboxTest extends TestCase
     {
         $env = new Environment(new ArrayLoader());
         $custom = new CustomCoercingNode(['expr' => new ContextVariable('foo', 1)], [], 1);
-        $node = new ModuleNode(new BodyNode([$custom]), null, new EmptyNode(), new EmptyNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
+        $node = new ModuleNode(new BodyNode([$custom]), null, new EmptyNode(), new MacrosNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
         $traverser = new NodeTraverser($env, [new SandboxNodeVisitor($env)]);
         $node = $traverser->traverse($node);
 
@@ -83,7 +84,7 @@ class SandboxTest extends TestCase
         $env = new Environment(new ArrayLoader());
         $self = new ContextVariable('_self', 1);
         $custom = new CustomCoercingNode(['expr' => $self], [], 1);
-        $node = new ModuleNode(new BodyNode([$custom]), null, new EmptyNode(), new EmptyNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
+        $node = new ModuleNode(new BodyNode([$custom]), null, new EmptyNode(), new MacrosNode(), new EmptyNode(), new EmptyNode(), new Source('foo', 'foo'));
         $traverser = new NodeTraverser($env, [new SandboxNodeVisitor($env)]);
         $node = $traverser->traverse($node);
 
