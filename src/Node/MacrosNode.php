@@ -38,7 +38,7 @@ final class MacrosNode extends Node
         parent::__construct($macros);
     }
 
-    public function setNode(string $name, Node $node): void
+    public function setNode(string|int $name, Node $node): void
     {
         if (!$node instanceof MacroNode) {
             throw new \LogicException(\sprintf('A "%s" can only contain "%s" nodes; replacing the macro "%s" with a "%s" node is not supported.', static::class, MacroNode::class, $name, get_debug_type($node)));

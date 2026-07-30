@@ -148,7 +148,7 @@ EOF, 'index')));
         $twig = new Environment(new ArrayLoader());
 
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Omitting parentheses when calling a macro is not allowed; add parentheses after the macro name.');
+        $this->expectExceptionMessage('Omitting parentheses when calling a macro is not allowed; add parentheses after the macro name in "index" at line 1.');
 
         $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression }}", 'index')));
     }
