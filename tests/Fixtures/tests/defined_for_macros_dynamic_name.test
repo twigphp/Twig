@@ -5,8 +5,8 @@
 
 {% set known = 'hello' %}
 {% set unknown = 'missing' %}
-{{~ macros.(known)() is defined ? 'OK' : 'KO' }}
-{{~ macros.(unknown)() is not defined ? 'OK' : 'KO' }}
+{{~ macros.(known) is defined ? 'OK' : 'KO' }}
+{{~ macros.(unknown) is not defined ? 'OK' : 'KO' }}
 
 {% macro hello(name) %}{% endmacro %}
 --DATA--

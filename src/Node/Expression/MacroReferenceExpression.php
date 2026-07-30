@@ -25,6 +25,8 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
     use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
 
+    private bool $hasCallParentheses = true;
+
     /**
      * @param string|AbstractExpression $name The bare macro name (a static identifier) or, for a dynamic
      *                                        call, an expression resolving to the macro name
@@ -41,6 +43,22 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
         }
 
         parent::__construct($nodes, $attributes, $lineno);
+    }
+
+    /**
+     * @internal
+     */
+    public function setHasCallParentheses(bool $hasCallParentheses): void
+    {
+        $this->hasCallParentheses = $hasCallParentheses;
+    }
+
+    /**
+     * @internal
+     */
+    public function hasCallParentheses(): bool
+    {
+        return $this->hasCallParentheses;
     }
 
     public function __clone()

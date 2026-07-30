@@ -72,13 +72,11 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
         }
 
         if ($isMacroTarget) {
-            if (Template::METHOD_CALL !== $type) {
-                trigger_deprecation('twig/twig', '3.29', 'Omitting parentheses when calling or testing a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "%s" at line %d.', $stream->getSourceContext()->getName(), $expr->getTemplateLine());
-            }
-
             $name = $attribute instanceof ConstantExpression ? (string) $attribute->getAttribute('value') : $attribute;
+            $node = new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $name, $arguments, $expr->getTemplateLine());
+            $node->setHasCallParentheses(Template::METHOD_CALL === $type);
 
-            return new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $name, $arguments, $expr->getTemplateLine());
+            return $node;
         }
 
         return new GetAttrExpression($expr, $attribute, $arguments, $type, $lineno, $nullSafe);

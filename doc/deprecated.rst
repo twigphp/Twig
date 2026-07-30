@@ -332,10 +332,16 @@ Macros
 * Passing an unknown named argument to a macro is deprecated as of Twig 3.29 and
   will throw in Twig 4.0. Declare an explicit variadic argument to accept it.
 
-* Omitting parentheses when calling or testing a macro (e.g.
-  ``macros.input`` or ``macros.(name)``) is deprecated as of Twig 3.29 and
-  will throw a ``SyntaxError`` in Twig 4.0. Add parentheses after the macro
-  name (e.g. ``macros.input()`` or ``macros.(name)()``).
+* Omitting parentheses when calling a macro (e.g. ``macros.input`` or
+  ``macros.(name)``) is deprecated as of Twig 3.29 and will throw a
+  ``SyntaxError`` in Twig 4.0. Add parentheses after the macro name (e.g.
+  ``macros.input()`` or ``macros.(name)()``).
+
+* Using parentheses when testing a macro with the ``defined`` test (e.g.
+  ``macros.input() is defined``) is deprecated as of Twig 3.29 and will throw a
+  ``SyntaxError`` in Twig 4.0. The test checks the macro itself, not a call, so
+  remove the parentheses after the macro name (e.g.
+  ``macros.input is defined``).
 
 * Calling a macro without a value for an argument that has no default value is
   deprecated as of Twig 3.29; such an argument will be required in Twig 4.0

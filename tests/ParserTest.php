@@ -142,7 +142,9 @@ EOF, 'index')));
     {
         foreach (['_self', 'macros'] as $target) {
             yield $target.' static with parentheses' => [$target.'.foo()'];
+            yield $target.' grouped static with parentheses' => ['('.$target.'.foo())'];
             yield $target.' dynamic with parentheses' => [$target.'.(name)()'];
+            yield $target.' grouped dynamic with parentheses' => ['('.$target.'.(name)())'];
         }
     }
 
@@ -157,7 +159,7 @@ EOF, 'index')));
     {
         $twig = new Environment(new ArrayLoader());
 
-        $this->expectDeprecation('Since twig/twig 3.29: Omitting parentheses when calling or testing a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.');
+        $this->expectDeprecation('Since twig/twig 3.29: Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.');
 
         $module = $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression }}", 'index')));
         $macroReferences = [];
@@ -173,8 +175,51 @@ EOF, 'index')));
     {
         foreach (['_self', 'macros'] as $target) {
             yield $target.' static without parentheses' => [$target.'.foo'];
+            yield $target.' grouped static without parentheses' => ['('.$target.'.foo)'];
             yield $target.' dynamic without parentheses' => [$target.'.(name)'];
+            yield $target.' grouped dynamic without parentheses' => ['('.$target.'.(name))'];
         }
+    }
+
+    /**
+     * @dataProvider provideMacroTargetExpressionsWithoutParentheses
+     */
+    #[DataProvider('provideMacroTargetExpressionsWithoutParentheses')]
+    public function testMacroTargetsWithoutParenthesesAreAllowedInDefinedTest(string $expression): void
+    {
+        $twig = new Environment(new ArrayLoader());
+
+        $module = $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression is defined }}{{ $expression is not defined }}", 'index')));
+        $macroReferences = [];
+        $attributeExpressions = [];
+
+        $this->collectExpressions($module, $macroReferences, $attributeExpressions);
+
+        $this->assertCount(2, $macroReferences);
+        $this->assertSame([], $attributeExpressions);
+    }
+
+    /**
+     * @dataProvider provideMacroTargetExpressions
+     *
+     * @group legacy
+     */
+    #[DataProvider('provideMacroTargetExpressions')]
+    #[Group('legacy')]
+    public function testMacroTargetsWithParenthesesAreDeprecatedInDefinedTest(string $expression): void
+    {
+        $twig = new Environment(new ArrayLoader());
+
+        $this->expectDeprecation('Since twig/twig 3.29: Using parentheses when testing a macro with the "defined" test is deprecated and will throw a SyntaxError in Twig 4.0; remove the parentheses after the macro name in "index" at line 1.');
+
+        $module = $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression is defined }}", 'index')));
+        $macroReferences = [];
+        $attributeExpressions = [];
+
+        $this->collectExpressions($module, $macroReferences, $attributeExpressions);
+
+        $this->assertCount(1, $macroReferences);
+        $this->assertSame([], $attributeExpressions);
     }
 
     public function testImplicitMacroArgumentDefaultValues(): void

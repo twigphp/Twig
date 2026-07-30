@@ -46,8 +46,15 @@ class IsExpressionParser extends AbstractExpressionParser implements InfixExpres
             $arguments = new Nodes([0 => $parser->parseExpression($this->getPrecedence())]);
         }
 
-        if ('defined' === $test->getName() && $expr instanceof NameExpression && null !== $alias = $parser->getImportedSymbol('function', $expr->getAttribute('name'))) {
-            $expr = new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], new ArrayExpression([], $expr->getTemplateLine()), $expr->getTemplateLine());
+        if ('defined' === $test->getName()) {
+            if ($expr instanceof NameExpression && null !== $alias = $parser->getImportedSymbol('function', $expr->getAttribute('name'))) {
+                $expr = new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], new ArrayExpression([], $expr->getTemplateLine()), $expr->getTemplateLine());
+                $expr->setHasCallParentheses(false);
+            }
+
+            if ($expr instanceof MacroReferenceExpression && $expr->hasCallParentheses()) {
+                trigger_deprecation('twig/twig', '3.29', 'Using parentheses when testing a macro with the "defined" test is deprecated and will throw a SyntaxError in Twig 4.0; remove the parentheses after the macro name in "%s" at line %d.', $stream->getSourceContext()->getName(), $expr->getTemplateLine());
+            }
         }
 
         $ready = $test instanceof TwigTest;
