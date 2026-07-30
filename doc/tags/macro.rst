@@ -35,13 +35,6 @@ As with PHP function arguments, a macro argument is required unless it declares
 a default value. Here, ``name`` is required while ``value``, ``type``, and
 ``size`` are optional.
 
-.. deprecated:: 3.29
-
-    Calling a macro without a value for an argument that has no default value is
-    deprecated as of Twig 3.29; the argument will be required in Twig 4.0 (until
-    then, it defaults to ``null``). Give every optional argument an explicit
-    default value.
-
 To accept an arbitrary number of extra arguments, declare an explicit variadic
 argument as described below.
 
@@ -62,11 +55,6 @@ notation as PHP:
     {{ _self.tag("input", type: "text", name: "username") }}
 
 The variadic argument must be the last one and cannot have a default value.
-
-.. versionadded:: 3.29
-
-    Support for declaring an explicit variadic macro argument was added in Twig
-    3.29.
 
 .. tip::
 
@@ -180,7 +168,7 @@ You can check if a macro is defined via the ``defined`` test:
 
     {% from "macros.html.twig" import hello %}
 
-    {% if macros.hello is defined -%}
+    {% if macros.hello() is defined -%}
         OK
     {% endif %}
 

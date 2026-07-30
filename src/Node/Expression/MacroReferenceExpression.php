@@ -12,7 +12,6 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
-use Twig\Error\SyntaxError;
 use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\Variable\MacroVariable;
 

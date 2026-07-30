@@ -12,6 +12,12 @@
  * Throw a `SyntaxError` when an `extends`, `use`, or `macro` tag is not at the root of a template
  * Throw a `SyntaxError` when a macro is defined more than once in a template
  * Throw a `SyntaxError` when calling a macro without parentheses
+ * Remove support for case-insensitive macro references
+ * Remove support for resolving macros through legacy `macro_`-prefixed references
+ * Remove support for omitted, extra, and unknown macro arguments unless accepted by defaults or an explicit variadic argument
+ * Remove the implicit `varargs` macro variable; use an explicit variadic argument instead
+ * Remove support for extending `Twig\Node\MacroNode`
+ * Remove support for passing invalid node types to `Twig\Node\MacroNode` and `Twig\Node\ModuleNode`
 
 # 4.0.0 alpha 1 (2026-05-17)
 

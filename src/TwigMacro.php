@@ -20,9 +20,7 @@ use Twig\Node\Expression\Variable\LocalVariable;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @internal This class is an implementation detail of the per-template macro
- *           registry: compiled templates instantiate it, but it is not part of
- *           the public API, neither on 3.x nor in 4.0.
+ * @internal
  */
 final class TwigMacro
 {
@@ -37,10 +35,6 @@ final class TwigMacro
     private array $requiredNames = [];
 
     /**
-     * Twig argument names that do not match their compiled closure parameter name
-     * (reserved names get prefixed by the compiler). Only needed by callLegacy()'s
-     * native binding; to be removed in 4.0 together with it.
-     *
      * @var array<string, string>
      */
     private array $renamedArguments = [];
@@ -72,74 +66,52 @@ final class TwigMacro
     }
 
     /**
-     * Invokes the macro the way Twig 3.x always has (lenient argument handling),
-     * while reporting the cases that will become errors in Twig 4.0.
-     *
-     * In 4.0, this becomes the strict call() method: the scan below already detects
-     * every deprecated case, so triggerLegacyDeprecations() turns into upfront
-     * throws and the rest stays as is.
-     *
-     * @param array<int|string, mixed> $arguments Positional arguments keyed by their integer position
-     *                                            and named arguments keyed by their name
-     * @param Source                   $source    The source of the template making the call, used to enrich errors
-     * @param int                      $lineno    The line of the call in that template, used to enrich errors
+     * @param array<int|string, mixed> $arguments Positional arguments keyed by their integer position and named arguments keyed by their name
      */
-    public function callLegacy(array $arguments, Source $source, int $lineno): string|Markup
+    public function call(array $arguments, Source $source, int $lineno): string|Markup
     {
-        // Spreading the arguments as-is is equivalent to resolving them: PHP binds
-        // them natively, maps the named ones onto their parameter, fills the
-        // defaults, and collects the extra ones into the variadic bucket. Only the
-        // cases where PHP would report its own error (with closure-centric wording)
-        // are detected upfront and turned into Twig errors.
         if (array_is_list($arguments)) {
             $count = \count($arguments);
-            if ($count < $this->requiredCount || (!$this->variadic && $count > \count($this->arguments))) {
-                $this->triggerLegacyDeprecations($arguments, $count, $source, $lineno);
+            $this->validateRequiredArguments($arguments, $count, $source, $lineno);
+            if (!$this->variadic && $count > \count($this->arguments)) {
+                throw new RuntimeError(\sprintf('Too many arguments for macro "%s".', $this->name), $lineno, $source);
             }
 
             return ($this->body)(...$arguments);
         }
 
         $positionalCount = 0;
-        $namedRequired = 0;
         $sawNamed = false;
-        $misordered = false;
         $duplicate = null;
-        $hasUnknownNamed = false;
+        $unknown = null;
         foreach ($arguments as $key => $value) {
             if (\is_int($key)) {
-                $misordered = $misordered || $sawNamed;
+                if ($sawNamed) {
+                    throw new RuntimeError(\sprintf('Positional arguments cannot be used after named arguments for macro "%s".', $this->name), $lineno, $source);
+                }
                 ++$positionalCount;
             } else {
                 $sawNamed = true;
                 if (null === $i = $this->argumentIndexes[$key] ?? null) {
-                    $hasUnknownNamed = true;
-                } else {
-                    if (null === $duplicate && $i < $positionalCount) {
-                        $duplicate = $key;
-                    }
-                    if (isset($this->requiredNames[$key])) {
-                        ++$namedRequired;
-                    }
+                    $unknown ??= $key;
+                } elseif (null === $duplicate && $i < $positionalCount) {
+                    $duplicate = $key;
                 }
             }
         }
 
-        if ($misordered) {
-            throw new RuntimeError(\sprintf('Positional arguments cannot be used after named arguments for macro "%s".', $this->name), $lineno, $source);
-        }
         if (null !== $duplicate) {
             throw new RuntimeError(\sprintf('Argument "%s" is defined twice for macro "%s".', $duplicate, $this->name), $lineno, $source);
         }
 
-        // For a fully named call, the coverage of the required arguments is exact; a
-        // mixed call falls back to the precise (and slower) per-argument check.
-        $mayMissRequired = 0 === $positionalCount
-            ? $namedRequired < \count($this->requiredNames)
-            : $positionalCount < $this->requiredCount;
-
-        if ($mayMissRequired || (!$this->variadic && ($hasUnknownNamed || $positionalCount > \count($this->arguments)))) {
-            $this->triggerLegacyDeprecations($arguments, $positionalCount, $source, $lineno);
+        $this->validateRequiredArguments($arguments, $positionalCount, $source, $lineno);
+        if (!$this->variadic) {
+            if ($positionalCount > \count($this->arguments)) {
+                throw new RuntimeError(\sprintf('Too many arguments for macro "%s".', $this->name), $lineno, $source);
+            }
+            if (null !== $unknown) {
+                throw new RuntimeError(\sprintf('Unknown argument "%s" for macro "%s".', $unknown, $this->name), $lineno, $source);
+            }
         }
 
         foreach ($this->renamedArguments as $name => $parameterName) {
@@ -153,34 +125,20 @@ final class TwigMacro
     }
 
     /**
-     * To be removed in 4.0 (these deprecated cases become hard errors).
-     *
-     * @param array<int|string, mixed> $arguments The full argument array; string keys are the named arguments
+     * @param array<int|string, mixed> $arguments
      */
-    private function triggerLegacyDeprecations(array $arguments, int $positionalCount, Source $source, int $lineno): void
+    private function validateRequiredArguments(array $arguments, int $positionalCount, Source $source, int $lineno): void
     {
-        if ($positionalCount < $this->requiredCount) {
-            foreach ($this->requiredNames as $argName => $required) {
-                if ($this->argumentIndexes[$argName] < $positionalCount || \array_key_exists($argName, $arguments)) {
-                    continue;
-                }
-
-                trigger_deprecation('twig/twig', '3.29', 'Not passing a value for the "%s" argument of macro "%s" is deprecated and the argument will be required in Twig 4.0; give it a default value in the macro definition or pass a value when calling it (in "%s" at line %d).', $argName, $this->name, $source->getName(), $lineno);
-            }
-        }
-
-        if ($this->variadic) {
+        if ($positionalCount >= $this->requiredCount) {
             return;
         }
 
-        if ($positionalCount > \count($this->arguments)) {
-            trigger_deprecation('twig/twig', '3.29', 'Passing more arguments than the macro "%s" accepts is deprecated and will throw in Twig 4.0; declare a variadic argument ("...name") in the macro definition to accept extra arguments (in "%s" at line %d).', $this->name, $source->getName(), $lineno);
-        }
-
-        foreach ($arguments as $name => $value) {
-            if (\is_string($name) && !isset($this->argumentIndexes[$name])) {
-                trigger_deprecation('twig/twig', '3.29', 'Passing the unknown named argument "%s" to the macro "%s" is deprecated and will throw in Twig 4.0; declare a variadic argument ("...name") in the macro definition to accept it (in "%s" at line %d).', $name, $this->name, $source->getName(), $lineno);
+        foreach ($this->requiredNames as $name => $required) {
+            if ($this->argumentIndexes[$name] < $positionalCount || \array_key_exists($name, $arguments)) {
+                continue;
             }
+
+            throw new RuntimeError(\sprintf('Value for argument "%s" is required for macro "%s".', $name, $this->name), $lineno, $source);
         }
     }
 }

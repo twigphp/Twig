@@ -1,0 +1,10 @@
+--TEST--
+macro rejects extra arguments without an explicit variadic argument
+--TEMPLATE--
+{% from _self import test %}
+{% macro test(value) %}{% endmacro %}
+{{ test("foo", "bar") }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Too many arguments for macro "test" in "index.twig" at line 4.

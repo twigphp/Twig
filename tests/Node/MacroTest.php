@@ -63,14 +63,13 @@ class MacroTest extends NodeTestCase
     public static function provideTests(): iterable
     {
         yield 'with use_yield = true' => [self::createNode(), <<<EOF
-new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null, ...\$varargs): string|Markup {
+new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null): string|Markup {
     // line 1
     \$macros = \$this->macros;
     \$context = [
         "foo" => \$foo,
         "bar" => \$bar,
         "_underscore" => \$_underscore,
-        "varargs" => \$varargs,
     ] + \$this->env->getGlobals();
 
     \$blocks = [];
@@ -84,14 +83,13 @@ EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
         ];
 
         yield 'with use_yield = false' => [self::createNode(), <<<EOF
-new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null, ...\$varargs): string|Markup {
+new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null): string|Markup {
     // line 1
     \$macros = \$this->macros;
     \$context = [
         "foo" => \$foo,
         "bar" => \$bar,
         "_underscore" => \$_underscore,
-        "varargs" => \$varargs,
     ] + \$this->env->getGlobals();
 
     \$blocks = [];

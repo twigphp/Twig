@@ -1,0 +1,10 @@
+--TEST--
+macro arguments without a default value are required
+--TEMPLATE--
+{% from _self import test %}
+{% macro test(a, b) %}{% endmacro %}
+{{ test() }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Value for argument "a" is required for macro "test" in "index.twig" at line 4.

@@ -107,9 +107,6 @@ abstract class IntegrationTestCase extends TestCase
         return [];
     }
 
-    /**
-     * @return void
-     */
     #[DataProvider('getTests')]
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
     {

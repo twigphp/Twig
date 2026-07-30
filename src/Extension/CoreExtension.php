@@ -29,7 +29,6 @@ use Twig\ExpressionParser\InfixAssociativity;
 use Twig\ExpressionParser\Prefix\GroupingExpressionParser;
 use Twig\ExpressionParser\Prefix\LiteralExpressionParser;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
-use Twig\MacroNamespace;
 use Twig\Markup;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;

@@ -1,0 +1,10 @@
+--TEST--
+macro rejects unknown named arguments without an explicit variadic argument
+--TEMPLATE--
+{% from _self import test %}
+{% macro test(value) %}{% endmacro %}
+{{ test(value: "foo", extra: "bar") }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Unknown argument "extra" for macro "test" in "index.twig" at line 4.
