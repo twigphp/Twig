@@ -382,10 +382,12 @@ Sandbox
   3.27.0 with no replacement. Passing an instance to the
   ``Twig\Extension\SandboxExtension`` constructor triggers a deprecation.
 
-* Deprecate the ``sandbox`` tag, use the ``sandboxed`` option of the
-  ``include`` function instead:
+* Deprecate the ``sandbox`` tag, use the ``Twig\Sandbox\Sandbox`` class
+  instead:
 
-  Before::
+  Before:
+
+  .. code-block:: twig
 
     {% sandbox %}
       {% include 'user_defined.html.twig' %}
@@ -393,7 +395,22 @@ Sandbox
 
   After::
 
-    {{ include('user_defined.html.twig', sandboxed: true) }}
+    echo $sandbox->render('user_defined.html.twig');
+
+* The ``Twig\Extension\SandboxExtension`` class is marked as internal as of
+  Twig 3.29 and should not be used directly anymore (no runtime deprecation is
+  triggered); use the ``Twig\Sandbox\Sandbox`` class to render untrusted
+  templates instead.
+
+* The ``sandboxed`` argument of the ``include`` function is deprecated as of
+  Twig 3.29. Render the untrusted template with the ``Twig\Sandbox\Sandbox``
+  class from PHP or the
+  :doc:`render_sandboxed() function <functions/render_sandboxed>` from a
+  trusted Twig template instead.
+
+* The ``enableSandbox()``, ``disableSandbox()``, and ``isSandboxedGlobally()``
+  methods of ``Twig\Extension\SandboxExtension`` are deprecated as of Twig
+  3.29 with no replacement: a ``Twig\Sandbox\Sandbox`` has no state to toggle.
 
 Testing Utilities
 -----------------
