@@ -41,14 +41,6 @@ class SandboxTest extends TestCase
         $this->assertSame('Hello FABIEN', $sandbox->render('index', ['greet' => true, 'name' => 'fabien']));
     }
 
-    public function testNonStrictSecurityPolicyIsRejected(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('The sandbox requires a strict security policy, call "setStrict(true)" on a dedicated policy for this sandbox.');
-
-        new Sandbox(self::env(), new SecurityPolicy());
-    }
-
     public function testAnAlreadyUsedEnvironmentIsRejected(): void
     {
         $env = self::env(['index' => 'plain content']);

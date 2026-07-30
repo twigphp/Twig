@@ -21,6 +21,8 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -53,10 +55,8 @@ use Twig\TwigTest;
 /**
  * Covers the deprecated stateful sandbox mechanisms; new code should use
  * \Twig\Sandbox\Sandbox, covered by \Twig\Tests\Sandbox\SandboxTest.
- *
- * @group legacy
  */
-#[Group('legacy')]
+#[Group('legacy'), IgnoreDeprecations]
 class SandboxTest extends TestCase
 {
     protected static $params;

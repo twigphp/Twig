@@ -11,6 +11,8 @@
 
 namespace Twig\Tests\Extension;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\SandboxExtension;
@@ -29,10 +31,8 @@ use Twig\Sandbox\SecurityPolicyInterface;
  * Without the fix, the compiled checkSecurity() method only ran once at
  * construction time, locking in the verdict computed against whatever sandbox
  * state was active when the template was first loaded.
- *
- * @group legacy
  */
-#[Group('legacy')]
+#[Group('legacy'), IgnoreDeprecations]
 class SandboxStateChangeTest extends TestCase
 {
     public function testEnableSandboxAfterFirstRender(): void

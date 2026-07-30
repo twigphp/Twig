@@ -21,6 +21,8 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -353,10 +355,7 @@ class CoreTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
-    #[Group('legacy')]
+    #[Group('legacy'), IgnoreDeprecations]
     public function testSandboxedInclude(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -372,10 +371,7 @@ class CoreTest extends TestCase
         $twig->render('index');
     }
 
-    /**
-     * @group legacy
-     */
-    #[Group('legacy')]
+    #[Group('legacy'), IgnoreDeprecations]
     public function testSandboxedIncludeWithPreloadedTemplate(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -395,10 +391,7 @@ class CoreTest extends TestCase
         $twig->render('index');
     }
 
-    /**
-     * @group legacy
-     */
-    #[Group('legacy')]
+    #[Group('legacy'), IgnoreDeprecations]
     public function testSandboxedIncludeResultStaysEscapedWhenAssigned(): void
     {
         $twig = new Environment(new ArrayLoader([
