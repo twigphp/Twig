@@ -30,7 +30,7 @@ class MacroVariable extends TempNameExpression
         $name = $this->getName($compiler);
 
         if ('_self' === $name) {
-            $compiler->raw('$this');
+            $compiler->raw('$this->getMacroNamespace()');
         } else {
             $compiler
                 ->raw('$macros[')

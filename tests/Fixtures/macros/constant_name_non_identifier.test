@@ -1,0 +1,10 @@
+--TEST--
+macro called with a constant name that is not a valid identifier
+--TEMPLATE--
+{% import _self as macros %}
+
+{{ macros.('foo-bar')() }}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\RuntimeError: Macro "foo-bar" is not defined in template "index.twig" in "index.twig" at line 4.

@@ -1,0 +1,22 @@
+--TEST--
+macro with an explicit variadic argument
+--TEMPLATE--
+{% from _self import tag, list %}
+
+{% macro tag(name, ...attributes) -%}
+    <{{ name }}{% for attr in attributes %} {{ attr }}{% endfor %}>
+{%- endmacro %}
+
+{% macro list(...items) -%}
+    {{ items|join(", ") }}
+{%- endmacro %}
+
+{{ tag("div", "a", "b") }}
+{{ tag("br") }}
+{{ list(1, 2, 3) }}
+--DATA--
+return []
+--EXPECT--
+<div a b>
+<br>
+1, 2, 3

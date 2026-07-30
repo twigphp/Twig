@@ -1,0 +1,27 @@
+--TEST--
+macro arguments without a default value are implicitly optional (deprecated)
+--DEPRECATION--
+Since twig/twig 3.29: Not passing a value for the "a" argument of macro "test" is deprecated and the argument will be required in Twig 4.0; give it a default value in the macro definition or pass a value when calling it (in "index.twig" at line 10).
+Since twig/twig 3.29: Not passing a value for the "b" argument of macro "test" is deprecated and the argument will be required in Twig 4.0; give it a default value in the macro definition or pass a value when calling it (in "index.twig" at line 10).
+Since twig/twig 3.29: Not passing a value for the "a" argument of macro "test" is deprecated and the argument will be required in Twig 4.0; give it a default value in the macro definition or pass a value when calling it (in "index.twig" at line 11).
+Since twig/twig 3.29: Not passing a value for the "b" argument of macro "test" is deprecated and the argument will be required in Twig 4.0; give it a default value in the macro definition or pass a value when calling it (in "index.twig" at line 11).
+--TEMPLATE--
+{% import _self as test %}
+{% from _self import test %}
+
+{% macro test(a, b) -%}
+    {{ a|default('a') }}<br />
+    {{- b|default('b') }}<br />
+{%- endmacro %}
+
+{{ test.test() }}
+{{ test() }}
+{{ test.test(1, "c") }}
+{{ test(1, "c") }}
+--DATA--
+return []
+--EXPECT--
+a<br />b<br />
+a<br />b<br />
+1<br />c<br />
+1<br />c<br />

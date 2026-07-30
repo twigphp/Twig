@@ -31,6 +31,7 @@ use Twig\ExpressionParser\PrecedenceChange;
 use Twig\ExpressionParser\Prefix\GroupingExpressionParser;
 use Twig\ExpressionParser\Prefix\LiteralExpressionParser;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
+use Twig\MacroNamespace;
 use Twig\Markup;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Binary\AddBinary;
@@ -1358,20 +1359,9 @@ final class CoreExtension extends AbstractExtension
      *
      * to be removed in 4.0
      */
-    public static function callMacro(Template $template, string $method, array $args, int $lineno, array $context, Source $source)
+    public static function callMacro(MacroNamespace $namespace, string $method, array $args, int $lineno, array $context, Source $source)
     {
-        if (!method_exists($template, $method)) {
-            $parent = $template;
-            while ($parent = $parent->getParent($context)) {
-                if (method_exists($parent, $method)) {
-                    return $parent->$method(...$args);
-                }
-            }
-
-            throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', substr($method, \strlen('macro_')), $template->getTemplateName()), $lineno, $source);
-        }
-
-        return $template->$method(...$args);
+        return $namespace->call(substr($method, \strlen('macro_')), $args, $context, $lineno, $source);
     }
 
     /**

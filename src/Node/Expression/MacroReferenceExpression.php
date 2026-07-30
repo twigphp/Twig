@@ -25,12 +25,9 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
     use SupportDefinedTestDeprecationTrait;
     use SupportDefinedTestTrait;
 
-    private bool $hasParentheses = true;
-
     /**
-     * @param string|AbstractExpression $name A static macro method name (e.g. "macro_foo") or, for a dynamic
-     *                                        call, an expression resolving to the macro name (without the
-     *                                        "macro_" prefix, which is added at runtime)
+     * @param string|AbstractExpression $name The bare macro name (a static identifier) or, for a dynamic
+     *                                        call, an expression resolving to the macro name
      */
     public function __construct(MacroVariable $template, string|AbstractExpression $name, AbstractExpression $arguments, int $lineno)
     {
@@ -38,27 +35,12 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
         $attributes = ['name' => null];
 
         if (\is_string($name)) {
-            // The name is emitted as raw PHP in compile() via "->{$name}(...)",
-            // so it must be a valid PHP method identifier. Reject anything else
-            // as a defense-in-depth against accidental PHP code injection from
-            // a caller that forgot to validate user-controlled input.
-            if (!preg_match('#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$#D', $name)) {
-                throw new \LogicException(\sprintf('Macro name "%s" is not a valid PHP identifier.', $name));
-            }
             $attributes['name'] = $name;
         } else {
             $nodes['name'] = $name;
         }
 
         parent::__construct($nodes, $attributes, $lineno);
-    }
-
-    /**
-     * @internal
-     */
-    public function setHasParentheses(bool $hasParentheses): void
-    {
-        $this->hasParentheses = $hasParentheses;
     }
 
     public function __clone()
@@ -73,78 +55,41 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
 
     public function compile(Compiler $compiler): void
     {
-        if (!$this->hasParentheses && !$this->definedTest) {
-            trigger_deprecation('twig/twig', '3.29', 'Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "%s" at line %d.', $this->getTemplateName(), $this->getTemplateLine());
-        }
-
-        if ($this->hasNode('name')) {
-            $this->compileDynamic($compiler);
-
-            return;
-        }
+        $compiler->subcompile($this->getNode('template'));
 
         if ($this->definedTest) {
-            $compiler
-                ->subcompile($this->getNode('template'))
-                ->raw('->hasMacro(')
-                ->repr($this->getAttribute('name'))
-                ->raw(', $context')
-                ->raw(')')
-            ;
+            $compiler->raw('->has(');
+            $this->compileName($compiler);
+            $compiler->raw(', $context)');
 
             return;
         }
 
+        $compiler->raw('->call(');
+        $this->compileName($compiler);
         $compiler
-            ->subcompile($this->getNode('template'))
-            ->raw('->getTemplateForMacro(')
-            ->repr($this->getAttribute('name'))
+            ->raw(', ')
+            ->subcompile($this->getNode('arguments'))
             ->raw(', $context, ')
             ->repr($this->getTemplateLine())
             ->raw(', $this->getSourceContext())')
-            ->raw(\sprintf('->%s', $this->getAttribute('name')))
-            ->raw('(...')
-            ->subcompile($this->getNode('arguments'))
-            ->raw(')')
         ;
     }
 
     public function getStringCoercedChildNames(): array
     {
-        // Dynamic macro names are prefixed via PHP string concatenation at runtime.
+        // Dynamic macro names are string-coerced at runtime.
         return $this->hasNode('name') ? ['name'] : [];
     }
 
-    private function compileDynamic(Compiler $compiler): void
+    private function compileName(Compiler $compiler): void
     {
-        // The macro method name is resolved at runtime from a context value;
-        // prefixing it with "macro_" constrains the dynamic method call to the
-        // template's macro methods only, and getTemplateForMacro()/hasMacro()
-        // validate that the method actually exists.
-        $var = $compiler->getVarName();
-
-        if ($this->definedTest) {
-            $compiler
-                ->subcompile($this->getNode('template'))
-                ->raw('->hasMacro(\'macro_\'.')
-                ->subcompile($this->getNode('name'))
-                ->raw(', $context)')
-            ;
-
-            return;
+        // A dynamic macro name is resolved at runtime from a context value and
+        // string-coerced before the registry lookup.
+        if ($this->hasNode('name')) {
+            $compiler->raw('(string) ')->subcompile($this->getNode('name'));
+        } else {
+            $compiler->repr($this->getAttribute('name'));
         }
-
-        $compiler
-            ->subcompile($this->getNode('template'))
-            ->raw(\sprintf('->getTemplateForMacro($%s = \'macro_\'.', $var))
-            ->subcompile($this->getNode('name'))
-            ->raw(', $context, ')
-            ->repr($this->getTemplateLine())
-            ->raw(', $this->getSourceContext())')
-            ->raw(\sprintf('->{$%s}', $var))
-            ->raw('(...')
-            ->subcompile($this->getNode('arguments'))
-            ->raw(')')
-        ;
     }
 }
