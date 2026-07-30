@@ -1,10 +1,6 @@
 ``render_sandboxed``
 ====================
 
-.. versionadded:: 3.29
-
-    The ``render_sandboxed`` function was added in Twig 3.29.
-
 The ``render_sandboxed`` function renders a template through a dedicated
 :doc:`sandbox <../sandbox>`:
 

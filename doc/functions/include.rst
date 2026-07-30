@@ -73,15 +73,10 @@ If ``ignore_missing`` is set, it will fall back to rendering nothing if none
 of the templates exist, otherwise it will throw an exception.
 
 When including a template created by an end user, you should
-:doc:`sandbox<../sandbox>` it.
-
-.. deprecated:: 3.29
-
-    Sandboxing the included template via the ``sandboxed`` argument is
-    deprecated as of Twig 3.29. Render the untrusted template with the
-    ``Twig\Sandbox\Sandbox`` class from PHP or the
-    :doc:`render_sandboxed() function <render_sandboxed>` from a trusted Twig
-    template instead.
+:doc:`sandbox<../sandbox>` it: render the untrusted template with the
+``Twig\Sandbox\Sandbox`` class from PHP or the
+:doc:`render_sandboxed() function <render_sandboxed>` from a trusted Twig
+template.
 
 Arguments
 ---------
@@ -90,5 +85,3 @@ Arguments
 * ``variables``:      The variables to pass to the template
 * ``with_context``:   Whether to pass the current context variables or not
 * ``ignore_missing``: Whether to ignore missing templates or not
-* ``sandboxed``:      Whether to sandbox the template or not (deprecated as of
-  Twig 3.29)

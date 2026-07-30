@@ -21,17 +21,12 @@ namespace Twig\Tests\Extension;
  */
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
-use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Markup;
-use Twig\Sandbox\SecurityError;
-use Twig\Sandbox\SecurityPolicy;
 
 class CoreTest extends TestCase
 {
@@ -353,54 +348,6 @@ class CoreTest extends TestCase
             [0, 42, "42\f"],
             [1, 42, "\x00\x34\x32"],
         ];
-    }
-
-    #[Group('legacy'), IgnoreDeprecations]
-    public function testSandboxedInclude(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'index' => '{{ include("included", sandboxed: true) }}',
-            'included' => '{{ "included"|e }}',
-        ]));
-        $policy = new SecurityPolicy(allowedFunctions: ['include']);
-        $sandbox = new SandboxExtension($policy, false);
-        $twig->addExtension($sandbox);
-
-        // We expect a compile error
-        $this->expectException(SecurityError::class);
-        $twig->render('index');
-    }
-
-    #[Group('legacy'), IgnoreDeprecations]
-    public function testSandboxedIncludeWithPreloadedTemplate(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'index' => '{{ include("included", sandboxed: true) }}',
-            'included' => '{{ "included"|e }}',
-        ]));
-        $policy = new SecurityPolicy(allowedFunctions: ['include']);
-        $sandbox = new SandboxExtension($policy, false);
-        $twig->addExtension($sandbox);
-
-        // The template is loaded without the sandbox enabled
-        // so, no compile error
-        $twig->load('included');
-
-        // We expect a runtime error
-        $this->expectException(SecurityError::class);
-        $twig->render('index');
-    }
-
-    #[Group('legacy'), IgnoreDeprecations]
-    public function testSandboxedIncludeResultStaysEscapedWhenAssigned(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'index' => "{% set body = include('included', sandboxed: true) %}[{{ body }}]",
-            'included' => '{{ evil }}',
-        ]), ['autoescape' => 'html']);
-        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], ['escape'], [], [], ['include']), false));
-
-        $this->assertSame('[&lt;script&gt;]', $twig->render('index', ['evil' => '<script>']));
     }
 
     public function testIncludeReturnsMarkupForRenderedContent(): void

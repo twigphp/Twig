@@ -12,7 +12,6 @@
 namespace Twig\Extension;
 
 use Twig\NodeVisitor\SandboxNodeVisitor;
-use Twig\Sandbox\Sandbox;
 use Twig\Sandbox\SecurityChecker;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityPolicyInterface;
@@ -46,39 +45,9 @@ final class SandboxExtension extends AbstractExtension
         return $this->checker;
     }
 
-    /**
-     * @deprecated since Twig 3.29, use "Twig\Sandbox\Sandbox" to render untrusted templates instead
-     */
-    public function enableSandbox(): void
-    {
-        trigger_deprecation('twig/twig', '3.29', 'The "%s()" method is deprecated, use "%s" to render untrusted templates instead.', __METHOD__, Sandbox::class);
-
-        $this->checker->setSandboxed(true);
-    }
-
-    /**
-     * @deprecated since Twig 3.29, use "Twig\Sandbox\Sandbox" to render untrusted templates instead
-     */
-    public function disableSandbox(): void
-    {
-        trigger_deprecation('twig/twig', '3.29', 'The "%s()" method is deprecated, use "%s" to render untrusted templates instead.', __METHOD__, Sandbox::class);
-
-        $this->checker->setSandboxed(false);
-    }
-
     public function isSandboxed(?Source $source = null): bool
     {
         return $this->checker->isSandboxed($source);
-    }
-
-    /**
-     * @deprecated since Twig 3.29, use "Twig\Sandbox\Sandbox" to render untrusted templates instead
-     */
-    public function isSandboxedGlobally(): bool
-    {
-        trigger_deprecation('twig/twig', '3.29', 'The "%s()" method is deprecated, use "%s" to render untrusted templates instead.', __METHOD__, Sandbox::class);
-
-        return $this->checker->isSandboxedGlobally();
     }
 
     public function setSecurityPolicy(SecurityPolicyInterface $policy): void
@@ -91,16 +60,8 @@ final class SandboxExtension extends AbstractExtension
         return $this->checker->getSecurityPolicy();
     }
 
-    public function checkSecurity($tags, $filters, $functions, $tests = [], $source = null): void
+    public function checkSecurity($tags, $filters, $functions, $tests = [], ?Source $source = null): void
     {
-        // BC: previous signature was checkSecurity($tags, $filters, $functions, ?Source $source = null);
-        // detect a legacy call where the 4th positional argument was the Source.
-        if ($tests instanceof Source || (null === $tests && \func_num_args() < 5)) {
-            trigger_deprecation('twig/twig', '3.28', 'Passing a "Twig\Source" as the 4th argument of "%s()" is deprecated; pass an array of tests instead.', __METHOD__);
-            $source = $tests;
-            $tests = [];
-        }
-
         $this->checker->checkSecurity($tags, $filters, $functions, $tests, $source);
     }
 

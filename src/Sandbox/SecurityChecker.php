@@ -26,41 +26,17 @@ use Twig\Source;
  */
 final class SecurityChecker
 {
-    private bool $sandboxed = false;
-
     public function __construct(
         private SecurityPolicyInterface $policy,
-        private bool $sandboxedGlobally = false,
+        private bool $sandboxed = false,
     ) {
-    }
-
-    /**
-     * Toggles the sandbox mode for the legacy stateful mechanisms.
-     *
-     * To be removed in 4.0 together with the $sandboxed state: a sandbox
-     * environment is permanently sandboxed.
-     */
-    public function setSandboxed(bool $sandboxed): void
-    {
-        $this->sandboxed = $sandboxed;
     }
 
     public function isSandboxed(?Source $source = null): bool
     {
-        return $this->sandboxedGlobally || $this->sandboxed;
+        return $this->sandboxed;
     }
 
-    /**
-     * To be removed in 4.0: only the deprecated SandboxExtension::isSandboxedGlobally() uses it.
-     */
-    public function isSandboxedGlobally(): bool
-    {
-        return $this->sandboxedGlobally;
-    }
-
-    /**
-     * To be removed in 4.0: a sandbox policy is fixed at construction.
-     */
     public function setSecurityPolicy(SecurityPolicyInterface $policy): void
     {
         $this->policy = $policy;
@@ -71,10 +47,6 @@ final class SecurityChecker
         return $this->policy;
     }
 
-    /**
-     * $source can only be null when called through the deprecated
-     * SandboxExtension::checkSecurity() method; type it Source in 4.0.
-     */
     public function checkSecurity(array $tags, array $filters, array $functions, array $tests, ?Source $source): void
     {
         if (!$this->isSandboxed($source)) {

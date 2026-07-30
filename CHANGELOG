@@ -4,6 +4,8 @@
  * Add the `isAlwaysAllowedInSandbox()` method to `Twig\TwigCallableInterface` and `Twig\TokenParser\TokenParserInterface`
  * Always allow printing a `Markup` object in a sandbox, whatever the security policy is
  * Remove the `Twig\Sandbox\SourcePolicyInterface` interface and the corresponding argument of `Twig\Extension\SandboxExtension::__construct()`
+ * Remove the `sandboxed` argument of the `include` function, use the `render_sandboxed` function instead
+ * Remove `Twig\Extension\SandboxExtension::enableSandbox()`, `disableSandbox()`, and `isSandboxedGlobally()`, use `Twig\Sandbox\Sandbox` instead
  * Enforce the `parent`, `block`, and `attribute` functions against the sandbox `allowedFunctions` allow-list
  * Enforce tests against the sandbox `allowedTests` allow-list and add the `$allowedTests` argument to `Twig\Sandbox\SecurityPolicy::__construct()`
  * Add a fourth `array $tests` argument to `Twig\Sandbox\SecurityPolicyInterface::checkSecurity()`

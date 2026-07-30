@@ -15,11 +15,6 @@ authors can reach through explicit allow-lists.
 Rendering Untrusted Templates
 -----------------------------
 
-.. versionadded:: 3.29
-
-    The ``Twig\Sandbox\SandboxInterface`` interface and
-    ``Twig\Sandbox\Sandbox`` class were added in Twig 3.29.
-
 The recommended way to render untrusted templates is the
 ``Twig\Sandbox\Sandbox`` class, which implements ``SandboxInterface``. Type-hint
 ``SandboxInterface`` when injecting a sandbox into an application service. A
@@ -48,7 +43,6 @@ allowed to execute::
         allowedTags: ['if'],
         allowedFilters: ['upper', 'escape'],
     );
-    $policy->setStrict(true);
 
     $sandbox = new Sandbox($env, $policy);
 
@@ -66,10 +60,6 @@ Keeping the two environments separate also guarantees isolation in both
 directions: the sandbox cannot load or affect application templates, and
 application renders happening while a sandboxed render is in flight are not
 sandboxed.
-
-A ``SecurityPolicy`` passed to the sandbox must be strict (call
-``setStrict(true)``) so it behaves the same way in Twig 3.x and 4.0; the
-constructor throws a ``LogicException`` otherwise.
 
 Everything rendered through a ``Sandbox`` is sandboxed: ``render()``,
 ``display()``, and ``stream()`` render a template from the environment loader
@@ -102,44 +92,11 @@ To render an untrusted template from a trusted template, use the
     express. Only register extensions and callables that are safe to call
     with attacker-chosen arguments.
 
-Using the Sandbox Extension Directly
-------------------------------------
-
-.. deprecated:: 3.29
-
-    The ``SandboxExtension`` is internal as of Twig 3.29 and should not be
-    used directly anymore; the ``sandboxed`` argument of the ``include``
-    function and the ``enableSandbox()``, ``disableSandbox()``, and
-    ``isSandboxedGlobally()`` methods are deprecated. Use the ``Sandbox``
-    class instead.
-
-Before the ``Sandbox`` class existed, sandboxing was configured by registering
-the ``SandboxExtension`` on the environment via the ``addExtension()``
-method::
-
-    $twig->addExtension(new \Twig\Extension\SandboxExtension($policy));
-
-By default, the sandbox mode is then disabled and gets enabled when including
-untrusted template code by using the ``sandboxed`` option of the ``include``
-function:
-
-.. code-block:: twig
-
-    {{ include('user.html.twig', sandboxed: true) }}
-
-You can also sandbox all templates by passing ``true`` as the second argument
-of the extension constructor::
-
-    $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
-
 Configuring the Sandbox Policy
 ------------------------------
 
-The security policy is enforced the same way whether templates are rendered
-through a ``Sandbox`` or through the ``SandboxExtension`` directly.
-
 The sandbox security is managed by a policy instance, which must be passed to
-the ``SandboxExtension`` constructor.
+the ``Sandbox`` constructor.
 
 By default, Twig comes with one policy class: ``\Twig\Sandbox\SecurityPolicy``.
 This class allows you to allow-list some tags, filters, functions, and

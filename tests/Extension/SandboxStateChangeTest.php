@@ -11,8 +11,6 @@
 
 namespace Twig\Tests\Extension;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\SandboxExtension;
@@ -32,40 +30,8 @@ use Twig\Sandbox\SecurityPolicyInterface;
  * construction time, locking in the verdict computed against whatever sandbox
  * state was active when the template was first loaded.
  */
-#[Group('legacy'), IgnoreDeprecations]
 class SandboxStateChangeTest extends TestCase
 {
-    public function testEnableSandboxAfterFirstRender(): void
-    {
-        [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], new SecurityPolicy(allowedFilters: []), false);
-
-        $this->assertSame('FOO', $twig->render('t'));
-
-        $sandbox->enableSandbox();
-
-        $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "upper" is not allowed');
-        $twig->render('t');
-    }
-
-    public function testDisableSandboxAfterFirstRender(): void
-    {
-        // Use enableSandbox() to toggle a non-global sandbox so disableSandbox() actually has an effect.
-        [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], new SecurityPolicy(allowedFilters: []), false);
-        $sandbox->enableSandbox();
-
-        try {
-            $twig->render('t');
-            $this->fail('Expected SecurityNotAllowedFilterError on first render');
-        } catch (SecurityNotAllowedFilterError $e) {
-            $this->assertSame('upper', $e->getFilterName());
-        }
-
-        $sandbox->disableSandbox();
-
-        $this->assertSame('FOO', $twig->render('t'));
-    }
-
     public function testSetSecurityPolicyTightening(): void
     {
         $permissive = new SecurityPolicy(allowedFilters: ['upper', 'escape']);
@@ -105,43 +71,18 @@ class SandboxStateChangeTest extends TestCase
         ];
         $policy = new SecurityPolicy(
             allowedTags: ['extends', 'block'],
-            allowedFilters: [],
+            allowedFilters: ['upper'],
         );
-        [$twig, $sandbox] = $this->build($templates, $policy, false);
+        [$twig, $sandbox] = $this->build($templates, $policy, true);
 
-        // pre-warm with sandbox off: parent and child Template instances are now cached
+        // pre-warm with a permissive policy: parent and child Template instances are now cached
         $this->assertSame('childHI', $twig->render('child.twig'));
 
-        $sandbox->enableSandbox();
+        $sandbox->setSecurityPolicy(new SecurityPolicy(allowedTags: ['extends', 'block'], allowedFilters: []));
 
         $this->expectException(SecurityNotAllowedFilterError::class);
         $this->expectExceptionMessage('Filter "upper" is not allowed');
         $twig->render('child.twig');
-    }
-
-    public function testPreWarmedSharedViaSandboxedInclude(): void
-    {
-        $templates = [
-            'top' => '{{ include("user", sandboxed=true) }}',
-            'user' => '{% extends "shared" %}{% block c %}user{% endblock %}',
-            'shared' => '{% block c %}{% endblock %}{{ "ok"|upper }}',
-        ];
-        $policy = new SecurityPolicy(
-            allowedTags: ['extends', 'block'],
-            allowedFunctions: ['include'],
-            allowedFilters: ['escape'],
-        );
-        [$twig] = $this->build($templates, $policy, false);
-
-        // legitimate pre-warm of the trusted layout with sandbox off
-        $this->assertSame('OK', $twig->render('shared'));
-
-        // sandboxed include of user, which extends the pre-warmed shared:
-        // upper is not in the allow-list, so it must throw even though shared
-        // was loaded unsandboxed.
-        $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "upper" is not allowed');
-        $twig->render('top');
     }
 
     public function testMacroFromPreWarmedTemplate(): void
@@ -152,14 +93,14 @@ class SandboxStateChangeTest extends TestCase
         ];
         $policy = new SecurityPolicy(
             allowedTags: ['import', 'macro'],
-            allowedFilters: [],
+            allowedFilters: ['upper'],
         );
-        [$twig, $sandbox] = $this->build($templates, $policy, false);
+        [$twig, $sandbox] = $this->build($templates, $policy, true);
 
-        // pre-warm with sandbox off
+        // pre-warm with a permissive policy
         $this->assertSame('WORLD', $twig->render('caller.twig'));
 
-        $sandbox->enableSandbox();
+        $sandbox->setSecurityPolicy(new SecurityPolicy(allowedTags: ['import', 'macro'], allowedFilters: []));
 
         $this->expectException(SecurityNotAllowedFilterError::class);
         $this->expectExceptionMessage('Filter "upper" is not allowed');
@@ -173,15 +114,15 @@ class SandboxStateChangeTest extends TestCase
             'child.twig' => '{% extends "parent.twig" %}{% block c %}{{ parent() }}{% endblock %}',
         ];
         $policy = new SecurityPolicy(
-            allowedTags: ['extends', 'block'],
+            allowedTags: ['extends', 'block', 'for'],
             allowedFilters: [],
             allowedFunctions: ['parent', 'range'],
         );
-        [$twig, $sandbox] = $this->build($templates, $policy, false);
+        [$twig, $sandbox] = $this->build($templates, $policy, true);
 
         $this->assertSame('12', $twig->render('child.twig'));
 
-        $sandbox->enableSandbox();
+        $sandbox->setSecurityPolicy(new SecurityPolicy(allowedTags: ['extends', 'block'], allowedFunctions: ['parent', 'range']));
 
         $this->expectException(SecurityNotAllowedTagError::class);
         $this->expectExceptionMessage('Tag "for" is not allowed');
@@ -197,13 +138,13 @@ class SandboxStateChangeTest extends TestCase
         $policy = new SecurityPolicy(
             allowedTags: ['extends', 'block'],
             allowedFilters: ['first'],
-            allowedFunctions: ['parent'],
+            allowedFunctions: ['parent', 'range'],
         );
-        [$twig, $sandbox] = $this->build($templates, $policy, false);
+        [$twig, $sandbox] = $this->build($templates, $policy, true);
 
         $this->assertSame('1', $twig->render('child.twig'));
 
-        $sandbox->enableSandbox();
+        $sandbox->setSecurityPolicy(new SecurityPolicy(allowedTags: ['extends', 'block'], allowedFilters: ['first'], allowedFunctions: ['parent']));
 
         $this->expectException(SecurityNotAllowedFunctionError::class);
         $this->expectExceptionMessage('Function "range" is not allowed');
@@ -277,8 +218,8 @@ class SandboxStateChangeTest extends TestCase
     public function testDynamicParentFilterRejectedOnPreWarmedTemplate(): void
     {
         // Same bypass, but reached after the template has been pre-warmed
-        // outside the sandbox (which would have otherwise short-circuited
-        // ensureSecurityChecked() at yield() time).
+        // with a permissive policy (which would have otherwise
+        // short-circuited ensureSecurityChecked() at yield() time).
         $templates = [
             'grandparent.twig' => '{% macro foo() %}grand{% endmacro %}',
             'middle.twig' => '{% extends parent_name|evil %}',
@@ -286,9 +227,9 @@ class SandboxStateChangeTest extends TestCase
         ];
         $policy = new SecurityPolicy(
             allowedTags: ['extends', 'import', 'macro'],
-            allowedFilters: [],
+            allowedFilters: ['evil'],
         );
-        [$twig, $sandbox] = $this->build($templates, $policy, false);
+        [$twig, $sandbox] = $this->build($templates, $policy, true);
         $evilCalls = 0;
         $twig->addFilter(new \Twig\TwigFilter('evil', static function ($v) use (&$evilCalls) {
             ++$evilCalls;
@@ -299,7 +240,7 @@ class SandboxStateChangeTest extends TestCase
         $this->assertSame('grand', $twig->render('caller.twig', ['parent_name' => 'grandparent.twig']));
         $this->assertSame(1, $evilCalls);
 
-        $sandbox->enableSandbox();
+        $sandbox->setSecurityPolicy(new SecurityPolicy(allowedTags: ['extends', 'import', 'macro'], allowedFilters: []));
 
         try {
             $twig->render('caller.twig', ['parent_name' => 'grandparent.twig']);

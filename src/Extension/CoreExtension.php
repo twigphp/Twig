@@ -1424,55 +1424,30 @@ final class CoreExtension extends AbstractExtension
      * @param array                        $variables     The variables to pass to the template
      * @param bool                         $withContext
      * @param bool                         $ignoreMissing Whether to ignore missing templates or not
-     * @param bool                         $sandboxed     Whether to sandbox the template or not
      *
      * @return string|Markup
      *
      * @internal
      */
-    public static function include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
+    public static function include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false)
     {
-        if (\func_num_args() >= 7) {
-            if ($sandboxed) {
-                trigger_deprecation('twig/twig', '3.29', 'The "sandboxed" argument of the "include" function is deprecated, use the "render_sandboxed" function to render untrusted templates instead.');
-            } else {
-                trigger_deprecation('twig/twig', '3.29', 'The "sandboxed" argument of the "include" function is deprecated, remove the argument as "false" has no effect.');
-            }
-        }
-
-        $alreadySandboxed = false;
-        $sandbox = null;
         if ($withContext) {
             $variables = array_merge($context, $variables);
         }
 
-        if ($isSandboxed = $sandboxed && $env->hasExtension(SandboxExtension::class)) {
-            $sandbox = $env->getExtension(SandboxExtension::class)->getChecker();
-            if (!$alreadySandboxed = $sandbox->isSandboxed()) {
-                $sandbox->setSandboxed(true);
-            }
-        }
-
         try {
-            $loaded = null;
-            try {
-                $loaded = $env->resolveTemplate($template);
-            } catch (LoaderError $e) {
-                if (!$ignoreMissing) {
-                    throw $e;
-                }
-
-                return '';
+            $loaded = $env->resolveTemplate($template);
+        } catch (LoaderError $e) {
+            if (!$ignoreMissing) {
+                throw $e;
             }
 
-            $rendered = $loaded->render($variables);
-
-            return '' === $rendered ? '' : new Markup($rendered, $env->getCharset());
-        } finally {
-            if ($isSandboxed && !$alreadySandboxed) {
-                $sandbox->setSandboxed(false);
-            }
+            return '';
         }
+
+        $rendered = $loaded->render($variables);
+
+        return '' === $rendered ? '' : new Markup($rendered, $env->getCharset());
     }
 
     /**
