@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-04T16:54:45Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+,
+
+<details>
+<summary>Changed Files</summary>
+
+- ,.den) - method of your Twig\.mostly a refinement PR:dress prior review Threads (#3681282419419419 the checkSecurity source par, and #3681293434 on the include(sandboxed: false) deprecation message). Both threads are addressed and the new code is consistent.  On thread #3681282419: the `$source` parameter of `SecurityimCh:checkSecurity()` now drops its `= null` default (making it a required argument, still nullable for BC) and carries a docblock explaining the only null path is the deprecated `SandboxExtension::checkSecurity()`. On thread #3681293434: `CoreExtension::include()` now emits a distinct deprecation message telling authors to remove the argument when `sandboxed: false` is passed.  I verified the removal of `$e->setSourceContext($this->source)` from the compiled `CheckSecurityNode` is not a regression: `SecurityChecker::checkSecurity()` now sets the source context in its own `catch (SecurityError)` block before rethrowing, so the source is still attached before the compiled catch sets the template line.
+- changes changes
+- file
+
+</details>
