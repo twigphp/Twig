@@ -29,7 +29,10 @@ use Twig\Sandbox\SecurityPolicyInterface;
  * Without the fix, the compiled checkSecurity() method only ran once at
  * construction time, locking in the verdict computed against whatever sandbox
  * state was active when the template was first loaded.
+ *
+ * @group legacy
  */
+#[Group('legacy')]
 class SandboxStateChangeTest extends TestCase
 {
     public function testEnableSandboxAfterFirstRender(): void

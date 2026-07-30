@@ -1,7 +1,8 @@
 Twig Sandbox
 ============
 
-The ``sandbox`` extension can be used to evaluate untrusted code.
+The sandbox can be used to evaluate untrusted code, restricting what template
+authors can reach through explicit allow-lists.
 
 .. warning::
 
@@ -11,15 +12,131 @@ The ``sandbox`` extension can be used to evaluate untrusted code.
     boundary, and any behavior caused by rendering an untrusted template
     without the sandbox is not a security issue in Twig.
 
-Registering the Sandbox
------------------------
+Rendering Untrusted Templates
+-----------------------------
 
-Register the ``SandboxExtension`` extension via the ``addExtension()`` method::
+.. versionadded:: 3.29
+
+    The ``Twig\Sandbox\SandboxInterface`` interface and
+    ``Twig\Sandbox\Sandbox`` class were added in Twig 3.29.
+
+The recommended way to render untrusted templates is the
+``Twig\Sandbox\Sandbox`` class, which implements ``SandboxInterface``. Type-hint
+``SandboxInterface`` when injecting a sandbox into an application service. A
+``Sandbox`` takes ownership of an environment crafted specifically for it and
+renders everything through it in
+sandbox mode. Being in full control of that environment, you decide exactly
+what untrusted templates can reach: its loader defines which templates exist,
+the extensions, filters, functions, tests, and globals you register on it
+define which capabilities exist, and the security policy defines what is
+allowed to execute::
+
+    use Twig\Environment;
+    use Twig\Extra\Intl\IntlExtension;
+    use Twig\Loader\ArrayLoader;
+    use Twig\Sandbox\Sandbox;
+    use Twig\Sandbox\SecurityPolicy;
+
+    // craft an environment dedicated to untrusted templates
+    $env = new Environment(new ArrayLoader($untrustedTemplates), [
+        'cache' => '/path/to/sandbox/cache',
+    ]);
+    // register the capabilities untrusted templates may use
+    $env->addExtension(new IntlExtension());
+
+    $policy = new SecurityPolicy(
+        allowedTags: ['if'],
+        allowedFilters: ['upper', 'escape'],
+    );
+    $policy->setStrict(true);
+
+    $sandbox = new Sandbox($env, $policy);
+
+    // render a template known to the environment loader
+    echo $sandbox->render('newsletter.twig', ['name' => 'Fabien']);
+
+    // render an untrusted template held as a string
+    echo $sandbox->createTemplate($userTemplate)->render(['name' => 'Fabien']);
+
+The environment must be dedicated to the sandbox: build a fresh environment
+and pass it before its first use (the constructor throws a ``LogicException``
+otherwise). In particular, never pass your main application environment: all
+your application templates would suddenly be rendered in sandbox mode.
+Keeping the two environments separate also guarantees isolation in both
+directions: the sandbox cannot load or affect application templates, and
+application renders happening while a sandboxed render is in flight are not
+sandboxed.
+
+A ``SecurityPolicy`` passed to the sandbox must be strict (call
+``setStrict(true)``) so it behaves the same way in Twig 3.x and 4.0; the
+constructor throws a ``LogicException`` otherwise.
+
+Everything rendered through a ``Sandbox`` is sandboxed: ``render()``,
+``display()``, and ``stream()`` render a template from the environment loader
+by name; ``renderBlock()``, ``displayBlock()``, and ``streamBlock()`` render a
+single block of such a template; ``createTemplate()`` turns a string into a
+sandboxed template. Templates included by a sandboxed template are sandboxed
+as well.
+
+Data is passed through the render context (or registered as globals on the
+environment you crafted); the policy governs any method or property access on
+those values either way.
+
+Rendering From a Trusted Template
+---------------------------------
+
+To render an untrusted template from a trusted template, use the
+:doc:`render_sandboxed() function <functions/render_sandboxed>`.
+
+.. note::
+
+    When auto-escaping is enabled (the default), the ``escape`` filter is
+    applied to every printed expression, so it must be part of the filter
+    allow-list for sandboxed templates to render.
+
+.. caution::
+
+    PHP code invoked during a sandboxed render (a filter, function, or
+    extension you registered on the sandbox environment) runs with its full
+    PHP capabilities: the sandbox only restricts what the template source can
+    express. Only register extensions and callables that are safe to call
+    with attacker-chosen arguments.
+
+Using the Sandbox Extension Directly
+------------------------------------
+
+.. deprecated:: 3.29
+
+    The ``SandboxExtension`` is internal as of Twig 3.29 and should not be
+    used directly anymore; the ``sandboxed`` argument of the ``include``
+    function and the ``enableSandbox()``, ``disableSandbox()``, and
+    ``isSandboxedGlobally()`` methods are deprecated. Use the ``Sandbox``
+    class instead.
+
+Before the ``Sandbox`` class existed, sandboxing was configured by registering
+the ``SandboxExtension`` on the environment via the ``addExtension()``
+method::
 
     $twig->addExtension(new \Twig\Extension\SandboxExtension($policy));
 
+By default, the sandbox mode is then disabled and gets enabled when including
+untrusted template code by using the ``sandboxed`` option of the ``include``
+function:
+
+.. code-block:: twig
+
+    {{ include('user.html.twig', sandboxed: true) }}
+
+You can also sandbox all templates by passing ``true`` as the second argument
+of the extension constructor::
+
+    $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
+
 Configuring the Sandbox Policy
 ------------------------------
+
+The security policy is enforced the same way whether templates are rendered
+through a ``Sandbox`` or through the ``SandboxExtension`` directly.
 
 The sandbox security is managed by a policy instance, which must be passed to
 the ``SandboxExtension`` constructor.
@@ -195,22 +312,6 @@ The corresponding built-in tests (``defined``, ``divisible by``, ``empty``,
 ``sequence``, ``true``) are also always allowed, so they never need to be
 allow-listed. The ``constant`` test is the exception: it reaches into the PHP
 runtime, so it is not always allowed and must be allow-listed.
-
-Enabling the Sandbox
---------------------
-
-By default, the sandbox mode is disabled and should be enabled when including
-untrusted template code by using the ``sandboxed`` option of the ``include``
-function:
-
-.. code-block:: twig
-
-    {{ include('user.html.twig', sandboxed: true) }}
-
-You can sandbox all templates by passing ``true`` as the second argument of
-the extension constructor::
-
-    $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
 
 .. _allowed-operations-transitive:
 

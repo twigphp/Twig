@@ -89,11 +89,11 @@ class FilterTest extends NodeTestCase
 
         // needs sandbox
         $node = self::createFilter($environment, $string, 'bar_sandbox');
-        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_sandbox($this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->isSandboxed($this->source), "abc")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_sandbox($this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->getChecker()->isSandboxed($this->source), "abc")', $environment];
 
         // needs charset, environment, context, and sandbox
         $node = self::createFilter($environment, $string, 'bar_all');
-        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_all($this->env->getCharset(), $this->env, $context, $this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->isSandboxed($this->source), "abc")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_all($this->env->getCharset(), $this->env, $context, $this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->getChecker()->isSandboxed($this->source), "abc")', $environment];
 
         // needs environment
         $node = self::createFilter($environment, $string, 'bar');

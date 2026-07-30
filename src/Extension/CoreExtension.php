@@ -1432,6 +1432,14 @@ final class CoreExtension extends AbstractExtension
      */
     public static function include(Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false)
     {
+        if (\func_num_args() >= 7) {
+            if ($sandboxed) {
+                trigger_deprecation('twig/twig', '3.29', 'The "sandboxed" argument of the "include" function is deprecated, use the "render_sandboxed" function to render untrusted templates instead.');
+            } else {
+                trigger_deprecation('twig/twig', '3.29', 'The "sandboxed" argument of the "include" function is deprecated, remove the argument as "false" has no effect.');
+            }
+        }
+
         $alreadySandboxed = false;
         $sandbox = null;
         if ($withContext) {
@@ -1439,9 +1447,9 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ($isSandboxed = $sandboxed && $env->hasExtension(SandboxExtension::class)) {
-            $sandbox = $env->getExtension(SandboxExtension::class);
+            $sandbox = $env->getExtension(SandboxExtension::class)->getChecker();
             if (!$alreadySandboxed = $sandbox->isSandboxed()) {
-                $sandbox->enableSandbox();
+                $sandbox->setSandboxed(true);
             }
         }
 
@@ -1462,7 +1470,7 @@ final class CoreExtension extends AbstractExtension
             return '' === $rendered ? '' : new Markup($rendered, $env->getCharset());
         } finally {
             if ($isSandboxed && !$alreadySandboxed) {
-                $sandbox->disableSandbox();
+                $sandbox->setSandboxed(false);
             }
         }
     }
@@ -1623,7 +1631,7 @@ final class CoreExtension extends AbstractExtension
     {
         $propertyNotAllowedError = null;
         if ($sandboxed && $item instanceof \Stringable) {
-            $env->getExtension(SandboxExtension::class)->ensureToStringAllowed($item, $lineno, $source);
+            $env->getExtension(SandboxExtension::class)->getChecker()->ensureToStringAllowed($item, $lineno, $source);
         }
 
         // array
@@ -1632,7 +1640,7 @@ final class CoreExtension extends AbstractExtension
 
             if ($sandboxed && $object instanceof \ArrayAccess && !\in_array($object::class, self::ARRAY_LIKE_CLASSES, true)) {
                 try {
-                    $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $arrayItem, $lineno, $source);
+                    $env->getExtension(SandboxExtension::class)->getChecker()->checkPropertyAllowed($object, $arrayItem, $lineno, $source);
                 } catch (SecurityNotAllowedPropertyError $propertyNotAllowedError) {
                     // The methodCheck path expects $item to be a string; stringify it here
                     // to avoid PHP 8.1+ implicit float-to-int deprecations on downstream
@@ -1723,7 +1731,7 @@ final class CoreExtension extends AbstractExtension
         if (Template::METHOD_CALL !== $type) {
             if ($sandboxed) {
                 try {
-                    $env->getExtension(SandboxExtension::class)->checkPropertyAllowed($object, $item, $lineno, $source);
+                    $env->getExtension(SandboxExtension::class)->getChecker()->checkPropertyAllowed($object, $item, $lineno, $source);
                 } catch (SecurityNotAllowedPropertyError $propertyNotAllowedError) {
                     goto methodCheck;
                 }
@@ -1837,7 +1845,7 @@ final class CoreExtension extends AbstractExtension
 
         if ($sandboxed) {
             try {
-                $env->getExtension(SandboxExtension::class)->checkMethodAllowed($object, $method, $lineno, $source);
+                $env->getExtension(SandboxExtension::class)->getChecker()->checkMethodAllowed($object, $method, $lineno, $source);
             } catch (SecurityNotAllowedMethodError $e) {
                 if ($isDefinedTest) {
                     return false;
@@ -1900,7 +1908,7 @@ final class CoreExtension extends AbstractExtension
 
         if ($isSandboxed) {
             // $isSandboxed is computed against the call-site source, so check the policy directly to honor that decision.
-            $policy = $env->getExtension(SandboxExtension::class)->getSecurityPolicy();
+            $policy = $env->getExtension(SandboxExtension::class)->getChecker()->getSecurityPolicy();
             foreach ($array as $item) {
                 if (\is_object($item)) {
                     $policy->checkPropertyAllowed($item, (string) $name);

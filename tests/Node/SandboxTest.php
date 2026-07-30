@@ -44,13 +44,13 @@ class SandboxTest extends NodeTestCase
         $tests[] = [$node, <<<EOF
 // line 1
 if (!\$alreadySandboxed = \$this->sandbox->isSandboxed()) {
-    \$this->sandbox->enableSandbox();
+    \$this->sandbox->setSandboxed(true);
 }
 try {
     yield "foo";
 } finally {
     if (!\$alreadySandboxed) {
-        \$this->sandbox->disableSandbox();
+        \$this->sandbox->setSandboxed(false);
     }
 }
 EOF

@@ -330,7 +330,7 @@ Using Extensions
 Twig extensions are packages that add new features to Twig. Register an
 extension via the ``addExtension()`` method::
 
-    $twig->addExtension(new \Twig\Extension\SandboxExtension());
+    $twig->addExtension(new \Twig\Extension\DebugExtension());
 
 Twig comes bundled with the following extensions:
 

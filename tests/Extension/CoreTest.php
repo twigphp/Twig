@@ -353,6 +353,10 @@ class CoreTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
     public function testSandboxedInclude(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -368,6 +372,10 @@ class CoreTest extends TestCase
         $twig->render('index');
     }
 
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
     public function testSandboxedIncludeWithPreloadedTemplate(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -387,6 +395,10 @@ class CoreTest extends TestCase
         $twig->render('index');
     }
 
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
     public function testSandboxedIncludeResultStaysEscapedWhenAssigned(): void
     {
         $twig = new Environment(new ArrayLoader([

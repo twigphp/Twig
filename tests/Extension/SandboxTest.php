@@ -50,6 +50,13 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
+/**
+ * Covers the deprecated stateful sandbox mechanisms; new code should use
+ * \Twig\Sandbox\Sandbox, covered by \Twig\Tests\Sandbox\SandboxTest.
+ *
+ * @group legacy
+ */
+#[Group('legacy')]
 class SandboxTest extends TestCase
 {
     protected static $params;

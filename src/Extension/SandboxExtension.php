@@ -11,23 +11,26 @@
 
 namespace Twig\Extension;
 
-use Twig\Markup;
 use Twig\NodeVisitor\SandboxNodeVisitor;
+use Twig\Sandbox\Sandbox;
+use Twig\Sandbox\SecurityChecker;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
-use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityPolicyInterface;
 use Twig\Source;
 
+/**
+ * This extension is the wiring behind "Twig\Sandbox\Sandbox" and should not
+ * be used directly, use a "Sandbox" to render untrusted templates instead.
+ *
+ * @internal since Twig 3.29
+ */
 final class SandboxExtension extends AbstractExtension
 {
-    private bool $sandboxedGlobally;
-    private bool $sandboxed = false;
-    private SecurityPolicyInterface $policy;
+    private SecurityChecker $checker;
 
     public function __construct(SecurityPolicyInterface $policy, $sandboxed = false)
     {
-        $this->policy = $policy;
-        $this->sandboxedGlobally = $sandboxed;
+        $this->checker = new SecurityChecker($policy, (bool) $sandboxed);
     }
 
     public function getNodeVisitors(): array
@@ -35,69 +38,80 @@ final class SandboxExtension extends AbstractExtension
         return [new SandboxNodeVisitor()];
     }
 
-    public function enableSandbox(): void
+    /**
+     * @internal
+     */
+    public function getChecker(): SecurityChecker
     {
-        $this->sandboxed = true;
+        return $this->checker;
     }
 
+    /**
+     * @deprecated since Twig 3.29, use "Twig\Sandbox\Sandbox" to render untrusted templates instead
+     */
+    public function enableSandbox(): void
+    {
+        trigger_deprecation('twig/twig', '3.29', 'The "%s()" method is deprecated, use "%s" to render untrusted templates instead.', __METHOD__, Sandbox::class);
+
+        $this->checker->setSandboxed(true);
+    }
+
+    /**
+     * @deprecated since Twig 3.29, use "Twig\Sandbox\Sandbox" to render untrusted templates instead
+     */
     public function disableSandbox(): void
     {
-        $this->sandboxed = false;
+        trigger_deprecation('twig/twig', '3.29', 'The "%s()" method is deprecated, use "%s" to render untrusted templates instead.', __METHOD__, Sandbox::class);
+
+        $this->checker->setSandboxed(false);
     }
 
     public function isSandboxed(?Source $source = null): bool
     {
-        return $this->sandboxedGlobally || $this->sandboxed;
+        return $this->checker->isSandboxed($source);
     }
 
+    /**
+     * @deprecated since Twig 3.29, use "Twig\Sandbox\Sandbox" to render untrusted templates instead
+     */
     public function isSandboxedGlobally(): bool
     {
-        return $this->sandboxedGlobally;
+        trigger_deprecation('twig/twig', '3.29', 'The "%s()" method is deprecated, use "%s" to render untrusted templates instead.', __METHOD__, Sandbox::class);
+
+        return $this->checker->isSandboxedGlobally();
     }
 
     public function setSecurityPolicy(SecurityPolicyInterface $policy): void
     {
-        $this->policy = $policy;
+        $this->checker->setSecurityPolicy($policy);
     }
 
     public function getSecurityPolicy(): SecurityPolicyInterface
     {
-        return $this->policy;
+        return $this->checker->getSecurityPolicy();
     }
 
-    public function checkSecurity($tags, $filters, $functions, $tests = [], ?Source $source = null): void
+    public function checkSecurity($tags, $filters, $functions, $tests = [], $source = null): void
     {
-        if ($this->isSandboxed($source)) {
-            $this->policy->checkSecurity($tags, $filters, $functions, $tests);
+        // BC: previous signature was checkSecurity($tags, $filters, $functions, ?Source $source = null);
+        // detect a legacy call where the 4th positional argument was the Source.
+        if ($tests instanceof Source || (null === $tests && \func_num_args() < 5)) {
+            trigger_deprecation('twig/twig', '3.28', 'Passing a "Twig\Source" as the 4th argument of "%s()" is deprecated; pass an array of tests instead.', __METHOD__);
+            $source = $tests;
+            $tests = [];
         }
+
+        $this->checker->checkSecurity($tags, $filters, $functions, $tests, $source);
     }
 
     public function checkMethodAllowed($obj, $method, int $lineno = -1, ?Source $source = null): void
     {
-        if ($this->isSandboxed($source)) {
-            try {
-                $this->policy->checkMethodAllowed($obj, $method);
-            } catch (SecurityNotAllowedMethodError $e) {
-                $e->setSourceContext($source);
-                $e->setTemplateLine($lineno);
-
-                throw $e;
-            }
-        }
+        $this->checker->checkMethodAllowed($obj, $method, $lineno, $source);
     }
 
     public function checkPropertyAllowed($obj, $property, int $lineno = -1, ?Source $source = null): void
     {
-        if ($this->isSandboxed($source)) {
-            try {
-                $this->policy->checkPropertyAllowed($obj, $property);
-            } catch (SecurityNotAllowedPropertyError $e) {
-                $e->setSourceContext($source);
-                $e->setTemplateLine($lineno);
-
-                throw $e;
-            }
-        }
+        $this->checker->checkPropertyAllowed($obj, $property, $lineno, $source);
     }
 
     /**
@@ -105,7 +119,7 @@ final class SandboxExtension extends AbstractExtension
      */
     public function ensureToStringAllowed($obj, int $lineno = -1, ?Source $source = null)
     {
-        return $this->doEnsureToStringAllowed($obj, $lineno, $source, new \SplObjectStorage());
+        return $this->checker->ensureToStringAllowed($obj, $lineno, $source);
     }
 
     /**
@@ -117,94 +131,6 @@ final class SandboxExtension extends AbstractExtension
      */
     public function ensureSpreadAllowed(iterable $obj, int $lineno = -1, ?Source $source = null): array
     {
-        $seen = new \SplObjectStorage();
-        if ($obj instanceof \Traversable) {
-            $seen[$obj] = true;
-            $obj = iterator_to_array($obj);
-        }
-
-        $this->ensureToStringAllowedForArray($obj, $lineno, $source, $seen);
-
-        return $obj;
-    }
-
-    private function doEnsureToStringAllowed($obj, int $lineno, ?Source $source, \SplObjectStorage $seen)
-    {
-        if (\is_array($obj)) {
-            $this->ensureToStringAllowedForArray($obj, $lineno, $source, $seen);
-
-            return $obj;
-        }
-
-        if (!$this->isSandboxed($source)) {
-            return $obj;
-        }
-
-        // Markup carries content that Twig already considers safe, so its
-        // __toString() is always allowed, whatever the security policy is.
-        if ($obj instanceof \Stringable && !$obj instanceof Markup) {
-            try {
-                $this->policy->checkMethodAllowed($obj, '__toString');
-            } catch (SecurityNotAllowedMethodError $e) {
-                $e->setSourceContext($source);
-                $e->setTemplateLine($lineno);
-
-                throw $e;
-            }
-        }
-
-        // Elements yielded by a Traversable may be string-coerced downstream
-        // (e.g. by `join`/`replace`), bypassing the policy. Check them now.
-        if ($obj instanceof \Traversable) {
-            if (isset($seen[$obj])) {
-                return $obj;
-            }
-            $seen[$obj] = true;
-
-            // IteratorAggregate::getIterator() is idempotent, so we can walk
-            // the elements and return the original object: host code typed
-            // against a specific class (e.g. FormView) keeps working.
-            if ($obj instanceof \IteratorAggregate) {
-                foreach ($obj as $v) {
-                    $this->doEnsureToStringAllowed($v, $lineno, $source, $seen);
-                }
-
-                return $obj;
-            }
-
-            // Single-pass Iterator/Generator: materialise to validate.
-            $array = iterator_to_array($obj);
-            $this->ensureToStringAllowedForArray($array, $lineno, $source, $seen);
-
-            if (!$obj instanceof \Stringable) {
-                return $array;
-            }
-        }
-
-        return $obj;
-    }
-
-    private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, \SplObjectStorage $seen, array &$stack = []): void
-    {
-        foreach ($obj as $k => $v) {
-            if (!$v) {
-                continue;
-            }
-
-            if (!\is_array($v)) {
-                $this->doEnsureToStringAllowed($v, $lineno, $source, $seen);
-                continue;
-            }
-
-            if ($r = \ReflectionReference::fromArrayElement($obj, $k)) {
-                if (isset($stack[$r->getId()])) {
-                    continue;
-                }
-
-                $stack[$r->getId()] = true;
-            }
-
-            $this->ensureToStringAllowedForArray($v, $lineno, $source, $seen, $stack);
-        }
+        return $this->checker->ensureSpreadAllowed($obj, $lineno, $source);
     }
 }
