@@ -1,0 +1,11 @@
+--TEST--
+Testing a dynamic macro with "defined" using parentheses is forbidden
+--TEMPLATE--
+{% import _self as macros %}
+{% set name = 'hello' %}
+{{ macros.(name)() is defined ? 'OK' : 'KO' }}
+{% macro hello() %}{% endmacro %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Using parentheses when testing a macro with the "defined" test is not allowed; remove the parentheses after the macro name in "index.twig" at line 4.

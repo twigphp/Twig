@@ -12,6 +12,7 @@
  * Throw a `SyntaxError` when an `extends`, `use`, or `macro` tag is not at the root of a template
  * Throw a `SyntaxError` when a macro is defined more than once in a template
  * Throw a `SyntaxError` when calling a macro without parentheses
+ * Throw a `SyntaxError` when testing a macro with the `defined` test using parentheses
  * Remove support for case-insensitive macro references
  * Remove support for resolving macros through legacy `macro_`-prefixed references
  * Remove support for omitted, extra, and unknown macro arguments unless accepted by defaults or an explicit variadic argument

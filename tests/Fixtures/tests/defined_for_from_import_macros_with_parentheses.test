@@ -1,0 +1,10 @@
+--TEST--
+Testing a "from"-imported macro with "defined" using parentheses is forbidden
+--TEMPLATE--
+{% from _self import hello %}
+{{ hello() is defined ? 'OK' : 'KO' }}
+{% macro hello() %}{% endmacro %}
+--DATA--
+return []
+--EXCEPTION--
+Twig\Error\SyntaxError: Using parentheses when testing a macro with the "defined" test is not allowed; remove the parentheses after the macro name in "index.twig" at line 3.

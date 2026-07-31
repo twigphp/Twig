@@ -11,6 +11,7 @@
 
 namespace Twig\ExpressionParser\Infix;
 
+use Twig\Error\SyntaxError;
 use Twig\ExpressionParser\AbstractExpressionParser;
 use Twig\ExpressionParser\ExpressionParserDescriptionInterface;
 use Twig\ExpressionParser\InfixAssociativity;
@@ -52,7 +53,7 @@ class IsExpressionParser extends AbstractExpressionParser implements InfixExpres
             }
 
             if ($expr instanceof MacroReferenceExpression && $expr->hasCallParentheses()) {
-                trigger_deprecation('twig/twig', '3.29', 'Using parentheses when testing a macro with the "defined" test is deprecated and will throw a SyntaxError in Twig 4.0; remove the parentheses after the macro name in "%s" at line %d.', $stream->getSourceContext()->getName(), $expr->getTemplateLine());
+                throw new SyntaxError('Using parentheses when testing a macro with the "defined" test is not allowed; remove the parentheses after the macro name.', $expr->getTemplateLine(), $stream->getSourceContext());
             }
         }
 
