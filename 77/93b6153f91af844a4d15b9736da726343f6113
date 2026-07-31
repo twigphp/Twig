@@ -1,0 +1,36 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-30T20:15:48Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR reworks how Twig deprecates macro-call parenthesization around the `defined` test. Instead of computing the deprecation inline in `DotExpressionParser`/`FunctionExpressionParser` via stream lookahead, it records a `hasCallParentheses` flag on `MacroReferenceExpression` and emits the two deprecations from single sites: the "using parentheses with defined" warning in `IsExpressionParser`, and the "omitting parentheses when calling" warning in `CorrectnessNodeVisitor`. Docs, CHANGELOG, and fixtures are updated to reflect that omitting parentheses is now the preferred syntax for the `defined` test.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **parser logic** | |
+| `src/ExpressionParser/Infix/DotExpressionParser.php` | Removes inline deprecation heuristics; sets `hasCallParentheses` on the created `MacroReferenceExpression` based on whether the call used `METHOD_CALL` (parentheses). |
+| `src/ExpressionParser/Infix/FunctionExpressionParser.php` | Drops the inline stream lookahead/deprecation; marks the from-imported macro reference as having call parentheses (always true for `hello()` form). |
+| `src/ExpressionParser/Infix/IsExpressionParser.php` | Restructures the `defined` handling to mark a bare imported macro name as parenthesis-free and to emit the "using parentheses with defined" deprecation based on the flag. |
+| **node model** | |
+| `src/Node/Expression/MacroReferenceExpression.php` | Adds an internal `hasCallParentheses` flag (default true) with getter/setter. |
+| `src/NodeVisitor/CorrectnessNodeVisitor.php` | Adds a WeakMap-deduplicated visit that emits the "omitting parentheses when calling a macro" deprecation for macro references lacking parentheses outside a defined test. |
+| **docs** | |
+| `CHANGELOG` | Documents the new deprecation. |
+| `doc/deprecated.rst` | Describes the parentheses/defined deprecation change. |
+| `doc/tags/macro.rst` | Adds guidance on the preferred syntax. |
+| **tests** | |
+| `tests/Fixtures/macros/call_without_parentheses.legacy.test` | Adds a grouped-call case asserting the omitting-parentheses deprecation. |
+| `tests/Fixtures/tests/defined_for_macros.test` | Updates expectations for the reworked defined-test handling. |
+| `tests/Fixtures/tests/defined_for_macros_dynamic_name.test` | Adjusts dynamic-name defined-test expectations. |
+| `tests/Fixtures/tests/defined_for_macros_dynamic_name_with_parentheses.legacy.test` | New legacy fixture: parentheses with defined on dynamic names is now deprecated. |
+| `tests/Fixtures/tests/defined_for_macros_dynamic_name_without_parentheses.legacy.test` | Removed: omitting parentheses on dynamic names is no longer deprecated for defined. |
+| `tests/Fixtures/tests/defined_for_macros_with_parentheses.legacy.test` | New legacy fixture for parenthesized static-name defined tests, including a grouped case. |
+| `tests/Fixtures/tests/defined_for_macros_without_parentheses.legacy.test` | Removed: omitting parentheses on static names is no longer deprecated for defined. |
+| `tests/ParserTest.php` | Adds grouped-parentheses cases to the with/without parentheses providers. |
+
+</details>
