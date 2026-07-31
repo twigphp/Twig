@@ -47,8 +47,11 @@ final class FunctionExpressionParser extends AbstractExpressionParser implements
         if (null !== $alias = $parser->getImportedSymbol('function', $name)) {
             /** @var MacroVariable $var */
             $var = $alias['node']->getNode('var');
+            $arguments = $this->parseCallableArguments($parser, $line, false, true);
+            $node = new MacroReferenceExpression($var, $alias['name'], $arguments, $line);
+            $node->setHasCallParentheses(true);
 
-            return new MacroReferenceExpression($var, $alias['name'], $this->parseCallableArguments($parser, $line, false, true), $line);
+            return $node;
         }
 
         $args = $this->parseNamedArguments($parser, false);

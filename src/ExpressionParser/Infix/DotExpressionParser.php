@@ -72,13 +72,11 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
         }
 
         if ($isMacroTarget) {
-            if (Template::METHOD_CALL !== $type) {
-                throw new SyntaxError('Omitting parentheses when calling a macro is not allowed; add parentheses after the macro name.', $expr->getTemplateLine(), $stream->getSourceContext());
-            }
-
             $name = $attribute instanceof ConstantExpression ? (string) $attribute->getAttribute('value') : $attribute;
+            $node = new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $name, $arguments, $expr->getTemplateLine());
+            $node->setHasCallParentheses(Template::METHOD_CALL === $type);
 
-            return new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $name, $arguments, $expr->getTemplateLine());
+            return $node;
         }
 
         return new GetAttrExpression($expr, $attribute, $arguments, $type, $lineno, $nullSafe);

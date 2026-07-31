@@ -176,6 +176,15 @@ You can check if a macro is defined via the ``defined`` test:
         OK
     {% endif %}
 
+Note that the test applies to the macro itself, not to a call: don't use
+parentheses after the macro name when testing it.
+
+.. deprecated:: 3.29
+
+    Using parentheses when testing a macro with the ``defined`` test (e.g.
+    ``macros.hello() is defined``) is deprecated as of Twig 3.29; it will
+    throw a ``SyntaxError`` in Twig 4.0.
+
 Named Macro End-Tags
 --------------------
 

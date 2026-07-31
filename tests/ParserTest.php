@@ -21,6 +21,8 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -138,7 +140,9 @@ EOF, 'index')));
     {
         foreach (['_self', 'macros'] as $target) {
             yield $target.' static with parentheses' => [$target.'.foo()'];
+            yield $target.' grouped static with parentheses' => ['('.$target.'.foo())'];
             yield $target.' dynamic with parentheses' => [$target.'.(name)()'];
+            yield $target.' grouped dynamic with parentheses' => ['('.$target.'.(name)())'];
         }
     }
 
@@ -157,10 +161,44 @@ EOF, 'index')));
     {
         foreach (['_self', 'macros'] as $target) {
             yield $target.' static without parentheses' => [$target.'.foo'];
+            yield $target.' grouped static without parentheses' => ['('.$target.'.foo)'];
             yield $target.' dynamic without parentheses' => [$target.'.(name)'];
-            yield $target.' static defined test without parentheses' => [$target.'.foo is defined'];
-            yield $target.' dynamic defined test without parentheses' => [$target.'.(name) is defined'];
+            yield $target.' grouped dynamic without parentheses' => ['('.$target.'.(name))'];
         }
+    }
+
+    #[DataProvider('provideMacroTargetExpressionsWithoutParentheses')]
+    public function testMacroTargetsWithoutParenthesesAreAllowedInDefinedTest(string $expression): void
+    {
+        $twig = new Environment(new ArrayLoader());
+
+        $module = $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression is defined }}{{ $expression is not defined }}", 'index')));
+        $macroReferences = [];
+        $attributeExpressions = [];
+
+        $this->collectExpressions($module, $macroReferences, $attributeExpressions);
+
+        $this->assertCount(2, $macroReferences);
+        $this->assertSame([], $attributeExpressions);
+    }
+
+    #[DataProvider('provideMacroTargetExpressions')]
+    #[Group('legacy')]
+    #[IgnoreDeprecations]
+    public function testMacroTargetsWithParenthesesAreDeprecatedInDefinedTest(string $expression): void
+    {
+        $twig = new Environment(new ArrayLoader());
+
+        $this->expectUserDeprecationMessage('Since twig/twig 3.29: Using parentheses when testing a macro with the "defined" test is deprecated and will throw a SyntaxError in Twig 4.0; remove the parentheses after the macro name in "index" at line 1.');
+
+        $module = $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression is defined }}", 'index')));
+        $macroReferences = [];
+        $attributeExpressions = [];
+
+        $this->collectExpressions($module, $macroReferences, $attributeExpressions);
+
+        $this->assertCount(1, $macroReferences);
+        $this->assertSame([], $attributeExpressions);
     }
 
     public function testImplicitMacroArgumentDefaultValues(): void
