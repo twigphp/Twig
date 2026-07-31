@@ -16,6 +16,7 @@ use Twig\Error\SyntaxError;
 use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
 use Twig\Node\ConfigNode;
+use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
@@ -32,6 +33,7 @@ use Twig\Node\TextNode;
 final class CorrectnessNodeVisitor implements NodeVisitorInterface
 {
     private ?\WeakMap $rootNodes = null;
+    private ?\WeakMap $checkedMacroReferences = null;
     /**
      * Stack of the output-wrapping tags ("if", "for", "set", ...) currently open;
      * the top one is the nearest tag a "block" definition would be nested under.
@@ -57,6 +59,10 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
 
         if ($node instanceof ConfigNode) {
             $this->checkConfigTag($node);
+        }
+
+        if ($node instanceof MacroReferenceExpression) {
+            $this->checkMacroCallParentheses($node);
         }
 
         if ($node instanceof BlockReferenceNode) {
@@ -88,6 +94,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     {
         $this->resetState();
         $this->rootNodes = new \WeakMap();
+        $this->checkedMacroReferences = new \WeakMap();
         $this->hasParent = $node->hasNode('parent');
 
         foreach ($this->getRootNodes($node) as $n) {
@@ -101,6 +108,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     private function resetState(): void
     {
         $this->rootNodes = null;
+        $this->checkedMacroReferences = null;
         $this->tagStack = [];
         $this->hasParent = false;
         $this->blockDepth = 0;
@@ -149,6 +157,18 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
             --$this->macroDepth;
         } elseif ($node->getNodeTag() && !$node instanceof BlockReferenceNode) {
             array_pop($this->tagStack);
+        }
+    }
+
+    private function checkMacroCallParentheses(MacroReferenceExpression $node): void
+    {
+        if (isset($this->checkedMacroReferences[$node])) {
+            return;
+        }
+        $this->checkedMacroReferences[$node] = true;
+
+        if (false === $node->hasCallParentheses() && !$node->isDefinedTestEnabled()) {
+            trigger_deprecation('twig/twig', '3.29', 'Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "%s" at line %d.', $node->getSourceContext()->getName(), $node->getTemplateLine());
         }
     }
 

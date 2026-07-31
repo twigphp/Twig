@@ -47,7 +47,11 @@ final class FunctionExpressionParser extends AbstractExpressionParser implements
         // FromTokenParser, which maps the local alias to the macro name and the
         // template it comes from.
         if (null !== $alias = $parser->getImportedSymbol('function', $name)) {
-            return new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], $this->parseCallableArguments($parser, $line, false, true), $line);
+            $arguments = $this->parseCallableArguments($parser, $line, false, true);
+            $node = new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], $arguments, $line);
+            $node->setHasCallParentheses(true);
+
+            return $node;
         }
 
         $args = $this->parseNamedArguments($parser, false);

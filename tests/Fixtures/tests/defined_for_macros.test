@@ -9,28 +9,25 @@
 {% from _self import hello, bar %}
 
 {% block content %}
-    {{~ macros.hello() is defined ? 'OK' : 'KO' }}
+    {{~ macros.hello is defined ? 'OK' : 'KO' }}
 
-    {{~ macros_ext.lol() is defined ? 'OK' : 'KO' }}
+    {{~ macros_ext.lol is defined ? 'OK' : 'KO' }}
 
-    {{~ macros.foo() is not defined ? 'OK' : 'KO' }}
+    {{~ macros.foo is not defined ? 'OK' : 'KO' }}
 
-    {{~ macros_ext.hello() is not defined ? 'OK' : 'KO' }}
+    {{~ macros_ext.hello is not defined ? 'OK' : 'KO' }}
 
     {{~ hello is defined ? 'OK' : 'KO' }}
-    {{~ hello() is defined ? 'OK' : 'KO' }}
 
     {{~ lol is defined ? 'OK' : 'KO' }}
-    {{~ lol() is defined ? 'OK' : 'KO' }}
 
     {{~ baz is not defined ? 'OK' : 'KO' }}
-    {{~ baz() is not defined ? 'OK' : 'KO' }}
 
-    {{~ _self.hello() is defined ? 'OK' : 'KO' }}
+    {{~ _self.hello is defined ? 'OK' : 'KO' }}
 
-    {{~ _self.bar() is not defined ? 'OK' : 'KO' }}
+    {{~ _self.bar is not defined ? 'OK' : 'KO' }}
 
-    {{~ _self.lol() is defined ? 'OK' : 'KO' }}
+    {{~ _self.lol is defined ? 'OK' : 'KO' }}
 {% endblock %}
 
 {% macro hello(name) %}{% endmacro %}
@@ -51,12 +48,9 @@ OK
 OK
 
 OK
-OK
 
 OK
-OK
 
-OK
 OK
 
 OK

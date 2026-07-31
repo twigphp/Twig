@@ -14,7 +14,8 @@
  * Deprecate defining a macro more than once in the same template
  * Deprecate `TemplateVariable` and `AssignTemplateVariable`; use `MacroVariable` and `AssignMacroVariable` instead
  * Deprecate calling or testing a macro with a name whose case differs from its definition; macro names will be case-sensitive in 4.0
- * Deprecate omitting parentheses when calling or testing a macro; it will throw a `SyntaxError` in 4.0
+ * Deprecate omitting parentheses when calling a macro; it will throw a `SyntaxError` in 4.0
+ * Deprecate using parentheses when testing a macro with the `defined` test; it will throw a `SyntaxError` in 4.0
  * Deprecate calling a macro without a value for an argument that has no default value; the argument will be required in 4.0
  * Deprecate passing extra or unknown arguments to a macro that does not declare a variadic argument; it will throw in 4.0
  * Add support for declaring an explicit variadic macro argument (`{% macro foo(a, ...rest) %}`)
