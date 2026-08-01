@@ -512,15 +512,7 @@ abstract class Template
      */
     public function getMacroNamespace(): MacroNamespace
     {
-        return $this->macroNamespace ??= new MacroNamespace($this, $this->loadDeclaredMacros());
-    }
-
-    /**
-     * @return array<string, TwigMacro>
-     */
-    protected function loadDeclaredMacros(): array
-    {
-        return [];
+        return $this->macroNamespace ??= new MacroNamespace($this);
     }
 
     /**
