@@ -16,6 +16,7 @@ use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\Variable\AssignMacroVariable;
 use Twig\Source;
 
 /**
@@ -395,6 +396,49 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
     protected function compileMacros(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('macros'));
+
+        if (!\count($this->getNode('macros'))) {
+            return;
+        }
+
+        $imports = [];
+        $this->collectGlobalImports($this->getNode('body'), $imports);
+        if (!$imports) {
+            return;
+        }
+
+        $compiler
+            ->write("protected function loadMacroImports(): void\n", "{\n")
+            ->indent()
+            ->write("\$macros = \$this->macros;\n")
+            ->write("\$context = \$this->env->getGlobals();\n")
+        ;
+        foreach ($imports as $import) {
+            $compiler->subcompile($import);
+        }
+        $compiler
+            ->outdent()
+            ->write("}\n\n")
+        ;
+    }
+
+    /**
+     * @param ImportNode[] $imports
+     */
+    private function collectGlobalImports(Node $node, array &$imports): void
+    {
+        foreach ($node as $child) {
+            if ($child instanceof ImportNode) {
+                $var = $child->getNode('var');
+                if ($var instanceof AssignMacroVariable && $var->getAttribute('global')) {
+                    $imports[] = $child;
+                }
+
+                continue;
+            }
+
+            $this->collectGlobalImports($child, $imports);
+        }
     }
 
     protected function compileGetTemplateName(Compiler $compiler): void

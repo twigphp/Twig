@@ -1,0 +1,14 @@
+--TEST--
+"from" tag with a macro that calls a macro imported in another template
+--TEMPLATE--
+{% from "macros2.twig" import macro2 %}
+{{ macro2() }}
+--TEMPLATE(macros2.twig)--
+{% from "macros1.twig" import macro1 %}
+{% macro macro2() %}[{{ macro1() }}]{% endmacro %}
+--TEMPLATE(macros1.twig)--
+{% macro macro1() %}ok{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+[ok]

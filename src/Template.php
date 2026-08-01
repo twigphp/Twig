@@ -512,7 +512,12 @@ abstract class Template
      */
     public function getMacroNamespace(): MacroNamespace
     {
-        return $this->macroNamespace ??= new MacroNamespace($this, $this->loadDeclaredMacros());
+        if (null === $this->macroNamespace) {
+            $this->macroNamespace = new MacroNamespace($this, $this->loadDeclaredMacros());
+            $this->loadMacroImports();
+        }
+
+        return $this->macroNamespace;
     }
 
     /**
@@ -521,6 +526,15 @@ abstract class Template
     protected function loadDeclaredMacros(): array
     {
         return [];
+    }
+
+    /**
+     * Resolves the imports the declared macros rely on, so they work even when the template is not displayed.
+     *
+     * @internal
+     */
+    protected function loadMacroImports(): void
+    {
     }
 
     /**
