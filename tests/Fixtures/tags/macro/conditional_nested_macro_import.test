@@ -1,0 +1,14 @@
+--TEST--
+A conditional macro import is not initialized outside its control flow
+--TEMPLATE--
+{% import "macros.twig" as macros %}
+{{ macros.macro() }}
+--TEMPLATE(macros.twig)--
+{% if false %}
+    {% import "missing.twig" as unused %}
+{% endif %}
+{% macro macro() %}ok{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+ok

@@ -1,0 +1,14 @@
+--TEST--
+Nested macro imports cannot use the importing template's context
+--TEMPLATE--
+{% from "macros2.twig" import macro2 %}
+{{ macro2() }}
+--TEMPLATE(macros2.twig)--
+{% from macros_template import macro1 %}
+{% macro macro2() %}[{{ macro1() }}]{% endmacro %}
+--TEMPLATE(macros1.twig)--
+{% macro macro1() %}ok{% endmacro %}
+--DATA--
+return ['macros_template' => 'macros1.twig']
+--EXCEPTION--
+Twig\Error\RuntimeError: Variable "macros_template" does not exist in "macros2.twig" at line 2.

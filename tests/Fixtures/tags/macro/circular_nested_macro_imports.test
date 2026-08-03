@@ -1,0 +1,15 @@
+--TEST--
+Circular nested macro imports
+--TEMPLATE--
+{% import "macros1.twig" as macros %}
+{{ macros.macro1() }}
+--TEMPLATE(macros1.twig)--
+{% import "macros2.twig" as macros %}
+{% macro macro1() %}[{{ macros.macro2() }}]{% endmacro %}
+--TEMPLATE(macros2.twig)--
+{% import "macros1.twig" as macros %}
+{% macro macro2() %}ok{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+[ok]
