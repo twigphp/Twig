@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-08-01T16:52:22Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **Lazy macro import flag rename** | |
+| `src/Node/MacroImportsNode.php` | Renames the compiled lazy-loader guard check to check ```skipLazyMacroImports``; the lazy loader still collects and runs only top-level global ImportNodes. |
+| `src/Node/MacrosNode.php` | Declares the generated property as ``private bool $skipLazyMacroImports`` instead of ``$macroImportsLoaded`` when the macros have imports. |
+| `src/Node/SkipLazyMacroImportsNode.php` | Renamed from MacroImportsLoadedNode; now compiles ``$this->skipLazyMacroImports = true;`` and is injected at display_start. |
+| `src/Parser.php` | Swaps the use/import and constructs SkipLazyMacroImportsNode when the module's macros have imports. |
+
+</details>
