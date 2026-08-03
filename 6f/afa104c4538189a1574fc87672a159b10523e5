@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-08-03T15:46:22Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR appends a clarifying sentence to the duplicate-macro deprecation message in Twig's Parser, stating that the last definition is the one used in Twig 3, and updates the matching test fixture expectation.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **deprecation message** | |
+| `src/Parser.php` | Extends the `trigger_deprecation` message in `setMacro` to note that the last macro definition is used in Twig 3. |
+| `tests/Fixtures/macros/duplicate_definition.legacy.test` | Updates the expected `--DEPRECATION--` output to match the new message text. |
+
+</details>
