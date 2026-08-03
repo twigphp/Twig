@@ -36,6 +36,7 @@ use Twig\Node\Node;
 use Twig\Source;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TwigFunction;
 
 class ErrorTest extends TestCase
 {
@@ -45,6 +46,24 @@ class ErrorTest extends TestCase
         $error->setSourceContext(new Source('', new \SplFileInfo(__FILE__)));
 
         $this->assertStringContainsString('tests'.\DIRECTORY_SEPARATOR.'ErrorTest.php', $error->getMessage());
+    }
+
+    public function testTwigErrorIsEnrichedWithoutBeingWrapped(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => "foo\n{{ fail() }}"]), ['debug' => true, 'cache' => false]);
+        $error = null;
+        $twig->addFunction(new TwigFunction('fail', static function () use (&$error): never {
+            throw $error = new RuntimeError('Runtime error.');
+        }));
+
+        try {
+            $twig->render('index');
+            $this->fail();
+        } catch (RuntimeError $e) {
+            $this->assertSame($error, $e);
+            $this->assertSame(2, $e->getTemplateLine());
+            $this->assertSame('index', $e->getSourceContext()->getName());
+        }
     }
 
     public function testTwigExceptionGuessWithMissingVarAndArrayLoader(): void
