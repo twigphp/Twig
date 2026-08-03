@@ -20,6 +20,7 @@ use Twig\Sandbox\SecurityNotAllowedFunctionError;
 use Twig\Sandbox\SecurityNotAllowedTagError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Sandbox\SecurityPolicyInterface;
+use Twig\TwigFunction;
 
 /**
  * Regression tests for the sandbox filter/tag/function allow-list bypass that
@@ -200,7 +201,7 @@ class SandboxStateChangeTest extends TestCase
         );
         [$twig] = $this->build($templates, $policy, true);
         $evilCalls = 0;
-        $twig->addFunction(new \Twig\TwigFunction('evil', static function ($v) use (&$evilCalls) {
+        $twig->addFunction(new TwigFunction('evil', static function ($v) use (&$evilCalls) {
             ++$evilCalls;
 
             return $v;

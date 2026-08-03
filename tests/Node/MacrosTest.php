@@ -54,14 +54,16 @@ class MacrosTest extends NodeTestCase
 
     public static function provideTests(): iterable
     {
-        yield 'without macros, no method is compiled' => [new MacrosNode(), ''];
+        yield 'without macros, nothing is compiled' => [new MacrosNode(), ''];
 
         $macro = self::createMacro();
 
-        yield 'with macros, the registry method is compiled' => [new MacrosNode(['foo' => $macro]), <<<EOF
-protected function loadDeclaredMacros(): array
+        yield 'with macros, the namespace is compiled' => [new MacrosNode(['foo' => $macro]), <<<EOF
+private ?MacroNamespace \$macroNamespace = null;
+
+public function getMacroNamespace(): MacroNamespace
 {
-    return [
+    return \$this->macroNamespace ??= new MacroNamespace(\$this, [
         "foo" => new \\Twig\\TwigMacro("foo", function (\$foo = null): string|Markup {
             // line 1
             \$macros = \$this->macros;
@@ -76,7 +78,7 @@ protected function loadDeclaredMacros(): array
                 yield from [];
             })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
         }, ["foo" => true], false),
-    ];
+    ]);
 }
 EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
         ];

@@ -25,12 +25,14 @@ use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Variable\AssignMacroVariable;
+use Twig\Node\MacroImportsNode;
 use Twig\Node\MacroNode;
 use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
+use Twig\Node\SkipLazyMacroImportsNode;
 use Twig\Node\TextNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
@@ -135,11 +137,12 @@ class Parser
             $body = $this->cleanupBodyForChildTemplates($body);
         }
 
+        $body = new BodyNode([$body]);
         $node = new ModuleNode(
-            new BodyNode([$body]),
+            $body,
             $this->parent,
             $this->blocks ? new Nodes($this->blocks) : new EmptyNode(),
-            new MacrosNode($this->macros),
+            new MacrosNode($this->macros, new MacroImportsNode($body)),
             $this->traits ? new Nodes($this->traits) : new EmptyNode(),
             $this->embeddedTemplates ? new Nodes($this->embeddedTemplates) : new EmptyNode(),
             $stream->getSourceContext(),
@@ -151,6 +154,11 @@ class Parser
          * @var ModuleNode $node
          */
         $node = $traverser->traverse($node);
+
+        $macros = $node->getNode('macros');
+        if ($macros instanceof MacrosNode && $macros->hasImports()) {
+            $node->setNode('display_start', new Nodes([new SkipLazyMacroImportsNode(), $node->getNode('display_start')]));
+        }
 
         // restore previous stack so previous parse() call can resume working
         foreach (array_pop($this->stack) as $key => $val) {
