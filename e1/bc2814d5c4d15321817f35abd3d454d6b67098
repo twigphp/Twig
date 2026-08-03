@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-08-03T15:26:13Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR deduplicates the exception-handling logic in `Template::yield()` and `Template::yieldBlock()` by extracting the two separate `catch` blocks into a single private `handleException()` helper. The single `catch (\Throwable $e)` now delegates to that helper, which enriches Twig `Error` instances (source context + line guessing) or wraps non-Twig throwables in a `RuntimeError`. A test confirms that a thrown Twig `RuntimeError` is enriched in place rather than re-wrapped.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **error handling refactor** | |
+| `src/Template.php` | Replaced the duplicated `catch (Error)` / `catch (\Throwable)` blocks in `yield()` and `yieldBlock()` with a single catch that calls the new `handleException()` helper, which preserves the original enrich-vs-wrap behavior via an `instanceof Error` check. |
+| **tests** | |
+| `tests/ErrorTest.php` | Added a test verifying a Twig `RuntimeError` thrown from a function is enriched (source context and line set) and re-thrown as the same instance rather than wrapped. |
+
+</details>
