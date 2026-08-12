@@ -151,6 +151,11 @@ jobs:
               working-directory: extra/${{ matrix.extension }}
               run: "composer require --no-update 'symfony/translation-contracts:^1.1|^2.0'"
 
+            - name: "Prevent installing tempest/markdown, which requires PHP 8.5"
+              if: "matrix.extension == 'markdown-extra' && matrix.php-version != '8.5'"
+              working-directory: extra/${{ matrix.extension }}
+              run: composer remove --dev --no-update tempest/markdown
+
             - name: "Composer install ${{ matrix.extension }}"
               working-directory: extra/${{ matrix.extension }}
               run: composer install

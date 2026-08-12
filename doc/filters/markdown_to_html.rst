@@ -84,10 +84,11 @@ Using a Custom Converter
 The ``markdown_to_html`` filter delegates the conversion to a class implementing
 ``Twig\Extra\Markdown\MarkdownInterface``. Several implementations are provided:
 ``LeagueMarkdown`` (``league/commonmark``), ``MichelfMarkdown``
-(``michelf/php-markdown``), and ``ErusevMarkdown`` (``erusev/parsedown``). Each
-accepts a pre-configured converter in its constructor, so you can tune the
-underlying library or switch to another implementation (for instance
-``ParsedownExtra``, which extends ``Parsedown``)::
+(``michelf/php-markdown``), ``ErusevMarkdown`` (``erusev/parsedown``), and
+``TempestMarkdown`` (``tempest/markdown``). Each accepts a pre-configured
+converter in its constructor, so you can tune the underlying library or switch
+to another implementation (for instance ``ParsedownExtra``, which extends
+``Parsedown``)::
 
     use Twig\Extra\Markdown\ErusevMarkdown;
 
@@ -95,6 +96,14 @@ underlying library or switch to another implementation (for instance
     $parsedown->setSafeMode(true);
 
     $markdown = new ErusevMarkdown($parsedown);
+
+.. note::
+
+    ``tempest/markdown`` requires PHP 8.5 or later. It also differs from the
+    other libraries on two points worth knowing about: Setext headings
+    (``Title`` underlined with ``===``) are not supported, so use ATX headings
+    (``# Title``) instead, and any YAML front matter is parsed out of the
+    rendered HTML rather than being rendered.
 
 When using ``twig/extra-bundle``, register your converter as the
 ``twig.markdown.default`` service to make it the one used by the filter:
