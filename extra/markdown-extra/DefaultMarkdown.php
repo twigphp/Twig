@@ -13,6 +13,7 @@ namespace Twig\Extra\Markdown;
 
 use League\CommonMark\CommonMarkConverter;
 use Michelf\MarkdownExtra;
+use Tempest\Markdown\Markdown;
 
 class DefaultMarkdown implements MarkdownInterface
 {
@@ -26,6 +27,8 @@ class DefaultMarkdown implements MarkdownInterface
             $this->converter = new MichelfMarkdown();
         } elseif (class_exists(\Parsedown::class)) {
             $this->converter = new ErusevMarkdown();
+        } elseif (class_exists(Markdown::class)) {
+            $this->converter = new TempestMarkdown();
         } else {
             throw new \LogicException('You cannot use the "markdown_to_html" filter as no Markdown library is available; try running "composer require league/commonmark".');
         }

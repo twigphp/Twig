@@ -20,6 +20,7 @@ use Twig\Extra\Markdown\MarkdownExtension;
 use Twig\Extra\Markdown\MarkdownInterface;
 use Twig\Extra\Markdown\MarkdownRuntime;
 use Twig\Extra\Markdown\MichelfMarkdown;
+use Twig\Extra\Markdown\TempestMarkdown;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
@@ -30,12 +31,16 @@ class FunctionalTest extends TestCase
      */
     public function testMarkdown(string $template, string $expected): void
     {
-        foreach ([LeagueMarkdown::class, ErusevMarkdown::class, /* MichelfMarkdown::class, */ DefaultMarkdown::class] as $class) {
+        $classes = [LeagueMarkdown::class, ErusevMarkdown::class, /* MichelfMarkdown::class, */ DefaultMarkdown::class];
+        if (class_exists(\Tempest\Markdown\Markdown::class)) {
+            $classes[] = TempestMarkdown::class;
+        }
+
+        foreach ($classes as $class) {
             $twig = new Environment(new ArrayLoader([
                 'index' => $template,
                 'html' => <<<EOF
-Hello
-=====
+# Hello
 
 Great!
 EOF,
@@ -63,21 +68,19 @@ EOF,
         return [
             [<<<EOF
 {% apply markdown_to_html %}
-Hello
-=====
+# Hello
 
 Great!
 {% endapply %}
-EOF, "<h1>Hello</h1>\n+<p>Great!</p>"],
+EOF, "<h1[^>]*>Hello</h1>\n+<p>Great!\s*</p>"],
             [<<<EOF
 {% apply markdown_to_html %}
-    Hello
-    =====
+    # Hello
 
     Great!
 {% endapply %}
-EOF, "<h1>Hello</h1>\n+<p>Great!</p>"],
-            ["{{ include('html')|markdown_to_html }}", "<h1>Hello</h1>\n+<p>Great!</p>"],
+EOF, "<h1[^>]*>Hello</h1>\n+<p>Great!\s*</p>"],
+            ["{{ include('html')|markdown_to_html }}", "<h1[^>]*>Hello</h1>\n+<p>Great!\s*</p>"],
             [<<<EOF
 {% apply markdown_to_html %}
 
@@ -85,7 +88,7 @@ Paragraph 1
 
 Paragraph 2
 {% endapply %}
-EOF, "<p>Paragraph 1</p>\n+<p>Paragraph 2</p>"],
+EOF, "<p>Paragraph 1</p>\n+<p>Paragraph 2\s*</p>"],
         ];
     }
 
