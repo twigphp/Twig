@@ -1,0 +1,9 @@
+--TEST--
+"include_only" function ignores missing templates
+--TEMPLATE--
+{{ include_only(["foo.twig", "bar.twig"], ignore_missing = true) }}
+{{ include_only("foo.twig", ignore_missing = true) }}
+{{ include_only("foo.twig", ignore_missing = true, variables = {}) }}
+--DATA--
+return []
+--EXPECT--
