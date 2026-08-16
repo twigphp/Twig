@@ -346,23 +346,8 @@ abstract class Template
         try {
             $this->ensureSecurityChecked();
             yield from $this->doDisplay($context, $blocks);
-        } catch (Error $e) {
-            if (!$e->getSourceContext()) {
-                $e->setSourceContext($this->getSourceContext());
-            }
-
-            // this is mostly useful for \Twig\Error\LoaderError exceptions
-            // see \Twig\Error\LoaderError
-            if (-1 === $e->getTemplateLine()) {
-                $e->guess();
-            }
-
-            throw $e;
         } catch (\Throwable $e) {
-            $e = new RuntimeError(\sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
-            $e->guess();
-
-            throw $e;
+            $this->handleException($e);
         }
     }
 
@@ -393,23 +378,8 @@ abstract class Template
             try {
                 $template->ensureSecurityChecked();
                 yield from $template->$block($context, $blocks);
-            } catch (Error $e) {
-                if (!$e->getSourceContext()) {
-                    $e->setSourceContext($template->getSourceContext());
-                }
-
-                // this is mostly useful for \Twig\Error\LoaderError exceptions
-                // see \Twig\Error\LoaderError
-                if (-1 === $e->getTemplateLine()) {
-                    $e->guess();
-                }
-
-                throw $e;
             } catch (\Throwable $e) {
-                $e = new RuntimeError(\sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
-                $e->guess();
-
-                throw $e;
+                $template->handleException($e);
             }
         } elseif ($parent = $this->getParent($context)) {
             yield from $parent->unwrap()->yieldBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
@@ -458,5 +428,24 @@ abstract class Template
      */
     public function ensureSecurityChecked(): void
     {
+    }
+
+    private function handleException(\Throwable $error): never
+    {
+        if ($error instanceof Error) {
+            if (!$error->getSourceContext()) {
+                $error->setSourceContext($this->getSourceContext());
+            }
+            if (-1 === $error->getTemplateLine()) {
+                $error->guess();
+            }
+
+            throw $error;
+        }
+
+        $error = new RuntimeError(\sprintf('An exception has been thrown during the rendering of a template ("%s").', $error->getMessage()), -1, $this->getSourceContext(), $error);
+        $error->guess();
+
+        throw $error;
     }
 }

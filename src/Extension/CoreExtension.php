@@ -304,6 +304,7 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('random', self::random(...), ['needs_charset' => true]),
             new TwigFunction('date', $this->convertDate(...)),
             new TwigFunction('include', self::include(...), ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
+            new TwigFunction('include_only', self::includeOnly(...), ['needs_environment' => true, 'is_safe' => ['all']]),
             new TwigFunction('source', self::source(...), ['needs_environment' => true, 'is_safe' => ['all']]),
             new TwigFunction('enum_cases', self::enumCases(...), ['node_class' => EnumCasesFunction::class]),
             new TwigFunction('enum', self::enum(...), ['node_class' => EnumFunction::class]),
@@ -1448,6 +1449,22 @@ final class CoreExtension extends AbstractExtension
         $rendered = $loaded->render($variables);
 
         return '' === $rendered ? '' : new Markup($rendered, $env->getCharset());
+    }
+
+    /**
+     * Renders a template without giving it access to the current context.
+     *
+     * @param string|array<string|TemplateWrapper>|TemplateWrapper $template      The template to render or an array of templates to try consecutively
+     * @param array<string, mixed>                                 $variables     The variables to pass to the template
+     * @param bool                                                 $ignoreMissing Whether to ignore missing templates or not
+     *
+     * @return string|Markup
+     *
+     * @internal
+     */
+    public static function includeOnly(Environment $env, $template, array $variables = [], bool $ignoreMissing = false)
+    {
+        return self::include($env, [], $template, $variables, false, $ignoreMissing);
     }
 
     /**

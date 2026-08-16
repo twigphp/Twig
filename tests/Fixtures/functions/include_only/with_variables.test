@@ -1,0 +1,12 @@
+--TEST--
+"include_only" function accepts variables
+--TEMPLATE--
+{{ include_only("foo.twig", {'foo': 'bar'}) }}
+{{- include_only("foo.twig", vars) }}
+--TEMPLATE(foo.twig)--
+{{ foo }}
+--DATA--
+return ['vars' => ['foo' => 'bar']]
+--EXPECT--
+bar
+bar

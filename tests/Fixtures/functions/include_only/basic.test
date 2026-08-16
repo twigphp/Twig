@@ -1,0 +1,17 @@
+--TEST--
+"include_only" function
+--TEMPLATE--
+FOO
+{{ include_only("foo.twig") }}
+
+BAR
+--TEMPLATE(foo.twig)--
+FOOBAR
+--DATA--
+return []
+--EXPECT--
+FOO
+
+FOOBAR
+
+BAR

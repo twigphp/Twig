@@ -26,7 +26,7 @@ jobs:
 
         steps:
             - name: "Checkout code"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: "Install PHP with extensions"
               uses: shivammathur/setup-php@v2
@@ -72,7 +72,7 @@ jobs:
 
         steps:
             - name: "Checkout code"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: "Install PHP with extensions"
               uses: shivammathur/setup-php@v2
@@ -89,6 +89,11 @@ jobs:
               if: "matrix.extension == 'twig-extra-bundle'"
               working-directory: extra/${{ matrix.extension }}
               run: "composer require --no-update 'symfony/translation-contracts:^1.1|^2.0'"
+
+            - name: "Prevent installing tempest/markdown, which requires PHP 8.5"
+              if: "matrix.extension == 'markdown-extra' && matrix.php-version != '8.5'"
+              working-directory: extra/${{ matrix.extension }}
+              run: composer remove --dev --no-update tempest/markdown
 
             - name: "Composer install ${{ matrix.extension }}"
               working-directory: extra/${{ matrix.extension }}
@@ -116,7 +121,7 @@ jobs:
 
         steps:
             - name: "Checkout code"
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: "Install PHP with extensions"
               uses: shivammathur/setup-php@v2
