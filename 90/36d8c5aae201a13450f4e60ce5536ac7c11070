@@ -1,0 +1,272 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2024-11-04T09:00:05Z
+
+Maybe it would be good to also deprecate the `include` tag in 3.15.
+My only "concern" is about the `embed` tag that is kind of a glorified include node behind the scene.
+
+---------------------------------------------------------------------------
+
+by alexander-schranz at 2024-11-04T10:27:52Z
+
+@fabpot wanted to give some feedback. I really like the new include decision without context by default. Even I'm not a fan of renaming it `render`, but I understand from BC reasons for better transparency. I'm working the last two years where we only use `with_context = false` to make things more transparent what variables are accessed by components. Only case which was confusing is the `embed` tag which we use for things like `overlays`, `fieldsets`, ...
+
+Typically looks like this:
+
+```twig
+{# overlay.html.twig #}
+<dialog>
+   <h3>
+       {% block title %}{% endblock %}
+   </h3>
+
+   <div>
+       {% block content %}{% endblock %}
+   </div>
+</dialog>
+```
+
+```twig
+{# using.html.twig #}
+{% set title = 'Title' %}
+{% set content = 'Content' %}
+
+{% embed "overlay.html.twig" only %}
+    {% block title %}
+        {{ title }} {# not available #}
+    {% endblock %}
+    {% block content %}
+        <div>
+            {{ content }} {# not available #}
+        </div>
+    {% endblock %}
+{% endembed %}
+```
+
+To get this work I need give the variables also to overlay.html.twig which may have similar variables defined.
+
+```twig
+{# using.html.twig #}
+{% set title = 'Title' %}
+{% set content = 'Content' %}
+
+{% embed "overlay.html.twig" {title: title, content: content} only %}
+    {% block title %}
+        {{ title }}
+    {% endblock %}
+    {% block content %}
+        <div>
+            {{ content }}
+        </div>
+    {% endblock %}
+{% endembed %}
+```
+
+So it is a little bit strange. That I need to give the variables to the `overlay.html.twig` to access them in my own twig file. Better would be only have to give variables in it which are really used by the overlay.html.twig and block of the embed still has access to the one by its own file:
+
+```twig
+{# using.html.twig #}
+{% set title = 'Title' %}
+{% set content = 'Content' %}
+
+{% embed "overlay.html.twig" only %}
+    {% block title %}
+        {{ title }} {# still have access to this one #}
+    {% endblock %}
+    {% block content %}
+        <div>
+            {{ content }} {# still have access to this one #}
+        </div>
+    {% endblock %}
+{% endembed %}
+```
+
+Another solution would be maybe make it transparency on the embed block e.g.:
+
+```twig
+{# using.html.twig #}
+{% set title = 'Title' %}
+{% set content = 'Content' %}
+
+{% embed "overlay.html.twig" only %}
+    {% embedblock title with { title: title} %}
+        {{ title }}
+    {% endembedblock %}
+
+    {% embedblock content with { content: content} %}
+        <div>
+            {{ content }}
+        </div>
+    {% endembedblock %}
+{% endembed %}
+```
+
+I hope I did make it understandable where the issues with the embed tag is.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-11-04T10:43:09Z
+
+`render` will conflict with the [Symfony function](https://symfony.com/doc/current/reference/twig_reference.html#render) rendering the response of a sub-request, which exists since 10 years in the Symfony ecosystem ? https://github.com/symfony/symfony/blob/v7.1.6/src/Symfony/Bridge/Twig/Extension/HttpKernelExtension.php#L28
+
+---------------------------------------------------------------------------
+
+by stof at 2024-11-04T10:48:35Z
+
+@alexander-schranz the `{% embed %}` tag actually defines an anonymous template extending the provided template name, with the body of the tag being the body of that anonymous template. The blocks inside it are normal blocks, but they are blocks defined by the anonymous template.
+
+Your proposed syntax will not work, because blocks are rendered with the context from the caller (i.e. the parent template). they have no way to access the context of the place including the template.
+
+---------------------------------------------------------------------------
+
+by alexander-schranz at 2024-11-04T11:05:05Z
+
+@stof I understand that it is a technical challange to change that behaviour. Just wanted to give feedback that from end user perspective it just felled for me strange how it behaves currently.
+
+---------------------------------------------------------------------------
+
+by willrowe at 2024-11-04T13:43:44Z
+
+@fabpot is the new terminology `variables` as opposed to `context` or does `context` have a different meaning?
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-11-07T13:35:09Z
+
+> `render` will conflict with the [Symfony function](https://symfony.com/doc/current/reference/twig_reference.html#render)
+
+Maybe we can keep the include function, but add a flag to opt into the new behavior and deprecate not doing so.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-11-07T14:24:41Z
+
+@derrabus technically, that flag already exists in `include`: `with_context = false`
+
+---------------------------------------------------------------------------
+
+by derrabus at 2024-11-07T14:27:43Z
+
+> @derrabus technically, that flag already exists in `include`: `with_context = false`
+
+Perfect. So let's deprecate not setting that flag to `false` explicitly?
+
+---------------------------------------------------------------------------
+
+by willrowe at 2024-11-07T14:27:59Z
+
+I thought @derrabus meant a flag in the configuration, like how you can ignore missing variables.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-11-07T14:46:59Z
+
+@willrowe setting a flag in the Environment is bad, as it expects that the migration is done all at once, including all third-party templates. Switching the behavior of a function through a global state basically makes it unreliable for third-party code.
+
+---------------------------------------------------------------------------
+
+by alexander-schranz at 2024-11-08T11:10:47Z
+
+@lyrixx think twig-cs-fixer from @VincentLanglet can do that work. Upgrading include without_context = false to the new render I think should be possible without lot of effort.
+
+Problem is more about include where the context was not false which was default at current state. Sure quickfix could be give everywhere `_context` in it with a fixer rule but think that is something I would not suggest todo, but is sure the "easiest" upgrade way.
+
+Example: https://github.com/VincentLanglet/Twig-CS-Fixer/pull/327
+
+For such rule it is sure easier if `include` get renamed to `render`. As the upgrade is then easier. Else a "fixer" is not able to skip already converted includes only if we would make still possible to set `with_context = false` to mark already converted includes,  even true throws an error.
+
+---------------------------------------------------------------------------
+
+by romainmenke at 2025-05-04T20:09:43Z
+
+Please don't make this change.
+Neither including or excluding context is purely good or bad.
+Many teams use either approach successfully.
+Many teams run into issues with either approach.
+
+It is typical for such cases to only hear about the teams that run into issues with the current default while not hearing anything from the other side as they are happy with how things are.
+
+Switching the default (or worse, deprecating the current default) will not actually do any good for the wider community.
+
+Is there any dedicated issue where this was discussed in detail?
+
+------
+
+From a business perspective this change alone would be devastating for us.
+We have thousands of twig templates we actively maintain.
+
+We can't rewrite all of these so that each variable is passed explicitly.
+There also isn't any tool that can automate this refactor.
+
+Please do not just make such massively breaking changes.
+Including other templates is the core of any templating system. Changing this aspect is unthinkable imho.
+
+-------
+
+I think a more prudent approach could be to add new functionality without deprecating the old behavior.
+
+Let users pick the behavior that best suites their context/project.
+
+------
+
+Needing to add `_context` to each and every template include also seems horrible to me.
+The entire feature of always having the context available in included templates is that you don't need to do that. :)
+
+Why place extra burden on template authors?
+Why make the easy cases harder?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-06-04T19:57:51Z
+
+Rebased, deprection is gone, function renamed to `include_only` (why? similar to `{% include "foo.twig" only %}`).
+
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-08-03T15:47:46Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This PR adds an `include_only` Twig function that renders a template without exposing the caller's context. The implementation is a thin wrapper around the existing `include` function (passing an empty context with `with_context: false`), registered in `CoreExtension`, and is accompanied by new documentation, an index entry, a CHANGELOG entry, and fixture tests.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **core function** | |
+| `src/Extension/CoreExtension.php` | Registers the `include_only` function and adds the `includeOnly` static method that delegates to `include` with an empty context and `withContext=false`. |
+| **documentation** | |
+| `doc/functions/include_only.rst` | New documentation page for `include_only`, covering return value, variable passing, template loading, and `ignore_missing` behavior. |
+| `doc/functions/include.rst` | Trims duplicated content and adds a tip recommending `include_only`, pointing to the new page for shared loading/return-value behavior. |
+| `doc/functions/index.rst` | Adds `include_only` to the functions index. |
+| `CHANGELOG` | Adds a changelog entry announcing the `include_only` function. |
+| **tests** | |
+| `tests/Fixtures/functions/include_only/assignment_autoescaping.test` | Verifies the result is Markup and not re-escaped when assigned and printed. |
+| `tests/Fixtures/functions/include_only/basic.test` | Basic rendering of an included template. |
+| `tests/Fixtures/functions/include_only/ignore_missing.test` | Verifies missing templates are ignored with `ignore_missing`. |
+| `tests/Fixtures/functions/include_only/no_context.test` | Verifies the included template does not receive the current context. |
+| `tests/Fixtures/functions/include_only/with_variables.test` | Verifies explicitly passed variables are available. |
+
+</details>
+
+---------------------------------------------------------------------------
+
+by stof at 2026-08-03T15:58:46Z
+
+The PR title should be updated to reflect the new state.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-08-03T20:24:40Z
+
+> The PR title should be updated to reflect the new state.
+
+Updated the title and took your comments into account.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-08-04T06:00:37Z
+
+Added an additional commit that might be controversial where I make include_only the prefered function and include redirects to it for most of the docs.
