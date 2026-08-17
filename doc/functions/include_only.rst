@@ -1,10 +1,6 @@
 ``include_only``
 ================
 
-.. versionadded:: 3.29
-
-    The ``include_only`` function was added in Twig 3.29.
-
 The ``include_only`` function returns the rendered content of a template
 without giving it access to the current context:
 
