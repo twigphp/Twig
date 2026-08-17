@@ -91,9 +91,7 @@ EOF, "<p>Paragraph 1</p>\n+<p>Paragraph 2\s*</p>"],
         ];
     }
 
-    /**
-     * @dataProvider getIndentationTests
-     */
+    #[DataProvider('getIndentationTests')]
     public function testStripsCommonIndentation(string $body, string $expected): void
     {
         $runtime = new MarkdownRuntime(new class implements MarkdownInterface {
