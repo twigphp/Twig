@@ -349,6 +349,19 @@ TWIG, 'index')));
         $this->assertNull($body->getNode('4')->getDocumentation());
     }
 
+    public function testEmptyCommentIsNotLexedAsDocumentation(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['autoescape' => false]);
+        $module = $twig->parse($twig->tokenize(new Source(<<<'TWIG'
+{##}{{ answer }}
+{% block a %}x{##}{% endblock %}{% block b %}y{% endblock %}
+TWIG, 'index')));
+        $body = $module->getNode('body')->getNode('0');
+
+        $this->assertInstanceOf(PrintNode::class, $body->getNode('0'));
+        $this->assertNull($body->getNode('0')->getDocumentation());
+    }
+
     public function testInlineDocumentationBeforeATagNameIsIgnored(): void
     {
         $twig = new Environment(new ArrayLoader(), ['autoescape' => false]);
@@ -440,7 +453,7 @@ TWIG, 'index')));
     {
         $twig = new Environment(new ArrayLoader());
 
-        $this->expectDeprecation('Since twig/twig 3.29: Defining the macro "input" more than once in "index" is deprecated and will throw a SyntaxError in Twig 4.0 (first definition at line 1, second at line 1).');
+        $this->expectDeprecation('Since twig/twig 3.29: Defining the macro "input" more than once in "index" is deprecated and will throw a SyntaxError in Twig 4.0 (first definition at line 1, second at line 1). The last definition is used in Twig 3.');
 
         $module = $twig->parse($twig->tokenize(new Source('{## First #}{% macro input() %}{% endmacro %}{## Second #}{% macro input() %}{% endmacro %}', 'index')));
 
