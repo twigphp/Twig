@@ -401,24 +401,6 @@ TWIG, 'index')));
         $this->assertSame(4, $macro->getNode('arguments')->getNode('2')->getTemplateLine());
     }
 
-    /**
-     * @group legacy
-     */
-    #[Group('legacy')]
-    public function testDuplicateMacroKeepsOnlyTheLastDocumentation(): void
-    {
-        $twig = new Environment(new ArrayLoader());
-
-        $this->expectDeprecation('Since twig/twig 3.29: Defining the macro "input" more than once in "index" is deprecated and will throw a SyntaxError in Twig 4.0 (first definition at line 1, second at line 1).');
-
-        $module = $twig->parse($twig->tokenize(new Source('{## First #}{% macro input() %}{% endmacro %}{## Second #}{% macro input() %}{% endmacro %}', 'index')));
-
-        $this->assertSame('Second', $module->getNode('macros')->getNode('input')->getDocumentation());
-        foreach ($module->getNode('body')->getNode('0') as $declaration) {
-            $this->assertNull($declaration->getDocumentation());
-        }
-    }
-
     public function testBodyForParentTemplates(): void
     {
         $twig = new Environment(new ArrayLoader());

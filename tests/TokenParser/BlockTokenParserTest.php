@@ -24,14 +24,12 @@ use Twig\Source;
 
 class BlockTokenParserTest extends TestCase
 {
-    /** @dataProvider provideDocumentedBlocks */
     #[DataProvider('provideDocumentedBlocks')]
     public function testDocumentation(string $template, ?string $expected): void
     {
         $this->assertSame($expected, $this->parseBlock($template)->getDocumentation());
     }
 
-    /** @dataProvider provideDocumentationWhitespaceControl */
     #[DataProvider('provideDocumentationWhitespaceControl')]
     public function testDocumentationWhitespaceControl(string $template, string $expectedOutput): void
     {
@@ -113,9 +111,6 @@ class BlockTokenParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideDocumentationBoundaries
-     */
     #[DataProvider('provideDocumentationBoundaries')]
     public function testDocumentationDoesNotCrossSpecialConstructs(string $template): void
     {

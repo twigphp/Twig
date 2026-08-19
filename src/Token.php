@@ -96,7 +96,6 @@ final class Token
         return $this->documentation;
     }
 
-
     public function getValue()
     {
         return $this->value;
