@@ -1,0 +1,83 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-25T14:37:24Z
+
+Will it works for `{% props %}` tag from UX TwigComponent?
+
+Also, I forgot to close https://github.com/twigphp/Twig/issues/4768, but it was already resolved with our `@prop` and `@block` annotations (which are also properly highlighted in PHPStorm, thanks to the Symfony plugin).
+
+Since my initial issue is closed, do we really need this new feature here?
+
+It would requires UX to change again, and the Symfony PHPStorm plugin should be modified as well.
+
+---------------------------------------------------------------------------
+
+by upsun-dispatch[bot] at 2026-07-25T14:40:20Z
+
+<!-- dispatch-summary -->
+**📋 PR Summary**
+
+This incremental change refines the documentation-comment feature: `DocumentationNodeVisitor` now tracks macro declarations per module so that when a macro is defined more than once only the last declaration's documentation is promoted onto the compiled `MacroNode` (and stale declarations are cleared), and its priority is lowered to -512 so it runs before the optimizer. `Parser::cleanupBodyForChildTemplates` now moves documentation from `BlockReferenceNode`s onto the registered block body before they are dropped in child templates, guarding against unregistered block references. New tests cover child-template preservation, duplicate macros, node-visitor access, and the unregistered-block edge case. I verified the duplicate-macro and child-template flows against the merged code and found the logic consistent with the tests. The former process-global static `WeakMap` state in `NodeDocumentation` has been removed in favor of stateless `set`/`move`/`prepend` helpers.
+
+<details>
+<summary>Changes</summary>
+
+| Layer / File(s) | Summary |
+|---|---|
+| **documentation attachment** | |
+| `src/NodeVisitor/DocumentationNodeVisitor.php` | Adds a per-module stack of macro declarations so duplicate macros keep only the last documentation, clears superseded/mismatched declarations, and lowers the visitor priority to -512 so it runs before optimizations. |
+| `src/Parser.php` | Preserves documentation on block references in child templates by moving it onto the registered block body before the reference is removed; guards with isset so unregistered block references no longer error, and simplifies set() call to drop the redundant end token. |
+| **tests** | |
+| `tests/ParserTest.php` | Adds tests for unregistered block references, ignored inline tag documentation, node-visitor documentation access, and duplicate-macro documentation handling, plus supporting helper classes. |
+| `tests/TokenParser/BlockTokenParserTest.php` | Adds a test asserting block documentation is preserved in child templates. |
+| `tests/Node/NodeTest.php` | Tightens the documentation string assertion from assertEquals to assertSame. |
+
+</details>
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-07-25T15:26:17Z
+
+> Will it works for `{% props %}` tag from UX TwigComponent?
+>
+> Also, I forgot to close #4768, but it was already resolved with our `@prop` and `@block` annotations (which are also properly highlighted in PHPStorm, thanks to the Symfony plugin).
+>
+> Since my initial issue is closed, do we really need this new feature here?
+>
+> It would requires UX to change again, and the Symfony PHPStorm plugin should be modified as well.
+
+This is generic, so it should work just fine.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-25T15:39:31Z
+
+Cool, thanks!
+
+When merged/released, I will work on UX & Symfony PHPStorm plugin to re-align things with this PR.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-25T18:28:58Z
+
+Opened https://github.com/Haehnchen/idea-php-symfony2-plugin/pull/2836, UX PR will follows when this one get merged/released.
+
+---------------------------------------------------------------------------
+
+by stof at 2026-07-28T08:41:52Z
+
+@fabpot is it expected that this PR contains commits from https://github.com/twigphp/Twig/pull/4851 ?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-07-30T12:01:36Z
+
+> @fabpot is it expected that this PR contains commits from #4851 ?
+
+Yes, it was needed, but I've just rebased now that the PR has been merged, it's going to make reviewing easier.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-19T06:04:56Z
+
+Let's merge it? :D
