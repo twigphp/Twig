@@ -95,6 +95,10 @@ class Lexer
             return;
         }
 
+        // when the comment closing tag starts with "#" (as "#}" does), the empty comment ("{##}")
+        // starts like a documentation comment ("{##"); make sure it keeps lexing as a comment
+        $emptyCommentLookahead = str_starts_with($this->options['tag_comment'][1], '#') ? '(?!'.preg_quote(substr($this->options['tag_comment'][1], 1), '#').')' : '';
+
         // when PHP 7.3 is the min version, we will be able to remove the '#' part in preg_quote as it's part of the default
         $this->regexes = [
             // }}
@@ -187,7 +191,7 @@ class Lexer
                     '|'.
                     preg_quote($this->options['tag_block'][0], '#'). // {%
                     '|'.
-                    preg_quote($this->options['tag_comment'][0].'#', '#'). // {##
+                    preg_quote($this->options['tag_comment'][0].'#', '#').$emptyCommentLookahead. // {## (but not the empty comment {##})
                     '|'.
                     preg_quote($this->options['tag_comment'][0], '#'). // {#
                 ')('.
