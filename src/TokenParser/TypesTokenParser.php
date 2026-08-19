@@ -13,6 +13,8 @@ namespace Twig\TokenParser;
 
 use Twig\Error\SyntaxError;
 use Twig\Node\Node;
+use Twig\Node\NodeDocumentation;
+use Twig\Node\TypeNode;
 use Twig\Node\TypesNode;
 use Twig\Token;
 use Twig\TokenStream;
@@ -31,14 +33,19 @@ final class TypesTokenParser extends AbstractTokenParser
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
-        $types = $this->parseSimpleMappingExpression($stream);
+        [$types, $nodes] = $this->parseSimpleMappingExpression($stream);
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new TypesNode($types, $token->getLine());
+        $node = new TypesNode($types, $token->getLine());
+        foreach ($nodes as $name => $type) {
+            $node->setNode($name, $type);
+        }
+
+        return $node;
     }
 
     /**
-     * @return array<string, array{type: string, optional: bool}>
+     * @return array{array<string, array{type: string, optional: bool}>, array<string, TypeNode>}
      *
      * @throws SyntaxError
      */
@@ -46,6 +53,7 @@ final class TypesTokenParser extends AbstractTokenParser
     {
         $enclosed = null !== $stream->nextIf(Token::PUNCTUATION_TYPE, '{');
         $types = [];
+        $nodes = [];
         $first = true;
         while (!($stream->test(Token::PUNCTUATION_TYPE, '}') || $stream->test(Token::BLOCK_END_TYPE))) {
             if (!$first) {
@@ -73,13 +81,16 @@ final class TypesTokenParser extends AbstractTokenParser
                 'type' => $valueToken->getValue(),
                 'optional' => $isOptional,
             ];
+            $node = new TypeNode($nameToken->getValue(), $valueToken->getValue(), $isOptional, $nameToken->getLine());
+            NodeDocumentation::add($node, $nameToken);
+            $nodes[$nameToken->getValue()] = $node;
         }
 
         if ($enclosed) {
             $stream->expect(Token::PUNCTUATION_TYPE, '}', 'An opened mapping is not properly closed');
         }
 
-        return $types;
+        return [$types, $nodes];
     }
 
     public function getTag(): string

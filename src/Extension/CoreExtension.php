@@ -88,6 +88,7 @@ use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\NodeVisitor\CorrectnessNodeVisitor;
+use Twig\NodeVisitor\DocumentationNodeVisitor;
 use Twig\Parser;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
@@ -333,6 +334,7 @@ final class CoreExtension extends AbstractExtension
     public function getNodeVisitors(): array
     {
         return [
+            new DocumentationNodeVisitor(),
             new CorrectnessNodeVisitor(),
         ];
     }

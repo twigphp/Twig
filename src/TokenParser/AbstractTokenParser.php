@@ -13,6 +13,7 @@ namespace Twig\TokenParser;
 
 use Twig\Lexer;
 use Twig\Node\Expression\Variable\AssignContextVariable;
+use Twig\Node\NodeDocumentation;
 use Twig\Node\Nodes;
 use Twig\Parser;
 use Twig\Token;
@@ -54,7 +55,9 @@ abstract class AbstractTokenParser implements TokenParserInterface
             } else {
                 $stream->expect(Token::NAME_TYPE, null, 'Only variables can be assigned to');
             }
-            $targets[] = new AssignContextVariable($token->getValue(), $token->getLine());
+            $target = new AssignContextVariable($token->getValue(), $token->getLine());
+            NodeDocumentation::add($target, $token);
+            $targets[] = $target;
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 break;

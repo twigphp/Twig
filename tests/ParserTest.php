@@ -26,13 +26,22 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\BlockNode;
+use Twig\Node\BlockReferenceNode;
+use Twig\Node\DoNode;
 use Twig\Node\EmptyNode;
+use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
+use Twig\Node\ForNode;
+use Twig\Node\IfNode;
 use Twig\Node\MacroDeclarationNode;
+use Twig\Node\MacroNode;
 use Twig\Node\Node;
+use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
+use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Parser;
 use Twig\Source;
 use Twig\Token;
@@ -273,6 +282,143 @@ EOF, 'index')));
         $this->assertInstanceOf(EmptyNode::class, $body);
     }
 
+    public function testCleanupBodyAcceptsAnUnregisteredBlockReference(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $twig->addTokenParser(new UnregisteredBlockReferenceTokenParser());
+
+        $node = $twig->parse($twig->tokenize(new Source('{% unregistered_block_reference %}', 'index')));
+
+        $this->assertInstanceOf(EmptyNode::class, $node->getNode('body')->getNode('0'));
+    }
+
+    public function testDocumentationIsAttachedToNodes(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['autoescape' => false]);
+        $module = $twig->parse($twig->tokenize(new Source(<<<'TWIG'
+{## Printed expression #}
+{{ answer }}
+{## Conditional tag #}
+{% if enabled %}Enabled{% endif %}
+{## Do tag #}
+{% do max() %}
+{## Text node #}
+Text
+TWIG, 'index')));
+        $body = $module->getNode('body')->getNode('0');
+
+        $this->assertInstanceOf(PrintNode::class, $body->getNode('0'));
+        $this->assertSame('Printed expression', $body->getNode('0')->getDocumentation());
+        $this->assertNull($body->getNode('0')->getNode('expr')->getDocumentation());
+        $this->assertInstanceOf(IfNode::class, $body->getNode('2'));
+        $this->assertSame('Conditional tag', $body->getNode('2')->getDocumentation());
+        $this->assertInstanceOf(DoNode::class, $body->getNode('3'));
+        $this->assertSame('Do tag', $body->getNode('3')->getDocumentation());
+        $this->assertInstanceOf(TextNode::class, $body->getNode('4'));
+        $this->assertNull($body->getNode('4')->getDocumentation());
+    }
+
+    public function testInlineDocumentationBeforeATagNameIsIgnored(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['autoescape' => false]);
+        $module = $twig->parse($twig->tokenize(new Source("{% ## Not tag documentation\ndo max() %}", 'index')));
+
+        $this->assertNull($module->getNode('body')->getNode('0')->getDocumentation());
+    }
+
+    public function testDocumentationIsAvailableToNodeVisitors(): void
+    {
+        $visitor = new DocumentationReadingNodeVisitor();
+        $twig = new Environment(new ArrayLoader());
+        $twig->addNodeVisitor($visitor);
+
+        $twig->parse($twig->tokenize(new Source('{## Block documentation #}{% block content %}{% endblock %}{## Macro documentation #}{% macro input() %}{% endmacro %}', 'index')));
+
+        $this->assertSame([
+            BlockNode::class => 'Block documentation',
+            MacroNode::class => 'Macro documentation',
+        ], $visitor->documentation);
+    }
+
+    public function testDocumentationIsRemovedFromUnsupportedOptimizedNodes(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['autoescape' => false]);
+        $module = $twig->parse($twig->tokenize(new Source(<<<'TWIG'
+{## Text node #}
+{{ 'Hello' }}
+{## Block reference #}
+{{ block('content') }}
+{% block content %}Content{% endblock %}
+TWIG, 'index')));
+        $body = $module->getNode('body')->getNode('0');
+
+        $this->assertInstanceOf(TextNode::class, $body->getNode('0'));
+        $this->assertNull($body->getNode('0')->getDocumentation());
+        $this->assertInstanceOf(BlockReferenceExpression::class, $body->getNode('2'));
+        $this->assertNull($body->getNode('2')->getDocumentation());
+    }
+
+    public function testDocumentationIsAttachedToAssignmentTargets(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['autoescape' => false, 'optimizations' => 0]);
+        $module = $twig->parse($twig->tokenize(new Source(<<<'TWIG'
+{% set ## First name
+    first_name, ## Last name
+    last_name = user.first_name, user.last_name
+%}
+{% for ## Product identifier
+    product_id, ## Product
+    product in products
+%}{% endfor %}
+TWIG, 'index')));
+        $body = $module->getNode('body')->getNode('0');
+
+        $this->assertSame('First name', $body->getNode('0')->getNode('names')->getNode('0')->getDocumentation());
+        $this->assertSame('Last name', $body->getNode('0')->getNode('names')->getNode('1')->getDocumentation());
+
+        $for = $body->getNode('1');
+        $this->assertInstanceOf(ForNode::class, $for);
+        $this->assertSame('Product identifier', $for->getNode('key_target')->getDocumentation());
+        $this->assertSame('Product', $for->getNode('value_target')->getDocumentation());
+    }
+
+    public function testDocumentationIsAttachedToMacroNode(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $module = $twig->parse($twig->tokenize(new Source("{## Input macro #}\n{% macro input() %}{% endmacro %}", 'index')));
+
+        $this->assertSame('Input macro', $module->getNode('macros')->getNode('input')->getDocumentation());
+
+        $module = $twig->parse($twig->tokenize(new Source("{## Input macro #}\n{% macro input(## Name argument\nname, ## Value argument\nvalue) %}{% endmacro %}", 'index')));
+        $declaration = $module->getNode('body')->getNode('0');
+        $macro = $module->getNode('macros')->getNode('input');
+
+        $this->assertNull($declaration->getDocumentation());
+        $this->assertSame('Input macro', $macro->getDocumentation());
+        $this->assertSame('Name argument', $macro->getNode('arguments')->getNode('0')->getDocumentation());
+        $this->assertSame(3, $macro->getNode('arguments')->getNode('0')->getTemplateLine());
+        $this->assertSame('Value argument', $macro->getNode('arguments')->getNode('2')->getDocumentation());
+        $this->assertSame(4, $macro->getNode('arguments')->getNode('2')->getTemplateLine());
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testDuplicateMacroKeepsOnlyTheLastDocumentation(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+
+        $this->expectDeprecation('Since twig/twig 3.29: Defining the macro "input" more than once in "index" is deprecated and will throw a SyntaxError in Twig 4.0 (first definition at line 1, second at line 1).');
+
+        $module = $twig->parse($twig->tokenize(new Source('{## First #}{% macro input() %}{% endmacro %}{## Second #}{% macro input() %}{% endmacro %}', 'index')));
+
+        $this->assertSame('Second', $module->getNode('macros')->getNode('input')->getDocumentation());
+        foreach ($module->getNode('body')->getNode('0') as $declaration) {
+            $this->assertNull($declaration->getDocumentation());
+        }
+    }
+
     public function testBodyForParentTemplates(): void
     {
         $twig = new Environment(new ArrayLoader());
@@ -328,6 +474,30 @@ EOF, 'index')));
     }
 }
 
+class DocumentationReadingNodeVisitor implements NodeVisitorInterface
+{
+    public array $documentation = [];
+
+    public function enterNode(Node $node, Environment $env): Node
+    {
+        if (($node instanceof BlockNode || $node instanceof MacroNode) && null !== $documentation = $node->getDocumentation()) {
+            $this->documentation[$node::class] = $documentation;
+        }
+
+        return $node;
+    }
+
+    public function leaveNode(Node $node, Environment $env): ?Node
+    {
+        return $node;
+    }
+
+    public function getPriority(): int
+    {
+        return 0;
+    }
+}
+
 class TestTokenParser extends AbstractTokenParser
 {
     public function parse(Token $token): Node
@@ -349,6 +519,22 @@ class TestTokenParser extends AbstractTokenParser
     public function getTag(): string
     {
         return 'test';
+    }
+}
+
+class UnregisteredBlockReferenceTokenParser extends AbstractTokenParser
+{
+    public function parse(Token $token): Node
+    {
+        $this->parser->setParent(new ConstantExpression('base', $token->getLine()), false);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+
+        return new BlockReferenceNode('missing', $token->getLine());
+    }
+
+    public function getTag(): string
+    {
+        return 'unregistered_block_reference';
     }
 }
 

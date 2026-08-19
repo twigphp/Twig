@@ -29,7 +29,21 @@ class TypesTokenParserTest extends TestCase
 
         $typesNode = $parser->parse($stream)->getNode('body')->getNode(0);
 
-        self::assertEquals($expected, $typesNode->getAttribute('mapping'));
+        self::assertSame($expected, $typesNode->getAttribute('mapping'));
+    }
+
+    public function testDocumentationIsAttachedToTypeNodes(): void
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+        $stream = $env->tokenize(new Source("{% types {\n## The foo variable\nfoo: 'foo',\n## The bar variable\nbar?: 'bar',\n} %}", ''));
+        $parser = new Parser($env);
+
+        $typesNode = $parser->parse($stream)->getNode('body')->getNode('0');
+
+        self::assertSame('The foo variable', $typesNode->getNode('foo')->getDocumentation());
+        self::assertSame(3, $typesNode->getNode('foo')->getTemplateLine());
+        self::assertSame('The bar variable', $typesNode->getNode('bar')->getDocumentation());
+        self::assertSame(5, $typesNode->getNode('bar')->getTemplateLine());
     }
 
     public static function getMappingTests(): array
@@ -81,6 +95,34 @@ class TypesTokenParserTest extends TestCase
                 [
                     'foo' => ['type' => 'foo', 'optional' => false],
                     'bar' => ['type' => 'bar', 'optional' => false],
+                ],
+            ],
+
+            // documentation comments before types
+            [
+                "{% types {\n## The foo variable\n## Used by the header\nfoo: \"bar\"\n} %}",
+                [
+                    'foo' => [
+                        'type' => 'bar',
+                        'optional' => false,
+                    ],
+                ],
+            ],
+
+            // inline documentation comments
+            [
+                "{% types {\n## The foo variable\nfoo: \"foo\",\n## The bar variable\nbar?: \"bar\",\n} %}",
+                [
+                    'foo' => ['type' => 'foo', 'optional' => false],
+                    'bar' => ['type' => 'bar', 'optional' => true],
+                ],
+            ],
+
+            // regular comments
+            [
+                "{% types {\n# Not documentation\nfoo: \"bar\",\n} %}",
+                [
+                    'foo' => ['type' => 'bar', 'optional' => false],
                 ],
             ],
         ];

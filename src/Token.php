@@ -39,6 +39,7 @@ final class Token
         private $value,
         private int $lineno,
         private ?int $offset = null,
+        private ?string $documentation = null,
     ) {
     }
 
@@ -89,6 +90,12 @@ final class Token
     {
         return $this->offset;
     }
+
+    public function getDocumentation(): ?string
+    {
+        return $this->documentation;
+    }
+
 
     public function getValue()
     {

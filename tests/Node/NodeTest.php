@@ -71,6 +71,17 @@ Twig\Tests\Node\NodeForTest
 EOF, (string) $node);
     }
 
+    public function testToStringWithDocumentation(): void
+    {
+        $node = new NodeForTest();
+        $node->setDocumentation("First line\nSecond line");
+
+        $this->assertSame(<<<'EOF'
+Twig\Tests\Node\NodeForTest
+  documentation: First line\nSecond line
+EOF, (string) $node);
+    }
+
     public function testAttributeDeprecationIgnore(): void
     {
         $node = new NodeForTest([], ['foo' => false]);

@@ -30,6 +30,7 @@ use Twig\Node\MacroNode;
 use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\NodeDocumentation;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Node\SkipLazyMacroImportsNode;
@@ -204,11 +205,13 @@ class Parser
                     $token = $this->stream->next();
                     $expr = $this->parseExpression();
                     $this->stream->expect(Token::VAR_END_TYPE);
-                    $rv[] = new PrintNode($expr, $token->getLine());
+                    $node = new PrintNode($expr, $token->getLine());
+                    NodeDocumentation::add($node, $token);
+                    $rv[] = $node;
                     break;
 
                 case $this->stream->getCurrent()->test(Token::BLOCK_START_TYPE):
-                    $this->stream->next();
+                    $startToken = $this->stream->next();
                     $token = $this->getCurrentToken();
 
                     if (!$token->test(Token::NAME_TYPE)) {
@@ -248,8 +251,8 @@ class Parser
                     $subparser->setParser($this);
                     $node = $subparser->parse($token);
                     $node->setNodeTag($subparser->getTag());
+                    NodeDocumentation::add($node, $startToken);
                     $rv[] = $node;
-
                     break;
 
                 default:
@@ -503,13 +506,25 @@ class Parser
 
     private function cleanupBodyForChildTemplates(Node $body): Node
     {
-        if ($body instanceof BlockReferenceNode || ($body instanceof TextNode && $body->isBlank())) {
+        if ($body instanceof BlockReferenceNode) {
+            $name = $body->getAttribute('name');
+            if (isset($this->blocks[$name])) {
+                NodeDocumentation::move($body, $this->blocks[$name]->getNode('0'));
+            }
+
+            return new EmptyNode();
+        }
+        if ($body instanceof TextNode && $body->isBlank()) {
             return new EmptyNode();
         }
 
         foreach ($body as $k => $node) {
             if ($node instanceof BlockReferenceNode) {
                 // as it has a parent, the block reference won't be used
+                $name = $node->getAttribute('name');
+                if (isset($this->blocks[$name])) {
+                    NodeDocumentation::move($node, $this->blocks[$name]->getNode('0'));
+                }
                 $body->removeNode($k);
             } elseif ($node instanceof TextNode && $node->isBlank()) {
                 // remove nodes considered as "empty"
