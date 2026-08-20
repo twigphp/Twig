@@ -318,6 +318,19 @@ TWIG, 'index')));
         $this->assertNull($body->getNode('4')->getDocumentation());
     }
 
+    public function testEmptyCommentIsNotLexedAsDocumentation(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['autoescape' => false]);
+        $module = $twig->parse($twig->tokenize(new Source(<<<'TWIG'
+{##}{{ answer }}
+{% block a %}x{##}{% endblock %}{% block b %}y{% endblock %}
+TWIG, 'index')));
+        $body = $module->getNode('body')->getNode('0');
+
+        $this->assertInstanceOf(PrintNode::class, $body->getNode('0'));
+        $this->assertNull($body->getNode('0')->getDocumentation());
+    }
+
     public function testInlineDocumentationBeforeATagNameIsIgnored(): void
     {
         $twig = new Environment(new ArrayLoader(), ['autoescape' => false]);
