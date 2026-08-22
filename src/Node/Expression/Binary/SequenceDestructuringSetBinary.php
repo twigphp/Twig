@@ -57,7 +57,15 @@ class SequenceDestructuringSetBinary extends AbstractBinary
                 $compiler->raw('$context[')->repr($name)->raw(']');
             }
         }
-        $compiler->raw('] = array_pad(')->subcompile($this->getNode('right'))->raw(', ')->repr(\count($this->variables))->raw(', null)');
+        $compiler->raw('] = array_pad((');
+        $var = '$'.$compiler->getVarName();
+        $compiler
+            ->raw($var.' = ')
+            ->subcompile($this->getNode('right'))
+            ->raw(') instanceof \Traversable ? iterator_to_array('.$var.') : '.$var)
+            ->raw(', ')
+            ->repr(\count($this->variables))
+            ->raw(', null)');
     }
 
     public function operator(Compiler $compiler): Compiler

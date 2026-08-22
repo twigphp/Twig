@@ -22,6 +22,9 @@ Twig supports the "=" operator (assignment)
 {% do {first_name, last_name} = user_map %}{{ first_name }} {{ last_name }}
 {% do {name} = user_obj %}{{ name }}
 
+# Array destructuring from a Traversable
+{% do [p, q] = pair_traversable %}{{ p }} {{ q }}
+
 # Object destructuring with renaming
 {% do {name: userName, email: userEmail} = user %}{{ userName }} {{ userEmail }}
 {% do {first_name: first, last_name: last} = user_map %}{{ first }} {{ last }}
@@ -34,7 +37,8 @@ return [
     'user_obj' => new class {
         public function getName() { return 'Fabien'; }
     },
-    'null_obj' => null
+    'null_obj' => null,
+    'pair_traversable' => new ArrayIterator(['Fabien', 'Potencier']),
 ]
 --EXPECT--
 4
@@ -53,6 +57,9 @@ one two null
 Fabien fabien@example.com
 Fabien Potencier
 Fabien
+
+# Array destructuring from a Traversable
+Fabien Potencier
 
 # Object destructuring with renaming
 Fabien fabien@example.com
