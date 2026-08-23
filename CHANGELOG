@@ -1,6 +1,7 @@
 # 3.29.0 (2026-XX-XX)
 
  * Add documentation comments to attach metadata to nodes (experimental)
+ * Fix sequence destructuring of iterators throwing a `TypeError`
  * Add `TempestMarkdown` to use `tempest/markdown` as the `markdown_to_html` converter
  * Fix imported macros not resolving their own template-level macro imports
  * Add the `include_only` function to render a template without giving it access to the current context

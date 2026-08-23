@@ -23,7 +23,8 @@ Twig supports the "=" operator (assignment)
 {% do {name} = user_obj %}{{ name }}
 
 # Array destructuring from a Traversable
-{% do [p, q] = pair_traversable %}{{ p }} {{ q }}
+{% do destructured = ([p, q] = pair_traversable) %}{{ p }} {{ q }} {{ pair_traversable.yielded }} {{ destructured is same as(pair_traversable) ? 'same' : 'different' }}
+{% do [r, , t] = short_traversable %}{{ r }} {{ t is same as(null) ? 'null' : t }}
 
 # Object destructuring with renaming
 {% do {name: userName, email: userEmail} = user %}{{ userName }} {{ userEmail }}
@@ -38,7 +39,18 @@ return [
         public function getName() { return 'Fabien'; }
     },
     'null_obj' => null,
-    'pair_traversable' => new ArrayIterator(['Fabien', 'Potencier']),
+    'pair_traversable' => new class implements IteratorAggregate {
+        public int $yielded = 0;
+
+        public function getIterator(): Traversable
+        {
+            foreach ([5 => 'Fabien', 8 => 'Potencier', 13 => 'Ignored'] as $key => $value) {
+                ++$this->yielded;
+                yield $key => $value;
+            }
+        }
+    },
+    'short_traversable' => new ArrayIterator(['one']),
 ]
 --EXPECT--
 4
@@ -59,7 +71,8 @@ Fabien Potencier
 Fabien
 
 # Array destructuring from a Traversable
-Fabien Potencier
+Fabien Potencier 2 same
+one null
 
 # Object destructuring with renaming
 Fabien fabien@example.com
