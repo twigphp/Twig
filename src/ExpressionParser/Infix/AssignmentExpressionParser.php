@@ -50,6 +50,9 @@ class AssignmentExpressionParser extends BinaryOperatorExpressionParser
         };
 
         if ($left instanceof ArrayExpression) {
+            if (!$left->getKeyValuePairs()) {
+                throw new SyntaxError('Cannot destructure to an empty list of variables.', $token->getLine(), $parser->getStream()->getSourceContext());
+            }
             foreach ($left->getKeyValuePairs() as $i => $pair) {
                 if ($pair['value'] instanceof ContextVariable && !$pair['value'] instanceof AssignContextVariable) {
                     $left->setNode(2 * $i + 1, new AssignContextVariable($pair['value']->getAttribute('name'), $pair['value']->getTemplateLine()));

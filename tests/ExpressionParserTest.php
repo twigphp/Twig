@@ -268,6 +268,25 @@ class ExpressionParserTest extends TestCase
         $this->assertSame('third', $pairs[2]['value']->getAttribute('name'));
     }
 
+    /**
+     * @dataProvider getEmptyDestructuringTests
+     */
+    #[DataProvider('getEmptyDestructuringTests')]
+    public function testEmptyDestructuringThrows(string $template): void
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Cannot destructure to an empty list of variables');
+        $env->compileSource(new Source($template, 'index'));
+    }
+
+    public static function getEmptyDestructuringTests()
+    {
+        yield ['{% do [] = values %}'];
+        yield ['{% do {} = values %}'];
+    }
+
     public function testObjectDestructuringUsesAssignmentTargets(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
