@@ -55,6 +55,24 @@ class ExtensionsTest extends TestCase
         $this->assertCatalogCovers($entry['tags'], array_map(static fn ($parser) => $parser->getTag(), $extension->getTokenParsers()), 'tag', $entry['package']);
     }
 
+    public function testCatalogUsesExtensionsFromCurrentCheckout(): void
+    {
+        $extraDir = \dirname(__DIR__, 2);
+
+        if (!is_dir($extraDir.'/html-extra')) {
+            $this->markTestSkipped('The extra packages are not checked out locally.');
+        }
+
+        foreach (self::provideCatalog() as [$entry]) {
+            $extension = $this->loadExtension($entry);
+
+            $this->assertSame(
+                realpath($extraDir.'/'.$entry['name'].'-extra'),
+                realpath(\dirname((string) (new \ReflectionObject($extension))->getFileName())),
+            );
+        }
+    }
+
     public static function provideCatalog(): iterable
     {
         // The catalog duplicates names owned by seven separate packages, so read it back from the constant.
