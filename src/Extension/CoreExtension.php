@@ -1402,6 +1402,39 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
+     * @param list<string|null> $names
+     *
+     * @internal
+     */
+    public static function destructureSequence(array &$context, array $names, \Traversable $sequence): \Traversable
+    {
+        $count = \count($names);
+        if (0 === $count) {
+            return $sequence;
+        }
+
+        $i = 0;
+        foreach ($sequence as $value) {
+            $name = $names[$i];
+            if (null !== $name) {
+                $context[$name] = $value;
+            }
+            if (++$i === $count) {
+                return $sequence;
+            }
+        }
+
+        for (; $i < $count; ++$i) {
+            $name = $names[$i];
+            if (null !== $name) {
+                $context[$name] = null;
+            }
+        }
+
+        return $sequence;
+    }
+
+    /**
      * Checks if a variable is empty.
      *
      *    {# evaluates to true if the foo variable is null, false, or the empty string #}
