@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2026-08-23T07:45:17Z
+
+I've added an additional commit:
+
+• Destructure iterator values in iteration order, ignoring keys
+• Consume only the values needed for the requested variables
+• Preserve the original iterator as the assignment expression result
