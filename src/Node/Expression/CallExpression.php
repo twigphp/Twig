@@ -26,7 +26,10 @@ abstract class CallExpression extends AbstractExpression
 {
     private $reflector;
 
-    protected function compileCallable(Compiler $compiler): void
+    /**
+     * @return void
+     */
+    protected function compileCallable(Compiler $compiler)
     {
         $twigCallable = $this->getTwigCallable();
         $callable = $twigCallable->getCallable();

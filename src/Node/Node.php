@@ -117,7 +117,10 @@ class Node implements \Countable, \IteratorAggregate
         }
     }
 
-    public function compile(Compiler $compiler): void
+    /**
+     * @return void
+     */
+    public function compile(Compiler $compiler)
     {
         foreach ($this->nodes as $node) {
             $compiler->subcompile($node);

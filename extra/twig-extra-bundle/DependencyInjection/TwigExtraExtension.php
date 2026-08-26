@@ -31,7 +31,8 @@ if (!method_exists(ContainerBuilder::class, 'getAutoconfiguredAttributes')) {
     /** @internal */
     trait TwigExtraExtensionTrait
     {
-        public function load(array $configs, ContainerBuilder $container): void
+        /** @return void */
+        public function load(array $configs, ContainerBuilder $container)
         {
             $this->doLoad($configs, $container);
         }

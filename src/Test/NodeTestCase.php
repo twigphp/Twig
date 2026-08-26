@@ -49,14 +49,19 @@ abstract class NodeTestCase extends TestCase
      *
      * @dataProvider getTests
      * @dataProvider provideTests
+     *
+     * @return void
      */
     #[DataProvider('provideTests')]
-    public function testCompile($node, $source, $environment = null, $isPattern = false): void
+    public function testCompile($node, $source, $environment = null, $isPattern = false)
     {
         $this->assertNodeCompilation($source, $node, $environment, $isPattern);
     }
 
-    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = false): void
+    /**
+     * @return void
+     */
+    public function assertNodeCompilation($source, Node $node, ?Environment $environment = null, $isPattern = false)
     {
         $compiler = $this->getCompiler($environment);
         $compiler->compile($node);
