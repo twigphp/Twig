@@ -369,6 +369,9 @@ class Parser
         return 1 === \count($this->importedSymbols);
     }
 
+    /**
+     * @internal
+     */
     public function markMacroImportAsUsed(?AssignMacroVariable $internalRef): ?int
     {
         if (!$this->isMacroScope() || null === $internalRef || !$internalRef->getAttribute('global') || !$internalRef->hasAttribute('macro_import_id')) {
@@ -380,6 +383,9 @@ class Parser
         return $internalRef->getAttribute('macro_import_id');
     }
 
+    /**
+     * @internal
+     */
     public function isMacroScope(): bool
     {
         return \in_array(true, $this->macroScopes, true);
@@ -390,6 +396,9 @@ class Parser
         $this->pushScope(false);
     }
 
+    /**
+     * @internal
+     */
     public function pushMacroScope(): void
     {
         $this->pushScope(true);

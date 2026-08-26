@@ -11,6 +11,7 @@
 
 namespace Twig\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -163,6 +164,78 @@ class CallMacroTest extends TestCase
         $this->assertSame('firstsecond', (string) $this->callMacro($template, 'render', []));
     }
 
+    public function testFromImportUsedOnlyByDefinedTestResolvesLazily(): void
+    {
+        $template = $this->load([
+            'index' => '{% from "first" import render as imported %}{% macro render() %}{{ imported is defined ? "defined" : "missing" }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+        ]);
+
+        $this->assertSame('defined', (string) $this->callMacro($template, 'render', []));
+    }
+
+    #[DataProvider('provideUnsupportedNestedMacroImports')]
+    public function testNestedMacroImportsFailClearlyBeforeRendering(string $source, int $line): void
+    {
+        $template = $this->load([
+            'index' => $source,
+            'first' => '{% macro render() %}first{% endmacro %}',
+        ]);
+
+        try {
+            $this->callMacro($template, 'render', []);
+            $this->fail('Expected RuntimeError');
+        } catch (RuntimeError $e) {
+            $this->assertSame('A macro import nested in a control structure cannot be resolved before the template is rendered.', $e->getRawMessage());
+            $this->assertSame($line, $e->getTemplateLine());
+            $this->assertSame('index', $e->getSourceContext()->getName());
+        }
+    }
+
+    public static function provideUnsupportedNestedMacroImports(): iterable
+    {
+        yield 'conditional' => [<<<'TWIG'
+{% if enabled %}
+    {% import "first" as macros %}
+{% endif %}
+{% macro render() %}
+    {{ macros.render() }}
+{% endmacro %}
+TWIG, 5];
+
+        yield 'loop' => [<<<'TWIG'
+{% for template in templates %}
+    {% from template import render as imported %}
+{% endfor %}
+{% macro render() %}
+    {{ imported() }}
+{% endmacro %}
+TWIG, 5];
+    }
+
+    public function testCompletedRenderingDeterminesShadowedNestedMacroImport(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'outer' => '{% import "first" as macros %}{% if use_second %}{% import "second" as macros %}{% endif %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+            'second' => '{% macro render() %}second{% endmacro %}',
+        ]));
+        $template = $twig->load('outer')->unwrap();
+
+        try {
+            $this->callMacro($template, 'render', []);
+            $this->fail('Expected RuntimeError');
+        } catch (RuntimeError $e) {
+            $this->assertSame('A macro import nested in a control structure cannot be resolved before the template is rendered.', $e->getRawMessage());
+        }
+
+        $template->render(['use_second' => false]);
+        $this->assertSame('first', (string) $this->callMacro($template, 'render', []));
+
+        $template->render(['use_second' => true]);
+        $this->assertSame('second', (string) $this->callMacro($template, 'render', []));
+    }
+
     public function testSelfReferenceDoesNotResolveALaterUnusedImport(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -216,7 +289,7 @@ class CallMacroTest extends TestCase
     public function testReentrantImportResolutionDoesNotRecurseIndefinitely(): void
     {
         $twig = new Environment(new ArrayLoader([
-            'outer' => '{% import pick() as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
+            'outer' => "{% import pick() as macros %}\n{% macro render() %}{{ macros.render() }}{% endmacro %}",
             'first' => '{% macro render() %}first{% endmacro %}',
         ]));
         $template = null;
@@ -227,7 +300,7 @@ class CallMacroTest extends TestCase
             try {
                 $template->getMacroNamespace()->call('render', [], [], 1, new Source('', 'outer'));
             } catch (RuntimeError $e) {
-                $reentrantError = $e->getMessage();
+                $reentrantError = $e;
             }
 
             return 'first';
@@ -235,7 +308,10 @@ class CallMacroTest extends TestCase
         $template = $twig->load('outer')->unwrap();
 
         $this->assertSame('first', (string) $this->callMacro($template, 'render', []));
-        $this->assertStringContainsString('circular macro import', $reentrantError);
+        $this->assertInstanceOf(RuntimeError::class, $reentrantError);
+        $this->assertSame('A circular macro import was detected.', $reentrantError->getRawMessage());
+        $this->assertSame(2, $reentrantError->getTemplateLine());
+        $this->assertSame('outer', $reentrantError->getSourceContext()->getName());
         $this->assertSame('first', (string) $this->callMacro($template, 'render', []));
         $this->assertSame(1, $calls);
     }

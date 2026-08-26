@@ -23,9 +23,15 @@ use Twig\Node\Expression\Variable\AssignMacroVariable;
 #[YieldReady]
 final class MacroImportsNode extends Node
 {
+    /** @var array<int, true> */
+    private array $supportedImports = [];
+
     public function __construct(Node $body)
     {
-        parent::__construct($this->collectTopLevelImports($body));
+        $imports = [];
+        $this->collectImports($body, true, $imports);
+
+        parent::__construct($imports);
     }
 
     public function compile(Compiler $compiler): void
@@ -33,7 +39,7 @@ final class MacroImportsNode extends Node
         $compiler
             ->write("private array \$lazyMacroImports = [];\n")
             ->write("private array \$loadingLazyMacroImports = [];\n\n")
-            ->write("private function loadLazyMacroImport(int \$index): MacroNamespace\n", "{\n")
+            ->write("private function loadLazyMacroImport(int \$index, int \$line): MacroNamespace\n", "{\n")
             ->indent()
             ->write("if (isset(\$this->lazyMacroImports[\$index])) {\n")
             ->indent()
@@ -42,7 +48,7 @@ final class MacroImportsNode extends Node
             ->write("}\n")
             ->write("if (isset(\$this->loadingLazyMacroImports[\$index])) {\n")
             ->indent()
-            ->write("throw new RuntimeError(sprintf('A circular macro import was detected in template \"%s\".', \$this->getTemplateName()));\n")
+            ->write("throw new RuntimeError('A circular macro import was detected.', \$line, \$this->getSourceContext());\n")
             ->outdent()
             ->write("}\n\n")
             ->write("\$this->loadingLazyMacroImports[\$index] = true;\n")
@@ -57,6 +63,10 @@ final class MacroImportsNode extends Node
 
         /** @var ImportNode $import */
         foreach ($this as $index => $import) {
+            if (!isset($this->supportedImports[$index])) {
+                continue;
+            }
+
             $compiler
                 ->write($index.' => ')
             ;
@@ -65,7 +75,7 @@ final class MacroImportsNode extends Node
         }
 
         $compiler
-            ->write("default => throw new \\LogicException(sprintf('Unknown lazy macro import %d.', \$index)),\n")
+            ->write("default => throw new RuntimeError('A macro import nested in a control structure cannot be resolved before the template is rendered.', \$line, \$this->getSourceContext()),\n")
             ->outdent()
             ->write("};\n")
             ->outdent()
@@ -80,25 +90,26 @@ final class MacroImportsNode extends Node
     }
 
     /**
-     * @return array<int, ImportNode>
+     * @param array<int, ImportNode> $imports
      */
-    private function collectTopLevelImports(Node $node): array
+    private function collectImports(Node $node, bool $supported, array &$imports): void
     {
         if ($node instanceof ImportNode) {
             $var = $node->getNode('var');
+            if ($var instanceof AssignMacroVariable && $var->getAttribute('global') && $var->hasAttribute('used_in_macro')) {
+                $index = $var->getAttribute('macro_import_id');
+                $imports[$index] = $node;
+                if ($supported) {
+                    $this->supportedImports[$index] = true;
+                }
+            }
 
-            return $var instanceof AssignMacroVariable && $var->getAttribute('global') && $var->hasAttribute('used_in_macro') ? [$var->getAttribute('macro_import_id') => $node] : [];
+            return;
         }
 
-        if (!$node instanceof BodyNode && !$node instanceof Nodes) {
-            return [];
-        }
-
-        $imports = [];
+        $supported = $supported && ($node instanceof BodyNode || $node instanceof Nodes);
         foreach ($node as $child) {
-            $imports += $this->collectTopLevelImports($child);
+            $this->collectImports($child, $supported, $imports);
         }
-
-        return $imports;
     }
 }

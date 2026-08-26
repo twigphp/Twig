@@ -88,7 +88,7 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
             $compiler
                 ->raw('(')
                 ->subcompile($this->getNode('template'))
-                ->raw(' ?? $this->lazyMacroImports['.$this->lazyImportIndex.'] ?? $this->loadLazyMacroImport('.$this->lazyImportIndex.'))')
+                ->raw(' ?? $this->lazyMacroImports['.$this->lazyImportIndex.'] ?? $this->loadLazyMacroImport('.$this->lazyImportIndex.', '.$this->getTemplateLine().'))')
             ;
         }
 

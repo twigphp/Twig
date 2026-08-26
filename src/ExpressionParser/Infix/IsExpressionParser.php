@@ -50,6 +50,9 @@ class IsExpressionParser extends AbstractExpressionParser implements InfixExpres
             if ($expr instanceof NameExpression && null !== $alias = $parser->getImportedSymbol('function', $expr->getAttribute('name'))) {
                 $expr = new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], new ArrayExpression([], $expr->getTemplateLine()), $expr->getTemplateLine());
                 $expr->setHasCallParentheses(false);
+                if (null !== $index = $parser->markMacroImportAsUsed($alias['node'])) {
+                    $expr->setLazyImportIndex($index);
+                }
             }
 
             if ($expr instanceof MacroReferenceExpression && $expr->hasCallParentheses()) {
