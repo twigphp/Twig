@@ -174,22 +174,21 @@ class CallMacroTest extends TestCase
         $this->assertSame('defined', (string) $this->callMacro($template, 'render', []));
     }
 
+    /**
+     * @dataProvider provideUnsupportedNestedMacroImports
+     */
     #[DataProvider('provideUnsupportedNestedMacroImports')]
-    public function testNestedMacroImportsFailClearlyBeforeRendering(string $source, int $line): void
+    public function testNestedMacroImportsFailClearlyWhenNotExecuted(string $source, int $line): void
     {
         $template = $this->load([
             'index' => $source,
             'first' => '{% macro render() %}first{% endmacro %}',
         ]);
 
-        try {
-            $this->callMacro($template, 'render', []);
-            $this->fail('Expected RuntimeError');
-        } catch (RuntimeError $e) {
-            $this->assertSame('A macro import nested in a control structure cannot be resolved before the template is rendered.', $e->getRawMessage());
-            $this->assertSame($line, $e->getTemplateLine());
-            $this->assertSame('index', $e->getSourceContext()->getName());
-        }
+        $this->assertUnresolvedNestedMacroImport($template, $line);
+
+        $template->render(['enabled' => false, 'templates' => []]);
+        $this->assertUnresolvedNestedMacroImport($template, $line);
     }
 
     public static function provideUnsupportedNestedMacroImports(): iterable
@@ -211,6 +210,15 @@ TWIG, 5];
     {{ imported() }}
 {% endmacro %}
 TWIG, 5];
+
+        yield 'defined test' => [<<<'TWIG'
+{% if enabled %}
+    {% from "first" import render as imported %}
+{% endif %}
+{% macro render() %}
+    {{ imported is defined ? "defined" : "missing" }}
+{% endmacro %}
+TWIG, 5];
     }
 
     public function testCompletedRenderingDeterminesShadowedNestedMacroImport(): void
@@ -226,7 +234,7 @@ TWIG, 5];
             $this->callMacro($template, 'render', []);
             $this->fail('Expected RuntimeError');
         } catch (RuntimeError $e) {
-            $this->assertSame('A macro import nested in a control structure cannot be resolved before the template is rendered.', $e->getRawMessage());
+            $this->assertSame('A macro import nested in a control structure cannot be resolved because the import has not been executed.', $e->getRawMessage());
         }
 
         $template->render(['use_second' => false]);
@@ -500,6 +508,18 @@ TWIG, 5];
         $template = $this->load(['index' => '{% macro greet(name) %}Hi {{ name }}{% endmacro %}']);
 
         $this->assertSame('Hi Bob', (string) CoreExtension::callMacro($template->getMacroNamespace(), 'macro_greet', ['Bob'], 1, [], new Source('', 'index')));
+    }
+
+    private function assertUnresolvedNestedMacroImport(Template $template, int $line): void
+    {
+        try {
+            $this->callMacro($template, 'render', []);
+            $this->fail('Expected RuntimeError');
+        } catch (RuntimeError $e) {
+            $this->assertSame('A macro import nested in a control structure cannot be resolved because the import has not been executed.', $e->getRawMessage());
+            $this->assertSame($line, $e->getTemplateLine());
+            $this->assertSame('index', $e->getSourceContext()->getName());
+        }
     }
 
     private function callMacro(Template $template, string $name, array $arguments): mixed

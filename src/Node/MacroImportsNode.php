@@ -75,7 +75,7 @@ final class MacroImportsNode extends Node
         }
 
         $compiler
-            ->write("default => throw new RuntimeError('A macro import nested in a control structure cannot be resolved before the template is rendered.', \$line, \$this->getSourceContext()),\n")
+            ->write("default => throw new RuntimeError('A macro import nested in a control structure cannot be resolved because the import has not been executed.', \$line, \$this->getSourceContext()),\n")
             ->outdent()
             ->write("};\n")
             ->outdent()
@@ -97,7 +97,7 @@ final class MacroImportsNode extends Node
         if ($node instanceof ImportNode) {
             $var = $node->getNode('var');
             if ($var instanceof AssignMacroVariable && $var->getAttribute('global') && $var->hasAttribute('used_in_macro')) {
-                $index = $var->getAttribute('macro_import_id');
+                $index = (int) $var->getAttribute('macro_import_id');
                 $imports[$index] = $node;
                 if ($supported) {
                     $this->supportedImports[$index] = true;
