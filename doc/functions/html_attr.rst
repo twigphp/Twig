@@ -123,8 +123,11 @@ attributes are converted to strings ``"true"`` and ``"false"``.
 Data Attributes
 ---------------
 
-For ``data-*`` attributes, boolean ``true`` values will be converted to ``"true"``.
-Values that are not scalars are automatically JSON-encoded.
+For ``data-*`` attributes, a boolean ``true`` is converted to the string
+``"true"``, and any non-scalar value is JSON-encoded. Two exceptions behave as
+they do for any other attribute: an iterable is rendered as a token list, and
+a ``Stringable`` object is cast to its string representation. When an object
+is both, the iterable behavior wins.
 
 .. code-block:: html+twig
 

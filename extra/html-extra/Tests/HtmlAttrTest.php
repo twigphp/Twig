@@ -82,6 +82,30 @@ class HtmlAttrTest extends TestCase
             ],
         ];
 
+        yield 'Stringable renders its string, with or without a data- prefix' => [
+            'title="stringable-object" data-value="stringable-object"',
+            [
+                [
+                    'title' => new StringableStub('stringable-object'),
+                    'data-value' => new StringableStub('stringable-object'),
+                ],
+            ],
+        ];
+
+        yield 'Stringable takes precedence over JsonSerializable in a data attribute' => [
+            'data-id="01JABC"',
+            [
+                ['data-id' => new StringableJsonSerializableStub('01JABC')],
+            ],
+        ];
+
+        yield 'iterable takes precedence over Stringable in a data attribute' => [
+            'data-list="a b"',
+            [
+                ['data-list' => new StringableTraversableStub()],
+            ],
+        ];
+
         // In general, array values are printed as space-separated token lists
         yield 'array value renders as space-separated token list' => [
             'class="btn btn-primary btn-lg"',
@@ -328,6 +352,38 @@ class HtmlAttrTest extends TestCase
             ['title' => new \stdClass()]
         );
     }
+
+    /**
+     * @dataProvider htmlAttrValueProvider
+     */
+    public function testHtmlAttrValue(?string $expected, string $name, mixed $value): void
+    {
+        self::assertSame($expected, HtmlExtension::htmlAttrValue($name, $value));
+    }
+
+    public static function htmlAttrValueProvider(): \Generator
+    {
+        yield 'plain string' => ['foo', 'class', 'foo'];
+        yield 'integer is cast to string' => ['0', 'tabindex', 0];
+        yield 'boolean true renders an empty string' => ['', 'required', true];
+        yield 'boolean false is omitted' => [null, 'disabled', false];
+        yield 'null is omitted' => [null, 'title', null];
+        yield 'aria-* true renders "true"' => ['true', 'aria-hidden', true];
+        yield 'aria-* false renders "false"' => ['false', 'aria-hidden', false];
+        yield 'data-* true renders "true"' => ['true', 'data-open', true];
+        yield 'data-* array is JSON encoded, unescaped' => ['{"theme":"dark"}', 'data-config', ['theme' => 'dark']];
+        yield 'iterable becomes a space-separated token list' => ['btn btn-primary', 'class', ['btn', 'btn-primary']];
+        yield 'style iterable becomes an inline style' => ['color: red; font-size: 16px;', 'style', ['color' => 'red', 'font-size' => '16px']];
+        yield 'string-backed enum uses its value' => ['card', 'data-view', StringBackedStub::CARD];
+        yield 'int-backed enum uses its value' => ['10', 'tabindex', IntBackedStub::HIGH];
+        yield 'Stringable is cast to string' => ['stringable-object', 'title', new StringableStub('stringable-object')];
+        yield 'Stringable in a data-* attribute is cast to string, not JSON encoded' => ['stringable-object', 'data-value', new StringableStub('stringable-object')];
+        yield 'Stringable takes precedence over JsonSerializable in a data-* attribute' => ['01JABC', 'data-id', new StringableJsonSerializableStub('01JABC')];
+        yield 'iterable takes precedence over Stringable' => ['a b', 'class', new StringableTraversableStub()];
+        yield 'iterable takes precedence over Stringable in a data-* attribute' => ['a b', 'data-list', new StringableTraversableStub()];
+        yield 'AttributeValueInterface uses getValue()' => ['custom-value', 'custom', new AttributeValueStub('custom-value')];
+        yield 'AttributeValueInterface returning null is omitted' => [null, 'custom', new AttributeValueStub(null)];
+    }
 }
 
 class StringableStub implements \Stringable
@@ -339,6 +395,36 @@ class StringableStub implements \Stringable
     public function __toString(): string
     {
         return $this->value;
+    }
+}
+
+class StringableTraversableStub implements \Stringable, \IteratorAggregate
+{
+    public function __toString(): string
+    {
+        return 'from-toString';
+    }
+
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator(['a', 'b']);
+    }
+}
+
+class StringableJsonSerializableStub implements \Stringable, \JsonSerializable
+{
+    public function __construct(private readonly string $value)
+    {
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return ['value' => $this->value];
     }
 }
 
