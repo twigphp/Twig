@@ -25,6 +25,7 @@ use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\OptimizerExtension;
+use Twig\Extension\SandboxExtension;
 use Twig\Extension\YieldNotReadyExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
@@ -328,6 +329,12 @@ class Environment
     public function getTemplateClass(string $name, ?int $index = null): string
     {
         $key = ($this->hotCache[$name] ?? $this->getLoader()->getCacheKey($name)).($this->optionsHash ??= $this->getOptionsHash());
+        if ($this->hasExtension(EscaperExtension::class)) {
+            $key .= ':autoescape:'.self::encodeAutoescapeStrategy($this->getExtension(EscaperExtension::class)->getDefaultStrategy($name));
+        }
+        if ($this->hasExtension(SandboxExtension::class)) {
+            $key .= ':sandbox:'.$this->extensionSet->getSandboxSignature();
+        }
 
         return '__TwigTemplate_'.hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $key).(null === $index ? '' : '___'.$index);
     }
@@ -967,6 +974,18 @@ class Environment
     public function getExpressionParsers(): ExpressionParsers
     {
         return $this->extensionSet->getExpressionParsers();
+    }
+
+    private static function encodeAutoescapeStrategy($strategy): string
+    {
+        if (false === $strategy) {
+            return 'false';
+        }
+        if (\is_string($strategy)) {
+            return 'string:'.\strlen($strategy).':'.$strategy;
+        }
+
+        return 'invalid:'.get_debug_type($strategy).':'.(int) (bool) $strategy;
     }
 
     private function getOptionsHash(): string

@@ -68,6 +68,7 @@ final class ExtensionSet
     /** @var array<callable(string): (TokenParserInterface|false)> */
     private $parserCallbacks = [];
     private $lastModified = 0;
+    private ?string $sandboxSignature = null;
 
     public function __construct()
     {
@@ -115,7 +116,48 @@ final class ExtensionSet
 
     public function getSignature(): string
     {
-        return json_encode(array_keys($this->extensions));
+        return serialize(array_keys($this->extensions));
+    }
+
+    public function getSandboxSignature(): string
+    {
+        if (null !== $this->sandboxSignature) {
+            return $this->sandboxSignature;
+        }
+
+        $signature = [
+            'tags' => [],
+            'filters' => [],
+            'functions' => [],
+            'tests' => [],
+        ];
+
+        foreach ($this->getTokenParsers() as $name => $parser) {
+            if (method_exists($parser, 'isAlwaysAllowedInSandbox') && $parser->isAlwaysAllowedInSandbox()) {
+                $signature['tags'][] = $name;
+            }
+        }
+        foreach ($this->getFilters() as $name => $filter) {
+            if (method_exists($filter, 'isAlwaysAllowedInSandbox') && $filter->isAlwaysAllowedInSandbox()) {
+                $signature['filters'][] = $name;
+            }
+        }
+        foreach ($this->getFunctions() as $name => $function) {
+            if (method_exists($function, 'isAlwaysAllowedInSandbox') && $function->isAlwaysAllowedInSandbox()) {
+                $signature['functions'][] = $name;
+            }
+        }
+        foreach ($this->getTests() as $name => $test) {
+            if (method_exists($test, 'isAlwaysAllowedInSandbox') && $test->isAlwaysAllowedInSandbox()) {
+                $signature['tests'][] = $name;
+            }
+        }
+        sort($signature['tags'], \SORT_STRING);
+        sort($signature['filters'], \SORT_STRING);
+        sort($signature['functions'], \SORT_STRING);
+        sort($signature['tests'], \SORT_STRING);
+
+        return $this->sandboxSignature = hash('sha256', serialize($signature));
     }
 
     public function isInitialized(): bool
