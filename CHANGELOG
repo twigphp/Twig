@@ -15,7 +15,7 @@
  * Deprecate the `sandboxed` argument of the `include` function, use `Twig\Sandbox\Sandbox` instead
  * Deprecate `SandboxExtension::enableSandbox()`, `disableSandbox()`, and `isSandboxedGlobally()`
  * Normalize destructuring variable AST nodes as assignment targets
- * Fix `IntlExtension` ignoring explicit date/time formats and the `format_date`/`format_time` filters when a date formatter prototype is configured
+ * Fix `IntlExtension` ignoring explicit date/time formats and configured calendars when using a date formatter prototype
  * Add a `format_list` filter to `IntlExtension` to format a list of strings using PHP 8.5's `IntlListFormatter`
  * Fix array access with a `Stringable` key coercing the key to string for `ArrayAccess` objects that use object keys (such as `SplObjectStorage`)
  * Fix duplicated macro argument names triggering a PHP fatal error instead of a `SyntaxError`
