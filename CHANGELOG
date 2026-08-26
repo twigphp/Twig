@@ -17,7 +17,7 @@
  * Normalize destructuring variable AST nodes as assignment targets
  * Fix `IntlExtension` ignoring explicit date/time formats and the `format_date`/`format_time` filters when a date formatter prototype is configured
  * Add a `format_list` filter to `IntlExtension` to format a list of strings using PHP 8.5's `IntlListFormatter`
- * Fix array access with a `Stringable` key coercing the key to string for `ArrayAccess` objects that use object keys (such as `SplObjectStorage`)
+ * Fix array access with a `Stringable` key for `ArrayObject` and `ArrayIterator` while preserving object keys for `SplObjectStorage`
  * Fix duplicated macro argument names triggering a PHP fatal error instead of a `SyntaxError`
  * Deprecate defining a macro more than once in the same template
  * Deprecate `TemplateVariable` and `AssignTemplateVariable`; use `MacroVariable` and `AssignMacroVariable` instead

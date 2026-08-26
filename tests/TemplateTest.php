@@ -28,6 +28,7 @@ use Twig\Extension\CoreExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedPropertyError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;
 use Twig\Template;
@@ -261,27 +262,46 @@ class TemplateTest extends TestCase
      * @dataProvider getStrictVariablesModes
      */
     #[DataProvider('getStrictVariablesModes')]
-    public function testArrayAccessWithStringableKeyIsConsistentAcrossStrictModes(bool $strict): void
+    public function testArrayWithStringableKeyIsConsistentAcrossStrictModes(bool $strict): void
     {
         $twig = new Environment(new ArrayLoader(['index' => '{{ array[object] }}']), [
             'strict_variables' => $strict,
             'autoescape' => false,
         ]);
 
-        $object = new class implements \Stringable {
-            public function __toString(): string
-            {
-                return 'string';
-            }
-        };
+        $key = new TemplateStringableKey();
 
-        $this->assertSame('value', $twig->render('index', ['array' => ['string' => 'value'], 'object' => $object]));
+        $this->assertSame('value', $twig->render('index', ['array' => ['string' => 'value'], 'object' => $key]));
     }
 
-    public static function getStrictVariablesModes(): iterable
+    /**
+     * @dataProvider getStringableKeyArrayAccessContainers
+     */
+    #[DataProvider('getStringableKeyArrayAccessContainers')]
+    public function testStringableKeyIsCoercedForInternalArrayAccess(bool $strict, bool $sandboxed, \ArrayAccess $data): void
     {
-        yield 'lax' => [false];
-        yield 'strict' => [true];
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] }}']), [
+            'strict_variables' => $strict,
+            'autoescape' => false,
+        ]);
+        $key = new TemplateStringableKey();
+        if ($sandboxed) {
+            $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [$key::class => ['__toString']], [], []), true));
+        }
+
+        $this->assertSame('value', $twig->render('index', ['data' => $data, 'key' => $key]));
+        $this->assertSame(1, $key->toStringCalls);
+    }
+
+    public static function getStringableKeyArrayAccessContainers(): iterable
+    {
+        foreach (['lax' => false, 'strict' => true] as $mode => $strict) {
+            foreach (['unsandboxed' => false, 'sandboxed' => true] as $sandboxMode => $sandboxed) {
+                yield $mode.' '.$sandboxMode.' ArrayObject' => [$strict, $sandboxed, new \ArrayObject(['string' => 'value'])];
+                yield $mode.' '.$sandboxMode.' ArrayIterator' => [$strict, $sandboxed, new \ArrayIterator(['string' => 'value'])];
+                yield $mode.' '.$sandboxMode.' RecursiveArrayIterator' => [$strict, $sandboxed, new \RecursiveArrayIterator(['string' => 'value'])];
+            }
+        }
     }
 
     /**
@@ -290,47 +310,162 @@ class TemplateTest extends TestCase
     #[DataProvider('getStrictVariablesModes')]
     public function testArrayAccessWithObjectKeyKeepsTheObjectKey(bool $strict): void
     {
-        $twig = new Environment(new ArrayLoader(['index' => '{{ data[object] }}']), [
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] }}']), [
             'strict_variables' => $strict,
             'autoescape' => false,
         ]);
 
-        $object = new class implements \Stringable {
-            public function __toString(): string
-            {
-                return 'string';
-            }
-        };
+        $key = new TemplateStringableKey();
         $data = new \SplObjectStorage();
-        $data[$object] = 'value';
+        $data[$key] = 'value';
 
-        $this->assertSame('value', $twig->render('index', ['data' => $data, 'object' => $object]));
+        $this->assertSame('value', $twig->render('index', ['data' => $data, 'key' => $key]));
+        $this->assertSame(0, $key->toStringCalls);
     }
 
-    public function testArrayAccessWithStringableKeyIsCheckedBySandbox(): void
+    /**
+     * @dataProvider getStrictVariablesModes
+     */
+    #[DataProvider('getStrictVariablesModes')]
+    public function testArrayAccessLookupDoesNotRepeatOffsetChecks(bool $strict): void
     {
-        $object = new class implements \Stringable {
-            public function __toString(): string
-            {
-                return 'string';
-            }
-        };
-        $data = ['array' => ['string' => 'value'], 'object' => $object];
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] }}']), [
+            'strict_variables' => $strict,
+            'autoescape' => false,
+        ]);
 
-        $twig = new Environment(new ArrayLoader(['index' => '{{ array[object] }}']), ['autoescape' => false]);
+        $key = new TemplateStringableKey();
+        $data = new TemplateTrackingArrayAccess($key, false);
+
+        $this->assertSame('value', $twig->render('index', ['data' => $data, 'key' => $key]));
+        $this->assertSame([$key], $data->offsetExistsCalls);
+        $this->assertSame([$key], $data->offsetGetCalls);
+        $this->assertSame(0, $key->toStringCalls);
+    }
+
+    public function testArrayAccessDefinedTestDoesNotReadTheOffset(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] is defined ? "yes" : "no" }}']));
+        $key = new TemplateStringableKey();
+        $data = new TemplateTrackingArrayAccess($key, false);
+
+        $this->assertSame('yes', $twig->render('index', ['data' => $data, 'key' => $key]));
+        $this->assertSame([$key], $data->offsetExistsCalls);
+        $this->assertSame([], $data->offsetGetCalls);
+    }
+
+    /**
+     * @dataProvider getStrictVariablesModes
+     */
+    #[DataProvider('getStrictVariablesModes')]
+    public function testRejectedStringableArrayAccessKeyRethrowsOriginalTypeError(bool $strict): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] }}']), [
+            'strict_variables' => $strict,
+            'autoescape' => false,
+        ]);
+        $key = new TemplateStringableKey();
+        $data = new TemplateTrackingArrayAccess($key, true);
+
+        try {
+            $twig->render('index', ['data' => $data, 'key' => $key]);
+            $this->fail('The original TypeError must be rethrown.');
+        } catch (RuntimeError $e) {
+            $this->assertSame($data->offsetExistsError, $e->getPrevious());
+        }
+
+        $this->assertSame([$key], $data->offsetExistsCalls);
+        $this->assertSame([], $data->offsetGetCalls);
+        $this->assertSame(0, $key->toStringCalls);
+    }
+
+    /**
+     * @dataProvider getStrictVariablesModes
+     */
+    #[DataProvider('getStrictVariablesModes')]
+    public function testSandboxDoesNotAuthorizeStringPropertyForArrayAccessObjectKey(bool $strict): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] }}']), [
+            'strict_variables' => $strict,
+            'autoescape' => false,
+        ]);
+        $key = new TemplateStringableKey();
+        $data = new TemplateTrackingArrayAccess($key, false);
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [$key::class => ['__toString']], [$data::class => ['string']], []), true));
+
+        $this->expectException(SecurityNotAllowedPropertyError::class);
+
+        try {
+            $twig->render('index', ['data' => $data, 'key' => $key]);
+        } finally {
+            $this->assertSame([], $data->offsetExistsCalls);
+            $this->assertSame([], $data->offsetGetCalls);
+        }
+    }
+
+    /**
+     * @dataProvider getStrictVariablesModes
+     */
+    #[DataProvider('getStrictVariablesModes')]
+    public function testArrayWithStringableKeyIsCheckedBySandbox(bool $strict): void
+    {
+        $key = new TemplateStringableKey();
+        $context = ['array' => ['string' => 'value'], 'key' => $key];
+
+        $twig = new Environment(new ArrayLoader(['index' => '{{ array[key] }}']), ['strict_variables' => $strict, 'autoescape' => false]);
         $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [], [], []), true));
 
         try {
-            $twig->render('index', $data);
+            $twig->render('index', $context);
             $this->fail('The sandbox must reject the __toString() coercion of the array key.');
         } catch (SecurityError $e) {
             $this->assertStringContainsStringIgnoringCase('__toString', $e->getMessage());
         }
+        $this->assertSame(0, $key->toStringCalls);
 
-        $twig = new Environment(new ArrayLoader(['index' => '{{ array[object] }}']), ['autoescape' => false]);
-        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [$object::class => ['__toString']], [], []), true));
+        $twig = new Environment(new ArrayLoader(['index' => '{{ array[key] }}']), ['strict_variables' => $strict, 'autoescape' => false]);
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [$key::class => ['__toString']], [], []), true));
 
-        $this->assertSame('value', $twig->render('index', $data));
+        $this->assertSame('value', $twig->render('index', $context));
+        $this->assertSame(1, $key->toStringCalls);
+    }
+
+    /**
+     * @dataProvider getStrictVariablesModes
+     */
+    #[DataProvider('getStrictVariablesModes')]
+    public function testInternalArrayAccessWithStringableKeyIsCheckedBySandbox(bool $strict): void
+    {
+        $key = new TemplateStringableKey();
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] }}']), ['strict_variables' => $strict, 'autoescape' => false]);
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [], [], []), true));
+
+        try {
+            $twig->render('index', ['data' => new \ArrayObject(['string' => 'value']), 'key' => $key]);
+            $this->fail('The sandbox must reject the __toString() coercion of the ArrayAccess key.');
+        } catch (SecurityError $e) {
+            $this->assertStringContainsStringIgnoringCase('__toString', $e->getMessage());
+        }
+        $this->assertSame(0, $key->toStringCalls);
+    }
+
+    public function testSandboxedArrayAccessWithObjectKeyKeepsTheObjectKey(): void
+    {
+        $key = new TemplateStringableKey();
+        $data = new \SplObjectStorage();
+        $data[$key] = 'value';
+
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] }}']), ['autoescape' => false]);
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [$key::class => ['__toString']], [], []), true));
+
+        $this->assertSame('value', $twig->render('index', ['data' => $data, 'key' => $key]));
+        $this->assertSame(0, $key->toStringCalls);
+    }
+
+    public static function getStrictVariablesModes(): iterable
+    {
+        yield 'lax' => [false];
+        yield 'strict' => [true];
     }
 
     /**
@@ -636,6 +771,57 @@ class TemplateForTest extends Template
     }
 
     public function block_name($context, array $blocks = []): void
+    {
+    }
+}
+
+final class TemplateStringableKey implements \Stringable
+{
+    public int $toStringCalls = 0;
+
+    public function __toString(): string
+    {
+        ++$this->toStringCalls;
+
+        return 'string';
+    }
+}
+
+final class TemplateTrackingArrayAccess implements \ArrayAccess
+{
+    public array $offsetExistsCalls = [];
+    public ?\TypeError $offsetExistsError = null;
+    public array $offsetGetCalls = [];
+
+    public function __construct(
+        private object $key,
+        private bool $rejectObjectOffset,
+    ) {
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        $this->offsetExistsCalls[] = $offset;
+
+        if ($this->rejectObjectOffset && \is_object($offset)) {
+            throw $this->offsetExistsError = new \TypeError('Object offsets are not supported.');
+        }
+
+        return $this->key === $offset;
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        $this->offsetGetCalls[] = $offset;
+
+        return 'value';
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+    }
+
+    public function offsetUnset(mixed $offset): void
     {
     }
 }
