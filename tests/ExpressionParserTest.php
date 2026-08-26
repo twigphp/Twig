@@ -277,7 +277,7 @@ class ExpressionParserTest extends TestCase
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
 
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('Cannot destructure to an empty list of variables');
+        $this->expectExceptionMessage('Cannot destructure to an empty list of variables in "index" at line 1.');
         $env->compileSource(new Source($template, 'index'));
     }
 
@@ -285,6 +285,8 @@ class ExpressionParserTest extends TestCase
     {
         yield ['{% do [] = values %}'];
         yield ['{% do {} = values %}'];
+        yield ['{% do [,] = values %}'];
+        yield ['{% do [,,] = values %}'];
     }
 
     public function testObjectDestructuringUsesAssignmentTargets(): void

@@ -3,7 +3,7 @@
  * Add the `HtmlExtension::htmlAttrValue()` method to resolve a single HTML attribute value the way the `html_attr` function renders it
  * Fix `html_attr` JSON encoding a `Stringable` value in a `data-*` attribute instead of using its string representation
  * Add documentation comments to attach metadata to nodes (experimental)
- * Fix an empty destructuring pattern triggering a PHP fatal error instead of a `SyntaxError`
+ * Fix destructuring patterns with no variables, including sequences containing only empty slots, triggering a PHP fatal error instead of a `SyntaxError`
  * Fix sequence destructuring of iterators throwing a `TypeError`
  * Add `TempestMarkdown` to use `tempest/markdown` as the `markdown_to_html` converter
  * Fix imported macros not resolving their own template-level macro imports
