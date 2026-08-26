@@ -6,6 +6,7 @@
  * Fix an empty destructuring pattern triggering a PHP fatal error instead of a `SyntaxError`
  * Fix sequence destructuring of iterators throwing a `TypeError`
  * Add `TempestMarkdown` to use `tempest/markdown` as the `markdown_to_html` converter
+ * Fix externally called macros resolving unrelated template-level imports or losing lazy imports after interrupted renders
  * Fix imported macros not resolving their own template-level macro imports
  * Add the `include_only` function to render a template without giving it access to the current context
  * Add the `Twig\Sandbox\SandboxInterface` interface and `Twig\Sandbox\Sandbox` class to render untrusted templates through a dedicated, always-sandboxed environment crafted for it

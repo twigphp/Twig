@@ -26,6 +26,7 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
     use SupportDefinedTestTrait;
 
     private bool $hasCallParentheses = true;
+    private ?int $lazyImportIndex = null;
 
     /**
      * @param string|AbstractExpression $name The bare macro name (a static identifier) or, for a dynamic
@@ -61,6 +62,14 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
         return $this->hasCallParentheses;
     }
 
+    /**
+     * @internal
+     */
+    public function setLazyImportIndex(int $index): void
+    {
+        $this->lazyImportIndex = $index;
+    }
+
     public function __clone()
     {
         // The template node must not be deep-cloned because its name is
@@ -73,7 +82,15 @@ class MacroReferenceExpression extends AbstractExpression implements SupportDefi
 
     public function compile(Compiler $compiler): void
     {
-        $compiler->subcompile($this->getNode('template'));
+        if (null === $this->lazyImportIndex) {
+            $compiler->subcompile($this->getNode('template'));
+        } else {
+            $compiler
+                ->raw('(')
+                ->subcompile($this->getNode('template'))
+                ->raw(' ?? $this->lazyMacroImports['.$this->lazyImportIndex.'] ?? $this->loadLazyMacroImport('.$this->lazyImportIndex.'))')
+            ;
+        }
 
         if ($this->definedTest) {
             $compiler->raw('->has(');

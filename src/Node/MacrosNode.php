@@ -69,12 +69,8 @@ final class MacrosNode extends Node
             return;
         }
 
-        $compiler->write("private ?MacroNamespace \$macroNamespace = null;\n");
-        if ($this->hasImports()) {
-            $compiler->write("private bool \$skipLazyMacroImports = false;\n");
-        }
         $compiler
-            ->raw("\n")
+            ->write("private ?MacroNamespace \$macroNamespace = null;\n\n")
             ->write("public function getMacroNamespace(): MacroNamespace\n", "{\n")
             ->indent()
             ->write('return $this->macroNamespace ??= new MacroNamespace($this, ')
@@ -82,18 +78,15 @@ final class MacrosNode extends Node
 
         $this->compileMacros($compiler);
 
-        if ($this->hasImports()) {
-            $compiler
-                ->raw(', ')
-                ->subcompile($this->imports)
-            ;
-        }
-
         $compiler
             ->raw(");\n")
             ->outdent()
             ->write("}\n\n")
         ;
+
+        if ($this->hasImports()) {
+            $compiler->subcompile($this->imports);
+        }
     }
 
     private function compileMacros(Compiler $compiler): void

@@ -44,7 +44,7 @@ final class MacroTokenParser extends AbstractTokenParser
         [$arguments, $variadicName] = $this->parseDefinition($name);
 
         $stream->expect(Token::BLOCK_END_TYPE);
-        $this->parser->pushLocalScope();
+        $this->parser->pushMacroScope();
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
         if ($token = $stream->nextIf(Token::NAME_TYPE)) {
             $value = $token->getValue();

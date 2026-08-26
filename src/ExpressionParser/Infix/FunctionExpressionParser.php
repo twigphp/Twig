@@ -50,6 +50,9 @@ final class FunctionExpressionParser extends AbstractExpressionParser implements
             $arguments = $this->parseCallableArguments($parser, $line, false, true);
             $node = new MacroReferenceExpression($alias['node']->getNode('var'), $alias['name'], $arguments, $line);
             $node->setHasCallParentheses(true);
+            if (null !== $index = $parser->markMacroImportAsUsed($alias['node'])) {
+                $node->setLazyImportIndex($index);
+            }
 
             return $node;
         }

@@ -44,7 +44,15 @@ class ImportNode extends Node implements CoercesChildrenToStringInterface
     public function compile(Compiler $compiler): void
     {
         $compiler->subcompile($this->getNode('var'));
+        $this->compileMacroNamespace($compiler);
+        $compiler->raw(";\n");
+    }
 
+    /**
+     * @internal
+     */
+    public function compileMacroNamespace(Compiler $compiler): void
+    {
         if ($this->getNode('expr') instanceof ContextVariable && '_self' === $this->getNode('expr')->getAttribute('name')) {
             $compiler->raw('$this->getMacroNamespace()');
         } else {
@@ -56,8 +64,6 @@ class ImportNode extends Node implements CoercesChildrenToStringInterface
                 ->raw(')->unwrap()->getMacroNamespace()')
             ;
         }
-
-        $compiler->raw(";\n");
     }
 
     public function getStringCoercedChildNames(): array

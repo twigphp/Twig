@@ -60,11 +60,8 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
             }
         }
 
-        $isMacroTarget = $expr instanceof NameExpression
-            && (
-                null !== $parser->getImportedSymbol('template', $expr->getAttribute('name'))
-                || '_self' === $expr->getAttribute('name')
-            );
+        $importedSymbol = $expr instanceof NameExpression ? $parser->getImportedSymbol('template', $expr->getAttribute('name')) : null;
+        $isMacroTarget = $expr instanceof NameExpression && (null !== $importedSymbol || '_self' === $expr->getAttribute('name'));
 
         if ($stream->test(Token::OPERATOR_TYPE, '(')) {
             $type = Template::METHOD_CALL;
@@ -73,8 +70,13 @@ final class DotExpressionParser extends AbstractExpressionParser implements Infi
 
         if ($isMacroTarget) {
             $name = $attribute instanceof ConstantExpression ? (string) $attribute->getAttribute('value') : $attribute;
-            $node = new MacroReferenceExpression(new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine()), $name, $arguments, $expr->getTemplateLine());
+            $internalRef = $importedSymbol['node'] ?? null;
+            $template = $internalRef?->getNode('var') ?? new MacroVariable($expr->getAttribute('name'), $expr->getTemplateLine());
+            $node = new MacroReferenceExpression($template, $name, $arguments, $expr->getTemplateLine());
             $node->setHasCallParentheses(Template::METHOD_CALL === $type);
+            if (null !== $index = $parser->markMacroImportAsUsed($internalRef)) {
+                $node->setLazyImportIndex($index);
+            }
 
             return $node;
         }

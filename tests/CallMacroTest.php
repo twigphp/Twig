@@ -97,6 +97,160 @@ class CallMacroTest extends TestCase
         }
     }
 
+    public function testMacroImportsRemainResolvableAfterAFailedRender(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'outer' => '{{ fail() }}{% import "first" as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+        ]));
+        $twig->addFunction(new TwigFunction('fail', static function (): never {
+            throw new \RuntimeException('failed');
+        }));
+        $template = $twig->load('outer')->unwrap();
+
+        try {
+            $template->render([]);
+            $this->fail('Expected RuntimeError');
+        } catch (RuntimeError $e) {
+            $this->assertStringContainsString('failed', $e->getMessage());
+        }
+
+        $this->assertSame('first', (string) $this->callMacro($template, 'render', []));
+    }
+
+    public function testMacroImportsRemainResolvableWhileAStreamIsSuspended(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'outer' => 'started{% import "first" as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+        ]));
+        $wrapper = $twig->load('outer');
+        $stream = $wrapper->stream();
+
+        foreach ($stream as $chunk) {
+            $this->assertSame('started', $chunk);
+            break;
+        }
+
+        $this->assertSame('first', (string) $this->callMacro($wrapper->unwrap(), 'render', []));
+    }
+
+    public function testCallingAMacroDoesNotResolveUnusedImports(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'outer' => '{% import side_effect() as unused %}{% import missing_template as context_dependent %}{% import "first" as used %}{% macro render() %}{{ used.render() }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+        ]), ['strict_variables' => true]);
+        $calls = 0;
+        $twig->addFunction(new TwigFunction('side_effect', static function () use (&$calls): string {
+            ++$calls;
+
+            return 'first';
+        }));
+
+        $this->assertSame('first', (string) $this->callMacro($twig->load('outer')->unwrap(), 'render', []));
+        $this->assertSame(0, $calls);
+    }
+
+    public function testMixedMacroImportsResolveIndependently(): void
+    {
+        $template = $this->load([
+            'index' => '{% import "first" as first %}{% from "second" import render as second %}{% macro render() %}{{ first.render() }}{{ second() }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+            'second' => '{% macro render() %}second{% endmacro %}',
+        ]);
+
+        $this->assertSame('firstsecond', (string) $this->callMacro($template, 'render', []));
+    }
+
+    public function testSelfReferenceDoesNotResolveALaterUnusedImport(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'outer' => '{% macro value() %}self{% endmacro %}{% macro render() %}{{ _self.value() }}{% endmacro %}{% import side_effect() as unused %}',
+        ]));
+        $calls = 0;
+        $twig->addFunction(new TwigFunction('side_effect', static function () use (&$calls): string {
+            ++$calls;
+
+            return 'outer';
+        }));
+
+        $this->assertSame('self', (string) $this->callMacro($twig->load('outer')->unwrap(), 'render', []));
+        $this->assertSame(0, $calls);
+    }
+
+    public function testShadowedImportsKeepTheirOwnLazyResolutionAndDisplayResolutionWins(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'outer' => '{% import "first" as macros %}{% macro first() %}{{ macros.render() }}{% endmacro %}{% import "second" as macros %}{% macro second() %}{{ macros.render() }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+            'second' => '{% macro render() %}second{% endmacro %}',
+        ]));
+        $template = $twig->load('outer')->unwrap();
+
+        $this->assertSame('first', (string) $this->callMacro($template, 'first', []));
+        $this->assertSame('second', (string) $this->callMacro($template, 'second', []));
+
+        $template->render([]);
+
+        $this->assertSame('second', (string) $this->callMacro($template, 'first', []));
+    }
+
+    public function testMacroLocalImportShadowsAnUnusedTopLevelImport(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'outer' => '{% import side_effect() as macros %}{% macro render() %}{% import "second" as macros %}{{ macros.render() }}{% endmacro %}',
+            'second' => '{% macro render() %}second{% endmacro %}',
+        ]));
+        $calls = 0;
+        $twig->addFunction(new TwigFunction('side_effect', static function () use (&$calls): string {
+            ++$calls;
+
+            return 'second';
+        }));
+
+        $this->assertSame('second', (string) $this->callMacro($twig->load('outer')->unwrap(), 'render', []));
+        $this->assertSame(0, $calls);
+    }
+
+    public function testReentrantImportResolutionDoesNotRecurseIndefinitely(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'outer' => '{% import pick() as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+        ]));
+        $template = null;
+        $calls = 0;
+        $reentrantError = null;
+        $twig->addFunction(new TwigFunction('pick', static function () use (&$calls, &$reentrantError, &$template): string {
+            ++$calls;
+            try {
+                $template->getMacroNamespace()->call('render', [], [], 1, new Source('', 'outer'));
+            } catch (RuntimeError $e) {
+                $reentrantError = $e->getMessage();
+            }
+
+            return 'first';
+        }));
+        $template = $twig->load('outer')->unwrap();
+
+        $this->assertSame('first', (string) $this->callMacro($template, 'render', []));
+        $this->assertStringContainsString('circular macro import', $reentrantError);
+        $this->assertSame('first', (string) $this->callMacro($template, 'render', []));
+        $this->assertSame(1, $calls);
+    }
+
+    public function testInheritedMacroResolvesItsOwnImport(): void
+    {
+        $template = $this->load([
+            'index' => '{% extends "parent" %}',
+            'parent' => '{% import "first" as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
+            'first' => '{% macro render() %}first{% endmacro %}',
+        ]);
+
+        $this->assertSame('first', (string) $this->callMacro($template, 'render', []));
+    }
+
     public function testRenderTimeImportsKeepUsingTheRenderContext(): void
     {
         $twig = new Environment(new ArrayLoader([

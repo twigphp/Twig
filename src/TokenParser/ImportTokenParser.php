@@ -33,7 +33,7 @@ final class ImportTokenParser extends AbstractTokenParser
         $name = $this->parser->getStream()->expect(Token::NAME_TYPE)->getValue();
         $var = new AssignMacroVariable(new MacroVariable($name, $token->getLine()), $this->parser->isMainScope());
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
-        $this->parser->addImportedSymbol('template', $name);
+        $this->parser->addImportedSymbol('template', $name, internalRef: $var);
 
         return new ImportNode($macro, $var, $token->getLine());
     }

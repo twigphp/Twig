@@ -34,7 +34,6 @@ use Twig\Node\Node;
 use Twig\Node\NodeDocumentation;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
-use Twig\Node\SkipLazyMacroImportsNode;
 use Twig\Node\TextNode;
 use Twig\TokenParser\TokenParserInterface;
 use Twig\Util\ReflectionCallable;
@@ -54,6 +53,8 @@ class Parser
     private $blockStack;
     private $macros;
     private $importedSymbols;
+    private array $macroScopes;
+    private int $macroImportIndex = 0;
     private $traits;
     private $embeddedTemplates = [];
     private int $lastEmbedIndex = 0;
@@ -105,6 +106,8 @@ class Parser
         $this->traits = [];
         $this->blockStack = [];
         $this->importedSymbols = [[]];
+        $this->macroScopes = [false];
+        $this->macroImportIndex = 0;
         $this->embeddedTemplates = [];
         $this->expressionRefs = new \WeakMap();
 
@@ -145,11 +148,6 @@ class Parser
          * @var ModuleNode $node
          */
         $node = $traverser->traverse($node);
-
-        $macros = $node->getNode('macros');
-        if ($macros instanceof MacrosNode && $macros->hasImports()) {
-            $node->setNode('display_start', new Nodes([new SkipLazyMacroImportsNode(), $node->getNode('display_start')]));
-        }
 
         // restore previous stack so previous parse() call can resume working
         foreach (array_pop($this->stack) as $key => $val) {
@@ -350,6 +348,10 @@ class Parser
             $internalRef = new AssignMacroVariable(new MacroVariable($internalRef->getAttribute('name'), $internalRef->getTemplateLine()), $internalRef->getAttribute('global'));
         }
 
+        if ($internalRef && $internalRef->getAttribute('global') && !$internalRef->hasAttribute('macro_import_id')) {
+            $internalRef->setAttribute('macro_import_id', $this->macroImportIndex++);
+        }
+
         $this->importedSymbols[0][$type][$alias] = ['name' => $name, 'node' => $internalRef];
     }
 
@@ -367,14 +369,42 @@ class Parser
         return 1 === \count($this->importedSymbols);
     }
 
+    public function markMacroImportAsUsed(?AssignMacroVariable $internalRef): ?int
+    {
+        if (!$this->isMacroScope() || null === $internalRef || !$internalRef->getAttribute('global') || !$internalRef->hasAttribute('macro_import_id')) {
+            return null;
+        }
+
+        $internalRef->setAttribute('used_in_macro', true);
+
+        return $internalRef->getAttribute('macro_import_id');
+    }
+
+    public function isMacroScope(): bool
+    {
+        return \in_array(true, $this->macroScopes, true);
+    }
+
     public function pushLocalScope(): void
     {
-        array_unshift($this->importedSymbols, []);
+        $this->pushScope(false);
+    }
+
+    public function pushMacroScope(): void
+    {
+        $this->pushScope(true);
     }
 
     public function popLocalScope(): void
     {
         array_shift($this->importedSymbols);
+        array_shift($this->macroScopes);
+    }
+
+    private function pushScope(bool $macro): void
+    {
+        array_unshift($this->importedSymbols, []);
+        array_unshift($this->macroScopes, $macro);
     }
 
     /**
