@@ -8,7 +8,6 @@
  * Fix object and mapping destructuring evaluating the right-hand expression more than once
  * Fix sequence destructuring of iterators throwing a `TypeError`
  * Add `TempestMarkdown` to use `tempest/markdown` as the `markdown_to_html` converter
- * Fix imported macros not resolving their own template-level macro imports
  * Add the `include_only` function to render a template without giving it access to the current context
  * Add the `Twig\Sandbox\SandboxInterface` interface and `Twig\Sandbox\Sandbox` class to render untrusted templates through a dedicated, always-sandboxed environment crafted for it
  * Add the `Twig\Extension\SandboxBridgeExtension` to render sandboxed templates from trusted templates with an explicit output escaping strategy

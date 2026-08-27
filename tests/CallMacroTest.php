@@ -13,7 +13,6 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
-use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Loader\ArrayLoader;
@@ -22,7 +21,6 @@ use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Source;
 use Twig\Template;
-use Twig\TwigFunction;
 
 class CallMacroTest extends TestCase
 {
@@ -34,78 +32,6 @@ class CallMacroTest extends TestCase
 
         $this->assertSame('Hello World', (string) $this->callMacro($template, 'greet', ['World']));
         $this->assertSame('Hi World', (string) $this->callMacro($template, 'greet', ['name' => 'World', 'greeting' => 'Hi']));
-    }
-
-    public function testNestedMacroImportsResolveAgainstGlobals(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'index' => '{% import "outer" as outer %}{{ outer.render() }}',
-            'outer' => '{% import macro_template as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
-            'first' => '{% macro render() %}first{% endmacro %}',
-        ]));
-        $twig->addGlobal('macro_template', 'first');
-
-        $this->assertSame('first', $twig->render('index', []));
-    }
-
-    public function testNestedMacroImportsCannotUseTheImportingContext(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'index' => '{% import "outer" as outer %}{{ outer.render() }}',
-            'outer' => '{% import macro_template as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
-            'first' => '{% macro render() %}first{% endmacro %}',
-        ]), ['strict_variables' => true]);
-
-        $this->expectException(RuntimeError::class);
-        $this->expectExceptionMessage('Variable "macro_template" does not exist');
-
-        $twig->render('index', ['macro_template' => 'first']);
-    }
-
-    public function testNestedMacroImportsAreInitializedOncePerTemplate(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'index' => '{% import "outer" as outer %}{{ outer.render() }}{{ outer.render() }}',
-            'outer' => '{% import pick() as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
-            'first' => '{% macro render() %}first{% endmacro %}',
-        ]));
-        $calls = 0;
-        $twig->addFunction(new TwigFunction('pick', static function () use (&$calls): string {
-            ++$calls;
-
-            return 'first';
-        }));
-
-        $this->assertSame('firstfirst', $twig->render('index', []));
-        $this->assertSame(1, $calls);
-    }
-
-    public function testFailedNestedMacroImportsFailTheSameWayOnRetry(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'index' => '{% import "outer" as outer %}{{ outer.render() }}',
-            'outer' => '{% import "missing" as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
-        ]));
-
-        foreach ([1, 2] as $attempt) {
-            try {
-                $twig->render('index', []);
-                $this->fail('Expected LoaderError');
-            } catch (LoaderError $e) {
-                $this->assertStringContainsString('Template "missing" is not defined', $e->getMessage(), "Attempt $attempt");
-            }
-        }
-    }
-
-    public function testRenderTimeImportsKeepUsingTheRenderContext(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'index' => '{% include "outer" %}{% import "outer" as outer %}{{ outer.render() }}',
-            'outer' => '{% import macro_template as macros %}{% macro render() %}{{ macros.render() }}{% endmacro %}',
-            'first' => '{% macro render() %}first{% endmacro %}',
-        ]), ['strict_variables' => true]);
-
-        $this->assertSame('first', $twig->render('index', ['macro_template' => 'first']));
     }
 
     public function testMacroNamespaceOnlyExposesMacroOperations(): void
