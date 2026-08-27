@@ -101,8 +101,6 @@ What?      Implementation difficulty? How often? When?
 *operator* simple                     rare       Values transformation
 ========== ========================== ========== =========================
 
-.. _environment-globals:
-
 Globals
 -------
 
