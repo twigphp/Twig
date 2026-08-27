@@ -17,6 +17,9 @@ Variables from the active context are not passed implicitly. This makes the
 data a template relies on explicit, which is often clearer and easier to
 reason about.
 
+Note that global variables (like the ones registered via ``addGlobal()``) are
+not part of the context: they remain available in the included template.
+
 Returned Value
 --------------
 
@@ -40,7 +43,7 @@ explicitly:
 
 .. code-block:: twig
 
-    {# template.html.twig will only have access to the "name" variable #}
+    {# template.html.twig only gets the "name" variable from the caller #}
     {{ include_only('template.html.twig', {name: 'Fabien'}) }}
 
 When passing a variable from the current context, you can use the following
