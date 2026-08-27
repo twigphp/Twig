@@ -175,13 +175,16 @@ Reading Documentation from Nodes
 
 Node visitors can read documentation with ``Node::getDocumentation()``. Twig
 automatically attaches documentation before a custom tag to the node returned
-by its token parser. To support inline documentation, custom token parsers can
-pass the corresponding tokens to ``NodeDocumentation::add()``.
+by its token parser. If that node is a placeholder, the token parser can call
+``Parser::setDocumentationTarget()`` once while parsing the tag to select the
+semantic node instead. To support inline documentation, custom token parsers
+can pass the corresponding tokens to ``NodeDocumentation::add()``.
 
 The metadata is stored on the semantic node represented by the source:
 
 * output documentation is stored on the ``PrintNode``;
-* tag documentation is stored on the node produced by the tag;
+* tag documentation is stored on the node produced by the tag or the target
+  selected by its token parser;
 * block documentation is stored on the ``BlockNode``;
 * macro documentation is stored on the ``MacroNode``;
 * type documentation is stored on each ``TypeNode``;

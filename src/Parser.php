@@ -50,6 +50,8 @@ class Parser
     private $expressionParser;
     private $blocks;
     private $blockStack;
+    /** @var list<Node|null> */
+    private array $documentationTargets = [];
     private $macros;
     private $importedSymbols;
     private $traits;
@@ -99,6 +101,7 @@ class Parser
         $this->stream = $stream;
         $this->parent = null;
         $this->blocks = [];
+        $this->documentationTargets = [];
         $this->macros = [];
         $this->traits = [];
         $this->blockStack = [];
@@ -229,12 +232,22 @@ class Parser
                     $this->stream->next();
 
                     $subparser->setParser($this);
-                    $node = $subparser->parse($token);
+                    $documentationTargetIndex = \count($this->documentationTargets);
+                    $this->documentationTargets[] = null;
+                    try {
+                        $node = $subparser->parse($token);
+                        $documentationTarget = $this->documentationTargets[$documentationTargetIndex];
+                    } finally {
+                        array_pop($this->documentationTargets);
+                    }
                     if (!$node) {
                         trigger_deprecation('twig/twig', '3.12', 'Returning "null" from "%s" is deprecated and forbidden by "TokenParserInterface".', $subparser::class);
                     } else {
                         $node->setNodeTag($subparser->getTag());
                         NodeDocumentation::add($node, $startToken);
+                        if (null !== $documentationTarget && $node !== $documentationTarget) {
+                            NodeDocumentation::move($node, $documentationTarget);
+                        }
                         $rv[] = $node;
                     }
                     break;
@@ -304,6 +317,18 @@ class Parser
         trigger_deprecation('twig/twig', '3.12', 'Method "%s()" is deprecated.', __METHOD__);
 
         return isset($this->macros[$name]);
+    }
+
+    public function setDocumentationTarget(Node $node): void
+    {
+        if (null === $index = array_key_last($this->documentationTargets)) {
+            throw new \LogicException('A documentation target can only be set while parsing a tag.');
+        }
+        if (null !== $this->documentationTargets[$index]) {
+            throw new \LogicException('The documentation target for a tag can only be set once.');
+        }
+
+        $this->documentationTargets[$index] = $node;
     }
 
     public function setMacro(string $name, MacroNode $node): void
@@ -564,11 +589,6 @@ class Parser
     private function cleanupBodyForChildTemplates(Node $body): Node
     {
         if ($body instanceof BlockReferenceNode) {
-            $name = $body->getAttribute('name');
-            if (isset($this->blocks[$name])) {
-                NodeDocumentation::move($body, $this->blocks[$name]->getNode('0'));
-            }
-
             return new EmptyNode();
         }
         if ($body instanceof TextNode && $body->isBlank()) {
@@ -578,10 +598,6 @@ class Parser
         foreach ($body as $k => $node) {
             if ($node instanceof BlockReferenceNode) {
                 // as it has a parent, the block reference won't be used
-                $name = $node->getAttribute('name');
-                if (isset($this->blocks[$name])) {
-                    NodeDocumentation::move($node, $this->blocks[$name]->getNode('0'));
-                }
                 $body->removeNode($k);
             } elseif ($node instanceof TextNode && $node->isBlank()) {
                 // remove nodes considered as "empty"
