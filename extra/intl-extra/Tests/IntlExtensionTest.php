@@ -13,6 +13,7 @@ namespace Twig\Extra\Intl\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\ArrayLoader;
@@ -222,5 +223,23 @@ class IntlExtensionTest extends TestCase
         $cache = (new \ReflectionProperty(IntlExtension::class, 'numberFormatters'))->getValue($ext);
         $this->assertLessThanOrEqual(100, \count($cache));
         $this->assertGreaterThan(1, \count($cache));
+    }
+
+    public function testFormatListThrowsOnFailure(): void
+    {
+        if (!class_exists('IntlListFormatter')) {
+            $this->markTestSkipped('IntlListFormatter is not available.');
+        }
+
+        $strings = ['Alice', "\xB1\x31"];
+        $formatter = new \IntlListFormatter('en', \IntlListFormatter::TYPE_AND, \IntlListFormatter::WIDTH_WIDE);
+        if (false !== $formatter->format($strings)) {
+            $this->markTestSkipped('IntlListFormatter accepts the malformed UTF-8 input.');
+        }
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Unable to format the given list: '.$formatter->getErrorMessage());
+
+        (new IntlExtension())->formatList($strings, locale: 'en');
     }
 }

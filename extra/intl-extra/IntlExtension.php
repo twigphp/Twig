@@ -451,7 +451,12 @@ final class IntlExtension extends AbstractExtension
             throw new RuntimeError('The "format_list" filter requires the "IntlListFormatter" class, which is available since PHP 8.5.');
         }
 
-        return $this->createListFormatter($locale, $type, $width)->format($strings);
+        $formatter = $this->createListFormatter($locale, $type, $width);
+        if (false === $ret = $formatter->format($strings)) {
+            throw new RuntimeError(\sprintf('Unable to format the given list: %s', $formatter->getErrorMessage()));
+        }
+
+        return $ret;
     }
 
     private function createDateFormatter(?string $locale, ?string $dateFormat, ?string $timeFormat, string $pattern, ?\DateTimeZone $timezone, ?string $calendar): \IntlDateFormatter
