@@ -19,6 +19,7 @@ use Twig\Node\Expression\Binary\AbstractBinary;
 use Twig\Node\Expression\Binary\ObjectDestructuringSetBinary;
 use Twig\Node\Expression\Binary\SequenceDestructuringSetBinary;
 use Twig\Node\Expression\Binary\SetBinary;
+use Twig\Node\Expression\EmptyExpression;
 use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Parser;
@@ -50,16 +51,19 @@ class AssignmentExpressionParser extends BinaryOperatorExpressionParser
         };
 
         if ($left instanceof ArrayExpression) {
-            if (!$left->getKeyValuePairs()) {
+            $pairs = $left->getKeyValuePairs();
+            $isSequence = $left->isSequence();
+            if (!$pairs || ($isSequence && !array_filter($pairs, static fn (array $pair): bool => !$pair['value'] instanceof EmptyExpression))) {
                 throw new SyntaxError('Cannot destructure to an empty list of variables.', $token->getLine(), $parser->getStream()->getSourceContext());
             }
-            foreach ($left->getKeyValuePairs() as $i => $pair) {
+
+            foreach ($pairs as $i => $pair) {
                 if ($pair['value'] instanceof ContextVariable && !$pair['value'] instanceof AssignContextVariable) {
                     $left->setNode(2 * $i + 1, new AssignContextVariable($pair['value']->getAttribute('name'), $pair['value']->getTemplateLine()));
                 }
             }
 
-            if ($left->isSequence()) {
+            if ($isSequence) {
                 return new SequenceDestructuringSetBinary($left, $right, $token->getLine());
             }
 
