@@ -303,6 +303,20 @@ class ExpressionParserTest extends TestCase
         $this->assertSame('user_name', $pair['value']->getAttribute('name'));
     }
 
+    public function testObjectDestructuringEvaluatesRightHandExpressionOnce(): void
+    {
+        $calls = 0;
+        $env = new Environment(new ArrayLoader(['template' => '{% do [result_first, result_second] = ({first, second} = next_value()) %}{{ first }} {{ second }} {{ result_first }} {{ result_second }}']));
+        $env->addFunction(new TwigFunction('next_value', static function () use (&$calls): object {
+            ++$calls;
+
+            return (object) ['first' => $calls, 'second' => $calls];
+        }));
+
+        $this->assertSame('1 1 1 1', $env->render('template'));
+        $this->assertSame(1, $calls);
+    }
+
     /**
      * @dataProvider getTestsForString
      */
