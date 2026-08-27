@@ -11,7 +11,9 @@
 
 namespace Twig\Tests;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
@@ -24,6 +26,8 @@ use Twig\Template;
 
 class CallMacroTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testCallMacroResolvesPositionalAndNamedArguments(): void
     {
         $template = $this->load([
@@ -168,17 +172,19 @@ class CallMacroTest extends TestCase
         $template->getMacroNamespace()->call('macro_missing', [], [], 1, new Source('', 'index'));
     }
 
-    public function testHasMacroResolvesALegacyPrefixedNameSilently(): void
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testHasMacroResolvesALegacyPrefixedNameWithADeprecation(): void
     {
         $template = $this->load(['index' => '{% macro greet(name) %}Hi {{ name }}{% endmacro %}']);
 
-        $deprecations = $this->collectDeprecations(function () use ($template) {
-            $namespace = $template->getMacroNamespace();
-            $this->assertTrue($namespace->has('macro_greet', []));
-            $this->assertFalse($namespace->has('macro_missing', []));
-        });
+        $this->expectDeprecation('Since twig/twig 3.29: Testing whether the macro "greet" is defined via the "macro_"-prefixed name "macro_greet" is deprecated; pass the bare macro name to "Twig\Node\Expression\MacroReferenceExpression" instead.');
 
-        $this->assertSame([], $deprecations);
+        $namespace = $template->getMacroNamespace();
+        $this->assertTrue($namespace->has('macro_greet', []));
+        $this->assertFalse($namespace->has('macro_missing', []));
     }
 
     public function testCallMacroThrowsForAnUnknownMacro(): void

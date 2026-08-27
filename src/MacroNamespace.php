@@ -39,7 +39,13 @@ final class MacroNamespace
             return true;
         }
 
-        return str_starts_with($name, 'macro_') && null !== $this->findDeclaredName(substr($name, \strlen('macro_')), $context);
+        if (!str_starts_with($name, 'macro_') || null === $this->findDeclaredName($bareName = substr($name, \strlen('macro_')), $context)) {
+            return false;
+        }
+
+        trigger_deprecation('twig/twig', '3.29', 'Testing whether the macro "%s" is defined via the "macro_"-prefixed name "%s" is deprecated; pass the bare macro name to "%s" instead.', $bareName, $name, MacroReferenceExpression::class);
+
+        return true;
     }
 
     /**
