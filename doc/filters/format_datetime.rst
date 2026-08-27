@@ -30,7 +30,6 @@ The ``format_datetime`` filter formats a date time:
         $twig = new \Twig\Environment(...);
         $twig->addExtension(new IntlExtension());
 
-
 Format
 ------
 
@@ -49,6 +48,10 @@ You can tweak the output for the date part and the time part:
 
 Supported values are: ``none``, ``short``, ``medium``, ``long``, and ``full``.
 
+When no pattern is provided, each omitted format uses the corresponding
+:ref:`application default <intl-date-format-defaults>`, or ``medium`` when none
+is configured.
+
 .. versionadded:: 3.6
 
     ``relative_short``, ``relative_medium``, ``relative_long``, and ``relative_full`` are also supported when running on
@@ -60,18 +63,37 @@ For greater flexibility, you can even define your own pattern
 
 .. code-block:: twig
 
-    {# 11 oclock PM, GMT #}
+    {# 11 o'clock PM, GMT #}
     {{ '2019-08-07 23:39:12'|format_datetime(pattern: "hh 'oclock' a, zzzz") }}
+
+When no pattern, date format or time format is provided, Twig uses the
+:ref:`application default pattern <intl-date-format-defaults>`, if any.
 
 Locale
 ------
 
-By default, the filter uses the current locale. You can pass it explicitly:
+By default, the filter uses the
+:ref:`application default locale <intl-date-format-defaults>`, or the current
+locale when none is configured. You can override it explicitly:
 
 .. code-block:: twig
 
     {# 7 août 2019 23:39:12 #}
     {{ '2019-08-07 23:39:12'|format_datetime(locale: 'fr') }}
+
+Calendar
+--------
+
+By default, the filter uses the
+:ref:`application default calendar <intl-date-format-defaults>`, or the
+Gregorian calendar when none is configured. You can override it explicitly:
+
+.. code-block:: twig
+
+    {{ '2019-08-07 23:39:12'|format_datetime(
+        calendar: 'traditional',
+        locale: 'th_TH',
+    ) }}
 
 Timezone
 --------
@@ -118,6 +140,33 @@ The default timezone can also be set globally by calling ``setTimezone()``::
         $twig = new \Twig\Environment(...);
         $twig->addExtension(new IntlExtension());
 
+.. _intl-date-format-defaults:
+
+Configure Defaults
+------------------
+
+You can configure the locale, formats and calendar once for all date and time
+filters by passing an ``IntlDateFormatter`` when registering the extension::
+
+    use Twig\Extra\Intl\IntlExtension;
+
+    $dateFormatter = new \IntlDateFormatter(
+        locale: 'fr_FR',
+        dateType: \IntlDateFormatter::LONG,
+        timeType: \IntlDateFormatter::SHORT,
+        calendar: \IntlDateFormatter::GREGORIAN,
+    );
+
+    $twig->addExtension(new IntlExtension(
+        dateFormatterPrototype: $dateFormatter,
+    ));
+
+Arguments passed to a filter override these defaults. You can also configure a
+pattern with the ``pattern`` argument.
+
+When using a dependency injection container, pass the formatter as the
+``$dateFormatterPrototype`` argument of the ``IntlExtension`` service.
+
 Arguments
 ---------
 
@@ -126,7 +175,7 @@ Arguments
 * ``timeFormat``: The time format
 * ``pattern``: A date time pattern
 * ``timezone``: The date timezone name
-* ``calendar``: The calendar ("gregorian" by default)
+* ``calendar``: The calendar
 
 .. _ICU user guide: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
 .. _RFC 5646: https://www.rfc-editor.org/info/rfc5646
