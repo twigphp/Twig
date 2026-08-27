@@ -194,9 +194,12 @@ Everything else won't be allowed and will generate a
             'Article' => ['slug'],
         ];
 
-    Allow-listing ``__call`` itself has no effect: it would only match a
-    template that literally writes ``{{ article.__call }}``. Allow each virtual
-    method by its own name so the policy stays granular.
+    Allow each virtual method by its own advertised name so the policy stays
+    granular. Allow-listing ``__call`` itself is dangerous and should
+    essentially never be done: a template can invoke it directly as
+    ``{{ article.__call("anyMethodName", ["arg"]) }}``, and dispatch an
+    attacker-chosen method name with arbitrary arguments. In this case, the
+    sandbox checks the literal method name used in the template, ``__call``.
 
 .. caution::
 

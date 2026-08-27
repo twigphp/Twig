@@ -823,6 +823,24 @@ class SandboxTest extends TestCase
         }
     }
 
+    public function testSandboxUnallowedDirectMagicCallMethod(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ o.__call("anyMethodName", ["arg"]) }}']);
+        try {
+            $twig->load('index')->render(['o' => new MagicCallObject()]);
+            $this->fail('Sandbox throws a SecurityError exception if "__call" is invoked directly without being allowed');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals(MagicCallObject::class, $e->getClassName());
+            $this->assertEquals('__call', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxAllowedDirectMagicCallMethod(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ o.__call("anyMethodName", ["arg"]) }}'], [], [], [MagicCallObject::class => '__call']);
+        $this->assertSame('call:anyMethodName', $twig->load('index')->render(['o' => new MagicCallObject()]), 'Sandbox allows direct invocation of "__call" to dispatch the provided method name when it is allowed');
+    }
+
     public function testSandboxFallsBackToMagicCallMethodForUnallowedProperty(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ o.secret }}'], [], [], [MagicCallObject::class => 'secret']);
