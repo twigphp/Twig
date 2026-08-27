@@ -55,7 +55,10 @@ class FunctionExpression extends CallExpression implements SupportDefinedTestInt
         }
     }
 
-    public function compile(Compiler $compiler): void
+    /**
+     * @return void
+     */
+    public function compile(Compiler $compiler)
     {
         $name = $this->getAttribute('name');
         if ($this->hasAttribute('twig_callable')) {

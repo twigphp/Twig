@@ -23,13 +23,19 @@ class ProfilerExtension extends AbstractExtension
         $this->actives[] = $profile;
     }
 
-    public function enter(Profile $profile): void
+    /**
+     * @return void
+     */
+    public function enter(Profile $profile)
     {
         $this->actives[0]->addProfile($profile);
         array_unshift($this->actives, $profile);
     }
 
-    public function leave(Profile $profile): void
+    /**
+     * @return void
+     */
+    public function leave(Profile $profile)
     {
         $profile->leave();
         array_shift($this->actives);

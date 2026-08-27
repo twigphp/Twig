@@ -35,7 +35,10 @@ class TypesNode extends Node
         parent::__construct($nodes, ['mapping' => $types], $lineno);
     }
 
-    public function compile(Compiler $compiler): void
+    /**
+     * @return void
+     */
+    public function compile(Compiler $compiler)
     {
         // Don't compile anything.
     }

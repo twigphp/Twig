@@ -34,7 +34,8 @@ if (!method_exists(ContainerBuilder::class, 'getAutoconfiguredAttributes')) {
 } else {
     class MissingExtensionSuggestorPass implements CompilerPassInterface
     {
-        public function process(ContainerBuilder $container): void
+        /** @return void */
+        public function process(ContainerBuilder $container)
         {
             if (!$container->getParameter('kernel.debug')) {
                 return;

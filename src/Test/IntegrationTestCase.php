@@ -123,9 +123,11 @@ abstract class IntegrationTestCase extends TestCase
      * The annotation feeds PHPUnit < 10; the attribute feeds PHPUnit >= 10 and must point to a static provider, as PHPUnit >= 11 rejects non-static ones.
      *
      * @dataProvider getTests
+     *
+     * @return void
      */
     #[DataProvider('provideTests')]
-    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
+    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
@@ -134,9 +136,11 @@ abstract class IntegrationTestCase extends TestCase
      * @dataProvider getLegacyTests
      *
      * @group legacy
+     *
+     * @return void
      */
     #[DataProvider('provideLegacyTests'), Group('legacy')]
-    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
+    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = '')
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
@@ -223,7 +227,10 @@ abstract class IntegrationTestCase extends TestCase
         return $this->getTests('testLegacyIntegration', true);
     }
 
-    protected function doIntegrationTest($file, $message, $condition, $templateSources, $exception, $outputs, $deprecation = ''): void
+    /**
+     * @return void
+     */
+    protected function doIntegrationTest($file, $message, $condition, $templateSources, $exception, $outputs, $deprecation = '')
     {
         if (!$outputs) {
             // dummy test added by assembleTests() when there is no (legacy) test to run

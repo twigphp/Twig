@@ -154,8 +154,10 @@ class Environment
 
     /**
      * Enables debugging mode.
+     *
+     * @return void
      */
-    public function enableDebug(): void
+    public function enableDebug()
     {
         $this->debug = true;
         $this->updateOptionsHash();
@@ -163,8 +165,10 @@ class Environment
 
     /**
      * Disables debugging mode.
+     *
+     * @return void
      */
-    public function disableDebug(): void
+    public function disableDebug()
     {
         $this->debug = false;
         $this->updateOptionsHash();
@@ -182,16 +186,20 @@ class Environment
 
     /**
      * Enables the auto_reload option.
+     *
+     * @return void
      */
-    public function enableAutoReload(): void
+    public function enableAutoReload()
     {
         $this->autoReload = true;
     }
 
     /**
      * Disables the auto_reload option.
+     *
+     * @return void
      */
-    public function disableAutoReload(): void
+    public function disableAutoReload()
     {
         $this->autoReload = false;
     }
@@ -208,8 +216,10 @@ class Environment
 
     /**
      * Enables the strict_variables option.
+     *
+     * @return void
      */
-    public function enableStrictVariables(): void
+    public function enableStrictVariables()
     {
         $this->strictVariables = true;
         $this->updateOptionsHash();
@@ -217,8 +227,10 @@ class Environment
 
     /**
      * Disables the strict_variables option.
+     *
+     * @return void
      */
-    public function disableStrictVariables(): void
+    public function disableStrictVariables()
     {
         $this->strictVariables = false;
         $this->updateOptionsHash();
@@ -266,8 +278,10 @@ class Environment
      * @param CacheInterface|string|false $cache A Twig\Cache\CacheInterface implementation,
      *                                           an absolute path to the compiled templates,
      *                                           or false to disable cache
+     *
+     * @return void
      */
-    public function setCache($cache): void
+    public function setCache($cache)
     {
         if (\is_string($cache)) {
             $this->originalCache = $cache;
@@ -502,7 +516,10 @@ class Environment
         throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
     }
 
-    public function setLexer(Lexer $lexer): void
+    /**
+     * @return void
+     */
+    public function setLexer(Lexer $lexer)
     {
         $this->lexer = $lexer;
     }
@@ -519,7 +536,10 @@ class Environment
         return $this->lexer->tokenize($source);
     }
 
-    public function setParser(Parser $parser): void
+    /**
+     * @return void
+     */
+    public function setParser(Parser $parser)
     {
         $this->parser = $parser;
     }
@@ -538,7 +558,10 @@ class Environment
         return $this->parser->parse($stream);
     }
 
-    public function setCompiler(Compiler $compiler): void
+    /**
+     * @return void
+     */
+    public function setCompiler(Compiler $compiler)
     {
         $this->compiler = $compiler;
     }
@@ -572,7 +595,10 @@ class Environment
         }
     }
 
-    public function setLoader(LoaderInterface $loader): void
+    /**
+     * @return void
+     */
+    public function setLoader(LoaderInterface $loader)
     {
         $this->loader = $loader;
     }
@@ -582,7 +608,10 @@ class Environment
         return $this->loader;
     }
 
-    public function setCharset(string $charset): void
+    /**
+     * @return void
+     */
+    public function setCharset(string $charset)
     {
         if ('UTF8' === $charset = strtoupper($charset ?: '')) {
             // iconv on Windows requires "UTF-8" instead of "UTF8"
@@ -602,7 +631,10 @@ class Environment
         return $this->extensionSet->hasExtension($class);
     }
 
-    public function addRuntimeLoader(RuntimeLoaderInterface $loader): void
+    /**
+     * @return void
+     */
+    public function addRuntimeLoader(RuntimeLoaderInterface $loader)
     {
         $this->runtimeLoaders[] = $loader;
     }
@@ -649,7 +681,10 @@ class Environment
         throw new RuntimeError(\sprintf('Unable to load the "%s" runtime.', $class));
     }
 
-    public function addExtension(ExtensionInterface $extension): void
+    /**
+     * @return void
+     */
+    public function addExtension(ExtensionInterface $extension)
     {
         $this->extensionSet->addExtension($extension);
         $this->updateOptionsHash();
@@ -657,8 +692,10 @@ class Environment
 
     /**
      * @param ExtensionInterface[] $extensions An array of extensions
+     *
+     * @return void
      */
-    public function setExtensions(array $extensions): void
+    public function setExtensions(array $extensions)
     {
         $this->extensionSet->setExtensions($extensions);
         $this->updateOptionsHash();
@@ -672,7 +709,10 @@ class Environment
         return $this->extensionSet->getExtensions();
     }
 
-    public function addTokenParser(TokenParserInterface $parser): void
+    /**
+     * @return void
+     */
+    public function addTokenParser(TokenParserInterface $parser)
     {
         $this->extensionSet->addTokenParser($parser);
     }
@@ -703,7 +743,10 @@ class Environment
         $this->extensionSet->registerUndefinedTokenParserCallback($callable);
     }
 
-    public function addNodeVisitor(NodeVisitorInterface $visitor): void
+    /**
+     * @return void
+     */
+    public function addNodeVisitor(NodeVisitorInterface $visitor)
     {
         $this->extensionSet->addNodeVisitor($visitor);
     }
@@ -718,7 +761,10 @@ class Environment
         return $this->extensionSet->getNodeVisitors();
     }
 
-    public function addFilter(TwigFilter $filter): void
+    /**
+     * @return void
+     */
+    public function addFilter(TwigFilter $filter)
     {
         $this->extensionSet->addFilter($filter);
     }
@@ -755,7 +801,10 @@ class Environment
         return $this->extensionSet->getFilters();
     }
 
-    public function addTest(TwigTest $test): void
+    /**
+     * @return void
+     */
+    public function addTest(TwigTest $test)
     {
         $this->extensionSet->addTest($test);
     }
@@ -786,7 +835,10 @@ class Environment
         $this->extensionSet->registerUndefinedTestCallback($callable);
     }
 
-    public function addFunction(TwigFunction $function): void
+    /**
+     * @return void
+     */
+    public function addFunction(TwigFunction $function)
     {
         $this->extensionSet->addFunction($function);
     }
@@ -830,8 +882,10 @@ class Environment
      * but after, you can only update existing globals.
      *
      * @param mixed $value The global value
+     *
+     * @return void
      */
-    public function addGlobal(string $name, $value): void
+    public function addGlobal(string $name, $value)
     {
         if ($this->extensionSet->isInitialized() && !\array_key_exists($name, $this->getGlobals())) {
             throw new \LogicException(\sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
