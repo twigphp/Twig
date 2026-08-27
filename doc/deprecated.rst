@@ -12,7 +12,10 @@ Classes
   final in Twig 4.0. Use ``Twig\Markup`` directly instead of extending it.
 
 * The ``Twig\Node\MacroNode`` class is considered final as of Twig 3.29 and
-  will be final in Twig 4.0.
+  will be final in Twig 4.0. Note that macros are compiled as closures stored
+  in a per-template registry as of Twig 3.29, so overriding
+  ``MacroNode::compile()`` based on the previous contract (emitting a
+  ``macro_``-prefixed method) is not supported anymore.
 
 Functions
 ---------
