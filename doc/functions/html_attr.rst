@@ -124,10 +124,10 @@ Data Attributes
 ---------------
 
 For ``data-*`` attributes, a boolean ``true`` is converted to the string
-``"true"``, and any non-scalar value is JSON-encoded. Two exceptions behave as
-they do for any other attribute: an iterable is rendered as a token list, and
-a ``Stringable`` object is cast to its string representation. When an object
-is both, the iterable behavior wins.
+``"true"``, and any non-scalar value is JSON-encoded, including arrays and
+other iterables. The only exception is a ``Stringable`` object, which behaves
+as it does for any other attribute: it is cast to its string representation,
+or rendered as a token list when it is also iterable.
 
 .. code-block:: html+twig
 

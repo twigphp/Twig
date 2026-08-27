@@ -1216,8 +1216,14 @@ You can skip values by leaving a slot empty:
 
 Sequence destructuring also works with iterators (any ``Traversable``
 value). Values are extracted in iteration order and keys are ignored. The
-iterator is consumed lazily: only as many values as there are variables are
-fetched, and the expression returns the iterator itself.
+iterator is consumed lazily: only as many values as there are slots in the
+pattern are fetched (an empty slot consumes a value too), and the expression
+returns the iterator itself.
+
+Do not reuse a non-rewindable iterator (like a generator) after destructuring
+it: Twig does not define the iteration state it is left in. A rewindable
+iterator can be traversed again afterwards and restarts from the beginning,
+according to its own behavior.
 
 Object Destructuring
 ~~~~~~~~~~~~~~~~~~~~
