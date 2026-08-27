@@ -453,7 +453,7 @@ TWIG, 'index')));
     {
         $twig = new Environment(new ArrayLoader());
 
-        $this->expectDeprecation('Since twig/twig 3.29: Defining the macro "input" more than once in "index" is deprecated and will throw a SyntaxError in Twig 4.0 (first definition at line 1, second at line 1). The last definition is used in Twig 3.');
+        $this->expectDeprecation('Since twig/twig 3.29: Defining the macro "input" more than once in "index" is deprecated and will throw a SyntaxError in Twig 4.0 (previous definition at line 1, new definition at line 1). The last definition is used in Twig 3.');
 
         $module = $twig->parse($twig->tokenize(new Source('{## First #}{% macro input() %}{% endmacro %}{## Second #}{% macro input() %}{% endmacro %}', 'index')));
 
@@ -461,6 +461,20 @@ TWIG, 'index')));
         foreach ($module->getNode('body')->getNode('0') as $declaration) {
             $this->assertNull($declaration->getDocumentation());
         }
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testDuplicateMacroDeprecationsReferToPreviousDefinition(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+
+        $this->expectDeprecation('Since twig/twig 3.29: Defining the macro "input" more than once in "index" is deprecated and will throw a SyntaxError in Twig 4.0 (previous definition at line 1, new definition at line 2). The last definition is used in Twig 3.');
+        $this->expectDeprecation('Since twig/twig 3.29: Defining the macro "input" more than once in "index" is deprecated and will throw a SyntaxError in Twig 4.0 (previous definition at line 2, new definition at line 3). The last definition is used in Twig 3.');
+
+        $twig->parse($twig->tokenize(new Source("{% macro input() %}{% endmacro %}\n{% macro input() %}{% endmacro %}\n{% macro input() %}{% endmacro %}", 'index')));
     }
 
     public function testBodyForParentTemplates(): void
