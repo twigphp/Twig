@@ -48,7 +48,14 @@ class SequenceDestructuringSetBinary extends AbstractBinary
     public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
-        $compiler->raw('[');
+        $var = '$'.$compiler->getVarName();
+        $compiler
+            ->raw('[(('.$var.' = ')
+            ->subcompile($this->getNode('right'))
+            ->raw(') instanceof \Traversable ? CoreExtension::destructureSequence($context, ')
+            ->repr($this->variables)
+            ->raw(', '.$var.') : ([')
+        ;
         foreach ($this->variables as $i => $name) {
             if ($i) {
                 $compiler->raw(', ');
@@ -57,7 +64,11 @@ class SequenceDestructuringSetBinary extends AbstractBinary
                 $compiler->raw('$context[')->repr($name)->raw(']');
             }
         }
-        $compiler->raw('] = array_pad(')->subcompile($this->getNode('right'))->raw(', ')->repr(\count($this->variables))->raw(', null)');
+        $compiler
+            ->raw('] = array_pad('.$var.', ')
+            ->repr(\count($this->variables))
+            ->raw(', null))), '.$var.' = null][0]')
+        ;
     }
 
     public function operator(Compiler $compiler): Compiler

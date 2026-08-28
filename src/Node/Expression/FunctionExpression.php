@@ -34,7 +34,10 @@ class FunctionExpression extends CallExpression implements SupportDefinedTestInt
         }
     }
 
-    public function compile(Compiler $compiler): void
+    /**
+     * @return void
+     */
+    public function compile(Compiler $compiler)
     {
         if ('constant' === $this->getAttribute('name') && $this->definedTest) {
             $this->getNode('arguments')->setNode('checkDefined', new ConstantExpression(true, $this->getTemplateLine()));

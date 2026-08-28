@@ -79,7 +79,10 @@ class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenTo
         }
     }
 
-    protected function addGetTemplate(Compiler $compiler/* , string $template = '' */): void
+    /**
+     * @return void
+     */
+    protected function addGetTemplate(Compiler $compiler/* , string $template = '' */)
     {
         $compiler
             ->raw('$this->load(')
@@ -90,7 +93,10 @@ class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenTo
         ;
     }
 
-    protected function addTemplateArguments(Compiler $compiler): void
+    /**
+     * @return void
+     */
+    protected function addTemplateArguments(Compiler $compiler)
     {
         if (!$this->hasNode('variables')) {
             $compiler->raw(false === $this->getAttribute('only') ? '$context' : '[]');

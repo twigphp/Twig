@@ -1038,29 +1038,6 @@ EOF
         $this->assertEquals('<p>username</p>', $twig->load('index')->render([]));
     }
 
-    public function testMacroImportExpressionIsCheckedBeforeExecution(): void
-    {
-        $evilCalls = 0;
-        $twig = $this->getEnvironment(true, [], [
-            'caller.twig' => '{% import "macros.twig" as macros %}{{ macros.render() }}',
-            'macros.twig' => '{% from evil() import render as dependency %}{% macro render() %}{{ dependency() }}{% endmacro %}',
-            'dependency.twig' => '{% macro render() %}ok{% endmacro %}',
-        ], ['from', 'import', 'macro']);
-        $twig->addFunction(new TwigFunction('evil', static function () use (&$evilCalls): string {
-            ++$evilCalls;
-
-            return 'dependency.twig';
-        }));
-
-        try {
-            $twig->render('caller.twig');
-            $this->fail('Expected SecurityNotAllowedFunctionError');
-        } catch (SecurityNotAllowedFunctionError $e) {
-            $this->assertSame('evil', $e->getFunctionName());
-        }
-        $this->assertSame(0, $evilCalls, 'The forbidden function must not be invoked before the security check runs.');
-    }
-
     public function testSelfMacroReferenceWithStringLiteralDoesNotInjectPhp(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{{ _self.(\'foo + 1; trigger_error("BAD-MACRO-REF") //\')() }}']);

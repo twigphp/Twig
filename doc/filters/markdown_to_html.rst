@@ -105,6 +105,13 @@ to another implementation (for instance ``ParsedownExtra``, which extends
     (``# Title``) instead, and any YAML front matter is parsed out of the
     rendered HTML rather than being rendered.
 
+.. caution::
+
+    The output of the filter is marked as safe for HTML. The default
+    ``tempest/markdown`` converter passes raw HTML, raw ``@@ ... @@`` blocks,
+    and unsafe links through, so only use it on trusted input, or pass a
+    converter configured to sanitize its output to ``TempestMarkdown``.
+
 When using ``twig/extra-bundle``, register your converter as the
 ``twig.markdown.default`` service to make it the one used by the filter:
 

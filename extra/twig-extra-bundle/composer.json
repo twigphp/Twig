@@ -6,6 +6,24 @@
     "homepage": "https://twig.symfony.com",
     "license": "MIT",
     "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../*-extra",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "twig/cache-extra": "3.x-dev",
+                    "twig/cssinliner-extra": "3.x-dev",
+                    "twig/html-extra": "3.x-dev",
+                    "twig/inky-extra": "3.x-dev",
+                    "twig/intl-extra": "3.x-dev",
+                    "twig/markdown-extra": "3.x-dev",
+                    "twig/string-extra": "3.x-dev"
+                }
+            }
+        }
+    ],
     "authors": [
         {
             "name": "Fabien Potencier",

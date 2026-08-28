@@ -17,7 +17,7 @@ use Twig\Compiler;
 /**
  * Represents the macros declared in a template.
  *
- * It compiles the macro namespace of the template.
+ * It compiles to the method returning the macro registry of the template.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -27,7 +27,7 @@ final class MacrosNode extends Node
     /**
      * @param array<string, MacroNode> $macros
      */
-    public function __construct(array $macros = [], private ?MacroImportsNode $imports = null)
+    public function __construct(array $macros = [])
     {
         foreach ($macros as $name => $macro) {
             if (!$macro instanceof MacroNode) {
@@ -36,14 +36,6 @@ final class MacrosNode extends Node
         }
 
         parent::__construct($macros);
-    }
-
-    public function __clone()
-    {
-        parent::__clone();
-        if (null !== $this->imports) {
-            $this->imports = clone $this->imports;
-        }
     }
 
     public function setNode(string|int $name, Node $node): void
@@ -55,51 +47,16 @@ final class MacrosNode extends Node
         parent::setNode($name, $node);
     }
 
-    /**
-     * @internal
-     */
-    public function hasImports(): bool
-    {
-        return \count($this) && null !== $this->imports && \count($this->imports);
-    }
-
     public function compile(Compiler $compiler): void
     {
         if (!\count($this)) {
             return;
         }
 
-        $compiler->write("private ?MacroNamespace \$macroNamespace = null;\n");
-        if ($this->hasImports()) {
-            $compiler->write("private bool \$skipLazyMacroImports = false;\n");
-        }
         $compiler
-            ->raw("\n")
-            ->write("public function getMacroNamespace(): MacroNamespace\n", "{\n")
+            ->write("protected function loadDeclaredMacros(): array\n", "{\n")
             ->indent()
-            ->write('return $this->macroNamespace ??= new MacroNamespace($this, ')
-        ;
-
-        $this->compileMacros($compiler);
-
-        if ($this->hasImports()) {
-            $compiler
-                ->raw(', ')
-                ->subcompile($this->imports)
-            ;
-        }
-
-        $compiler
-            ->raw(");\n")
-            ->outdent()
-            ->write("}\n\n")
-        ;
-    }
-
-    private function compileMacros(Compiler $compiler): void
-    {
-        $compiler
-            ->raw("[\n")
+            ->write("return [\n")
             ->indent()
         ;
 
@@ -116,7 +73,9 @@ final class MacrosNode extends Node
 
         $compiler
             ->outdent()
-            ->write(']')
+            ->write("];\n")
+            ->outdent()
+            ->write("}\n\n")
         ;
     }
 }

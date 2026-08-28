@@ -25,7 +25,6 @@ use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Variable\AssignMacroVariable;
-use Twig\Node\MacroImportsNode;
 use Twig\Node\MacroNode;
 use Twig\Node\MacrosNode;
 use Twig\Node\ModuleNode;
@@ -33,7 +32,6 @@ use Twig\Node\Node;
 use Twig\Node\NodeDocumentation;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
-use Twig\Node\SkipLazyMacroImportsNode;
 use Twig\Node\TextNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\TokenParser\TokenParserInterface;
@@ -60,6 +58,8 @@ class Parser
      * @var string[]
      */
     private array $blockStack;
+    /** @var list<Node|null> */
+    private array $documentationTargets = [];
     /**
      * @var MacroNode[]
      */
@@ -111,6 +111,7 @@ class Parser
         $this->stream = $stream;
         $this->parent = null;
         $this->blocks = [];
+        $this->documentationTargets = [];
         $this->macros = [];
         $this->traits = [];
         $this->blockStack = [];
@@ -138,12 +139,11 @@ class Parser
             $body = $this->cleanupBodyForChildTemplates($body);
         }
 
-        $body = new BodyNode([$body]);
         $node = new ModuleNode(
-            $body,
+            new BodyNode([$body]),
             $this->parent,
             $this->blocks ? new Nodes($this->blocks) : new EmptyNode(),
-            new MacrosNode($this->macros, new MacroImportsNode($body)),
+            new MacrosNode($this->macros),
             $this->traits ? new Nodes($this->traits) : new EmptyNode(),
             $this->embeddedTemplates ? new Nodes($this->embeddedTemplates) : new EmptyNode(),
             $stream->getSourceContext(),
@@ -155,11 +155,6 @@ class Parser
          * @var ModuleNode $node
          */
         $node = $traverser->traverse($node);
-
-        $macros = $node->getNode('macros');
-        if ($macros instanceof MacrosNode && $macros->hasImports()) {
-            $node->setNode('display_start', new Nodes([new SkipLazyMacroImportsNode(), $node->getNode('display_start')]));
-        }
 
         // restore previous stack so previous parse() call can resume working
         foreach (array_pop($this->stack) as $key => $val) {
@@ -249,9 +244,19 @@ class Parser
                     $this->stream->next();
 
                     $subparser->setParser($this);
-                    $node = $subparser->parse($token);
+                    $documentationTargetIndex = \count($this->documentationTargets);
+                    $this->documentationTargets[] = null;
+                    try {
+                        $node = $subparser->parse($token);
+                        $documentationTarget = $this->documentationTargets[$documentationTargetIndex];
+                    } finally {
+                        array_pop($this->documentationTargets);
+                    }
                     $node->setNodeTag($subparser->getTag());
                     NodeDocumentation::add($node, $startToken);
+                    if (null !== $documentationTarget && $node !== $documentationTarget) {
+                        NodeDocumentation::move($node, $documentationTarget);
+                    }
                     $rv[] = $node;
                     break;
 
@@ -292,6 +297,18 @@ class Parser
         }
 
         $this->blocks[$name] = new BodyNode([$value], [], $value->getTemplateLine());
+    }
+
+    public function setDocumentationTarget(Node $node): void
+    {
+        if (null === $index = array_key_last($this->documentationTargets)) {
+            throw new \LogicException('A documentation target can only be set while parsing a tag.');
+        }
+        if (null !== $this->documentationTargets[$index]) {
+            throw new \LogicException('The documentation target for a tag can only be set once.');
+        }
+
+        $this->documentationTargets[$index] = $node;
     }
 
     public function setMacro(string $name, MacroNode $node): void
@@ -507,11 +524,6 @@ class Parser
     private function cleanupBodyForChildTemplates(Node $body): Node
     {
         if ($body instanceof BlockReferenceNode) {
-            $name = $body->getAttribute('name');
-            if (isset($this->blocks[$name])) {
-                NodeDocumentation::move($body, $this->blocks[$name]->getNode('0'));
-            }
-
             return new EmptyNode();
         }
         if ($body instanceof TextNode && $body->isBlank()) {
@@ -521,10 +533,6 @@ class Parser
         foreach ($body as $k => $node) {
             if ($node instanceof BlockReferenceNode) {
                 // as it has a parent, the block reference won't be used
-                $name = $node->getAttribute('name');
-                if (isset($this->blocks[$name])) {
-                    NodeDocumentation::move($node, $this->blocks[$name]->getNode('0'));
-                }
                 $body->removeNode($k);
             } elseif ($node instanceof TextNode && $node->isBlank()) {
                 // remove nodes considered as "empty"

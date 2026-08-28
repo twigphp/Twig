@@ -250,6 +250,27 @@ class ExpressionParserTest extends TestCase
         $this->assertSame('third', $pairs[2]['value']->getAttribute('name'));
     }
 
+    /**
+     * @dataProvider getEmptyDestructuringTests
+     */
+    #[DataProvider('getEmptyDestructuringTests')]
+    public function testEmptyDestructuringThrows(string $template): void
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('Cannot destructure to an empty list of variables in "index" at line 1.');
+        $env->compileSource(new Source($template, 'index'));
+    }
+
+    public static function getEmptyDestructuringTests()
+    {
+        yield ['{% do [] = values %}'];
+        yield ['{% do {} = values %}'];
+        yield ['{% do [,] = values %}'];
+        yield ['{% do [,,] = values %}'];
+    }
+
     public function testObjectDestructuringUsesAssignmentTargets(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -262,6 +283,20 @@ class ExpressionParserTest extends TestCase
         $this->assertSame('name', $pair['key']->getAttribute('value'));
         $this->assertSame(AssignContextVariable::class, $pair['value']::class);
         $this->assertSame('user_name', $pair['value']->getAttribute('name'));
+    }
+
+    public function testObjectDestructuringEvaluatesRightHandExpressionOnce(): void
+    {
+        $calls = 0;
+        $env = new Environment(new ArrayLoader(['template' => '{% do [result_first, result_second] = ({first, second} = next_value()) %}{{ first }} {{ second }} {{ result_first }} {{ result_second }}']));
+        $env->addFunction(new TwigFunction('next_value', static function () use (&$calls): object {
+            ++$calls;
+
+            return (object) ['first' => $calls, 'second' => $calls];
+        }));
+
+        $this->assertSame('1 1 1 1', $env->render('template'));
+        $this->assertSame(1, $calls);
     }
 
     #[DataProvider('getTestsForString')]

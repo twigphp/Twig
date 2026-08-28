@@ -13,6 +13,7 @@ namespace Twig\Extra\Intl\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extension\CoreExtension;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\ArrayLoader;
@@ -72,7 +73,7 @@ class IntlExtensionTest extends TestCase
         $this->assertContains(
             $ext->formatDateTime($env, new \DateTime('2020-02-20T13:37:00+00:00', new \DateTimeZone('Europe/Paris'))),
             [
-                'jeudi 20 février 2020 à 13:37:00 heure normale d’Europe centrale',
+                'jeudi 20 février 2020 à 13:37:00 heure normale d’Europe centrale', // codespell:ignore normale
                 'jeudi 20 février 2020 à 13:37:00 temps universel coordonné',
             ]
         );
@@ -107,6 +108,76 @@ class IntlExtensionTest extends TestCase
         $this->assertSame('20 feb 2020', $ext->formatDate($env, $date));
         $this->assertSame('22:22:00', $ext->formatTime($env, $date));
         $this->assertSame('donderdag 20 februari 2020', $ext->formatDateTime($env, $date, 'full', 'none'));
+    }
+
+    public function testFormatterCalendarPrecedence(): void
+    {
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2020-02-20T00:00:00+00:00');
+        $gregorianProto = new \IntlDateFormatter('th_TH', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', \IntlDateFormatter::GREGORIAN);
+        $traditionalProto = new \IntlDateFormatter('th_TH', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', \IntlDateFormatter::TRADITIONAL);
+        $hebrewProto = new \IntlDateFormatter('en_US', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', \IntlCalendar::createInstance('UTC', 'en_US@calendar=hebrew'));
+        $failedCalendarProto = new class('th_TH', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC') extends \IntlDateFormatter {
+            public function getCalendar(): int|false
+            {
+                return false;
+            }
+
+            public function getCalendarObject(): \IntlCalendar|false|null
+            {
+                return false;
+            }
+        };
+
+        $this->assertSame('2563', (new IntlExtension($gregorianProto))->formatDate($env, $date, pattern: 'yyyy', timezone: 'UTC', calendar: 'traditional', locale: 'th_TH'));
+        $this->assertSame('2020', (new IntlExtension($traditionalProto))->formatDate($env, $date, pattern: 'yyyy', timezone: 'UTC', calendar: 'gregorian', locale: 'th_TH'));
+        $this->assertSame('2563', (new IntlExtension($traditionalProto))->formatDate($env, $date, pattern: 'yyyy', timezone: 'UTC', locale: 'th_TH'));
+        $this->assertSame('5780', (new IntlExtension($hebrewProto))->formatDate($env, $date, pattern: 'yyyy', timezone: 'UTC', locale: 'en_US'));
+        $this->assertSame('2020', (new IntlExtension($failedCalendarProto))->formatDate($env, $date, pattern: 'yyyy', timezone: 'UTC', locale: 'th_TH'));
+        $this->assertSame('2020', (new IntlExtension())->formatDate($env, $date, pattern: 'yyyy', timezone: 'UTC', locale: 'th_TH'));
+    }
+
+    public function testFormatterObjectCalendarChangesAreApplied(): void
+    {
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2021-01-01T00:00:00+00:00');
+        $calendar = \IntlCalendar::createInstance('UTC', 'en_US@calendar=gregorian');
+        $calendar->setFirstDayOfWeek(\IntlCalendar::DOW_MONDAY);
+        $calendar->setMinimalDaysInFirstWeek(4);
+        $proto = new \IntlDateFormatter('en_US', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', $calendar);
+        $ext = new IntlExtension($proto);
+
+        $this->assertSame('2020-53', $ext->formatDate($env, $date, pattern: 'Y-ww', timezone: 'UTC', locale: 'en_US'));
+
+        $calendar = \IntlCalendar::createInstance('UTC', 'en_US@calendar=gregorian');
+        $calendar->setFirstDayOfWeek(\IntlCalendar::DOW_SUNDAY);
+        $calendar->setMinimalDaysInFirstWeek(1);
+        $proto->setCalendar($calendar);
+
+        $this->assertSame('2021-01', $ext->formatDate($env, $date, pattern: 'Y-ww', timezone: 'UTC', locale: 'en_US'));
+    }
+
+    public function testFormatterProtoFormatFailuresFallBackToMedium(): void
+    {
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2020-02-20T00:00:00+00:00');
+        $proto = new class('en_US', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, 'UTC') extends \IntlDateFormatter {
+            public function getDateType(): int|false
+            {
+                return false;
+            }
+
+            public function getTimeType(): int|false
+            {
+                return false;
+            }
+        };
+        $ext = new IntlExtension($proto);
+        $expectedDate = (new \IntlDateFormatter('en_US', \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE, 'UTC', \IntlDateFormatter::GREGORIAN))->format($date);
+        $expectedTime = (new \IntlDateFormatter('en_US', \IntlDateFormatter::NONE, \IntlDateFormatter::MEDIUM, 'UTC', \IntlDateFormatter::GREGORIAN))->format($date);
+
+        $this->assertSame($expectedDate, $ext->formatDate($env, $date, timezone: 'UTC', locale: 'en_US'));
+        $this->assertSame($expectedTime, $ext->formatTime($env, $date, timezone: 'UTC', locale: 'en_US'));
     }
 
     public function testFormatterProtoWithCustomPatternIsUsedByDefault(): void
@@ -152,5 +223,23 @@ class IntlExtensionTest extends TestCase
         $cache = (new \ReflectionProperty(IntlExtension::class, 'numberFormatters'))->getValue($ext);
         $this->assertLessThanOrEqual(100, \count($cache));
         $this->assertGreaterThan(1, \count($cache));
+    }
+
+    public function testFormatListThrowsOnFailure(): void
+    {
+        if (!class_exists('IntlListFormatter')) {
+            $this->markTestSkipped('IntlListFormatter is not available.');
+        }
+
+        $strings = ['Alice', "\xB1\x31"];
+        $formatter = new \IntlListFormatter('en', \IntlListFormatter::TYPE_AND, \IntlListFormatter::WIDTH_WIDE);
+        if (false !== $formatter->format($strings)) {
+            $this->markTestSkipped('IntlListFormatter accepts the malformed UTF-8 input.');
+        }
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Unable to format the given list: '.$formatter->getErrorMessage());
+
+        (new IntlExtension())->formatList($strings, locale: 'en');
     }
 }

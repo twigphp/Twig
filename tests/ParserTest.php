@@ -39,6 +39,7 @@ use Twig\Node\IfNode;
 use Twig\Node\MacroDeclarationNode;
 use Twig\Node\MacroNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -353,6 +354,18 @@ TWIG, 'index')));
         ], $visitor->documentation);
     }
 
+    public function testCustomTokenParserCanSetDocumentationTarget(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $twig->addTokenParser(new DocumentationTargetTokenParser());
+
+        $module = $twig->parse($twig->tokenize(new Source('{## Target documentation #}{% documentation_target %}', 'index')));
+        $node = $module->getNode('body')->getNode('0');
+
+        $this->assertNull($node->getDocumentation());
+        $this->assertSame('Target documentation', $node->getNode('target')->getDocumentation());
+    }
+
     public function testDocumentationIsRemovedFromUnsupportedOptimizedNodes(): void
     {
         $twig = new Environment(new ArrayLoader(), ['autoescape' => false]);
@@ -489,7 +502,24 @@ class DocumentationReadingNodeVisitor implements NodeVisitorInterface
 
     public function getPriority(): int
     {
-        return 0;
+        return -1024;
+    }
+}
+
+class DocumentationTargetTokenParser extends AbstractTokenParser
+{
+    public function parse(Token $token): Node
+    {
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
+        $target = new EmptyNode($token->getLine());
+        $this->parser->setDocumentationTarget($target);
+
+        return new Nodes(['target' => $target], $token->getLine());
+    }
+
+    public function getTag(): string
+    {
+        return 'documentation_target';
     }
 }
 

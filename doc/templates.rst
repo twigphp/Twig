@@ -1170,6 +1170,21 @@ You can skip values by leaving a slot empty:
     {# only assign the second value #}
     {% do [, last] = ['Fabien', 'Potencier'] %}
 
+.. versionadded:: 3.29
+
+    Support for destructuring iterators was introduced in Twig 3.29.
+
+Sequence destructuring also works with iterators (any ``Traversable``
+value). Values are extracted in iteration order and keys are ignored. The
+iterator is consumed lazily: only as many values as there are slots in the
+pattern are fetched (an empty slot consumes a value too), and the expression
+returns the iterator itself.
+
+Do not reuse a non-rewindable iterator (like a generator) after destructuring
+it: Twig does not define the iteration state it is left in. A rewindable
+iterator can be traversed again afterwards and restarts from the beginning,
+according to its own behavior.
+
 Object Destructuring
 ~~~~~~~~~~~~~~~~~~~~
 

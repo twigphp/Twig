@@ -88,7 +88,6 @@ use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\NodeVisitor\CorrectnessNodeVisitor;
-use Twig\NodeVisitor\DocumentationNodeVisitor;
 use Twig\Parser;
 use Twig\Sandbox\SecurityNotAllowedMethodError;
 use Twig\Sandbox\SecurityNotAllowedPropertyError;
@@ -132,6 +131,14 @@ final class CoreExtension extends AbstractExtension
         'SplQueue',
         'SplStack',
         'WeakMap',
+    ];
+    /**
+     * @internal
+     */
+    public const STRINGABLE_KEY_ARRAY_ACCESS_CLASSES = [
+        'ArrayIterator',
+        'ArrayObject',
+        'RecursiveArrayIterator',
     ];
 
     private const DEFAULT_TRIM_CHARS = " \t\n\r\0\x0B";
@@ -334,7 +341,6 @@ final class CoreExtension extends AbstractExtension
     public function getNodeVisitors(): array
     {
         return [
-            new DocumentationNodeVisitor(),
             new CorrectnessNodeVisitor(),
         ];
     }
@@ -1165,7 +1171,7 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * @throws RuntimeError When an invalid pattern is used
+     * @throws RuntimeError When the regular expression cannot be evaluated
      *
      * @internal
      */
@@ -1175,7 +1181,11 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" is not valid', $regexp).substr($m, 12));
         });
         try {
-            return preg_match($regexp, $str ?? '');
+            if (false === $result = preg_match($regexp, $str ?? '')) {
+                throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" failed: %s.', $regexp, preg_last_error_msg()));
+            }
+
+            return $result;
         } finally {
             restore_error_handler();
         }
@@ -1342,6 +1352,39 @@ final class CoreExtension extends AbstractExtension
     public static function toArray($seq, $preserveKeys = true)
     {
         return is_iterable($seq) ? iterator_to_array($seq, $preserveKeys) : $seq;
+    }
+
+    /**
+     * @param list<string|null> $names
+     *
+     * @internal
+     */
+    public static function destructureSequence(array &$context, array $names, \Traversable $sequence): \Traversable
+    {
+        $count = \count($names);
+        if (0 === $count) {
+            return $sequence;
+        }
+
+        $i = 0;
+        foreach ($sequence as $value) {
+            $name = $names[$i];
+            if (null !== $name) {
+                $context[$name] = $value;
+            }
+            if (++$i === $count) {
+                return $sequence;
+            }
+        }
+
+        for (; $i < $count; ++$i) {
+            $name = $names[$i];
+            if (null !== $name) {
+                $context[$name] = null;
+            }
+        }
+
+        return $sequence;
     }
 
     /**
@@ -1642,6 +1685,10 @@ final class CoreExtension extends AbstractExtension
                     $item = (string) $item;
                     goto methodCheck;
                 }
+            }
+
+            if ($object instanceof \ArrayAccess && $arrayItem instanceof \Stringable && \in_array($object::class, self::STRINGABLE_KEY_ARRAY_ACCESS_CLASSES, true)) {
+                $arrayItem = (string) $arrayItem;
             }
 
             if (match (true) {

@@ -1,8 +1,15 @@
 ``format_time``
 ===============
 
-The ``format_time`` filter formats a time. It behaves in the exact same way as
-the :doc:`format_datetime<format_datetime>` filter, but without the date.
+The ``format_time`` filter formats a time. It supports the same locale,
+timezone, calendar and format options as the
+:doc:`format_datetime<format_datetime>` filter, but without the date.
+
+When no format or pattern is provided, Twig uses the
+:ref:`application default time format <intl-date-format-defaults>`, or
+``medium`` when none is configured. To use a custom pattern, pass it explicitly.
+The :ref:`application default pattern <intl-date-format-defaults>` is not used
+for time-only formatting.
 
 .. note::
 
@@ -31,8 +38,8 @@ Arguments
 
 * ``locale``: The locale code as defined in `RFC 5646`_
 * ``timeFormat``: The time format
-* ``pattern``: A date time pattern
+* ``pattern``: A time pattern
 * ``timezone``: The date timezone
-* ``calendar``: The calendar ("gregorian" by default)
+* ``calendar``: The calendar
 
 .. _RFC 5646: https://www.rfc-editor.org/info/rfc5646

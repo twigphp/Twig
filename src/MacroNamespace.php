@@ -23,8 +23,7 @@ final class MacroNamespace
      */
     public function __construct(
         private Template $template,
-        private array $macros = [],
-        private ?\Closure $importsLoader = null,
+        private array $macros,
     ) {
     }
 
@@ -61,7 +60,6 @@ final class MacroNamespace
         }
 
         $this->template->ensureSecurityChecked();
-        $this->loadImports();
 
         return $this->macros[$name];
     }
@@ -77,23 +75,6 @@ final class MacroNamespace
             if (null === $namespace = $namespace->getParent($context)) {
                 return null;
             }
-        }
-    }
-
-    private function loadImports(): void
-    {
-        if (null === $loader = $this->importsLoader) {
-            return;
-        }
-
-        // clear before loading so that circular imports don't recurse infinitely
-        $this->importsLoader = null;
-        try {
-            $loader();
-        } catch (\Throwable $e) {
-            $this->importsLoader = $loader;
-
-            throw $e;
         }
     }
 

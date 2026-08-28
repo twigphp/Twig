@@ -150,32 +150,20 @@ macros are available in all blocks and other macros defined in the current
 template, but they are not available in included templates or child templates;
 you need to explicitly re-import macros in each template.
 
-A macro can use the imports declared at the top level of its own template::
+.. caution::
 
-    {# forms.twig #}
-    {% import "fields.twig" as fields %}
+    When a macro is called from another template, the body of the template where
+    it is defined is not executed. Do not rely on imports declared at the top
+    level of that template; import the dependencies inside the macro instead:
 
-    {% macro input(name) %}
-        {{ fields.text(name) }}
-    {% endmacro %}
+    .. code-block:: twig
 
-This also works when the macro is called from another template. For such an
-import to be available inside macros, it must follow two rules:
+        {# forms.twig #}
+        {% macro input(name) %}
+            {% from "fields.twig" import text %}
 
-* It must be declared at the top level of the template, not nested in another
-  tag like ``if`` or ``for``;
-
-* The imported template name must be a literal string or an expression that
-  only depends on :ref:`global variables <environment-globals>`; it cannot
-  use other variables.
-
-To use a dynamic template name, pass it as a macro argument and import it
-inside the macro body::
-
-    {% macro input(name, theme) %}
-        {% import theme as fields %}
-        {{ fields.text(name) }}
-    {% endmacro %}
+            {{ text(name) }}
+        {% endmacro %}
 
 Imported macros are not available in the body of ``embed`` tags, you need
 to explicitly re-import macros inside the tag.
