@@ -11,8 +11,10 @@
 
 namespace Twig\Tests\Sandbox;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Markup;
@@ -226,6 +228,34 @@ class SandboxTest extends TestCase
         $this->expectException(SecurityNotAllowedFilterError::class);
         $this->expectExceptionMessage('Filter "upper" is not allowed');
         $sandbox->render('index');
+    }
+
+    /**
+     * @dataProvider provideForeignTemplateWrapperUsages
+     */
+    #[DataProvider('provideForeignTemplateWrapperUsages')]
+    public function testRejectsTemplateWrapperFromAnotherEnvironment(string $template, string $foreignTemplate, array $tags = [], array $functions = []): void
+    {
+        $foreign = self::env(['foreign' => $foreignTemplate]);
+        $sandbox = new Sandbox(self::env(['index' => $template]), self::strictPolicy(tags: $tags, functions: $functions));
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('can only be used with the "Twig\\Environment" that created it');
+
+        $sandbox->render('index', ['foreign' => $foreign->load('foreign')]);
+    }
+
+    public static function provideForeignTemplateWrapperUsages(): iterable
+    {
+        yield 'include tag' => ['{% include foreign %}', 'foreign content', ['include']];
+        yield 'include function' => ['{{ include(foreign) }}', 'foreign content', [], ['include']];
+        yield 'include function fallback' => ['{{ include(["missing", foreign]) }}', 'foreign content', [], ['include']];
+        yield 'include_only function' => ['{{ include_only(foreign) }}', 'foreign content', [], ['include_only']];
+        yield 'extends tag' => ['{% extends foreign %}', 'foreign content', ['extends']];
+        yield 'embed tag' => ['{% embed foreign %}{% endembed %}', 'foreign content', ['embed', 'extends']];
+        yield 'import tag' => ['{% import foreign as macros %}{{ macros.foo() }}', '{% macro foo() %}foreign content{% endmacro %}', ['import']];
+        yield 'from tag' => ['{% from foreign import foo %}{{ foo() }}', '{% macro foo() %}foreign content{% endmacro %}', ['from']];
+        yield 'block function' => ['{{ block("content", foreign) }}', '{% block content %}foreign content{% endblock %}', [], ['block']];
     }
 
     public function testTheExtendsTagMustBeAllowed(): void

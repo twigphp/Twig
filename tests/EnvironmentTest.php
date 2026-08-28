@@ -85,6 +85,17 @@ class EnvironmentTest extends TestCase
         $this->assertEquals('foo\u003Cbr\/\u0020\u003E foo\u003Cbr\/\u0020\u003E', $twig->render('js', ['bar' => 'foo<br/ >']));
     }
 
+    public function testRejectsTemplateWrapperFromAnotherEnvironment(): void
+    {
+        $foreign = new Environment(new ArrayLoader(['index' => 'foreign']));
+        $twig = new Environment(new ArrayLoader());
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('can only be used with the "Twig\\Environment" that created it');
+
+        $twig->load($foreign->load('index'));
+    }
+
     public function escapingStrategyCallback($name)
     {
         return $name;
