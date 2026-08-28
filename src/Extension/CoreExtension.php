@@ -1188,7 +1188,7 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * @throws RuntimeError When an invalid pattern is used
+     * @throws RuntimeError When the regular expression cannot be evaluated
      *
      * @internal
      */
@@ -1198,7 +1198,11 @@ final class CoreExtension extends AbstractExtension
             throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" is not valid', $regexp).substr($m, 12));
         });
         try {
-            return preg_match($regexp, $str ?? '');
+            if (false === $result = preg_match($regexp, $str ?? '')) {
+                throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" failed: %s.', $regexp, preg_last_error_msg()));
+            }
+
+            return $result;
         } finally {
             restore_error_handler();
         }
