@@ -54,7 +54,7 @@ class ObjectDestructuringSetBinary extends AbstractBinary
     {
         $compiler->addDebugInfo($this);
         $var = '$'.$compiler->getVarName();
-        $compiler->raw('[');
+        $compiler->raw('[[');
         foreach ($this->mappings as $i => $mapping) {
             if ($i) {
                 $compiler->raw(', ');
@@ -74,7 +74,7 @@ class ObjectDestructuringSetBinary extends AbstractBinary
             }
             $compiler->raw(', ')->repr($mapping['property'])->raw(', [], \\Twig\\Template::ANY_CALL, false, false, ')->repr($compiler->getEnvironment()->hasExtension(SandboxExtension::class))->raw(', ')->repr($this->getNode('right')->getTemplateLine())->raw(')');
         }
-        $compiler->raw(']');
+        $compiler->raw('], '.$var.' = null][0]');
     }
 
     public function operator(Compiler $compiler): Compiler

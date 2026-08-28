@@ -50,7 +50,7 @@ class SequenceDestructuringSetBinary extends AbstractBinary
         $compiler->addDebugInfo($this);
         $var = '$'.$compiler->getVarName();
         $compiler
-            ->raw('(('.$var.' = ')
+            ->raw('[(('.$var.' = ')
             ->subcompile($this->getNode('right'))
             ->raw(') instanceof \Traversable ? CoreExtension::destructureSequence($context, ')
             ->repr($this->variables)
@@ -67,7 +67,7 @@ class SequenceDestructuringSetBinary extends AbstractBinary
         $compiler
             ->raw('] = array_pad('.$var.', ')
             ->repr(\count($this->variables))
-            ->raw(', null)))')
+            ->raw(', null))), '.$var.' = null][0]')
         ;
     }
 
