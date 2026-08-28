@@ -359,6 +359,8 @@ class Environment
     public function load($name): TemplateWrapper
     {
         if ($name instanceof TemplateWrapper) {
+            $name->unwrap($this);
+
             return $name;
         }
         if ($name instanceof Template) {
@@ -503,7 +505,7 @@ class Environment
                 return new TemplateWrapper($this, $name);
             }
             if ($name instanceof TemplateWrapper) {
-                return $name;
+                return $this->load($name);
             }
 
             if (1 !== $count && !$this->getLoader()->exists($name)) {

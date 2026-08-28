@@ -235,6 +235,6 @@ class CallMacroTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader($templates));
 
-        return $twig->load('index')->unwrap();
+        return $twig->load('index')->unwrap($twig);
     }
 }
