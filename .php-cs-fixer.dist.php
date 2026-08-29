@@ -2,6 +2,7 @@
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 return (new Config())
     ->setRules([
@@ -20,5 +21,6 @@ return (new Config())
         'no_superfluous_phpdoc_tags' => ['allow_mixed' => true, 'allow_unused_params' => true],
     ])
     ->setRiskyAllowed(true)
+    ->setParallelConfig(ParallelConfigFactory::detect())
     ->setFinder((new Finder())->in(__DIR__))
 ;
