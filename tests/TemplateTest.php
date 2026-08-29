@@ -239,9 +239,6 @@ class TemplateTest extends TestCase
         $this->assertSame('value', $twig->render('index', ['array' => ['string' => 'value'], 'object' => $key]));
     }
 
-    /**
-     * @dataProvider getStringableKeyArrayAccessContainers
-     */
     #[DataProvider('getStringableKeyArrayAccessContainers')]
     public function testStringableKeyIsCoercedForInternalArrayAccess(bool $strict, bool $sandboxed, \ArrayAccess $data): void
     {
@@ -269,9 +266,6 @@ class TemplateTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getStrictVariablesModes
-     */
     #[DataProvider('getStrictVariablesModes')]
     public function testArrayAccessWithObjectKeyKeepsTheObjectKey(bool $strict): void
     {
@@ -288,9 +282,6 @@ class TemplateTest extends TestCase
         $this->assertSame(0, $key->toStringCalls);
     }
 
-    /**
-     * @dataProvider getStrictVariablesModes
-     */
     #[DataProvider('getStrictVariablesModes')]
     public function testArrayAccessLookupDoesNotRepeatOffsetChecks(bool $strict): void
     {
@@ -319,9 +310,6 @@ class TemplateTest extends TestCase
         $this->assertSame([], $data->offsetGetCalls);
     }
 
-    /**
-     * @dataProvider getStrictVariablesModes
-     */
     #[DataProvider('getStrictVariablesModes')]
     public function testRejectedStringableArrayAccessKeyRethrowsOriginalTypeError(bool $strict): void
     {
@@ -344,9 +332,6 @@ class TemplateTest extends TestCase
         $this->assertSame(0, $key->toStringCalls);
     }
 
-    /**
-     * @dataProvider getStrictVariablesModes
-     */
     #[DataProvider('getStrictVariablesModes')]
     public function testSandboxDoesNotAuthorizeStringPropertyForArrayAccessObjectKey(bool $strict): void
     {
@@ -368,9 +353,6 @@ class TemplateTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getStrictVariablesModes
-     */
     #[DataProvider('getStrictVariablesModes')]
     public function testArrayWithStringableKeyIsCheckedBySandbox(bool $strict): void
     {
@@ -395,9 +377,6 @@ class TemplateTest extends TestCase
         $this->assertSame(1, $key->toStringCalls);
     }
 
-    /**
-     * @dataProvider getStrictVariablesModes
-     */
     #[DataProvider('getStrictVariablesModes')]
     public function testInternalArrayAccessWithStringableKeyIsCheckedBySandbox(bool $strict): void
     {

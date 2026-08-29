@@ -41,9 +41,6 @@ class TextTest extends NodeTestCase
         return $tests;
     }
 
-    /**
-     * @dataProvider getIsBlankData
-     */
     #[DataProvider('getIsBlankData')]
     public function testIsBlank($blank): void
     {

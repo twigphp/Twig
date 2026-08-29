@@ -33,9 +33,6 @@ use Twig\Source;
 
 class CorrectnessTest extends TestCase
 {
-    /**
-     * @dataProvider getFilterBodyNodesData
-     */
     #[DataProvider('getFilterBodyNodesData')]
     public function testFilterBodyNodes($input, $expected): void
     {
@@ -56,9 +53,6 @@ class CorrectnessTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getFilterBodyNodesDataThrowsException
-     */
     #[DataProvider('getFilterBodyNodesDataThrowsException')]
     public function testFilterBodyNodesThrowsException($input): void
     {
@@ -76,9 +70,6 @@ class CorrectnessTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getFilterBodyNodesWithBOMData
-     */
     #[DataProvider('getFilterBodyNodesWithBOMData')]
     public function testFilterBodyNodesWithBOM($emptyText): void
     {

@@ -47,7 +47,7 @@ function html()
 
 class IntegrationTest extends IntegrationTestCase
 {
-    public function getExtensions()
+    public function getExtensions(): array
     {
         $policy = new SecurityPolicy([], [], [], [], ['dump']);
 
