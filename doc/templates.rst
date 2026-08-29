@@ -649,12 +649,6 @@ exist:
     {# Stringable object (cast via __toString) #}
     {(uuid): 'token'}
 
-  .. versionadded:: 3.26.1
-
-      Support for arbitrary expressions as dynamic mapping keys
-      (attribute access, method calls, filter results, function calls,
-      and any ``Stringable`` object) was added in Twig 3.26.1.
-
   .. note::
 
       Inside a sandbox, the ``__toString()`` coercion goes through the
@@ -1169,10 +1163,6 @@ You can skip values by leaving a slot empty:
 
     {# only assign the second value #}
     {% do [, last] = ['Fabien', 'Potencier'] %}
-
-.. versionadded:: 3.29
-
-    Support for destructuring iterators was introduced in Twig 3.29.
 
 Sequence destructuring also works with iterators (any ``Traversable``
 value). Values are extracted in iteration order and keys are ignored. The

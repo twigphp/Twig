@@ -3,10 +3,7 @@
 Documentation Comments
 ======================
 
-.. versionadded:: 3.29
-
-    Documentation comments were added in Twig 3.29. This feature is
-    **experimental** and can change based on usage and feedback.
+This feature is **experimental** and can change based on usage and feedback.
 
 Documentation comments describe template constructs and variable bindings.
 Tools such as IDEs, static analyzers and documentation generators can read this
