@@ -24,7 +24,6 @@
         "league/commonmark": "^2.7",
         "league/html-to-markdown": "^4.8|^5.0",
         "michelf/php-markdown": "^1.8|^2.0",
-        "symfony/phpunit-bridge": "^6.4|^7.0",
         "tempest/markdown": "^1.2"
     },
     "autoload": {
