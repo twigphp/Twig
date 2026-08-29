@@ -352,9 +352,7 @@ class HtmlAttrTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider htmlAttrValueProvider
-     */
+    #[DataProvider('htmlAttrValueProvider')]
     public function testHtmlAttrValue(?string $expected, string $name, mixed $value): void
     {
         self::assertSame($expected, HtmlExtension::htmlAttrValue($name, $value));

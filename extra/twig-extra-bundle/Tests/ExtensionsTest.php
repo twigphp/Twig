@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\TwigExtraBundle\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
@@ -19,9 +20,7 @@ use Twig\Loader\ArrayLoader;
 
 class ExtensionsTest extends TestCase
 {
-    /**
-     * @dataProvider provideCatalog
-     */
+    #[DataProvider('provideCatalog')]
     public function testCatalogOnlyListsDeclaredCallables(array $entry): void
     {
         $extension = $this->loadExtension($entry);
@@ -43,9 +42,7 @@ class ExtensionsTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideCatalog
-     */
+    #[DataProvider('provideCatalog')]
     public function testCatalogListsEveryDeclaredCallable(array $entry): void
     {
         $extension = $this->loadExtension($entry);
