@@ -445,6 +445,27 @@ class ExpressionParserTest extends TestCase
                 ['foo' => (object) ['bar' => (object) ['baz' => null]]],
                 '',
             ],
+            // default filter fallback
+            [
+                '{{ foo?.bar|default(foo?.baz) }}',
+                ['foo' => null],
+                '',
+            ],
+            [
+                '{{ foo?.bar|default(foo?.baz.qux) }}',
+                ['foo' => null],
+                '',
+            ],
+            [
+                '{{ foo?.bar|default(foo?.baz) }}',
+                ['foo' => (object) ['bar' => null, 'baz' => 'qux']],
+                'qux',
+            ],
+            [
+                '{{ foo?.bar|default(foo?.baz) }}',
+                ['foo' => (object) ['bar' => 'corge', 'baz' => 'qux']],
+                'corge',
+            ],
         ];
     }
 
