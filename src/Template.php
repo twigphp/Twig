@@ -350,6 +350,89 @@ abstract class Template
     }
 
     /**
+     * @internal
+     */
+    public function isOwnedBy(Environment $env): bool
+    {
+        return $this->env === $env;
+    }
+
+    /**
+     * @internal
+     */
+    public function freezeLineage(BlockResolutionContext $resolution): self
+    {
+        $resolution->assertOwns($this);
+        if ($resolution->isFrozen($this)) {
+            return $resolution->getFrozen($this);
+        }
+
+        $resolution->beginFreeze($this);
+        try {
+            if (false === $parent = $resolution->getParent($this)) {
+                $resolution->setFrozen($this, $this);
+
+                return $this;
+            }
+
+            $template = clone $this;
+            foreach ($template->blocks as &$block) {
+                if ($block[0] === $this) {
+                    $block[0] = $template;
+                }
+            }
+            unset($block);
+            foreach ($template->traits as &$trait) {
+                if ($trait[0] === $this) {
+                    $trait[0] = $template;
+                }
+            }
+            unset($trait);
+
+            $template->parents = [];
+            $template->macroNamespace = null;
+            $template->parent = $parent->freezeLineage($resolution);
+            $template->rebindSelfMacroImports($this);
+            $resolution->setFrozen($this, $template);
+
+            return $template;
+        } finally {
+            $resolution->endFreeze($this);
+        }
+    }
+
+    private function rebindSelfMacroImports(self $original): void
+    {
+        $reflection = new \ReflectionObject($this);
+        if (!$reflection->hasProperty('macros')) {
+            return;
+        }
+
+        $property = $reflection->getProperty('macros');
+        if ($property->isStatic() || !$property->isInitialized($this)) {
+            return;
+        }
+
+        $macros = $property->getValue($this);
+        if (!\is_array($macros)) {
+            return;
+        }
+
+        $changed = false;
+        $templateProperty = new \ReflectionProperty(MacroNamespace::class, 'template');
+        foreach ($macros as $name => $namespace) {
+            if ($namespace instanceof MacroNamespace && $templateProperty->getValue($namespace) === $original) {
+                $macros[$name] = $this->getMacroNamespace();
+                $changed = true;
+            }
+        }
+
+        if ($changed) {
+            $property->setValue($this, $macros);
+        }
+    }
+
+    /**
      * Returns all blocks.
      *
      * This method is for internal use only and should never be called

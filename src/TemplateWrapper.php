@@ -99,8 +99,12 @@ final class TemplateWrapper
      *
      * @return Template
      */
-    public function unwrap()
+    public function unwrap(?Environment $env = null)
     {
+        if (null !== $env && ($env !== $this->env || !$this->template->isOwnedBy($env))) {
+            throw new \LogicException('A template wrapper cannot be used with a different Twig environment.');
+        }
+
         return $this->template;
     }
 }
