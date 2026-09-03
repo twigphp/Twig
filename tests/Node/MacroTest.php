@@ -65,7 +65,7 @@ class MacroTest extends NodeTestCase
         yield 'with use_yield = true' => [self::createNode(), <<<EOF
 new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null, ...\$varargs): string|Markup {
     // line 1
-    \$macros = \$this->macros;
+    \$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);
     \$context = [
         "foo" => \$foo,
         "bar" => \$bar,
@@ -86,7 +86,7 @@ EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
         yield 'with use_yield = false' => [self::createNode(), <<<EOF
 new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null, ...\$varargs): string|Markup {
     // line 1
-    \$macros = \$this->macros;
+    \$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);
     \$context = [
         "foo" => \$foo,
         "bar" => \$bar,
