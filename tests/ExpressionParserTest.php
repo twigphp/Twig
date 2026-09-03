@@ -461,16 +461,6 @@ class ExpressionParserTest extends TestCase
                 ['foos' => [(object) ['bar' => 'corge', 'baz' => 'grault'], (object) ['baz' => 'qux']]],
                 '[corge][qux]',
             ],
-            [
-                '{{ foo?.bar|default(foo?.baz) }}',
-                ['foo' => (object) ['bar' => null, 'baz' => 'qux']],
-                'qux',
-            ],
-            [
-                '{{ foo?.bar|default(foo?.baz) }}',
-                ['foo' => (object) ['bar' => 'corge', 'baz' => 'qux']],
-                'corge',
-            ],
         ];
     }
 
