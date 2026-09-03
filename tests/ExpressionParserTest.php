@@ -457,6 +457,11 @@ class ExpressionParserTest extends TestCase
                 '',
             ],
             [
+                '{% for foo in foos %}[{{ foo?.bar|default(foo?.baz) }}]{% endfor %}',
+                ['foos' => [(object) ['bar' => 'corge', 'baz' => 'grault'], (object) ['baz' => 'qux']]],
+                '[corge][qux]',
+            ],
+            [
                 '{{ foo?.bar|default(foo?.baz) }}',
                 ['foo' => (object) ['bar' => null, 'baz' => 'qux']],
                 'qux',
