@@ -68,6 +68,49 @@ If a template defines blocks, they can be rendered individually via the
 
     echo $template->renderBlock('block_name', ['the' => 'variables', 'go' => 'here']);
 
+Composing Blocks
+----------------
+
+.. versionadded:: 3.29
+
+    The ``BlockChain`` class was introduced in Twig 3.29.
+
+Use ``BlockChain`` when a renderer needs to select blocks from several
+unrelated templates, such as a collection of themes. Pass templates from the
+highest to the lowest precedence::
+
+    use Twig\BlockChain;
+
+    $blocks = new BlockChain($twig, [
+        'admin_theme.html.twig',
+        $twig->load('application_theme.html.twig'),
+        'base_theme.html.twig',
+    ]);
+
+    echo $blocks->renderBlock('field_row', ['field' => $field]);
+
+For each template, Twig considers its blocks, traits and complete parent
+lineage before considering the next template. The first definition of each
+block wins. The chain composes blocks only; it does not compose template bodies
+or macro namespaces. Block calls that explicitly name another template resolve
+against that template outside the chain namespace.
+
+Pass a third constructor argument when dynamic parent expressions need
+variables. Parent lineages are resolved when the chain is constructed and stay
+unchanged when blocks are rendered with another context. Create a new chain
+when structural variables change::
+
+    $blocks = new BlockChain(
+        $twig,
+        ['application_theme.html.twig'],
+        ['layout' => 'wide_layout.html.twig'],
+    );
+
+``renderBlock()`` and ``displayBlock()`` add environment globals to the render
+context. ``streamBlock()`` does not add them, matching the corresponding
+``TemplateWrapper`` methods. All template wrappers in a chain must belong to
+the environment passed to the constructor.
+
 Streaming Templates
 -------------------
 
