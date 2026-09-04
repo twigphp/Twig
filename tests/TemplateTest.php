@@ -226,12 +226,17 @@ class TemplateTest extends TestCase
         $template->displayBlock('foo', [], ['foo' => [new TemplateForTest($twig, 'index.twig'), 'block_foo']], false);
     }
 
-    public function testRenderParentBlockRestoresOutputBuffersOnError(): void
+    /**
+     * @dataProvider debugModes
+     */
+    #[DataProvider('debugModes')]
+    public function testRenderParentBlockRestoresOutputBuffersOnError(bool $debug): void
     {
         $twig = new Environment(new ArrayLoader([
-            'parent' => '{% block content %}{{ missing.value }}{% endblock %}',
+            'grandparent' => '{% block content %}{% set captured %}{{ missing.value }}{% endset %}{% endblock %}',
+            'parent' => '{% extends "grandparent" %}{% block content %}{% set inherited = parent() %}{{ inherited }}{% endblock %}',
             'child' => '{% extends "parent" %}',
-        ]), ['strict_variables' => true, 'use_yield' => false]);
+        ]), ['debug' => $debug, 'strict_variables' => true, 'use_yield' => false]);
         $template = $twig->load('child')->unwrap();
         $level = ob_get_level();
 
@@ -483,6 +488,12 @@ class TemplateTest extends TestCase
 
         $this->assertSame('value', $twig->render('index', ['data' => $data, 'key' => $key]));
         $this->assertSame(0, $key->toStringCalls);
+    }
+
+    public static function debugModes(): iterable
+    {
+        yield 'debug disabled' => [false];
+        yield 'debug enabled' => [true];
     }
 
     public static function getStrictVariablesModes(): iterable

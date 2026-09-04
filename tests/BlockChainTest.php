@@ -377,6 +377,24 @@ class BlockChainTest extends TestCase
      * @dataProvider externalMacroImportModes
      */
     #[DataProvider('externalMacroImportModes')]
+    public function testModuleImportsRemainUninitializedUntilTheDefiningBodyRuns(bool $useYield, string $template): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => $template,
+            'layout' => '{{ block("field") }}',
+            'macros1' => '{% macro label() %}one{% endmacro %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $chain = new BlockChain($twig, ['theme']);
+
+        $this->expectException(RuntimeError::class);
+
+        $chain->renderBlock('field');
+    }
+
+    /**
+     * @dataProvider externalMacroImportModes
+     */
+    #[DataProvider('externalMacroImportModes')]
     public function testMacroImportUpdatesAfterConstructionAreObserved(bool $useYield, string $template): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -391,6 +409,23 @@ class BlockChainTest extends TestCase
         $this->assertSame('one', $chain->renderBlock('field'));
         $this->assertSame('two', $twig->render('theme', ['helper' => 'macros2']));
         $this->assertSame('two', $chain->renderBlock('field'));
+    }
+
+    /**
+     * @dataProvider selfMacroBodyImportModes
+     */
+    #[DataProvider('selfMacroBodyImportModes')]
+    public function testSelfMacroImportsInMacroBodiesUseTheFrozenLineage(bool $useYield, string $template): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => $template,
+            'parent1' => '{% macro label() %}one{% endmacro %}',
+            'parent2' => '{% macro label() %}two{% endmacro %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+
+        $this->assertSame('', $twig->render('theme', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
     /**
@@ -536,6 +571,14 @@ class BlockChainTest extends TestCase
         foreach (self::yieldModes() as $mode => [$useYield]) {
             yield $mode.' import' => [$useYield, '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}'];
             yield $mode.' from' => [$useYield, '{% extends parent %}{% from _self import label %}{% block field %}{{ label() }}{% endblock %}'];
+        }
+    }
+
+    public static function selfMacroBodyImportModes(): iterable
+    {
+        foreach (self::yieldModes() as $mode => [$useYield]) {
+            yield $mode.' import' => [$useYield, '{% extends parent %}{% import _self as own %}{% macro wrapped() %}{{ own.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}'];
+            yield $mode.' from' => [$useYield, '{% extends parent %}{% from _self import label %}{% macro wrapped() %}{{ label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}'];
         }
     }
 
