@@ -14,6 +14,7 @@ namespace Twig\Tests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\BlockChain;
+use Twig\BlockResolutionContext;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\ProfilerExtension;
@@ -439,6 +440,25 @@ class BlockChainTest extends TestCase
         $this->expectExceptionMessage('A block chain requires at least one template.');
 
         new BlockChain(new Environment(new ArrayLoader()), []);
+    }
+
+    public function testResolutionRetainsTemplateIdentities(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $template = new class($twig) extends EchoingBlockChainTemplate {
+            public function __construct(Environment $env)
+            {
+                parent::__construct($env);
+                $this->blocks = [];
+            }
+        };
+        $reference = \WeakReference::create($template);
+        $resolution = new BlockResolutionContext($twig, []);
+        $resolution->setFrozen($template, clone $template);
+
+        unset($template);
+
+        $this->assertInstanceOf(Template::class, $reference->get());
     }
 
     public static function yieldModes(): iterable

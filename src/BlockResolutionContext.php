@@ -16,26 +16,28 @@ namespace Twig;
  */
 final class BlockResolutionContext
 {
-    /** @var array<int, Template|false> */
-    private array $parents = [];
+    /** @var \SplObjectStorage<Template, Template|false> */
+    private \SplObjectStorage $parents;
 
-    /** @var array<int, Template> */
-    private array $frozen = [];
+    /** @var \SplObjectStorage<Template, Template> */
+    private \SplObjectStorage $frozen;
 
-    /** @var array<int, true> */
-    private array $freezing = [];
+    /** @var \SplObjectStorage<Template, true> */
+    private \SplObjectStorage $freezing;
 
     public function __construct(
         private Environment $env,
         private array $context,
     ) {
+        $this->parents = new \SplObjectStorage();
+        $this->frozen = new \SplObjectStorage();
+        $this->freezing = new \SplObjectStorage();
     }
 
     public function getParent(Template $template): Template|false
     {
-        $id = spl_object_id($template);
-        if (isset($this->parents[$id]) || \array_key_exists($id, $this->parents)) {
-            return $this->parents[$id];
+        if ($this->parents->offsetExists($template)) {
+            return $this->parents[$template];
         }
 
         $parent = $template->getParent($this->context);
@@ -45,7 +47,7 @@ final class BlockResolutionContext
             $this->assertOwns($parent);
         }
 
-        return $this->parents[$id] = $parent;
+        return $this->parents[$template] = $parent;
     }
 
     public function assertOwns(Template $template): void
@@ -57,7 +59,7 @@ final class BlockResolutionContext
 
     public function isFrozen(Template $template): bool
     {
-        return isset($this->frozen[spl_object_id($template)]);
+        return $this->frozen->offsetExists($template);
     }
 
     public function isAncestor(Template $template, Template $ancestor): bool
@@ -73,26 +75,25 @@ final class BlockResolutionContext
 
     public function getFrozen(Template $template): Template
     {
-        return $this->frozen[spl_object_id($template)];
+        return $this->frozen[$template];
     }
 
     public function setFrozen(Template $template, Template $frozen): void
     {
-        $this->frozen[spl_object_id($template)] = $frozen;
+        $this->frozen[$template] = $frozen;
     }
 
     public function beginFreeze(Template $template): void
     {
-        $id = spl_object_id($template);
-        if (isset($this->freezing[$id])) {
+        if ($this->freezing->offsetExists($template)) {
             throw new \LogicException(\sprintf('Circular template inheritance detected while building a block chain from "%s".', $template->getTemplateName()));
         }
 
-        $this->freezing[$id] = true;
+        $this->freezing[$template] = true;
     }
 
     public function endFreeze(Template $template): void
     {
-        unset($this->freezing[spl_object_id($template)]);
+        $this->freezing->offsetUnset($template);
     }
 }
