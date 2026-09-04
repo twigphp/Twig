@@ -274,6 +274,21 @@ class BlockChainTest extends TestCase
         $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
+    public function testPreWarmedLineageMacroImportsAreReboundToTheFrozenLineage(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}{% import parent as inherited %}{% block field %}{{ inherited.label() }}{% endblock %}',
+            'parent' => '{% extends grandparent %}',
+            'grandparent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
+            'grandparent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
+        ]), ['autoescape' => false, 'use_yield' => true]);
+        $this->assertSame('two', $twig->render('theme', ['parent' => 'parent', 'grandparent' => 'grandparent2']));
+
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent', 'grandparent' => 'grandparent1']);
+
+        $this->assertSame('one', $chain->renderBlock('field', ['grandparent' => 'grandparent2']));
+    }
+
     public function testChainsWithDifferentDynamicParentsCanBeStreamedInterleaved(): void
     {
         $twig = new Environment(new ArrayLoader([

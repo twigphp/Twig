@@ -392,7 +392,7 @@ abstract class Template
             $template->parents = [];
             $template->macroNamespace = null;
             $template->parent = $parent->freezeLineage($resolution);
-            $template->rebindSelfMacroImports($this);
+            $template->rebindMacroImports($resolution, $this);
             $resolution->setFrozen($this, $template);
 
             return $template;
@@ -401,7 +401,7 @@ abstract class Template
         }
     }
 
-    private function rebindSelfMacroImports(self $original): void
+    private function rebindMacroImports(BlockResolutionContext $resolution, self $original): void
     {
         $reflection = new \ReflectionObject($this);
         if (!$reflection->hasProperty('macros')) {
@@ -421,8 +421,21 @@ abstract class Template
         $changed = false;
         $templateProperty = new \ReflectionProperty(MacroNamespace::class, 'template');
         foreach ($macros as $name => $namespace) {
-            if ($namespace instanceof MacroNamespace && $templateProperty->getValue($namespace) === $original) {
-                $macros[$name] = $this->getMacroNamespace();
+            if (!$namespace instanceof MacroNamespace) {
+                continue;
+            }
+
+            $imported = $templateProperty->getValue($namespace);
+            if ($imported === $original) {
+                $frozen = $this;
+            } elseif ($resolution->isFrozen($imported)) {
+                $frozen = $resolution->getFrozen($imported);
+            } else {
+                continue;
+            }
+
+            if ($frozen !== $imported) {
+                $macros[$name] = $frozen->getMacroNamespace();
                 $changed = true;
             }
         }
