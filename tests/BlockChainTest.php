@@ -68,6 +68,19 @@ class BlockChainTest extends TestCase
         $this->assertSame('theme/parent1/suffix', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
+    public function testExplicitTemplateBlockCallsResolveOutsideTheChainNamespace(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% block field %}{{ block("suffix", "explicit") }}{% endblock %}',
+            'chain' => '{% block suffix %}chain{% endblock %}',
+            'explicit' => '{% block suffix %}explicit{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => true]);
+
+        $chain = new BlockChain($twig, ['theme', 'chain']);
+
+        $this->assertSame('explicit', $chain->renderBlock('field'));
+    }
+
     public function testFreezingAChainDoesNotChangeTheLoadedTemplate(): void
     {
         $twig = new Environment(new ArrayLoader([
