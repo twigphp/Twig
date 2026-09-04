@@ -32,7 +32,6 @@ final class BlockChain
     ) {
         $resolution = new BlockResolutionContext($env, $context + $env->getGlobals());
         $blocks = [];
-        $owners = [];
 
         foreach ($templates as $template) {
             if (\is_string($template)) {
@@ -42,16 +41,9 @@ final class BlockChain
                 throw new \TypeError(\sprintf('Block chain templates must be strings or "%s" instances, "%s" given.', TemplateWrapper::class, get_debug_type($template)));
             }
 
-            $current = $template->unwrap($env)->freezeLineage($resolution);
+            $current = $template->unwrap()->freezeLineage($resolution);
             $this->template ??= $current;
-            $seen = [];
             do {
-                $id = spl_object_id($current);
-                if (isset($seen[$id])) {
-                    throw new \LogicException(\sprintf('Circular template inheritance detected while building a block chain from "%s".', $current->getTemplateName()));
-                }
-                $seen[$id] = true;
-
                 foreach ($current->getBlocks() as $name => $block) {
                     if (isset($blocks[$name])) {
                         continue;
@@ -60,11 +52,7 @@ final class BlockChain
                         throw new \LogicException('A block must be a method on a \Twig\Template instance.');
                     }
 
-                    $ownerId = spl_object_id($block[0]);
-                    if (!isset($owners[$ownerId])) {
-                        $resolution->assertOwns($block[0]);
-                        $owners[$ownerId] = true;
-                    }
+                    $resolution->assertOwns($block[0]);
                     $blocks[$name] = $block;
                 }
             } while (false !== $current = $resolution->getParent($current));
@@ -100,41 +88,12 @@ final class BlockChain
 
     public function renderBlock(string $name, array $context = []): string
     {
-        $context += $this->env->getGlobals();
-        if ($this->env->useYield()) {
-            $content = '';
-            foreach ($this->streamBlock($name, $context) as $data) {
-                $content .= $data;
-            }
-
-            return $content;
-        }
-
-        $level = ob_get_level();
-        if ($this->env->isDebug()) {
-            ob_start();
-        } else {
-            ob_start(static function () { return ''; });
-        }
-        try {
-            $this->displayBlock($name, $context);
-        } catch (\Throwable $e) {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-
-            throw $e;
-        }
-
-        return ob_get_clean();
+        return $this->getBlock($name)->renderBlock($name, $context + $this->env->getGlobals(), $this->blocks);
     }
 
     public function displayBlock(string $name, array $context = []): void
     {
-        $context += $this->env->getGlobals();
-        foreach ($this->streamBlock($name, $context) as $data) {
-            echo $data;
-        }
+        $this->getBlock($name)->displayBlock($name, $context + $this->env->getGlobals(), $this->blocks);
     }
 
     private function getBlock(string $name): Template

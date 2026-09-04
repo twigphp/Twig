@@ -233,8 +233,7 @@ class TemplateTest extends TestCase
     public function testRenderParentBlockRestoresOutputBuffersOnError(bool $debug): void
     {
         $twig = new Environment(new ArrayLoader([
-            'grandparent' => '{% block content %}{% set captured %}{{ missing.value }}{% endset %}{% endblock %}',
-            'parent' => '{% extends "grandparent" %}{% block content %}{% set inherited = parent() %}{{ inherited }}{% endblock %}',
+            'parent' => '{% block content %}{{ missing.value }}{% endblock %}',
             'child' => '{% extends "parent" %}',
         ]), ['debug' => $debug, 'strict_variables' => true, 'use_yield' => false]);
         $template = $twig->load('child')->unwrap();

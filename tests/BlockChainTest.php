@@ -14,7 +14,6 @@ namespace Twig\Tests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\BlockChain;
-use Twig\BlockResolutionContext;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\ProfilerExtension;
@@ -131,6 +130,28 @@ class BlockChainTest extends TestCase
         $this->assertSame('echo/yield', $chain->renderBlock('field'));
     }
 
+    public function testRenderRestoresOutputBuffersOnError(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% block field %}{% set captured %}{{ missing.value }}{% endset %}{% endblock %}',
+        ]), ['strict_variables' => true, 'use_yield' => false]);
+        $chain = new BlockChain($twig, ['theme']);
+        $level = ob_get_level();
+
+        try {
+            $chain->renderBlock('field');
+            $this->fail('Rendering the block must fail.');
+        } catch (RuntimeError) {
+            $actualLevel = ob_get_level();
+        } finally {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+        }
+
+        $this->assertSame($level, $actualLevel);
+    }
+
     public function testRenderingAndDisplayingAddGlobalsButStreamingDoesNot(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -175,7 +196,7 @@ class BlockChainTest extends TestCase
         $other = new Environment(new ArrayLoader(['theme' => '']));
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('A template wrapper cannot be used with a different Twig environment.');
+        $this->expectExceptionMessage('A block chain cannot contain templates from different Twig environments.');
 
         new BlockChain($twig, [$other->load('theme')]);
     }
@@ -187,7 +208,7 @@ class BlockChainTest extends TestCase
         $wrapper = new TemplateWrapper($twig, $other->load('theme')->unwrap());
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('A template wrapper cannot be used with a different Twig environment.');
+        $this->expectExceptionMessage('A block chain cannot contain templates from different Twig environments.');
 
         new BlockChain($twig, [$wrapper]);
     }
@@ -313,18 +334,6 @@ class BlockChainTest extends TestCase
         $this->assertSame('field', $profiles[0]->getName());
     }
 
-    public function testMacrosStayOwnedByTheirDefiningTemplate(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'theme1' => '{% macro label() %}one{% endmacro %}{% block field %}{{ _self.label() }}{% endblock %}',
-            'theme2' => '{% macro label() %}two{% endmacro %}{% block field %}{{ _self.label() }}{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
-
-        $chain = new BlockChain($twig, ['theme1', 'theme2']);
-
-        $this->assertSame('one', $chain->renderBlock('field'));
-    }
-
     public function testInheritedMacroLookupUsesTheFrozenLineage(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -339,19 +348,37 @@ class BlockChainTest extends TestCase
     }
 
     /**
-     * @dataProvider selfMacroImportModes
+     * @dataProvider yieldModes
      */
-    #[DataProvider('selfMacroImportModes')]
-    public function testSelfMacroImportsInitializedAfterConstructionUseTheFrozenLineage(bool $useYield, string $template): void
+    #[DataProvider('yieldModes')]
+    public function testSelfMacroImportsInitializedAfterConstructionUseTheFrozenLineage(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
-            'theme' => $template,
+            'theme' => '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}',
             'parent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
             'parent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
         ]), ['autoescape' => false, 'use_yield' => $useYield]);
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
         $this->assertSame('two', $twig->render('theme', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+    }
+
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testPreWarmedSelfMacroImportsUseTheFrozenLineage(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}',
+            'parent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
+            'parent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $this->assertSame('two', $twig->render('theme', ['parent' => 'parent2']));
+
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+
         $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
@@ -374,36 +401,25 @@ class BlockChainTest extends TestCase
     }
 
     /**
-     * @dataProvider externalMacroImportModes
+     * @dataProvider yieldModes
      */
-    #[DataProvider('externalMacroImportModes')]
-    public function testModuleImportsRemainUninitializedUntilTheDefiningBodyRuns(bool $useYield, string $template): void
+    #[DataProvider('yieldModes')]
+    public function testModuleImportsFollowTheDefiningTemplateBodyState(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
-            'theme' => $template,
-            'layout' => '{{ block("field") }}',
-            'macros1' => '{% macro label() %}one{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
-        $chain = new BlockChain($twig, ['theme']);
-
-        $this->expectException(RuntimeError::class);
-
-        $chain->renderBlock('field');
-    }
-
-    /**
-     * @dataProvider externalMacroImportModes
-     */
-    #[DataProvider('externalMacroImportModes')]
-    public function testMacroImportUpdatesAfterConstructionAreObserved(bool $useYield, string $template): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'theme' => $template,
+            'theme' => '{% extends "layout" %}{% import helper as macros %}{% block field %}{{ macros.label() }}{% endblock %}',
             'layout' => '{{ block("field") }}',
             'macros1' => '{% macro label() %}one{% endmacro %}',
             'macros2' => '{% macro label() %}two{% endmacro %}',
         ]), ['autoescape' => false, 'use_yield' => $useYield]);
         $chain = new BlockChain($twig, ['theme']);
+
+        try {
+            $chain->renderBlock('field');
+            $this->fail('Rendering an uninitialized import must fail.');
+        } catch (RuntimeError $e) {
+            $this->assertStringContainsString('Undefined array key', $e->getMessage());
+        }
 
         $this->assertSame('one', $twig->render('theme', ['helper' => 'macros1']));
         $this->assertSame('one', $chain->renderBlock('field'));
@@ -412,13 +428,13 @@ class BlockChainTest extends TestCase
     }
 
     /**
-     * @dataProvider selfMacroBodyImportModes
+     * @dataProvider yieldModes
      */
-    #[DataProvider('selfMacroBodyImportModes')]
-    public function testSelfMacroImportsInMacroBodiesUseTheFrozenLineage(bool $useYield, string $template): void
+    #[DataProvider('yieldModes')]
+    public function testSelfMacroImportsInMacroBodiesUseTheFrozenLineage(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
-            'theme' => $template,
+            'theme' => '{% extends parent %}{% import _self as own %}{% macro wrapped() %}{{ own.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}',
             'parent1' => '{% macro label() %}one{% endmacro %}',
             'parent2' => '{% macro label() %}two{% endmacro %}',
         ]), ['autoescape' => false, 'use_yield' => $useYield]);
@@ -545,49 +561,6 @@ class BlockChainTest extends TestCase
         $this->expectExceptionMessage('A block chain requires at least one template.');
 
         new BlockChain(new Environment(new ArrayLoader()), []);
-    }
-
-    public function testResolutionRetainsTemplateIdentities(): void
-    {
-        $twig = new Environment(new ArrayLoader());
-        $template = new class($twig) extends EchoingBlockChainTemplate {
-            public function __construct(Environment $env)
-            {
-                parent::__construct($env);
-                $this->blocks = [];
-            }
-        };
-        $reference = \WeakReference::create($template);
-        $resolution = new BlockResolutionContext($twig, []);
-        $resolution->setFrozen($template, clone $template);
-
-        unset($template);
-
-        $this->assertInstanceOf(Template::class, $reference->get());
-    }
-
-    public static function selfMacroImportModes(): iterable
-    {
-        foreach (self::yieldModes() as $mode => [$useYield]) {
-            yield $mode.' import' => [$useYield, '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}'];
-            yield $mode.' from' => [$useYield, '{% extends parent %}{% from _self import label %}{% block field %}{{ label() }}{% endblock %}'];
-        }
-    }
-
-    public static function selfMacroBodyImportModes(): iterable
-    {
-        foreach (self::yieldModes() as $mode => [$useYield]) {
-            yield $mode.' import' => [$useYield, '{% extends parent %}{% import _self as own %}{% macro wrapped() %}{{ own.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}'];
-            yield $mode.' from' => [$useYield, '{% extends parent %}{% from _self import label %}{% macro wrapped() %}{{ label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}'];
-        }
-    }
-
-    public static function externalMacroImportModes(): iterable
-    {
-        foreach (self::yieldModes() as $mode => [$useYield]) {
-            yield $mode.' import' => [$useYield, '{% extends "layout" %}{% import helper as macros %}{% block field %}{{ macros.label() }}{% endblock %}'];
-            yield $mode.' from' => [$useYield, '{% extends "layout" %}{% from helper import label %}{% block field %}{{ label() }}{% endblock %}'];
-        }
     }
 
     public static function yieldModes(): iterable

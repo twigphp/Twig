@@ -343,7 +343,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         $compiler
             ->write("protected function doDisplay(array \$context, array \$blocks = []): iterable\n", "{\n")
             ->indent()
-            ->write("\$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);\n")
+            ->write("\$macros = \$this->macros;\n")
             ->subcompile($this->getNode('display_start'))
             ->subcompile($this->getNode('body'))
         ;

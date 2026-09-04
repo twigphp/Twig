@@ -43,7 +43,6 @@ abstract class Template
 
     private $useYield;
     private ?MacroNamespace $macroNamespace = null;
-    private bool $checkSecurityForFrozenParent = false;
 
     public function __construct(
         protected Environment $env,
@@ -80,7 +79,7 @@ abstract class Template
     public function getParent(array $context): self|TemplateWrapper|false
     {
         if (null !== $this->parent) {
-            if ($this->checkSecurityForFrozenParent) {
+            if (null !== $this->macroImportSource) {
                 $this->ensureSecurityChecked();
             }
 
@@ -397,18 +396,10 @@ abstract class Template
                 }
             }
             unset($block);
-            foreach ($template->traits as &$trait) {
-                if ($trait[0] === $this) {
-                    $trait[0] = $template;
-                }
-            }
-            unset($trait);
 
-            $template->parents = [];
             $template->macroNamespace = null;
             // Keep module-level imports live while rebinding self imports to the clone.
             $template->macroImportSource = $this;
-            $template->checkSecurityForFrozenParent = true;
             $template->parent = $parent->freezeLineage($resolution);
             $resolution->setFrozen($this, $template);
 

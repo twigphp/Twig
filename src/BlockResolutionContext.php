@@ -42,9 +42,7 @@ final class BlockResolutionContext
 
         $parent = $template->getParent($this->context);
         if ($parent instanceof TemplateWrapper) {
-            $parent = $parent->unwrap($this->env);
-        } elseif ($parent instanceof Template) {
-            $this->assertOwns($parent);
+            $parent = $parent->unwrap();
         }
 
         return $this->parents[$template] = $parent;
