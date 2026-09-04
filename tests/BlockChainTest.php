@@ -151,6 +151,23 @@ class BlockChainTest extends TestCase
         $this->assertSame('LOCAL:none', $streamed);
     }
 
+    public function testRejectsInvalidBlockDefinitions(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $template = new class($twig) extends EchoingBlockChainTemplate {
+            public function __construct(Environment $env)
+            {
+                parent::__construct($env);
+                $this->blocks = ['field' => [new \stdClass(), 'block_field']];
+            }
+        };
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('A block must be a method on a \Twig\Template instance.');
+
+        new BlockChain($twig, [new TemplateWrapper($twig, $template)]);
+    }
+
     public function testRejectsWrappersFromAnotherEnvironment(): void
     {
         $twig = new Environment(new ArrayLoader(['theme' => '']));

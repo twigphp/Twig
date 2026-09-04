@@ -18,7 +18,8 @@ use Twig\Error\RuntimeError;
  */
 final class BlockChain
 {
-    private BlockNamespace $blocks;
+    /** @var array<string, array{Template, string}> */
+    private array $blocks;
     private Template $template;
 
     /**
@@ -30,7 +31,8 @@ final class BlockChain
         array $context = [],
     ) {
         $resolution = new BlockResolutionContext($env, $context + $env->getGlobals());
-        $definitions = [];
+        $blocks = [];
+        $owners = [];
 
         foreach ($templates as $template) {
             if (\is_string($template)) {
@@ -51,11 +53,19 @@ final class BlockChain
                 $seen[$id] = true;
 
                 foreach ($current->getBlocks() as $name => $block) {
-                    if (!isset($definitions[$name])) {
-                        $definition = BlockDefinition::fromLegacy($name, $block);
-                        $resolution->assertOwns($definition->getTemplate());
-                        $definitions[$name] = $definition;
+                    if (isset($blocks[$name])) {
+                        continue;
                     }
+                    if (!\is_array($block) || !isset($block[0], $block[1]) || !$block[0] instanceof Template || !\is_string($block[1])) {
+                        throw new \LogicException('A block must be a method on a \Twig\Template instance.');
+                    }
+
+                    $id = spl_object_id($block[0]);
+                    if (!isset($owners[$id])) {
+                        $resolution->assertOwns($block[0]);
+                        $owners[$id] = true;
+                    }
+                    $blocks[$name] = $block;
                 }
             } while (false !== $current = $resolution->getParent($current));
         }
@@ -64,12 +74,12 @@ final class BlockChain
             throw new \InvalidArgumentException('A block chain requires at least one template.');
         }
 
-        $this->blocks = new BlockNamespace($definitions);
+        $this->blocks = $blocks;
     }
 
     public function hasBlock(string $name): bool
     {
-        return $this->blocks->has($name);
+        return isset($this->blocks[$name]);
     }
 
     /**
@@ -77,7 +87,7 @@ final class BlockChain
      */
     public function getBlockNames(): array
     {
-        return $this->blocks->getNames();
+        return array_keys($this->blocks);
     }
 
     /**
@@ -85,7 +95,7 @@ final class BlockChain
      */
     public function streamBlock(string $name, array $context = []): iterable
     {
-        yield from $this->getBlock($name)->yield($context, $this->blocks->toLegacy());
+        yield from $this->getBlock($name)->yieldBlock($name, $context, $this->blocks);
     }
 
     public function renderBlock(string $name, array $context = []): string
@@ -127,10 +137,10 @@ final class BlockChain
         }
     }
 
-    private function getBlock(string $name): BlockDefinition
+    private function getBlock(string $name): Template
     {
-        if (null !== $definition = $this->blocks->get($name)) {
-            return $definition;
+        if (isset($this->blocks[$name])) {
+            return $this->blocks[$name][0];
         }
 
         throw new RuntimeError(\sprintf('Block "%s" on template "%s" does not exist.', $name, $this->template->getTemplateName()), -1, $this->template->getSourceContext());
