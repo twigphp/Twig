@@ -42,6 +42,7 @@ abstract class Template
 
     private $useYield;
     private ?MacroNamespace $macroNamespace = null;
+    private bool $checkSecurityForFrozenParent = false;
 
     public function __construct(
         protected Environment $env,
@@ -78,6 +79,10 @@ abstract class Template
     public function getParent(array $context): self|TemplateWrapper|false
     {
         if (null !== $this->parent) {
+            if ($this->checkSecurityForFrozenParent) {
+                $this->ensureSecurityChecked();
+            }
+
             return $this->parent;
         }
 
@@ -391,6 +396,7 @@ abstract class Template
 
             $template->parents = [];
             $template->macroNamespace = null;
+            $template->checkSecurityForFrozenParent = true;
             $template->parent = $parent->freezeLineage($resolution);
             $template->rebindMacroImports($resolution, $this);
             $resolution->setFrozen($this, $template);
@@ -428,7 +434,7 @@ abstract class Template
             $imported = $templateProperty->getValue($namespace);
             if ($imported === $original) {
                 $frozen = $this;
-            } elseif ($resolution->isFrozen($imported)) {
+            } elseif ($resolution->isAncestor($original, $imported)) {
                 $frozen = $resolution->getFrozen($imported);
             } else {
                 continue;

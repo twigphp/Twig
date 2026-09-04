@@ -60,6 +60,17 @@ final class BlockResolutionContext
         return isset($this->frozen[spl_object_id($template)]);
     }
 
+    public function isAncestor(Template $template, Template $ancestor): bool
+    {
+        while (false !== $template = $this->getParent($template)) {
+            if ($template === $ancestor) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getFrozen(Template $template): Template
     {
         return $this->frozen[spl_object_id($template)];

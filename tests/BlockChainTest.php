@@ -246,6 +246,29 @@ class BlockChainTest extends TestCase
         $chain->renderBlock('field', ['value' => 'value']);
     }
 
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testSandboxPolicyChangesAreCheckedOnFrozenIntermediateParents(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends "middle" %}{% block field %}{{ parent() }}{% endblock %}',
+            'middle' => '{% extends parent|upper %}',
+            'GRANDPARENT' => '{% block field %}safe{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'block'], ['upper'], allowedFunctions: ['parent']), true);
+        $twig->addExtension($sandbox);
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'grandparent']);
+
+        $this->assertSame('safe', $chain->renderBlock('field'));
+
+        $sandbox->setSecurityPolicy(new SecurityPolicy(['extends', 'block'], allowedFunctions: ['parent']));
+        $this->expectException(SecurityNotAllowedFilterError::class);
+
+        $chain->renderBlock('field');
+    }
+
     public function testProfilerKeepsTheDefiningTemplateAndBlockAttribution(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -317,6 +340,28 @@ class BlockChainTest extends TestCase
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent', 'grandparent' => 'grandparent1']);
 
         $this->assertSame('one', $chain->renderBlock('field', ['grandparent' => 'grandparent2']));
+    }
+
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testPreWarmedExternalMacroImportsAreNotReboundByChainOrder(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends "layout" %}{% import "macros" as macros %}{% block field %}{{ macros.label() }}{% endblock %}',
+            'layout' => '{{ block("field") }}',
+            'macros' => '{% extends macro_parent %}',
+            'macros1' => '{% macro label() %}one{% endmacro %}',
+            'macros2' => '{% macro label() %}two{% endmacro %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $this->assertSame('two', $twig->render('theme', ['macro_parent' => 'macros2']));
+
+        $context = ['macro_parent' => 'macros1'];
+        $renderContext = ['macro_parent' => 'macros2'];
+
+        $this->assertSame('two', (new BlockChain($twig, ['macros', 'theme'], $context))->renderBlock('field', $renderContext));
+        $this->assertSame('two', (new BlockChain($twig, ['theme', 'macros'], $context))->renderBlock('field', $renderContext));
     }
 
     public function testChainsWithDifferentDynamicParentsCanBeStreamedInterleaved(): void
