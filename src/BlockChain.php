@@ -60,10 +60,10 @@ final class BlockChain
                         throw new \LogicException('A block must be a method on a \Twig\Template instance.');
                     }
 
-                    $id = spl_object_id($block[0]);
-                    if (!isset($owners[$id])) {
+                    $ownerId = spl_object_id($block[0]);
+                    if (!isset($owners[$ownerId])) {
                         $resolution->assertOwns($block[0]);
-                        $owners[$id] = true;
+                        $owners[$ownerId] = true;
                     }
                     $blocks[$name] = $block;
                 }
