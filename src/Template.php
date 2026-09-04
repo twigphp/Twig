@@ -169,12 +169,21 @@ abstract class Template
     public function renderParentBlock($name, array $context, array $blocks = []): string
     {
         if (!$this->useYield) {
+            $level = ob_get_level();
             if ($this->env->isDebug()) {
                 ob_start();
             } else {
                 ob_start(static function () { return ''; });
             }
-            $this->displayParentBlock($name, $context, $blocks);
+            try {
+                $this->displayParentBlock($name, $context, $blocks);
+            } catch (\Throwable $e) {
+                while (ob_get_level() > $level) {
+                    ob_end_clean();
+                }
+
+                throw $e;
+            }
 
             return ob_get_clean();
         }

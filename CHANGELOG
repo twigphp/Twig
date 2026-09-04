@@ -4,6 +4,7 @@
  * Fix the `default` filter fallback emitting an undefined variable warning when it uses the null-safe operator
  * Fix the `matches` operator silently treating PCRE execution errors as non-matches
  * Add the `BlockChain` class to compose blocks from multiple templates without using template internals
+ * Fix an output buffer leak when a parent block rendered in an expression throws in non-yield mode
  * Add the `HtmlExtension::htmlAttrValue()` method to resolve a single HTML attribute value the way the `html_attr` function renders it
  * Fix `html_attr` JSON encoding a `Stringable` value in a `data-*` attribute instead of using its string representation
  * Add documentation comments to attach metadata to nodes (experimental)

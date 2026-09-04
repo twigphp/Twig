@@ -226,6 +226,29 @@ class TemplateTest extends TestCase
         $template->displayBlock('foo', [], ['foo' => [new TemplateForTest($twig, 'index.twig'), 'block_foo']], false);
     }
 
+    public function testRenderParentBlockRestoresOutputBuffersOnError(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'parent' => '{% block content %}{{ missing.value }}{% endblock %}',
+            'child' => '{% extends "parent" %}',
+        ]), ['strict_variables' => true, 'use_yield' => false]);
+        $template = $twig->load('child')->unwrap();
+        $level = ob_get_level();
+
+        try {
+            $template->renderParentBlock('content', []);
+            $this->fail('Rendering the parent block must fail.');
+        } catch (RuntimeError) {
+            $actualLevel = ob_get_level();
+        } finally {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+        }
+
+        $this->assertSame($level, $actualLevel);
+    }
+
     public function testGetAttributeOnArrayWithConfusableKey(): void
     {
         $twig = new Environment(new ArrayLoader());
