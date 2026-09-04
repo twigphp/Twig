@@ -334,6 +334,18 @@ class BlockChainTest extends TestCase
         $this->assertSame('field', $profiles[0]->getName());
     }
 
+    public function testMacrosStayOwnedByTheirDefiningTemplate(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme1' => '{% macro label() %}one{% endmacro %}{% block field %}{{ _self.label() }}{% endblock %}',
+            'theme2' => '{% macro label() %}two{% endmacro %}{% block field %}{{ _self.label() }}{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => true]);
+
+        $chain = new BlockChain($twig, ['theme1', 'theme2']);
+
+        $this->assertSame('one', $chain->renderBlock('field'));
+    }
+
     public function testInheritedMacroLookupUsesTheFrozenLineage(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -380,6 +392,24 @@ class BlockChainTest extends TestCase
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
         $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+    }
+
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testFromSelfImportsUseTheFrozenLineage(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}{% from _self import label %}{% macro wrapped() %}{{ label() }}{% endmacro %}{% block field %}{{ label() }}/{{ _self.wrapped() }}{% endblock %}',
+            'parent1' => '{% macro label() %}one{% endmacro %}',
+            'parent2' => '{% macro label() %}two{% endmacro %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $this->assertSame('', $twig->render('theme', ['parent' => 'parent2']));
+
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+
+        $this->assertSame('one/one', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
     /**
