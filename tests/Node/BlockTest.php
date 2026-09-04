@@ -47,7 +47,7 @@ class BlockTest extends NodeTestCase
  */
 public function block_foo(array \$context, array \$blocks = []): iterable
 {
-    \$macros = \$this->macros;
+    \$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);
     yield "foo";
     yield from [];
 }

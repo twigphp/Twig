@@ -270,6 +270,30 @@ class BlockChainTest extends TestCase
         $chain->renderBlock('field');
     }
 
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testImportedMacroNamespacesObserveSandboxPolicyChanges(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends "layout" %}{% import "macros" as macros %}{% block field %}{{ macros.label(value) }}{% endblock %}',
+            'layout' => '{{ block("field") }}',
+            'macros' => '{% macro label(value) %}{{ value|upper }}{% endmacro %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'import', 'block', 'macro'], ['upper'], allowedFunctions: ['block']), true);
+        $twig->addExtension($sandbox);
+        $chain = new BlockChain($twig, ['theme']);
+
+        $this->assertSame('VALUE', $twig->render('theme', ['value' => 'value']));
+        $this->assertSame('VALUE', $chain->renderBlock('field', ['value' => 'value']));
+
+        $sandbox->setSecurityPolicy(new SecurityPolicy(['extends', 'import', 'block', 'macro'], allowedFunctions: ['block']));
+        $this->expectException(SecurityNotAllowedFilterError::class);
+
+        $chain->renderBlock('field', ['value' => 'value']);
+    }
+
     public function testProfilerKeepsTheDefiningTemplateAndBlockAttribution(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -314,33 +338,79 @@ class BlockChainTest extends TestCase
         $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
-    public function testPreWarmedSelfMacroImportsAreReboundToTheFrozenLineage(): void
+    /**
+     * @dataProvider selfMacroImportModes
+     */
+    #[DataProvider('selfMacroImportModes')]
+    public function testSelfMacroImportsInitializedAfterConstructionUseTheFrozenLineage(bool $useYield, string $template): void
     {
         $twig = new Environment(new ArrayLoader([
-            'theme' => '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}',
+            'theme' => $template,
             'parent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
             'parent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+
+        $this->assertSame('two', $twig->render('theme', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+    }
+
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testImportedMacroNamespacesStayOutsideTheFrozenLineage(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}{% import parent as inherited %}{% block field %}{{ inherited.label() }}{% endblock %}',
+            'parent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
+            'parent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
         $this->assertSame('two', $twig->render('theme', ['parent' => 'parent2']));
 
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
-        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('two', $chain->renderBlock('field'));
     }
 
-    public function testPreWarmedLineageMacroImportsAreReboundToTheFrozenLineage(): void
+    /**
+     * @dataProvider externalMacroImportModes
+     */
+    #[DataProvider('externalMacroImportModes')]
+    public function testMacroImportUpdatesAfterConstructionAreObserved(bool $useYield, string $template): void
     {
         $twig = new Environment(new ArrayLoader([
-            'theme' => '{% extends parent %}{% import parent as inherited %}{% block field %}{{ inherited.label() }}{% endblock %}',
-            'parent' => '{% extends grandparent %}',
-            'grandparent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
-            'grandparent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
-        $this->assertSame('two', $twig->render('theme', ['parent' => 'parent', 'grandparent' => 'grandparent2']));
+            'theme' => $template,
+            'layout' => '{{ block("field") }}',
+            'macros1' => '{% macro label() %}one{% endmacro %}',
+            'macros2' => '{% macro label() %}two{% endmacro %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $chain = new BlockChain($twig, ['theme']);
 
-        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent', 'grandparent' => 'grandparent1']);
+        $this->assertSame('one', $twig->render('theme', ['helper' => 'macros1']));
+        $this->assertSame('one', $chain->renderBlock('field'));
+        $this->assertSame('two', $twig->render('theme', ['helper' => 'macros2']));
+        $this->assertSame('two', $chain->renderBlock('field'));
+    }
 
-        $this->assertSame('one', $chain->renderBlock('field', ['grandparent' => 'grandparent2']));
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testMacroBodiesObserveImportUpdatesAfterConstruction(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends "layout" %}{% import helper as macros %}{% macro wrapped() %}{{ macros.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}',
+            'layout' => '{{ block("field") }}',
+            'macros1' => '{% macro label() %}one{% endmacro %}',
+            'macros2' => '{% macro label() %}two{% endmacro %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $chain = new BlockChain($twig, ['theme']);
+
+        $this->assertSame('one', $twig->render('theme', ['helper' => 'macros1']));
+        $this->assertSame('one', $chain->renderBlock('field'));
+        $this->assertSame('two', $twig->render('theme', ['helper' => 'macros2']));
+        $this->assertSame('two', $chain->renderBlock('field'));
     }
 
     /**
@@ -459,6 +529,22 @@ class BlockChainTest extends TestCase
         unset($template);
 
         $this->assertInstanceOf(Template::class, $reference->get());
+    }
+
+    public static function selfMacroImportModes(): iterable
+    {
+        foreach (self::yieldModes() as $mode => [$useYield]) {
+            yield $mode.' import' => [$useYield, '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}'];
+            yield $mode.' from' => [$useYield, '{% extends parent %}{% from _self import label %}{% block field %}{{ label() }}{% endblock %}'];
+        }
+    }
+
+    public static function externalMacroImportModes(): iterable
+    {
+        foreach (self::yieldModes() as $mode => [$useYield]) {
+            yield $mode.' import' => [$useYield, '{% extends "layout" %}{% import helper as macros %}{% block field %}{{ macros.label() }}{% endblock %}'];
+            yield $mode.' from' => [$useYield, '{% extends "layout" %}{% from helper import label %}{% block field %}{{ label() }}{% endblock %}'];
+        }
     }
 
     public static function yieldModes(): iterable

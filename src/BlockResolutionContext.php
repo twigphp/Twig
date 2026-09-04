@@ -62,17 +62,6 @@ final class BlockResolutionContext
         return $this->frozen->offsetExists($template);
     }
 
-    public function isAncestor(Template $template, Template $ancestor): bool
-    {
-        while (false !== $template = $this->getParent($template)) {
-            if ($template === $ancestor) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function getFrozen(Template $template): Template
     {
         return $this->frozen[$template];

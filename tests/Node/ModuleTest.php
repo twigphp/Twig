@@ -156,7 +156,7 @@ class __TwigTemplate_%x extends Template
 
     protected function doDisplay(array \$context, array \$blocks = []): iterable
     {
-        \$macros = \$this->macros;
+        \$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);
         // line 1
         yield "foo";
         yield from [];
@@ -237,7 +237,7 @@ class __TwigTemplate_%x extends Template
 
     protected function doDisplay(array \$context, array \$blocks = []): iterable
     {
-        \$macros = \$this->macros;
+        \$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);
         // line 2
         \$macros["macro"] = \$this->macros["macro"] = \$this->load("foo.twig", 2)->unwrap()->getMacroNamespace();
         // line 1
@@ -333,7 +333,7 @@ class __TwigTemplate_%x extends Template
 
     protected function doDisplay(array \$context, array \$blocks = []): iterable
     {
-        \$macros = \$this->macros;
+        \$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);
         // line 4
         \$context["foo"] = "foo";
         // line 2

@@ -37,7 +37,7 @@ class BlockNode extends Node
             ->write(" */\n")
             ->write(\sprintf("public function block_%s(array \$context, array \$blocks = []): iterable\n", $this->getAttribute('name')), "{\n")
             ->indent()
-            ->write("\$macros = \$this->macros;\n")
+            ->write("\$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);\n")
         ;
 
         $compiler

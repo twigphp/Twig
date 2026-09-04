@@ -64,7 +64,7 @@ protected function loadDeclaredMacros(): array
     return [
         "foo" => new \\Twig\\TwigMacro("foo", function (\$foo = null, ...\$varargs): string|Markup {
             // line 1
-            \$macros = \$this->macros;
+            \$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);
             \$context = [
                 "foo" => \$foo,
                 "varargs" => \$varargs,

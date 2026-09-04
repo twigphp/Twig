@@ -39,6 +39,7 @@ abstract class Template
     protected $traitAliases = [];
     protected $extensions = [];
     protected $sandbox;
+    protected ?self $macroImportSource = null;
 
     private $useYield;
     private ?MacroNamespace $macroNamespace = null;
@@ -405,58 +406,15 @@ abstract class Template
 
             $template->parents = [];
             $template->macroNamespace = null;
+            // Keep module-level imports live while rebinding self imports to the clone.
+            $template->macroImportSource = $this;
             $template->checkSecurityForFrozenParent = true;
             $template->parent = $parent->freezeLineage($resolution);
-            $template->rebindMacroImports($resolution, $this);
             $resolution->setFrozen($this, $template);
 
             return $template;
         } finally {
             $resolution->endFreeze($this);
-        }
-    }
-
-    private function rebindMacroImports(BlockResolutionContext $resolution, self $original): void
-    {
-        $reflection = new \ReflectionObject($this);
-        if (!$reflection->hasProperty('macros')) {
-            return;
-        }
-
-        $property = $reflection->getProperty('macros');
-        if ($property->isStatic() || !$property->isInitialized($this)) {
-            return;
-        }
-
-        $macros = $property->getValue($this);
-        if (!\is_array($macros)) {
-            return;
-        }
-
-        $changed = false;
-        $templateProperty = new \ReflectionProperty(MacroNamespace::class, 'template');
-        foreach ($macros as $name => $namespace) {
-            if (!$namespace instanceof MacroNamespace) {
-                continue;
-            }
-
-            $imported = $templateProperty->getValue($namespace);
-            if ($imported === $original) {
-                $frozen = $this;
-            } elseif ($resolution->isAncestor($original, $imported)) {
-                $frozen = $resolution->getFrozen($imported);
-            } else {
-                continue;
-            }
-
-            if ($frozen !== $imported) {
-                $macros[$name] = $frozen->getMacroNamespace();
-                $changed = true;
-            }
-        }
-
-        if ($changed) {
-            $property->setValue($this, $macros);
         }
     }
 
@@ -602,6 +560,28 @@ abstract class Template
     protected function loadDeclaredMacros(): array
     {
         return [];
+    }
+
+    /**
+     * @param array<string, MacroNamespace> $macros
+     *
+     * @return array<string, MacroNamespace>
+     */
+    protected function rebindMacroImports(array $macros): array
+    {
+        if (null === $this->macroImportSource) {
+            return $macros;
+        }
+
+        static $templateProperty;
+        $templateProperty ??= new \ReflectionProperty(MacroNamespace::class, 'template');
+        foreach ($macros as $name => $namespace) {
+            if ($namespace instanceof MacroNamespace && $templateProperty->getValue($namespace) === $this->macroImportSource) {
+                $macros[$name] = $this->getMacroNamespace();
+            }
+        }
+
+        return $macros;
     }
 
     /**

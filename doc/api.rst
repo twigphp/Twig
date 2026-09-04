@@ -92,8 +92,12 @@ highest to the lowest precedence::
 For each template, Twig considers its blocks, traits and complete parent
 lineage before considering the next template. The first definition of each
 block wins. The chain composes blocks only; it does not compose template bodies
-or macro namespaces. Block calls that explicitly name another template resolve
-against that template outside the chain namespace.
+or imported macro namespaces. Module-level imports are initialized when the
+defining template body runs, as with direct block rendering, and chains observe
+later import updates instead of snapshotting them. Imports bound to the
+defining template itself use its frozen lineage; other imported namespaces stay
+outside the chain. Block calls that explicitly name another template also
+resolve against that template outside the chain namespace.
 
 Pass a third constructor argument when dynamic parent expressions need
 variables. Parent lineages are resolved when the chain is constructed and stay
