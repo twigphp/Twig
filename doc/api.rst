@@ -89,33 +89,17 @@ highest to the lowest precedence::
 
     echo $blocks->renderBlock('field_row', ['field' => $field]);
 
-For each template, Twig considers its blocks, traits and complete parent
-lineage before considering the next template. The first definition of each
-block wins. The chain composes blocks only; it does not compose template bodies
-or imported macro namespaces. Module-level imports are initialized when the
-defining template body runs, as with direct block rendering, and chains observe
-later import updates instead of snapshotting them. Imports bound to the
-defining template itself use its frozen lineage; other imported namespaces stay
-outside the chain. All chained templates share the composed block namespace, so
-only compose templates trusted to call one another's blocks. Block calls that
-explicitly name another template resolve against that template outside the
-chain namespace.
+Twig considers each template's blocks, traits and parents before moving to the
+next template. The first definition of each block wins. ``parent()`` follows
+the inheritance hierarchy of the template defining the block, while nested
+``block()`` calls use the composed block set.
 
-Pass a third constructor argument when dynamic parent expressions need
-variables. Parent lineages are resolved when the chain is constructed and stay
-unchanged when blocks are rendered with another context. Create a new chain
-when structural variables change::
+``BlockChain`` composes blocks, not template bodies or macros. Only combine
+templates that are trusted to call one another's blocks.
 
-    $blocks = new BlockChain(
-        $twig,
-        ['application_theme.html.twig'],
-        ['layout' => 'wide_layout.html.twig'],
-    );
-
-``renderBlock()`` and ``displayBlock()`` add environment globals to the render
-context. ``streamBlock()`` does not add them, matching the corresponding
-``TemplateWrapper`` methods. All template wrappers in a chain must belong to
-the environment passed to the constructor.
+The optional third constructor argument provides variables used to resolve
+dynamic parent expressions. Parent hierarchies are fixed when the chain is
+created; create another chain when these variables change.
 
 Streaming Templates
 -------------------
