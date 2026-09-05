@@ -250,9 +250,6 @@ class ExpressionParserTest extends TestCase
         $this->assertSame('third', $pairs[2]['value']->getAttribute('name'));
     }
 
-    /**
-     * @dataProvider getEmptyDestructuringTests
-     */
     #[DataProvider('getEmptyDestructuringTests')]
     public function testEmptyDestructuringThrows(string $template): void
     {

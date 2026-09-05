@@ -19,14 +19,14 @@ use Twig\Test\IntegrationTestCase;
 
 class IntegrationTest extends IntegrationTestCase
 {
-    public function getExtensions()
+    public function getExtensions(): array
     {
         return [
             new CacheExtension(),
         ];
     }
 
-    protected function getRuntimeLoaders()
+    protected function getRuntimeLoaders(): array
     {
         return [
             new class implements RuntimeLoaderInterface {

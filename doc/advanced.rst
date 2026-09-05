@@ -1042,7 +1042,7 @@ The ``IntegrationTest.php`` file should look like this::
 
     class IntegrationTest extends IntegrationTestCase
     {
-        public function getExtensions()
+        protected function getExtensions(): array
         {
             return [
                 new CustomTwigExtension1(),
@@ -1050,7 +1050,7 @@ The ``IntegrationTest.php`` file should look like this::
             ];
         }
 
-        public function getFixturesDir()
+        protected static function getFixturesDirectory(): string
         {
             return __DIR__.'/Fixtures/';
         }
@@ -1066,5 +1066,5 @@ Testing the node visitors can be complex, so extend your test cases from
 ``\Twig\Test\NodeTestCase``. Examples can be found in the Twig repository
 `tests/Twig/Node`_ directory.
 
-.. _`tests/Twig/Fixtures`: https://github.com/twigphp/Twig/tree/3.x/tests/Fixtures
-.. _`tests/Twig/Node`:     https://github.com/twigphp/Twig/tree/3.x/tests/Node
+.. _`tests/Twig/Fixtures`: https://github.com/twigphp/Twig/tree/4.x/tests/Fixtures
+.. _`tests/Twig/Node`:     https://github.com/twigphp/Twig/tree/4.x/tests/Node

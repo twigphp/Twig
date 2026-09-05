@@ -127,9 +127,6 @@ EOF, 'index')));
         $this->addToAssertionCount(1);
     }
 
-    /**
-     * @dataProvider provideMacroTargetExpressions
-     */
     #[DataProvider('provideMacroTargetExpressions')]
     public function testMacroTargetsOnlyCompileAsMacroReferences(string $expression): void
     {

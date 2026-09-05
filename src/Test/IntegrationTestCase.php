@@ -12,6 +12,7 @@
 namespace Twig\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Constraint\Exception;
 use PHPUnit\Framework\TestCase;
@@ -38,7 +39,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return RuntimeLoaderInterface[]
      */
-    protected function getRuntimeLoaders()
+    protected function getRuntimeLoaders(): array
     {
         return [];
     }
@@ -46,7 +47,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return ExtensionInterface[]
      */
-    protected function getExtensions()
+    protected function getExtensions(): array
     {
         return [];
     }
@@ -54,7 +55,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return TwigFilter[]
      */
-    protected function getTwigFilters()
+    protected function getTwigFilters(): array
     {
         return [];
     }
@@ -62,7 +63,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return TwigFunction[]
      */
-    protected function getTwigFunctions()
+    protected function getTwigFunctions(): array
     {
         return [];
     }
@@ -70,7 +71,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return TwigTest[]
      */
-    protected function getTwigTests()
+    protected function getTwigTests(): array
     {
         return [];
     }
@@ -113,10 +114,7 @@ abstract class IntegrationTestCase extends TestCase
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
     }
 
-    /**
-     * @group legacy
-     */
-    #[DataProvider('getLegacyTests'), IgnoreDeprecations]
+    #[DataProvider('getLegacyTests'), Group('legacy'), IgnoreDeprecations]
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
     {
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
@@ -331,7 +329,7 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return array<string, string>
      */
-    protected static function parseTemplates($test)
+    protected static function parseTemplates($test): array
     {
         $templates = [];
         preg_match_all('/--TEMPLATE(?:\((.*?)\))?--(.*?)(?=\-\-TEMPLATE|$)/s', $test, $matches, \PREG_SET_ORDER);
