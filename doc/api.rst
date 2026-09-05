@@ -89,13 +89,16 @@ highest to the lowest precedence::
 
     echo $blocks->renderBlock('field_row', ['field' => $field]);
 
-Twig considers each template's blocks, traits and parents before moving to the
-next template. The first definition of each block wins. ``parent()`` follows
-the inheritance hierarchy of the template defining the block, while nested
-``block()`` calls use the composed block set.
+Twig considers each template's blocks, blocks imported with ``use`` and parents
+before moving to the next template. The first definition of each block wins.
+``parent()`` follows the local inheritance or ``use`` hierarchy of the block,
+while nested ``block()`` calls use the composed block set unless they name
+another template.
 
-``BlockChain`` composes blocks, not template bodies or macros. Only combine
-templates that are trusted to call one another's blocks.
+``BlockChain`` composes blocks, not template bodies or macros. Because chained
+templates share the composed block set, only combine templates that are trusted
+to call one another's blocks. As with direct block rendering, module-level
+imports are available after the defining template body has run.
 
 The optional third constructor argument provides variables used to resolve
 dynamic parent expressions. Parent hierarchies are fixed when the chain is
