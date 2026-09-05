@@ -11,6 +11,8 @@
 
 namespace Twig;
 
+use Twig\Error\RuntimeError;
+
 /**
  * Exposes a template to userland.
  *
@@ -96,11 +98,13 @@ final class TemplateWrapper
 
     /**
      * @internal
-     *
-     * @return Template
      */
-    public function unwrap()
+    public function unwrap(Environment $env): Template
     {
+        if ($this->env !== $env) {
+            throw new RuntimeError(\sprintf('A "%s" can only be used with the "%s" that created it.', self::class, Environment::class));
+        }
+
         return $this->template;
     }
 }

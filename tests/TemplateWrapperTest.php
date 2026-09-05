@@ -22,10 +22,24 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Twig\Loader\ArrayLoader;
+use Twig\Template;
 
 class TemplateWrapperTest extends TestCase
 {
+    public function testUnwrapChecksTheEnvironment(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => 'content']));
+        $wrapper = $twig->load('index');
+
+        $this->assertInstanceOf(Template::class, $wrapper->unwrap($twig));
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('can only be used with the "Twig\\Environment" that created it');
+        $wrapper->unwrap(new Environment(new ArrayLoader()));
+    }
+
     public function testHasGetBlocks(): void
     {
         $twig = new Environment(new ArrayLoader([
