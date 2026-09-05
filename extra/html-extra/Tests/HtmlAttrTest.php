@@ -157,6 +157,27 @@ class HtmlAttrTest extends TestCase
             ],
         ];
 
+        yield 'zero style declaration values are printed' => [
+            'style="opacity: 0; z-index: 0; margin: 0;"',
+            [
+                ['style' => ['opacity' => 0, 'z-index' => '0', 'margin' => 0.0]],
+            ],
+        ];
+
+        yield 'null, false and empty string style declaration values are omitted' => [
+            'style="color: red;"',
+            [
+                ['style' => ['a' => null, 'b' => false, 'c' => '', 'd' => true, 'color' => 'red']],
+            ],
+        ];
+
+        yield 'style attribute is omitted when every declaration is omitted' => [
+            '',
+            [
+                ['style' => ['a' => null, 'b' => false, 'c' => '']],
+            ],
+        ];
+
         yield 'merging style attributes overrides by key' => [
             'style="color: blue; font-size: 14px;"',
             [

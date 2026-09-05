@@ -55,7 +55,9 @@ final class InlineStyle implements MergeableInterface, AttributeValueInterface
     {
         $style = '';
         foreach ($this->value as $name => $value) {
-            if (empty($value) || true === $value) {
+            // `0`, `0.0` and `'0'` are valid CSS values, so only the values that carry
+            // no declaration at all are skipped here
+            if (null === $value || false === $value || true === $value || '' === $value || [] === $value) {
                 continue;
             }
             if (is_numeric($name)) {

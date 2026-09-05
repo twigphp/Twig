@@ -1,5 +1,6 @@
 # 3.29.0 (2026-XX-XX)
 
+ * Fix `html_attr` dropping `style` declarations whose value is `0`, `0.0` or `'0'`
  * Fix the `default` filter fallback emitting an undefined variable warning when it uses the null-safe operator
  * Fix the `matches` operator silently treating PCRE execution errors as non-matches
  * Add the `HtmlExtension::htmlAttrValue()` method to resolve a single HTML attribute value the way the `html_attr` function renders it
