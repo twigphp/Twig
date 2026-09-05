@@ -115,7 +115,7 @@ class MacroNode extends Node
             ->raw("): string|Markup {\n")
             ->indent()
             ->addDebugInfo($this)
-            ->write("\$macros = \$this->macros;\n")
+            ->write("\$macros = null === \$this->macroImportSource ? \$this->macros : \$this->rebindMacroImports(\$this->macroImportSource->macros);\n")
             ->write("\$context = [\n")
             ->indent()
         ;

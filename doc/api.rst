@@ -68,6 +68,42 @@ If a template defines blocks, they can be rendered individually via the
 
     echo $template->renderBlock('block_name', ['the' => 'variables', 'go' => 'here']);
 
+Composing Blocks
+----------------
+
+.. versionadded:: 3.29
+
+    The ``BlockChain`` class was introduced in Twig 3.29.
+
+Use ``BlockChain`` when a form, CMS field, data-grid or similar renderer needs
+to select blocks from several templates at runtime. Pass templates from the
+highest to the lowest precedence::
+
+    use Twig\BlockChain;
+
+    $blocks = new BlockChain($twig, [
+        'admin_theme.html.twig',
+        $twig->load('application_theme.html.twig'),
+        'base_theme.html.twig',
+    ]);
+
+    echo $blocks->renderBlock('field_row', ['field' => $field]);
+
+Twig considers each template's blocks, blocks imported with ``use`` and parents
+before moving to the next template. The first definition of each block wins.
+``parent()`` follows the local inheritance or ``use`` hierarchy of the block,
+while nested ``block()`` calls use the composed block set unless they name
+another template.
+
+``BlockChain`` composes blocks, not template bodies or macros. Because chained
+templates share the composed block set, only combine templates that are trusted
+to call one another's blocks. As with direct block rendering, module-level
+imports are available after the defining template body has run.
+
+The optional third constructor argument provides variables used to resolve
+dynamic parent expressions. Parent hierarchies are fixed when the chain is
+created; create another chain when these variables change.
+
 Streaming Templates
 -------------------
 

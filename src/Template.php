@@ -39,6 +39,7 @@ abstract class Template
     protected $traitAliases = [];
     protected $extensions = [];
     protected $sandbox;
+    protected ?self $macroImportSource = null;
 
     private $useYield;
     private ?MacroNamespace $macroNamespace = null;
@@ -78,6 +79,10 @@ abstract class Template
     public function getParent(array $context): self|TemplateWrapper|false
     {
         if (null !== $this->parent) {
+            if (null !== $this->macroImportSource) {
+                $this->ensureSecurityChecked();
+            }
+
             return $this->parent;
         }
 
@@ -164,12 +169,21 @@ abstract class Template
     public function renderParentBlock($name, array $context, array $blocks = []): string
     {
         if (!$this->useYield) {
+            $level = ob_get_level();
             if ($this->env->isDebug()) {
                 ob_start();
             } else {
                 ob_start(static function () { return ''; });
             }
-            $this->displayParentBlock($name, $context, $blocks);
+            try {
+                $this->displayParentBlock($name, $context, $blocks);
+            } catch (\Throwable $e) {
+                while (ob_get_level() > $level) {
+                    ob_end_clean();
+                }
+
+                throw $e;
+            }
 
             return ob_get_clean();
         }
@@ -350,6 +364,52 @@ abstract class Template
     }
 
     /**
+     * @internal
+     */
+    public function isOwnedBy(Environment $env): bool
+    {
+        return $this->env === $env;
+    }
+
+    /**
+     * @internal
+     */
+    public function freezeLineage(BlockResolutionContext $resolution): self
+    {
+        $resolution->assertOwns($this);
+        if ($resolution->isFrozen($this)) {
+            return $resolution->getFrozen($this);
+        }
+
+        $resolution->beginFreeze($this);
+        try {
+            if (false === $parent = $resolution->getParent($this)) {
+                $resolution->setFrozen($this, $this);
+
+                return $this;
+            }
+
+            $template = clone $this;
+            foreach ($template->blocks as &$block) {
+                if ($block[0] === $this) {
+                    $block[0] = $template;
+                }
+            }
+            unset($block);
+
+            $template->macroNamespace = null;
+            // Keep module-level imports live while rebinding self imports to the clone.
+            $template->macroImportSource = $this;
+            $template->parent = $parent->freezeLineage($resolution);
+            $resolution->setFrozen($this, $template);
+
+            return $template;
+        } finally {
+            $resolution->endFreeze($this);
+        }
+    }
+
+    /**
      * Returns all blocks.
      *
      * This method is for internal use only and should never be called
@@ -491,6 +551,28 @@ abstract class Template
     protected function loadDeclaredMacros(): array
     {
         return [];
+    }
+
+    /**
+     * @param array<string, MacroNamespace> $macros
+     *
+     * @return array<string, MacroNamespace>
+     */
+    protected function rebindMacroImports(array $macros): array
+    {
+        if (null === $this->macroImportSource) {
+            return $macros;
+        }
+
+        static $templateProperty;
+        $templateProperty ??= new \ReflectionProperty(MacroNamespace::class, 'template');
+        foreach ($macros as $name => $namespace) {
+            if ($namespace instanceof MacroNamespace && $templateProperty->getValue($namespace) === $this->macroImportSource) {
+                $macros[$name] = $this->getMacroNamespace();
+            }
+        }
+
+        return $macros;
     }
 
     /**

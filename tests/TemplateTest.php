@@ -226,6 +226,33 @@ class TemplateTest extends TestCase
         $template->displayBlock('foo', [], ['foo' => [new TemplateForTest($twig, 'index.twig'), 'block_foo']], false);
     }
 
+    /**
+     * @dataProvider debugModes
+     */
+    #[DataProvider('debugModes')]
+    public function testRenderParentBlockRestoresOutputBuffersOnError(bool $debug): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'parent' => '{% block content %}{{ missing.value }}{% endblock %}',
+            'child' => '{% extends "parent" %}',
+        ]), ['debug' => $debug, 'strict_variables' => true, 'use_yield' => false]);
+        $template = $twig->load('child')->unwrap();
+        $level = ob_get_level();
+
+        try {
+            $template->renderParentBlock('content', []);
+            $this->fail('Rendering the parent block must fail.');
+        } catch (RuntimeError) {
+            $actualLevel = ob_get_level();
+        } finally {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+        }
+
+        $this->assertSame($level, $actualLevel);
+    }
+
     public function testGetAttributeOnArrayWithConfusableKey(): void
     {
         $twig = new Environment(new ArrayLoader());
@@ -460,6 +487,12 @@ class TemplateTest extends TestCase
 
         $this->assertSame('value', $twig->render('index', ['data' => $data, 'key' => $key]));
         $this->assertSame(0, $key->toStringCalls);
+    }
+
+    public static function debugModes(): iterable
+    {
+        yield 'debug disabled' => [false];
+        yield 'debug enabled' => [true];
     }
 
     public static function getStrictVariablesModes(): iterable
