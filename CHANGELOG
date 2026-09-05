@@ -1,5 +1,6 @@
 # 4.0.0 (2026-XX-XX)
 
+ * Add an optional `string $template = ''` argument to `IncludeNode::addGetTemplate()`; subclasses overriding this method must declare a compatible parameter
  * Remove `TemplateVariable` and `AssignTemplateVariable`; use `MacroVariable` and `AssignMacroVariable` instead
  * Add the `isAlwaysAllowedInSandbox()` method to `Twig\TwigCallableInterface` and `Twig\TokenParser\TokenParserInterface`
  * Always allow printing a `Markup` object in a sandbox, whatever the security policy is

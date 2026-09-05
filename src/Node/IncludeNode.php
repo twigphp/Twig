@@ -79,7 +79,7 @@ class IncludeNode extends Node implements NodeOutputInterface, CoercesChildrenTo
         }
     }
 
-    protected function addGetTemplate(Compiler $compiler/* , string $template = '' */): void
+    protected function addGetTemplate(Compiler $compiler, string $template = ''): void
     {
         $compiler
             ->raw('$this->load(')
