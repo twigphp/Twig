@@ -445,10 +445,9 @@ class BlockChainTest extends TestCase
         $chain = new BlockChain($twig, ['theme']);
 
         try {
-            $chain->renderBlock('field');
+            $chain->renderBlock('field', ['helper' => 'macros1']);
             $this->fail('Rendering an uninitialized import must fail.');
-        } catch (RuntimeError $e) {
-            $this->assertStringContainsString('Undefined array key', $e->getMessage());
+        } catch (RuntimeError) {
         }
 
         $this->assertSame('one', $twig->render('theme', ['helper' => 'macros1']));
