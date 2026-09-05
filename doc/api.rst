@@ -75,8 +75,8 @@ Composing Blocks
 
     The ``BlockChain`` class was introduced in Twig 3.29.
 
-Use ``BlockChain`` when a renderer needs to select blocks from several
-unrelated templates, such as a collection of themes. Pass templates from the
+Use ``BlockChain`` when a form, CMS field, data-grid or similar renderer needs
+to select blocks from several templates at runtime. Pass templates from the
 highest to the lowest precedence::
 
     use Twig\BlockChain;
