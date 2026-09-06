@@ -89,7 +89,13 @@ abstract class Template
         // resolved against a parent, or yieldBlock() into a pre-warmed instance).
         $this->ensureSecurityChecked();
 
-        if (!$parent = $this->doGetParent($context)) {
+        try {
+            $parent = $this->doGetParent($context);
+        } catch (\Throwable $e) {
+            $this->handleException($e);
+        }
+
+        if (!$parent) {
             return false;
         }
 
