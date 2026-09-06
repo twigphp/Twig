@@ -1,0 +1,9 @@
+--TEST--
+"block_data" function when block does not call block_export
+--TEMPLATE--
+{% block foo %}no export here{% endblock %}
+{{ block_data('foo')|json_encode|raw }}
+--DATA--
+return []
+--EXPECT--
+no export here[]

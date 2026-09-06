@@ -1,0 +1,12 @@
+--TEST--
+"block_data" function with block override
+--TEMPLATE--
+{% extends 'base.twig' %}
+{% block attrs %}{% do block_export({"id": "overridden", "class": "custom"}) %}overridden{% endblock %}
+--TEMPLATE(base.twig)--
+{% block attrs %}{% do block_export({"id": "base"}) %}base{% endblock %}
+{{ block_data('attrs').id }}
+--DATA--
+return []
+--EXPECT--
+overriddenoverridden

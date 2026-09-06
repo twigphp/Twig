@@ -1387,7 +1387,7 @@ EOF
         ], [], ['escape', 'filter', 'join']);
 
         $this->expectException(RuntimeError::class);
-        $this->expectExceptionMessage('The callable passed to the "filter" filter must be a Closure in sandbox mode in "index" at line 1.');
+        $this->expectExceptionMessage('The callable passed to the "filter" "filter" must be a Closure in sandbox mode in "index" at line 1.');
 
         $twig->load('index')->render([]);
     }

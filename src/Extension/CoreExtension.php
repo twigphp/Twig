@@ -67,6 +67,7 @@ use Twig\Node\Expression\Binary\SpaceshipBinary;
 use Twig\Node\Expression\Binary\StartsWithBinary;
 use Twig\Node\Expression\Binary\SubBinary;
 use Twig\Node\Expression\Binary\XorBinary;
+use Twig\Node\Expression\BlockDataExpression;
 use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\Filter\DefaultFilter;
 use Twig\Node\Expression\FunctionNode\EnumCasesFunction;
@@ -145,6 +146,7 @@ final class CoreExtension extends AbstractExtension
     private $dateFormats = ['F j, Y H:i', '%d days'];
     private $numberFormat = [0, '.', ','];
     private $timezone;
+    private mixed $exportedBlockData = null;
 
     /**
      * Sets the default format to be used by the date filter.
@@ -217,6 +219,22 @@ final class CoreExtension extends AbstractExtension
     public function getNumberFormat()
     {
         return $this->numberFormat;
+    }
+
+    public function exportBlockData(mixed $data): void
+    {
+        $this->exportedBlockData = $data;
+    }
+
+    /**
+     * @internal
+     */
+    public function getExportedBlockData(): mixed
+    {
+        $data = $this->exportedBlockData;
+        $this->exportedBlockData = null;
+
+        return $data;
     }
 
     public function getTokenParsers(): array
@@ -315,6 +333,8 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
             new TwigFunction('enum_cases', [self::class, 'enumCases'], ['node_class' => EnumCasesFunction::class]),
             new TwigFunction('enum', [self::class, 'enum'], ['node_class' => EnumFunction::class]),
+            new TwigFunction('block_data', null, ['parser_callable' => [self::class, 'parseBlockDataFunction']]),
+            new TwigFunction('block_export', [$this, 'exportBlockData']),
         ];
     }
 
@@ -1197,7 +1217,7 @@ final class CoreExtension extends AbstractExtension
         });
         try {
             if (false === $result = preg_match($regexp, $str ?? '')) {
-                throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" failed: %s.', $regexp, preg_last_error_msg()));
+                throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" failed: "%s".', $regexp, preg_last_error_msg()));
             }
 
             return $result;
@@ -2186,7 +2206,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ($isSandboxed) {
-            throw new RuntimeError(\sprintf('The callable passed to the "%s" %s must be a Closure in sandbox mode.', $thing, $type));
+            throw new RuntimeError(\sprintf('The callable passed to the "%s" "%s" must be a Closure in sandbox mode.', $thing, $type));
         }
 
         trigger_deprecation('twig/twig', '3.15', 'Passing a callable that is not a PHP \Closure as an argument to the "%s" %s is deprecated.', $thing, $type);
@@ -2240,6 +2260,17 @@ final class CoreExtension extends AbstractExtension
         $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
 
         return new BlockReferenceExpression($args[0], $args[1] ?? null, $line);
+    }
+
+    /**
+     * @internal
+     */
+    public static function parseBlockDataFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    {
+        $fakeFunction = new TwigFunction('block_data', static fn ($name, $template = null) => null);
+        $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
+
+        return new BlockDataExpression($args[0], $args[1] ?? null, $line);
     }
 
     /**
