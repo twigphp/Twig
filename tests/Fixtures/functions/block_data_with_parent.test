@@ -1,0 +1,12 @@
+--TEST--
+"block_data" function with parent() call
+--TEMPLATE--
+{% extends 'base.twig' %}
+{% block attrs %}{% set attr = {"id": "base", "class": "original"} %}{% set attr = attr|merge({"class": "modified"}) %}{% do block_export(attr) %}{{ attr.id }}{% endblock %}
+--TEMPLATE(base.twig)--
+{% block attrs %}{% endblock %}
+{{ block_data('attrs').class }}
+--DATA--
+return []
+--EXPECT--
+basemodified
