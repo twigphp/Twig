@@ -52,6 +52,43 @@ class TemplateWrapperTest extends TestCase
         $this->assertEquals(['foo', 'extended'], $wrapper->getBlockNames());
     }
 
+    public function testBlockIntrospectionIncludesGlobals(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => '{% extends layout %}',
+            'global_parent' => '{% block global %}{% endblock %}',
+            'local_parent' => '{% block local %}{% endblock %}',
+        ]));
+        $twig->addGlobal('layout', 'global_parent');
+
+        $wrapper = $twig->load('index');
+        $this->assertTrue($wrapper->hasBlock('global'));
+        $this->assertFalse($wrapper->hasBlock('local'));
+        $this->assertSame(['global'], $wrapper->getBlockNames());
+
+        $context = ['layout' => 'local_parent'];
+        $this->assertTrue($wrapper->hasBlock('local', $context));
+        $this->assertFalse($wrapper->hasBlock('global', $context));
+        $this->assertSame(['local'], $wrapper->getBlockNames($context));
+    }
+
+    public function testStreamBlockIncludesGlobals(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => '{% extends layout %}',
+            'layout' => '{% block foo %}{{ foo }}{{ bar }}{% endblock %}',
+        ]));
+        $twig->addGlobal('layout', 'layout');
+        $twig->addGlobal('bar', 'BAR');
+
+        $streamed = '';
+        foreach ($twig->load('index')->streamBlock('foo', ['foo' => 'FOO']) as $data) {
+            $streamed .= $data;
+        }
+
+        $this->assertSame('FOOBAR', $streamed);
+    }
+
     public function testRenderBlock(): void
     {
         $twig = new Environment(new ArrayLoader([
