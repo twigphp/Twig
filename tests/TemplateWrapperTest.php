@@ -93,9 +93,6 @@ class TemplateWrapperTest extends TestCase
         $this->assertSame('FOOBAR', $streamed);
     }
 
-    /**
-     * @dataProvider provideDynamicParentFailures
-     */
     #[DataProvider('provideDynamicParentFailures')]
     public function testDynamicParentFailuresAreWrapped(string $template, ?TwigFunction $function, string $previousException): void
     {
