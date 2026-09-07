@@ -43,7 +43,7 @@ final class TemplateWrapper
      */
     public function streamBlock(string $name, array $context = []): iterable
     {
-        yield from $this->template->yieldBlock($name, $context);
+        yield from $this->template->yieldBlock($name, $context + $this->env->getGlobals());
     }
 
     public function render(array $context = []): string
@@ -60,7 +60,7 @@ final class TemplateWrapper
 
     public function hasBlock(string $name, array $context = []): bool
     {
-        return $this->template->hasBlock($name, $context);
+        return $this->template->hasBlock($name, $context + $this->env->getGlobals());
     }
 
     /**
@@ -68,7 +68,7 @@ final class TemplateWrapper
      */
     public function getBlockNames(array $context = []): array
     {
-        return $this->template->getBlockNames($context);
+        return $this->template->getBlockNames($context + $this->env->getGlobals());
     }
 
     public function renderBlock(string $name, array $context = []): string
