@@ -15,6 +15,9 @@ use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 
 /**
+ * Wires the security checker at the very top of the template constructor, as
+ * the constructor resolves `use` traits before the sandbox could check them.
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 #[YieldReady]
@@ -26,7 +29,7 @@ class CheckSecurityCallNode extends Node
     public function compile(Compiler $compiler)
     {
         $compiler
-            ->write("\$this->sandbox = \$this->extensions[SandboxExtension::class]->getChecker();\n")
+            ->write("\$this->sandbox = \$env->getExtension(SandboxExtension::class)->getChecker();\n")
         ;
     }
 }
