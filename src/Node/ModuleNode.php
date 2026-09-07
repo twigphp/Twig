@@ -218,7 +218,8 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
 
         $countTraits = \count($this->getNode('traits'));
         if ($countTraits) {
-            // traits
+            $compiler->write("\$this->ensureTraitsAllowed();\n\n");
+
             foreach ($this->getNode('traits') as $i => $trait) {
                 $node = $trait->getNode('template');
 

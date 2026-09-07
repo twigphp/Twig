@@ -503,6 +503,31 @@ abstract class Template
     }
 
     /**
+     * Checks the "use" tag against the sandbox policy.
+     *
+     * The constructor resolves "use" traits eagerly, which reaches the loader,
+     * so that tag alone is checked here; the rest of the policy still runs at
+     * render time.
+     *
+     * @internal
+     */
+    public function ensureTraitsAllowed(): void
+    {
+        try {
+            $this->checkTraitsAllowed();
+        } catch (\Throwable $e) {
+            $this->handleException($e);
+        }
+    }
+
+    /**
+     * @internal
+     */
+    protected function checkTraitsAllowed(): void
+    {
+    }
+
+    /**
      * Auto-generated method to display the template with the given context.
      *
      * @param array $context An array of parameters to pass to the template
