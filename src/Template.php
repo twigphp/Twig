@@ -14,6 +14,7 @@ namespace Twig;
 
 use Twig\Error\Error;
 use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
 
 /**
  * Default base class for compiled templates.
@@ -244,6 +245,21 @@ abstract class Template
         }
 
         return $content;
+    }
+
+    /**
+     * Renders a block and returns the data exported via block_export() instead of the rendered string.
+     *
+     * @param string $name      The block name to render
+     * @param array  $context   The context
+     * @param array  $blocks    The current set of blocks
+     * @param bool   $useBlocks Whether to use the current set of blocks
+     */
+    public function renderBlockData(string $name, array $context, array $blocks = [], bool $useBlocks = true): mixed
+    {
+        $this->renderBlock($name, $context, $blocks, $useBlocks);
+
+        return $this->env->getExtension(CoreExtension::class)->getExportedBlockData() ?? [];
     }
 
     /**
