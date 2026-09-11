@@ -253,6 +253,27 @@ class TemplateTest extends TestCase
         $this->assertSame($level, $actualLevel);
     }
 
+    public function testHasFixedParentOnlyReportsLineagesThatCanNoLongerMove(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'no_parent' => '',
+            'constant_parent' => '{% extends "no_parent" %}',
+            'dynamic_parent' => '{% extends parent %}',
+        ]));
+
+        $this->assertTrue($twig->load('no_parent')->unwrap()->hasFixedParent());
+
+        $constant = $twig->load('constant_parent')->unwrap();
+        $this->assertFalse($constant->hasFixedParent());
+        $constant->getParent([]);
+        $this->assertTrue($constant->hasFixedParent());
+
+        $dynamic = $twig->load('dynamic_parent')->unwrap();
+        $this->assertFalse($dynamic->hasFixedParent());
+        $dynamic->getParent(['parent' => 'no_parent']);
+        $this->assertFalse($dynamic->hasFixedParent());
+    }
+
     public function testGetAttributeOnArrayWithConfusableKey(): void
     {
         $twig = new Environment(new ArrayLoader());
