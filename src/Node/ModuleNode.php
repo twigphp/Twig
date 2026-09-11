@@ -143,16 +143,17 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         ;
 
         if ($parent instanceof ConstantExpression) {
-            $compiler->subcompile($parent);
-        } else {
-            $compiler
-                ->raw('$this->load(')
-                ->subcompile($parent)
-                ->raw(', ')
-                ->repr($parent->getTemplateLine())
-                ->raw(')')
-            ;
+            // a constant parent never depends on the context, so resolve it once
+            $compiler->raw('$this->parent ??= ');
         }
+
+        $compiler
+            ->raw('$this->load(')
+            ->subcompile($parent)
+            ->raw(', ')
+            ->repr($parent->getTemplateLine())
+            ->raw(')')
+        ;
 
         $compiler
             ->raw(";\n")
