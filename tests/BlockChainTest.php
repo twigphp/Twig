@@ -253,7 +253,7 @@ class BlockChainTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader(['theme' => '']));
         $other = new Environment(new ArrayLoader(['theme' => '']));
-        $wrapper = new TemplateWrapper($twig, $other->load('theme')->unwrap());
+        $wrapper = new TemplateWrapper($twig, $other->load('theme')->unwrap($other));
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('A block chain cannot contain templates from different Twig environments.');
@@ -267,8 +267,8 @@ class BlockChainTest extends TestCase
         $other = new Environment(new ArrayLoader(['parent' => '']));
         $chain = new BlockChain($twig, ['theme'], ['parent' => $other->load('parent')]);
 
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('A block chain cannot contain templates from different Twig environments.');
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('A "Twig\TemplateWrapper" can only be used with the "Twig\Environment" that created it in "theme" at line 1.');
 
         $chain->getBlockNames();
     }
