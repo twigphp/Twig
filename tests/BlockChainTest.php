@@ -11,7 +11,6 @@
 
 namespace Twig\Tests;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\BlockChain;
 use Twig\Environment;
@@ -28,18 +27,14 @@ use Twig\TemplateWrapper;
 
 class BlockChainTest extends TestCase
 {
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testComposesCompleteTemplateLineagesInPrecedenceOrder(bool $useYield): void
+    public function testComposesCompleteTemplateLineagesInPrecedenceOrder(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme1' => '{% extends "parent1" %}{% block first %}theme1{% endblock %}',
             'parent1' => '{% block shared %}parent1{% endblock %}{% block parent1 %}parent1{% endblock %}',
             'theme2' => '{% extends "parent2" %}{% block shared %}theme2{% endblock %}{% block second %}theme2{% endblock %}',
             'parent2' => '{% block parent2 %}parent2{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, ['theme1', $twig->load('theme2')]);
 
@@ -50,18 +45,14 @@ class BlockChainTest extends TestCase
         $this->assertSame('theme2', $chain->renderBlock('second'));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testNestedBlocksUseTheComposedSetAndParentUsesTheRenderContextLineage(bool $useYield): void
+    public function testNestedBlocksUseTheComposedSetAndParentUsesTheRenderContextLineage(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% block field %}theme/{{ parent() }}/{{ block("suffix") }}{% endblock %}',
             'parent1' => '{% block field %}parent1{% endblock %}',
             'parent2' => '{% block field %}parent2{% endblock %}',
             'suffix' => '{% block suffix %}suffix{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, ['theme', 'suffix'], ['parent' => 'parent1']);
 
@@ -75,7 +66,7 @@ class BlockChainTest extends TestCase
             'theme' => '{% block field %}{{ block("suffix", "explicit") }}{% endblock %}',
             'chain' => '{% block suffix %}chain{% endblock %}',
             'explicit' => '{% block suffix %}explicit{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, ['theme', 'chain']);
 
@@ -88,7 +79,7 @@ class BlockChainTest extends TestCase
             'theme' => '{% extends parent %}{% block field %}{{ parent() }}{% endblock %}',
             'parent1' => '{% block field %}one{% endblock %}',
             'parent2' => '{% block field %}two{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
         $this->assertSame('one', $chain->renderBlock('field'));
@@ -102,7 +93,7 @@ class BlockChainTest extends TestCase
             'theme' => '{% extends parent %}{% block field %}{{ parent() }}{% endblock %}',
             'parent1' => '{% block field %}one{% endblock %}{% block only1 %}{% endblock %}',
             'parent2' => '{% block field %}two{% endblock %}{% block only2 %}{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
         $this->assertSame(['field', 'only1'], $chain->getBlockNames());
@@ -122,7 +113,7 @@ class BlockChainTest extends TestCase
             'theme' => '{% extends parent %}{% block field %}{{ parent() }}{% endblock %}',
             'parent1' => '{% block field %}one{% endblock %}',
             'parent2' => '{% block field %}two{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
         $template = $twig->load('theme');
         $chain = new BlockChain($twig, [$template], ['parent' => 'parent1']);
 
@@ -136,7 +127,7 @@ class BlockChainTest extends TestCase
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends layout %}{% block field %}{{ parent() }}{% endblock %}',
             'parent' => '{% block field %}parent{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
         $twig->addGlobal('layout', 'parent');
 
         $chain = new BlockChain($twig, ['theme']);
@@ -150,7 +141,7 @@ class BlockChainTest extends TestCase
             'base_trait' => '{% block field %}base{% endblock %}',
             'trait' => '{% use "base_trait" %}{% block field %}trait/{{ parent() }}{% endblock %}',
             'theme' => '{% use "trait" with field as aliased %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, ['theme']);
 
@@ -158,41 +149,11 @@ class BlockChainTest extends TestCase
         $this->assertSame('trait/base', $chain->renderBlock('aliased'));
     }
 
-    public function testRenderCapturesLegacyEchoingBlocks(): void
-    {
-        $twig = new Environment(new ArrayLoader(), ['use_yield' => false]);
-        $chain = new BlockChain($twig, [new TemplateWrapper($twig, new EchoingBlockChainTemplate($twig))]);
-
-        $this->assertSame('echo/yield', $chain->renderBlock('field'));
-    }
-
-    public function testRenderRestoresOutputBuffersOnError(): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'theme' => '{% block field %}{% set captured %}{{ missing.value }}{% endset %}{% endblock %}',
-        ]), ['strict_variables' => true, 'use_yield' => false]);
-        $chain = new BlockChain($twig, ['theme']);
-        $level = ob_get_level();
-
-        try {
-            $chain->renderBlock('field');
-            $this->fail('Rendering the block must fail.');
-        } catch (RuntimeError) {
-            $actualLevel = ob_get_level();
-        } finally {
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-        }
-
-        $this->assertSame($level, $actualLevel);
-    }
-
     public function testRenderingDisplayingAndStreamingAddGlobals(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% block field %}{{ local }}:{{ global|default("none") }}{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
         $twig->addGlobal('global', 'GLOBAL');
         $chain = new BlockChain($twig, ['theme']);
 
@@ -212,7 +173,7 @@ class BlockChainTest extends TestCase
     public function testRejectsInvalidBlockDefinitions(): void
     {
         $twig = new Environment(new ArrayLoader());
-        $template = new class($twig) extends EchoingBlockChainTemplate {
+        $template = new class($twig) extends BlockChainTestTemplate {
             public function __construct(Environment $env)
             {
                 parent::__construct($env);
@@ -305,7 +266,7 @@ class BlockChainTest extends TestCase
         $twig = new Environment(new ArrayLoader([
             'policy_theme' => '{% extends "parent" %}{% block field %}{{ value|upper }}{% endblock %}',
             'parent' => '',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
         $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'block'], ['upper']), true);
         $twig->addExtension($sandbox);
         $chain = new BlockChain($twig, ['policy_theme']);
@@ -318,17 +279,13 @@ class BlockChainTest extends TestCase
         $chain->renderBlock('field', ['value' => 'value']);
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testSandboxPolicyChangesAreCheckedOnIntermediateParents(bool $useYield): void
+    public function testSandboxPolicyChangesAreCheckedOnIntermediateParents(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "middle" %}{% block field %}{{ parent() }}{% endblock %}',
             'middle' => '{% extends parent|upper %}',
             'GRANDPARENT' => '{% block field %}safe{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'block'], ['upper'], allowedFunctions: ['parent']), true);
         $twig->addExtension($sandbox);
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'grandparent']);
@@ -341,17 +298,13 @@ class BlockChainTest extends TestCase
         $chain->renderBlock('field');
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testImportedMacroNamespacesObserveSandboxPolicyChanges(bool $useYield): void
+    public function testImportedMacroNamespacesObserveSandboxPolicyChanges(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "layout" %}{% import "macros" as macros %}{% block field %}{{ macros.label(value) }}{% endblock %}',
             'layout' => '{{ block("field") }}',
             'macros' => '{% macro label(value) %}{{ value|upper }}{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'import', 'block', 'macro'], ['upper'], allowedFunctions: ['block']), true);
         $twig->addExtension($sandbox);
         $chain = new BlockChain($twig, ['theme']);
@@ -370,7 +323,7 @@ class BlockChainTest extends TestCase
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "parent" %}{% block field %}field{% endblock %}',
             'parent' => '',
-        ]), ['use_yield' => true]);
+        ]), []);
         $profile = new Profile();
         $twig->addExtension(new ProfilerExtension($profile));
         $chain = new BlockChain($twig, ['theme']);
@@ -389,7 +342,7 @@ class BlockChainTest extends TestCase
         $twig = new Environment(new ArrayLoader([
             'theme1' => '{% macro label() %}one{% endmacro %}{% block field %}{{ _self.label() }}{% endblock %}',
             'theme2' => '{% macro label() %}two{% endmacro %}{% block field %}{{ _self.label() }}{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, ['theme1', 'theme2']);
 
@@ -402,7 +355,7 @@ class BlockChainTest extends TestCase
             'theme' => '{% extends parent %}{% block field %}{{ _self.label() }}{% endblock %}',
             'parent1' => '{% macro label() %}one{% endmacro %}',
             'parent2' => '{% macro label() %}two{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
@@ -410,17 +363,13 @@ class BlockChainTest extends TestCase
         $this->assertSame('two', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testSelfMacroImportsUseTheRenderContextLineage(bool $useYield): void
+    public function testSelfMacroImportsUseTheRenderContextLineage(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}',
             'parent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
             'parent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
         $this->assertSame('two', $twig->render('theme', ['parent' => 'parent2']));
@@ -428,16 +377,12 @@ class BlockChainTest extends TestCase
         $this->assertSame('two', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testFromSelfImportsResolveThroughTheLineage(bool $useYield): void
+    public function testFromSelfImportsResolveThroughTheLineage(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "parent" %}{% from _self import label %}{% macro wrapped() %}{{ label() }}{% endmacro %}{% block field %}{{ label() }}/{{ _self.wrapped() }}{% endblock %}',
             'parent' => '{% macro label() %}one{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $this->assertSame('', $twig->render('theme'));
 
         $chain = new BlockChain($twig, ['theme']);
@@ -445,17 +390,13 @@ class BlockChainTest extends TestCase
         $this->assertSame('one/one', $chain->renderBlock('field'));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testImportedMacroNamespacesKeepTheirOwnLineage(bool $useYield): void
+    public function testImportedMacroNamespacesKeepTheirOwnLineage(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% import parent as inherited %}{% block field %}{{ inherited.label() }}{% endblock %}',
             'parent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
             'parent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $this->assertSame('two', $twig->render('theme', ['parent' => 'parent2']));
 
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
@@ -463,18 +404,14 @@ class BlockChainTest extends TestCase
         $this->assertSame('two', $chain->renderBlock('field'));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testModuleImportsFollowTheDefiningTemplateBodyState(bool $useYield): void
+    public function testModuleImportsFollowTheDefiningTemplateBodyState(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "layout" %}{% import helper as macros %}{% block field %}{{ macros.label() }}{% endblock %}',
             'layout' => '{{ block("field") }}',
             'macros1' => '{% macro label() %}one{% endmacro %}',
             'macros2' => '{% macro label() %}two{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $chain = new BlockChain($twig, ['theme']);
 
         try {
@@ -489,32 +426,24 @@ class BlockChainTest extends TestCase
         $this->assertSame('two', $chain->renderBlock('field'));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testSelfMacroImportsInMacroBodiesResolveThroughTheLineage(bool $useYield): void
+    public function testSelfMacroImportsInMacroBodiesResolveThroughTheLineage(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "parent" %}{% import _self as own %}{% macro wrapped() %}{{ own.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}',
             'parent' => '{% macro label() %}one{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $chain = new BlockChain($twig, ['theme']);
 
         $this->assertSame('', $twig->render('theme'));
         $this->assertSame('one', $chain->renderBlock('field'));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testMacroBodiesCannotResolveADynamicParentJustLikeADirectRender(bool $useYield): void
+    public function testMacroBodiesCannotResolveADynamicParentJustLikeADirectRender(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% import _self as own %}{% macro wrapped() %}{{ own.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}',
             'parent' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent']);
 
         // a macro body only receives the macro arguments, so the "parent" variable is out of reach either way
@@ -529,18 +458,14 @@ class BlockChainTest extends TestCase
         $chain->renderBlock('field');
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testMacroBodiesObserveImportUpdatesAfterConstruction(bool $useYield): void
+    public function testMacroBodiesObserveImportUpdatesAfterConstruction(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "layout" %}{% import helper as macros %}{% macro wrapped() %}{{ macros.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}',
             'layout' => '{{ block("field") }}',
             'macros1' => '{% macro label() %}one{% endmacro %}',
             'macros2' => '{% macro label() %}two{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $chain = new BlockChain($twig, ['theme']);
 
         $this->assertSame('one', $twig->render('theme', ['helper' => 'macros1']));
@@ -549,11 +474,7 @@ class BlockChainTest extends TestCase
         $this->assertSame('two', $chain->renderBlock('field'));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testPreWarmedExternalMacroImportsAreNotReboundByChainOrder(bool $useYield): void
+    public function testPreWarmedExternalMacroImportsAreNotReboundByChainOrder(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "layout" %}{% import "macros" as macros %}{% block field %}{{ macros.label() }}{% endblock %}',
@@ -561,7 +482,7 @@ class BlockChainTest extends TestCase
             'macros' => '{% extends macro_parent %}',
             'macros1' => '{% macro label() %}one{% endmacro %}',
             'macros2' => '{% macro label() %}two{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
         $this->assertSame('two', $twig->render('theme', ['macro_parent' => 'macros2']));
 
         $context = ['macro_parent' => 'macros1'];
@@ -577,7 +498,7 @@ class BlockChainTest extends TestCase
             'theme' => '{% extends parent %}{% block field %}before/{{ parent() }}/after{% endblock %}',
             'parent1' => '{% block field %}one{% endblock %}',
             'parent2' => '{% block field %}two{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
 
         $stream1 = (new BlockChain($twig, ['theme'], ['parent' => 'parent1']))->streamBlock('field');
         $stream2 = (new BlockChain($twig, ['theme'], ['parent' => 'parent2']))->streamBlock('field');
@@ -604,7 +525,7 @@ class BlockChainTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => "{% block field %}\n{{ missing.value }}\n{% endblock %}",
-        ]), ['strict_variables' => true, 'use_yield' => true]);
+        ]), ['strict_variables' => true]);
         $chain = new BlockChain($twig, ['theme']);
 
         try {
@@ -648,15 +569,9 @@ class BlockChainTest extends TestCase
 
         new BlockChain(new Environment(new ArrayLoader()), []);
     }
-
-    public static function yieldModes(): iterable
-    {
-        yield 'echo and yield' => [false];
-        yield 'yield only' => [true];
-    }
 }
 
-class EchoingBlockChainTemplate extends Template
+class BlockChainTestTemplate extends Template
 {
     public function __construct(Environment $env)
     {
@@ -667,13 +582,12 @@ class EchoingBlockChainTemplate extends Template
 
     public function block_field(array $context, array $blocks = []): iterable
     {
-        echo 'echo/';
-        yield 'yield';
+        yield 'field';
     }
 
     public function getTemplateName(): string
     {
-        return 'echoing';
+        return 'block_chain_test';
     }
 
     public function getDebugInfo(): array
@@ -683,7 +597,7 @@ class EchoingBlockChainTemplate extends Template
 
     public function getSourceContext(): Source
     {
-        return new Source('', 'echoing');
+        return new Source('', 'block_chain_test');
     }
 
     protected function doDisplay(array $context, array $blocks = []): iterable
