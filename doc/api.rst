@@ -79,10 +79,6 @@ If a template defines blocks, they can be rendered individually via the
 Composing Blocks
 ----------------
 
-.. versionadded:: 3.29
-
-    The ``BlockChain`` class was introduced in Twig 3.29.
-
 Use ``BlockChain`` when a form, CMS field, data-grid or similar renderer needs
 to select blocks from several templates at runtime. Pass templates from the
 highest to the lowest precedence::
