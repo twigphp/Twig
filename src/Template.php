@@ -312,6 +312,23 @@ abstract class Template
     }
 
     /**
+     * @internal
+     */
+    public function isOwnedBy(Environment $env): bool
+    {
+        return $this->env === $env;
+    }
+
+    /**
+     * Returns whether getParent() has stopped depending on the context, which
+     * only ever happens for a template with no parent or with a constant one.
+     */
+    public function hasFixedParent(): bool
+    {
+        return null !== $this->parent;
+    }
+
+    /**
      * Returns all blocks.
      *
      * This method is for internal use only and should never be called
@@ -441,6 +458,31 @@ abstract class Template
      * @internal
      */
     public function ensureSecurityChecked(): void
+    {
+    }
+
+    /**
+     * Checks the "use" tag against the sandbox policy.
+     *
+     * The constructor resolves "use" traits eagerly, which reaches the loader,
+     * so that tag alone is checked here; the rest of the policy still runs at
+     * render time.
+     *
+     * @internal
+     */
+    public function ensureTraitsAllowed(): void
+    {
+        try {
+            $this->checkTraitsAllowed();
+        } catch (\Throwable $e) {
+            $this->handleException($e);
+        }
+    }
+
+    /**
+     * @internal
+     */
+    protected function checkTraitsAllowed(): void
     {
     }
 

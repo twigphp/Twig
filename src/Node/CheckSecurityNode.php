@@ -43,6 +43,32 @@ class CheckSecurityNode extends Node
 
     public function compile(Compiler $compiler): void
     {
+        if (isset($this->usedTags['use'])) {
+            $compiler
+                ->write("\n")
+                ->write("protected function checkTraitsAllowed(): void\n")
+                ->write("{\n")
+                ->indent()
+                ->write("if (!\$this->sandbox->isSandboxed(\$this->source)) {\n")
+                ->indent()
+                ->write("return;\n")
+                ->outdent()
+                ->write("}\n\n")
+                ->write("try {\n")
+                ->indent()
+                ->write("\$this->sandbox->checkSecurity(['use'], [], [], [], \$this->source);\n")
+                ->outdent()
+                ->write("} catch (SecurityNotAllowedTagError \$e) {\n")
+                ->indent()
+                ->write('$e->setTemplateLine(')->repr($this->usedTags['use'])->raw(");\n\n")
+                ->write("throw \$e;\n")
+                ->outdent()
+                ->write("}\n")
+                ->outdent()
+                ->write("}\n")
+            ;
+        }
+
         $compiler
             ->write("\n")
             ->write("public function ensureSecurityChecked(): void\n")

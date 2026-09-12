@@ -68,6 +68,64 @@ If a template defines blocks, they can be rendered individually via the
 
     echo $template->renderBlock('block_name', ['the' => 'variables', 'go' => 'here']);
 
+.. caution::
+
+    Rendering a block on its own does not run the template body, so macros
+    imported at the top level of the template are missing and the block fails
+    when it calls one. Move the ``import`` or ``from`` tag inside the block.
+    Rendering the whole template first also makes them available, but they then
+    keep the value they resolved to during that render.
+
+Composing Blocks
+----------------
+
+.. versionadded:: 3.29
+
+    The ``BlockChain`` class was introduced in Twig 3.29.
+
+Use ``BlockChain`` when a form, CMS field, data-grid or similar renderer needs
+to select blocks from several templates at runtime. Pass templates from the
+highest to the lowest precedence::
+
+    use Twig\BlockChain;
+
+    $blocks = new BlockChain($twig, [
+        'admin_theme.html.twig',
+        $twig->load('application_theme.html.twig'),
+        'base_theme.html.twig',
+    ]);
+
+    echo $blocks->renderBlock('field_row', ['field' => $field]);
+
+Twig considers each template's blocks, blocks imported with ``use`` and parents
+before moving to the next template. The first definition of each block wins.
+``parent()`` follows the local inheritance or ``use`` hierarchy of the block,
+while nested ``block()`` calls use the composed block set unless they name
+another template.
+
+``BlockChain`` composes blocks, not template bodies or macros. Because chained
+templates share the composed block set, only combine templates that are trusted
+to call one another's blocks. Chained blocks have the same top-level macro
+import limitation as blocks rendered directly.
+
+Every method takes the render context, and the whole chain is resolved against
+it, so a template using a dynamic ``{% extends %}`` behaves exactly as it would
+when rendered directly. The optional third constructor argument provides
+default variables for that resolution, which the render context can override::
+
+    $blocks = new BlockChain($twig, ['application_theme.html.twig'], [
+        'layout' => 'wide_layout.html.twig',
+    ]);
+
+    // resolved against wide_layout.html.twig
+    $blocks->getBlockNames();
+
+    // resolved against narrow_layout.html.twig
+    $blocks->getBlockNames(['layout' => 'narrow_layout.html.twig']);
+
+Pass the same context to ``hasBlock()``, ``getBlockNames()`` and
+``renderBlock()`` to keep them consistent.
+
 Streaming Templates
 -------------------
 

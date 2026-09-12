@@ -124,7 +124,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ModuleNode) {
             $this->inAModule = false;
 
-            $node->setNode('constructor_end', new Nodes([new CheckSecurityCallNode(), $node->getNode('constructor_end')]));
+            $node->setNode('constructor_start', new Nodes([new CheckSecurityCallNode(), $node->getNode('constructor_start')]));
             $node->setNode('class_end', new Nodes([new CheckSecurityNode($this->filters, $this->tags, $this->functions, $this->tests), $node->getNode('class_end')]));
         }
 

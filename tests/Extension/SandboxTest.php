@@ -223,6 +223,9 @@ class SandboxTest extends TestCase
     {
         yield ['extends', '{% extends "1_empty" %}'];
         yield ['use', '{% use "1_empty" %}'];
+        yield 'use of a missing template is rejected before the loader is reached' => ['use', '{% use "does_not_exist" %}'];
+        yield 'use of a missing block is rejected before the trait is resolved' => ['use', '{% use "1_layout" with does_not_exist as alias %}'];
+        yield 'use of a non-traitable template is rejected before the trait is resolved' => ['use', '{% use "1_child" %}'];
     }
 
     #[DataProvider('getStrictSandboxRejectsGrandfatheredFunctionsTests')]

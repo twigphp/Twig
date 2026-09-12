@@ -136,6 +136,19 @@ class TemplateWrapperTest extends TestCase
         yield 'exception thrown by parent expression' => ['{% extends boom() %}', new TwigFunction('boom', static function (): never { throw new \DomainException('kaboom'); }), \DomainException::class];
     }
 
+    public function testBlockIntrospectionReportsTheExtendsLineForAMissingParent(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => "\n\n{% extends 'missing' %}"]));
+
+        try {
+            $twig->load('index')->hasBlock('foo');
+            $this->fail('Introspecting a template with a missing parent must fail.');
+        } catch (LoaderError $e) {
+            $this->assertSame('Template "missing" is not defined.', $e->getRawMessage());
+            $this->assertSame(3, $e->getTemplateLine());
+        }
+    }
+
     public function testRenderBlock(): void
     {
         $twig = new Environment(new ArrayLoader([

@@ -213,7 +213,7 @@ class __TwigTemplate_%x extends Template
     protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper
     {
         // line 1
-        return "layout.twig";
+        return \$this->parent ??= \$this->load("layout.twig", 1);
     }
 
     protected function doDisplay(array \$context, array \$blocks = []): iterable

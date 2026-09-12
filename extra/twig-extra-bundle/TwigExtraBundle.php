@@ -11,9 +11,11 @@
 
 namespace Twig\Extra\TwigExtraBundle;
 
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Twig\Extra\TwigExtraBundle\DependencyInjection\Compiler\MissingExtensionSuggestorPass;
+use Twig\Extra\TwigExtraBundle\DependencyInjection\Compiler\TwigCachePoolPass;
 
 class TwigExtraBundle extends Bundle
 {
@@ -22,5 +24,7 @@ class TwigExtraBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new MissingExtensionSuggestorPass());
+        // priority 64 so that it runs before Symfony's CachePoolPass (priority 32)
+        $container->addCompilerPass(new TwigCachePoolPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 64);
     }
 }
