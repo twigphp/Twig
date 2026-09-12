@@ -33,9 +33,11 @@ class MacroVariable extends TempNameExpression
             $compiler->raw('$this->getMacroNamespace()');
         } else {
             $compiler
-                ->raw('$macros[')
+                ->raw('($macros[')
                 ->string($name)
-                ->raw(']')
+                ->raw('] ?? $this->throwUninitializedMacroNamespace(')
+                ->repr($this->getTemplateLine())
+                ->raw('))')
             ;
         }
     }

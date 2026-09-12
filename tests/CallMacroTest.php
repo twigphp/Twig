@@ -197,6 +197,42 @@ class CallMacroTest extends TestCase
         $template->getMacroNamespace()->call('missing', [], [], 1, new Source('', 'index'));
     }
 
+    public function testRenderingABlockOnItsOwnReportsMacrosImportedInTheTemplateBody(): void
+    {
+        $template = $this->load([
+            'index' => '{% import "macros" as helpers %}{% block field %}{{ helpers.label() }}{% endblock %}',
+            'macros' => '{% macro label() %}label{% endmacro %}',
+        ]);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Macros imported in the body of template "index" are not available because the body was not rendered; move the "import" or "from" tag inside the block or the macro that uses it in "index" at line 1.');
+
+        $template->renderBlock('field', []);
+    }
+
+    public function testRenderingABlockOnItsOwnUsesMacrosImportedInTheBlock(): void
+    {
+        $template = $this->load([
+            'index' => '{% block field %}{% import "macros" as helpers %}{{ helpers.label() }}{% endblock %}',
+            'macros' => '{% macro label() %}label{% endmacro %}',
+        ]);
+
+        $this->assertSame('label', $template->renderBlock('field', []));
+    }
+
+    public function testCallingAMacroOnItsOwnReportsMacrosImportedInTheTemplateBody(): void
+    {
+        $template = $this->load([
+            'index' => '{% from "macros" import label %}{% macro row() %}{{ label() }}{% endmacro %}',
+            'macros' => '{% macro label() %}label{% endmacro %}',
+        ]);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Macros imported in the body of template "index" are not available because the body was not rendered');
+
+        $this->callMacro($template, 'row', []);
+    }
+
     public function testDeprecatedCoreExtensionCallMacroAcceptsMacroNamespace(): void
     {
         $template = $this->load(['index' => '{% macro greet(name) %}Hi {{ name }}{% endmacro %}']);
