@@ -54,7 +54,7 @@ class BlockChainTest extends TestCase
      * @dataProvider yieldModes
      */
     #[DataProvider('yieldModes')]
-    public function testNestedBlocksUseTheEffectiveNamespaceAndParentUsesTheFrozenLineage(bool $useYield): void
+    public function testNestedBlocksUseTheComposedSetAndParentUsesTheRenderContextLineage(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% block field %}theme/{{ parent() }}/{{ block("suffix") }}{% endblock %}',
@@ -65,7 +65,8 @@ class BlockChainTest extends TestCase
 
         $chain = new BlockChain($twig, ['theme', 'suffix'], ['parent' => 'parent1']);
 
-        $this->assertSame('theme/parent1/suffix', $chain->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('theme/parent1/suffix', $chain->renderBlock('field'));
+        $this->assertSame('theme/parent2/suffix', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
     public function testExplicitTemplateBlockCallsResolveOutsideTheChainNamespace(): void
@@ -81,7 +82,41 @@ class BlockChainTest extends TestCase
         $this->assertSame('explicit', $chain->renderBlock('field'));
     }
 
-    public function testFreezingAChainDoesNotChangeTheLoadedTemplate(): void
+    public function testTheConstructorContextIsADefaultTheRenderContextCanOverride(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}{% block field %}{{ parent() }}{% endblock %}',
+            'parent1' => '{% block field %}one{% endblock %}',
+            'parent2' => '{% block field %}two{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => true]);
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+
+        $this->assertSame('one', $chain->renderBlock('field'));
+        $this->assertSame('two', $chain->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field'));
+    }
+
+    public function testIntrospectionAndRenderingAgreeOnTheSameContext(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}{% block field %}{{ parent() }}{% endblock %}',
+            'parent1' => '{% block field %}one{% endblock %}{% block only1 %}{% endblock %}',
+            'parent2' => '{% block field %}two{% endblock %}{% block only2 %}{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => true]);
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+
+        $this->assertSame(['field', 'only1'], $chain->getBlockNames());
+        $this->assertTrue($chain->hasBlock('only1'));
+        $this->assertFalse($chain->hasBlock('only2'));
+
+        $context = ['parent' => 'parent2'];
+        $this->assertSame(['field', 'only2'], $chain->getBlockNames($context));
+        $this->assertFalse($chain->hasBlock('only1', $context));
+        $this->assertTrue($chain->hasBlock('only2', $context));
+        $this->assertSame('two', $chain->renderBlock('field', $context));
+    }
+
+    public function testRenderingThroughTheChainDoesNotChangeTheLoadedTemplate(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% block field %}{{ parent() }}{% endblock %}',
@@ -91,8 +126,9 @@ class BlockChainTest extends TestCase
         $template = $twig->load('theme');
         $chain = new BlockChain($twig, [$template], ['parent' => 'parent1']);
 
-        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field'));
         $this->assertSame('two', $template->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field'));
     }
 
     public function testStructuralContextIncludesEnvironmentGlobals(): void
@@ -183,11 +219,13 @@ class BlockChainTest extends TestCase
                 $this->blocks = ['field' => [new \stdClass(), 'block_field']];
             }
         };
+        $chain = new BlockChain($twig, [new TemplateWrapper($twig, $template)]);
+        $this->assertSame(['field'], $chain->getBlockNames());
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('A block must be a method on a \Twig\Template instance.');
 
-        new BlockChain($twig, [new TemplateWrapper($twig, $template)]);
+        $chain->renderBlock('field');
     }
 
     public function testRejectsTemplatesThatAreNotStringsOrWrappers(): void
@@ -227,24 +265,26 @@ class BlockChainTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader(['theme' => '{% extends parent %}']));
         $other = new Environment(new ArrayLoader(['parent' => '']));
+        $chain = new BlockChain($twig, ['theme'], ['parent' => $other->load('parent')]);
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('A block chain cannot contain templates from different Twig environments.');
 
-        new BlockChain($twig, ['theme'], ['parent' => $other->load('parent')]);
+        $chain->getBlockNames();
     }
 
-    public function testDynamicParentSecurityIsCheckedDuringConstruction(): void
+    public function testDynamicParentSecurityIsCheckedWhenTheLineageIsResolved(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent|upper %}',
             'PARENT' => '',
         ]));
         $twig->addExtension(new SandboxExtension(new SecurityPolicy(['extends']), true));
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent']);
 
         $this->expectException(SecurityNotAllowedFilterError::class);
 
-        new BlockChain($twig, ['theme'], ['parent' => 'parent']);
+        $chain->getBlockNames();
     }
 
     public function testDefiningTemplateSecurityIsCheckedDuringRendering(): void
@@ -282,7 +322,7 @@ class BlockChainTest extends TestCase
      * @dataProvider yieldModes
      */
     #[DataProvider('yieldModes')]
-    public function testSandboxPolicyChangesAreCheckedOnFrozenIntermediateParents(bool $useYield): void
+    public function testSandboxPolicyChangesAreCheckedOnIntermediateParents(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "middle" %}{% block field %}{{ parent() }}{% endblock %}',
@@ -356,7 +396,7 @@ class BlockChainTest extends TestCase
         $this->assertSame('one', $chain->renderBlock('field'));
     }
 
-    public function testInheritedMacroLookupUsesTheFrozenLineage(): void
+    public function testInheritedMacroLookupUsesTheRenderContextLineage(): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% block field %}{{ _self.label() }}{% endblock %}',
@@ -366,14 +406,15 @@ class BlockChainTest extends TestCase
 
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
-        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field'));
+        $this->assertSame('two', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
     /**
      * @dataProvider yieldModes
      */
     #[DataProvider('yieldModes')]
-    public function testSelfMacroImportsInitializedAfterConstructionUseTheFrozenLineage(bool $useYield): void
+    public function testSelfMacroImportsUseTheRenderContextLineage(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}',
@@ -383,50 +424,32 @@ class BlockChainTest extends TestCase
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
 
         $this->assertSame('two', $twig->render('theme', ['parent' => 'parent2']));
-        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field'));
+        $this->assertSame('two', $chain->renderBlock('field', ['parent' => 'parent2']));
     }
 
     /**
      * @dataProvider yieldModes
      */
     #[DataProvider('yieldModes')]
-    public function testPreWarmedSelfMacroImportsUseTheFrozenLineage(bool $useYield): void
+    public function testFromSelfImportsResolveThroughTheLineage(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
-            'theme' => '{% extends parent %}{% import _self as own %}{% block field %}{{ own.label() }}{% endblock %}',
-            'parent1' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
-            'parent2' => '{% macro label() %}two{% endmacro %}{{ block("field") }}',
+            'theme' => '{% extends "parent" %}{% from _self import label %}{% macro wrapped() %}{{ label() }}{% endmacro %}{% block field %}{{ label() }}/{{ _self.wrapped() }}{% endblock %}',
+            'parent' => '{% macro label() %}one{% endmacro %}',
         ]), ['autoescape' => false, 'use_yield' => $useYield]);
-        $this->assertSame('two', $twig->render('theme', ['parent' => 'parent2']));
+        $this->assertSame('', $twig->render('theme'));
 
-        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+        $chain = new BlockChain($twig, ['theme']);
 
-        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('one/one', $chain->renderBlock('field'));
     }
 
     /**
      * @dataProvider yieldModes
      */
     #[DataProvider('yieldModes')]
-    public function testFromSelfImportsUseTheFrozenLineage(bool $useYield): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            'theme' => '{% extends parent %}{% from _self import label %}{% macro wrapped() %}{{ label() }}{% endmacro %}{% block field %}{{ label() }}/{{ _self.wrapped() }}{% endblock %}',
-            'parent1' => '{% macro label() %}one{% endmacro %}',
-            'parent2' => '{% macro label() %}two{% endmacro %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
-        $this->assertSame('', $twig->render('theme', ['parent' => 'parent2']));
-
-        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
-
-        $this->assertSame('one/one', $chain->renderBlock('field', ['parent' => 'parent2']));
-    }
-
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testImportedMacroNamespacesStayOutsideTheFrozenLineage(bool $useYield): void
+    public function testImportedMacroNamespacesKeepTheirOwnLineage(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% import parent as inherited %}{% block field %}{{ inherited.label() }}{% endblock %}',
@@ -470,17 +493,40 @@ class BlockChainTest extends TestCase
      * @dataProvider yieldModes
      */
     #[DataProvider('yieldModes')]
-    public function testSelfMacroImportsInMacroBodiesUseTheFrozenLineage(bool $useYield): void
+    public function testSelfMacroImportsInMacroBodiesResolveThroughTheLineage(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends "parent" %}{% import _self as own %}{% macro wrapped() %}{{ own.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}',
+            'parent' => '{% macro label() %}one{% endmacro %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        $chain = new BlockChain($twig, ['theme']);
+
+        $this->assertSame('', $twig->render('theme'));
+        $this->assertSame('one', $chain->renderBlock('field'));
+    }
+
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testMacroBodiesCannotResolveADynamicParentJustLikeADirectRender(bool $useYield): void
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends parent %}{% import _self as own %}{% macro wrapped() %}{{ own.label() }}{% endmacro %}{% block field %}{{ _self.wrapped() }}{% endblock %}',
-            'parent1' => '{% macro label() %}one{% endmacro %}',
-            'parent2' => '{% macro label() %}two{% endmacro %}',
+            'parent' => '{% macro label() %}one{% endmacro %}{{ block("field") }}',
         ]), ['autoescape' => false, 'use_yield' => $useYield]);
-        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent']);
 
-        $this->assertSame('', $twig->render('theme', ['parent' => 'parent2']));
-        $this->assertSame('one', $chain->renderBlock('field', ['parent' => 'parent2']));
+        // a macro body only receives the macro arguments, so the "parent" variable is out of reach either way
+        $this->expectException(RuntimeError::class);
+
+        try {
+            $twig->render('theme', ['parent' => 'parent']);
+            $this->fail('Rendering the template directly must fail.');
+        } catch (RuntimeError) {
+        }
+
+        $chain->renderBlock('field');
     }
 
     /**
@@ -581,17 +627,18 @@ class BlockChainTest extends TestCase
         $chain->renderBlock('missing');
     }
 
-    public function testCircularInheritanceIsRejectedDuringConstruction(): void
+    public function testCircularInheritanceIsRejected(): void
     {
         $twig = new Environment(new ArrayLoader([
             'one' => '{% extends "two" %}',
             'two' => '{% extends "one" %}',
         ]));
+        $chain = new BlockChain($twig, ['one']);
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Circular template inheritance detected while building a block chain from "one".');
 
-        new BlockChain($twig, ['one']);
+        $chain->getBlockNames();
     }
 
     public function testRequiresAtLeastOneTemplate(): void

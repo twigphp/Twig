@@ -39,7 +39,6 @@ abstract class Template
     protected $traitAliases = [];
     protected $extensions = [];
     protected $sandbox;
-    protected ?self $macroImportSource = null;
 
     private $useYield;
     private ?MacroNamespace $macroNamespace = null;
@@ -79,11 +78,6 @@ abstract class Template
     public function getParent(array $context): self|TemplateWrapper|false
     {
         if (null !== $this->parent) {
-            // only block chain clones set macroImportSource; they never run yield(), where the sandbox check normally happens
-            if (null !== $this->macroImportSource) {
-                $this->ensureSecurityChecked();
-            }
-
             return $this->parent;
         }
 
@@ -379,42 +373,12 @@ abstract class Template
     }
 
     /**
-     * @internal
+     * Returns whether getParent() has stopped depending on the context, which
+     * only ever happens for a template with no parent or with a constant one.
      */
-    public function freezeLineage(BlockResolutionContext $resolution): self
+    public function hasFixedParent(): bool
     {
-        $resolution->assertOwns($this);
-        if ($resolution->isFrozen($this)) {
-            return $resolution->getFrozen($this);
-        }
-
-        $resolution->beginFreeze($this);
-        try {
-            if (false === $parent = $resolution->getParent($this)) {
-                $resolution->setFrozen($this, $this);
-
-                return $this;
-            }
-
-            $template = clone $this;
-            foreach ($template->blocks as &$block) {
-                if ($block[0] === $this) {
-                    $block[0] = $template;
-                }
-            }
-            unset($block);
-
-            $template->macroNamespace = null;
-            // Keep module-level imports live while rebinding self imports to the clone.
-            $template->macroImportSource = $this;
-            $template->parent = $frozenParent = $parent->freezeLineage($resolution);
-            $resolution->setParent($template, $frozenParent);
-            $resolution->setFrozen($this, $template);
-
-            return $template;
-        } finally {
-            $resolution->endFreeze($this);
-        }
+        return null !== $this->parent;
     }
 
     /**
@@ -559,27 +523,6 @@ abstract class Template
     protected function loadDeclaredMacros(): array
     {
         return [];
-    }
-
-    /**
-     * @param array<string, MacroNamespace> $macros
-     *
-     * @return array<string, MacroNamespace>
-     */
-    protected function rebindMacroImports(array $macros): array
-    {
-        if (null === $this->macroImportSource) {
-            return $macros;
-        }
-
-        $imported = $this->macroImportSource->getMacroNamespace();
-        foreach ($macros as $name => $namespace) {
-            if ($namespace === $imported) {
-                $macros[$name] = $this->getMacroNamespace();
-            }
-        }
-
-        return $macros;
     }
 
     /**

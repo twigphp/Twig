@@ -108,9 +108,23 @@ templates share the composed block set, only combine templates that are trusted
 to call one another's blocks. Chained blocks have the same top-level macro
 import limitation as blocks rendered directly.
 
-The optional third constructor argument provides variables used to resolve
-dynamic parent expressions. Parent hierarchies are fixed when the chain is
-created; create another chain when these variables change.
+Every method takes the render context, and the whole chain is resolved against
+it, so a template using a dynamic ``{% extends %}`` behaves exactly as it would
+when rendered directly. The optional third constructor argument provides
+default variables for that resolution, which the render context can override::
+
+    $blocks = new BlockChain($twig, ['application_theme.html.twig'], [
+        'layout' => 'wide_layout.html.twig',
+    ]);
+
+    // resolved against wide_layout.html.twig
+    $blocks->getBlockNames();
+
+    // resolved against narrow_layout.html.twig
+    $blocks->getBlockNames(['layout' => 'narrow_layout.html.twig']);
+
+Pass the same context to ``hasBlock()``, ``getBlockNames()`` and
+``renderBlock()`` to keep them consistent.
 
 Streaming Templates
 -------------------
