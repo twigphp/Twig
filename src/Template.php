@@ -78,10 +78,6 @@ abstract class Template
     public function getParent(array $context): self|false
     {
         if (null !== $this->parent) {
-            if ($this->parent instanceof TemplateWrapper) {
-                $this->parent = $this->load($this->parent, -1);
-            }
-
             return $this->parent;
         }
 

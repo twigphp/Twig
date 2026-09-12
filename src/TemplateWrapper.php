@@ -99,9 +99,17 @@ final class TemplateWrapper
     /**
      * @internal
      */
+    public function isOwnedBy(Environment $env): bool
+    {
+        return $this->env === $env && $this->template->isOwnedBy($env);
+    }
+
+    /**
+     * @internal
+     */
     public function unwrap(Environment $env): Template
     {
-        if ($this->env !== $env) {
+        if (!$this->isOwnedBy($env)) {
             throw new RuntimeError(\sprintf('A "%s" can only be used with the "%s" that created it.', self::class, Environment::class));
         }
 
