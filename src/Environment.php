@@ -335,6 +335,8 @@ class Environment
     public function load(string|TemplateWrapper $name): TemplateWrapper
     {
         if ($name instanceof TemplateWrapper) {
+            $name->unwrap($this);
+
             return $name;
         }
 
@@ -471,7 +473,7 @@ class Environment
         $count = \count($names);
         foreach ($names as $name) {
             if ($name instanceof TemplateWrapper) {
-                return $name;
+                return $this->load($name);
             }
 
             if (1 !== $count && !$this->getLoader()->exists($name)) {
