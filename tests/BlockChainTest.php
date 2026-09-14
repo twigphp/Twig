@@ -335,7 +335,7 @@ class BlockChainTest extends TestCase
         $other = new Environment(new ArrayLoader(['theme' => '']));
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('A block chain cannot contain templates from different Twig environments.');
+        $this->expectExceptionMessage('A block chain cannot contain a block chain from a different Twig environment.');
 
         new BlockChain($twig, [new BlockChain($other, ['theme'])]);
     }
