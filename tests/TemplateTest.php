@@ -236,7 +236,7 @@ class TemplateTest extends TestCase
             'parent' => '{% block content %}{{ missing.value }}{% endblock %}',
             'child' => '{% extends "parent" %}',
         ]), ['debug' => $debug, 'strict_variables' => true, 'use_yield' => false]);
-        $template = $twig->load('child')->unwrap();
+        $template = $twig->load('child')->unwrap($twig);
         $level = ob_get_level();
 
         try {
@@ -261,14 +261,14 @@ class TemplateTest extends TestCase
             'dynamic_parent' => '{% extends parent %}',
         ]));
 
-        $this->assertTrue($twig->load('no_parent')->unwrap()->hasFixedParent());
+        $this->assertTrue($twig->load('no_parent')->unwrap($twig)->hasFixedParent());
 
-        $constant = $twig->load('constant_parent')->unwrap();
+        $constant = $twig->load('constant_parent')->unwrap($twig);
         $this->assertFalse($constant->hasFixedParent());
         $constant->getParent([]);
         $this->assertTrue($constant->hasFixedParent());
 
-        $dynamic = $twig->load('dynamic_parent')->unwrap();
+        $dynamic = $twig->load('dynamic_parent')->unwrap($twig);
         $this->assertFalse($dynamic->hasFixedParent());
         $dynamic->getParent(['parent' => 'no_parent']);
         $this->assertFalse($dynamic->hasFixedParent());

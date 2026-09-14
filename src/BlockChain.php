@@ -58,12 +58,11 @@ final class BlockChain
                 throw new \TypeError(\sprintf('Block chain templates must be strings, "%s" or "%s" instances, "%s" given.', TemplateWrapper::class, self::class, get_debug_type($template)));
             }
 
-            $template = $template->unwrap();
             if (!$template->isOwnedBy($env)) {
                 throw new \LogicException('A block chain cannot contain templates from different Twig environments.');
             }
 
-            $this->templates[] = $template;
+            $this->templates[] = $template->unwrap($env);
         }
 
         if (!$this->templates) {
@@ -210,11 +209,7 @@ final class BlockChain
                 $parent = $template->getParent($context);
                 $fixed = $fixed && $template->hasFixedParent();
 
-                // a dynamic parent expression can evaluate to a template from another environment
-                $template = $parent instanceof TemplateWrapper ? $parent->unwrap() : $parent;
-                if (false !== $template && !$template->isOwnedBy($this->env)) {
-                    throw new \LogicException('A block chain cannot contain templates from different Twig environments.');
-                }
+                $template = $parent;
             } while (false !== $template);
         }
 
