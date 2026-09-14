@@ -582,7 +582,8 @@ class BlockChainTest extends TestCase
         try {
             $chain->renderBlock('field', ['helper' => 'macros1']);
             $this->fail('Rendering an uninitialized import must fail.');
-        } catch (RuntimeError) {
+        } catch (RuntimeError $e) {
+            $this->assertStringContainsString('Macros imported in the body of template "theme" are not available because the body was not rendered', $e->getMessage());
         }
 
         $this->assertSame('one', $twig->render('theme', ['helper' => 'macros1']));
