@@ -18,10 +18,10 @@ use Twig\Error\RuntimeError;
  */
 final class BlockChain
 {
-    /** @var list<Template> */
+    /** @var list<Template|self> */
     private array $templates = [];
 
-    /** @var list<Template> */
+    /** @var list<Template|self> */
     private array $lineage = [];
 
     /** @var array<string, array{Template, string}> */
@@ -33,8 +33,8 @@ final class BlockChain
     private bool $fixed = false;
 
     /**
-     * @param iterable<string|TemplateWrapper> $templates Templates ordered from highest to lowest precedence
-     * @param array<string, mixed>             $context   Default variables used to resolve dynamic parent expressions
+     * @param iterable<string|TemplateWrapper|self> $templates Templates and nested chains ordered from highest to lowest precedence
+     * @param array<string, mixed>                  $context   Default variables used to resolve dynamic parent expressions
      */
     public function __construct(
         private Environment $env,
@@ -42,11 +42,20 @@ final class BlockChain
         private array $context = [],
     ) {
         foreach ($templates as $template) {
+            if ($template instanceof self) {
+                if ($env !== $template->env) {
+                    throw new \LogicException('A block chain cannot contain templates from different Twig environments.');
+                }
+
+                $this->templates[] = $template;
+                continue;
+            }
+
             if (\is_string($template)) {
                 $template = $env->load($template);
             }
             if (!$template instanceof TemplateWrapper) {
-                throw new \TypeError(\sprintf('Block chain templates must be strings or "%s" instances, "%s" given.', TemplateWrapper::class, get_debug_type($template)));
+                throw new \TypeError(\sprintf('Block chain templates must be strings, "%s" or "%s" instances, "%s" given.', TemplateWrapper::class, self::class, get_debug_type($template)));
             }
 
             $template = $template->unwrap();
@@ -95,7 +104,7 @@ final class BlockChain
             $this->throwUnknownBlock($name);
         }
 
-        yield from $this->templates[0]->yieldBlock($name, $context, $blocks);
+        yield from $this->entryTemplate()->yieldBlock($name, $context, $blocks);
     }
 
     /**
@@ -109,7 +118,7 @@ final class BlockChain
             $this->throwUnknownBlock($name);
         }
 
-        return $this->templates[0]->renderBlock($name, $context, $blocks);
+        return $this->entryTemplate()->renderBlock($name, $context, $blocks);
     }
 
     /**
@@ -123,7 +132,7 @@ final class BlockChain
             $this->throwUnknownBlock($name);
         }
 
-        $this->templates[0]->displayBlock($name, $context, $blocks);
+        $this->entryTemplate()->displayBlock($name, $context, $blocks);
     }
 
     /**
@@ -133,14 +142,37 @@ final class BlockChain
      */
     private function resolveBlocks(array $context): array
     {
-        [$lineage, $this->fixed] = $this->resolveLineage($context);
+        [$lineage, $fixed] = $this->resolveLineage($context);
 
-        if ($lineage === $this->lineage) {
+        $stale = $lineage !== $this->lineage;
+
+        foreach ($lineage as $template) {
+            if (!$template instanceof self) {
+                continue;
+            }
+
+            if (!$template->fixed) {
+                // a nested chain that can still move may resolve to other blocks on every call
+                $template->resolveBlocks($context + $template->context);
+                $stale = true;
+            }
+
+            $fixed = $fixed && $template->fixed;
+        }
+
+        $this->fixed = $fixed;
+
+        if (!$stale) {
             return $this->blocks;
         }
 
         $blocks = [];
         foreach ($lineage as $template) {
+            if ($template instanceof self) {
+                $blocks += $template->blocks;
+                continue;
+            }
+
             foreach ($template->getBlocks() as $name => $block) {
                 $blocks[$name] ??= $block;
             }
@@ -154,7 +186,7 @@ final class BlockChain
     /**
      * @param array<string, mixed> $context
      *
-     * @return array{list<Template>, bool}
+     * @return array{list<Template|self>, bool}
      */
     private function resolveLineage(array $context): array
     {
@@ -162,6 +194,11 @@ final class BlockChain
         $fixed = true;
 
         foreach ($this->templates as $template) {
+            if ($template instanceof self) {
+                $lineage[] = $template;
+                continue;
+            }
+
             $seen = [];
             do {
                 if (isset($seen[$id = spl_object_id($template)])) {
@@ -184,8 +221,13 @@ final class BlockChain
         return [$lineage, $fixed];
     }
 
+    private function entryTemplate(): Template
+    {
+        return ($template = $this->templates[0]) instanceof self ? $template->entryTemplate() : $template;
+    }
+
     private function throwUnknownBlock(string $name): never
     {
-        throw new RuntimeError(\sprintf('Block "%s" on template "%s" does not exist.', $name, $this->templates[0]->getTemplateName()), -1, $this->templates[0]->getSourceContext());
+        throw new RuntimeError(\sprintf('Block "%s" on template "%s" does not exist.', $name, $this->entryTemplate()->getTemplateName()), -1, $this->entryTemplate()->getSourceContext());
     }
 }

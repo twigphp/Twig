@@ -122,6 +122,18 @@ default variables for that resolution, which the render context can override::
 Pass the same context to ``hasBlock()``, ``getBlockNames()`` and
 ``renderBlock()`` to keep them consistent.
 
+A chain also accepts other chains::
+
+    $base = new BlockChain($twig, ['base_theme.html.twig']);
+    $application = new BlockChain($twig, ['application_theme.html.twig', $base]);
+    $admin = new BlockChain($twig, ['admin_theme.html.twig', $application]);
+
+A chained chain keeps its position in the precedence order: templates listed
+before it win, and it wins over templates listed after it. It contributes the
+blocks it composes itself, resolved with its own default variables. Chaining a
+chain never modifies it, so the same chain can be reused in as many others as
+needed.
+
 Streaming Templates
 -------------------
 
