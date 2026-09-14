@@ -228,14 +228,116 @@ class BlockChainTest extends TestCase
         $chain->renderBlock('field');
     }
 
-    public function testRejectsTemplatesThatAreNotStringsOrWrappers(): void
+    public function testRejectsTemplatesThatAreNotStringsWrappersOrChains(): void
     {
         $twig = new Environment(new ArrayLoader(['theme' => '']));
 
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Block chain templates must be strings or "Twig\TemplateWrapper" instances, "stdClass" given.');
+        $this->expectExceptionMessage('Block chain templates must be strings, "Twig\TemplateWrapper" or "Twig\BlockChain" instances, "stdClass" given.');
 
         new BlockChain($twig, [new \stdClass()]);
+    }
+
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testAChainedChainKeepsItsPositionInThePrecedenceOrder(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'override' => '{% block field %}override{% endblock %}',
+            'base' => '{% block field %}base{% endblock %}{% block shared %}base{% endblock %}',
+            'fallback' => '{% block shared %}fallback{% endblock %}{% block last %}fallback{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+
+        $base = new BlockChain($twig, ['base']);
+        $chain = new BlockChain($twig, ['override', $base, 'fallback']);
+
+        $this->assertSame(['field', 'shared', 'last'], $chain->getBlockNames());
+        $this->assertSame('override', $chain->renderBlock('field'));
+        $this->assertSame('base', $chain->renderBlock('shared'));
+        $this->assertSame('fallback', $chain->renderBlock('last'));
+
+        // the chained chain is left untouched
+        $this->assertSame(['field', 'shared'], $base->getBlockNames());
+        $this->assertSame('base', $base->renderBlock('field'));
+    }
+
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testNestedBlockCallsSeeTheBlocksOfAChainedChain(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'override' => '{% block field %}override/{{ block("widget") }}{% endblock %}',
+            'base' => '{% block field %}base{% endblock %}{% block widget %}base-widget{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+
+        $chain = new BlockChain($twig, ['override', new BlockChain($twig, ['base'])]);
+
+        $this->assertSame('override/base-widget', $chain->renderBlock('field'));
+    }
+
+    public function testAChainedChainIsComposedThroughItsWholeLineage(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'override' => '{% block field %}override{% endblock %}',
+            'base' => '{% extends "layout" %}{% block widget %}base-widget{% endblock %}',
+            'layout' => '{% block field %}layout{% endblock %}{% block row %}layout-row{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => true]);
+
+        $chain = new BlockChain($twig, ['override', new BlockChain($twig, ['base'])]);
+
+        $this->assertSame(['field', 'widget', 'row'], $chain->getBlockNames());
+        $this->assertSame('override', $chain->renderBlock('field'));
+        $this->assertSame('layout-row', $chain->renderBlock('row'));
+    }
+
+    public function testAChainedChainKeepsItsOwnDefaultContext(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}',
+            'parent1' => '{% block field %}one{% endblock %}',
+            'parent2' => '{% block field %}two{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => true]);
+
+        $base = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+        $chain = new BlockChain($twig, [$base]);
+
+        $this->assertSame('one', $chain->renderBlock('field'));
+        $this->assertSame('two', $chain->renderBlock('field', ['parent' => 'parent2']));
+        $this->assertSame('one', $chain->renderBlock('field'));
+    }
+
+    public function testAChainedChainWithADynamicParentIsResolvedAgainstTheRenderContext(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}',
+            'parent1' => '{% block field %}one{% endblock %}{% block only1 %}{% endblock %}',
+            'parent2' => '{% block field %}two{% endblock %}{% block only2 %}{% endblock %}',
+        ]), ['autoescape' => false, 'use_yield' => true]);
+
+        $chain = new BlockChain($twig, [new BlockChain($twig, ['theme'])]);
+
+        $context = ['parent' => 'parent1'];
+        $this->assertSame(['field', 'only1'], $chain->getBlockNames($context));
+        $this->assertSame('one', $chain->renderBlock('field', $context));
+
+        $context = ['parent' => 'parent2'];
+        $this->assertSame(['field', 'only2'], $chain->getBlockNames($context));
+        $this->assertSame('two', $chain->renderBlock('field', $context));
+    }
+
+    public function testRejectsChainsFromAnotherEnvironment(): void
+    {
+        $twig = new Environment(new ArrayLoader(['theme' => '']));
+        $other = new Environment(new ArrayLoader(['theme' => '']));
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('A block chain cannot contain templates from different Twig environments.');
+
+        new BlockChain($twig, [new BlockChain($other, ['theme'])]);
     }
 
     public function testRejectsWrappersFromAnotherEnvironment(): void
@@ -620,6 +722,17 @@ class BlockChainTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader(['theme' => '']));
         $chain = new BlockChain($twig, ['theme']);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Block "missing" on template "theme" does not exist in "theme".');
+
+        $chain->renderBlock('missing');
+    }
+
+    public function testUnknownBlockUsesTheFirstTemplateOfAChainedChainAsErrorContext(): void
+    {
+        $twig = new Environment(new ArrayLoader(['theme' => '']));
+        $chain = new BlockChain($twig, [new BlockChain($twig, ['theme'])]);
 
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Block "missing" on template "theme" does not exist in "theme".');
