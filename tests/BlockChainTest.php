@@ -199,17 +199,13 @@ class BlockChainTest extends TestCase
         new BlockChain($twig, [new \stdClass()]);
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testAChainedChainKeepsItsPositionInThePrecedenceOrder(bool $useYield): void
+    public function testAChainedChainKeepsItsPositionInThePrecedenceOrder(): void
     {
         $twig = new Environment(new ArrayLoader([
             'override' => '{% block field %}override{% endblock %}',
             'base' => '{% block field %}base{% endblock %}{% block shared %}base{% endblock %}',
             'fallback' => '{% block shared %}fallback{% endblock %}{% block last %}fallback{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
 
         $base = new BlockChain($twig, ['base']);
         $chain = new BlockChain($twig, ['override', $base, 'fallback']);
@@ -224,16 +220,12 @@ class BlockChainTest extends TestCase
         $this->assertSame('base', $base->renderBlock('field'));
     }
 
-    /**
-     * @dataProvider yieldModes
-     */
-    #[DataProvider('yieldModes')]
-    public function testNestedBlockCallsSeeTheBlocksOfAChainedChain(bool $useYield): void
+    public function testNestedBlockCallsSeeTheBlocksOfAChainedChain(): void
     {
         $twig = new Environment(new ArrayLoader([
             'override' => '{% block field %}override/{{ block("widget") }}{% endblock %}',
             'base' => '{% block field %}base{% endblock %}{% block widget %}base-widget{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => $useYield]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, ['override', new BlockChain($twig, ['base'])]);
 
@@ -246,7 +238,7 @@ class BlockChainTest extends TestCase
             'override' => '{% block field %}override{% endblock %}',
             'base' => '{% extends "layout" %}{% block widget %}base-widget{% endblock %}',
             'layout' => '{% block field %}layout{% endblock %}{% block row %}layout-row{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, ['override', new BlockChain($twig, ['base'])]);
 
@@ -261,7 +253,7 @@ class BlockChainTest extends TestCase
             'theme' => '{% extends parent %}',
             'parent1' => '{% block field %}one{% endblock %}',
             'parent2' => '{% block field %}two{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
 
         $base = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
         $chain = new BlockChain($twig, [$base]);
@@ -277,7 +269,7 @@ class BlockChainTest extends TestCase
             'theme' => '{% extends parent %}',
             'parent1' => '{% block field %}one{% endblock %}{% block only1 %}{% endblock %}',
             'parent2' => '{% block field %}two{% endblock %}{% block only2 %}{% endblock %}',
-        ]), ['autoescape' => false, 'use_yield' => true]);
+        ]), ['autoescape' => false]);
 
         $chain = new BlockChain($twig, [new BlockChain($twig, ['theme'])]);
 
