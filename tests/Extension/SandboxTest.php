@@ -895,7 +895,8 @@ class SandboxTest extends TestCase
 
     public function testSandboxAppliesThePolicyToTemplateMethods(): void
     {
-        $template = $this->getEnvironment(true, [], ['index' => 'foo'])->load('index')->unwrap();
+        $twig = $this->getEnvironment(true, [], ['index' => 'foo']);
+        $template = $twig->load('index')->unwrap($twig);
         $policy = new SecurityPolicy();
 
         $this->expectException(SecurityNotAllowedMethodError::class);
