@@ -486,6 +486,14 @@ abstract class Template
     {
     }
 
+    /**
+     * @internal
+     */
+    protected function throwUninitializedMacroNamespace(int $line): never
+    {
+        throw new RuntimeError(\sprintf('Macros imported in the body of template "%s" are not available because the body was not rendered; move the "import" or "from" tag inside the block or the macro that uses it.', $this->getTemplateName()), $line, $this->getSourceContext());
+    }
+
     private function handleException(\Throwable $error): never
     {
         if ($error instanceof Error) {

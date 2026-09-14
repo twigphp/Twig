@@ -44,7 +44,7 @@ final class BlockChain
         foreach ($templates as $template) {
             if ($template instanceof self) {
                 if ($env !== $template->env) {
-                    throw new \LogicException('A block chain cannot contain templates from different Twig environments.');
+                    throw new \LogicException('A block chain cannot contain a block chain from a different Twig environment.');
                 }
 
                 $this->templates[] = $template;

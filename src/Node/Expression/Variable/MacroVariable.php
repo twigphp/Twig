@@ -52,9 +52,11 @@ class MacroVariable extends AbstractExpression
             $compiler->raw('$this->getMacroNamespace()');
         } else {
             $compiler
-                ->raw('$macros[')
+                ->raw('($macros[')
                 ->string($name)
-                ->raw(']')
+                ->raw('] ?? $this->throwUninitializedMacroNamespace(')
+                ->repr($this->getTemplateLine())
+                ->raw('))')
             ;
         }
     }

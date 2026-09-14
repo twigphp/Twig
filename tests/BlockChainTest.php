@@ -296,7 +296,7 @@ class BlockChainTest extends TestCase
         $other = new Environment(new ArrayLoader(['theme' => '']));
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('A block chain cannot contain templates from different Twig environments.');
+        $this->expectExceptionMessage('A block chain cannot contain a block chain from a different Twig environment.');
 
         new BlockChain($twig, [new BlockChain($other, ['theme'])]);
     }
@@ -519,7 +519,8 @@ class BlockChainTest extends TestCase
         try {
             $chain->renderBlock('field', ['helper' => 'macros1']);
             $this->fail('Rendering an uninitialized import must fail.');
-        } catch (RuntimeError) {
+        } catch (RuntimeError $e) {
+            $this->assertStringContainsString('Macros imported in the body of template "theme" are not available because the body was not rendered', $e->getMessage());
         }
 
         $this->assertSame('one', $twig->render('theme', ['helper' => 'macros1']));
