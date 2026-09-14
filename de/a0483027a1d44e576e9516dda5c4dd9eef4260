@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by stof at 2026-08-28T10:04:22Z
+
+This will break the Symfony form renderer, which relies on the internal API: https://github.com/symfony/symfony/blob/f1072d8902e3d397ab5f9190877fb947d259b0c3/src/Symfony/Bridge/Twig/Form/TwigRendererEngine.php#L142
+
+It might make sense to first refactor Symfony to stop using the internal API (which will be safer regarding semver guarantees)
