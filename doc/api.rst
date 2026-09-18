@@ -554,6 +554,10 @@ The escaping rules are implemented as follows:
         // mark objects of class "HtmlGenerator" as safe for all strategies
         $escaper->addSafeClass('HtmlGenerator', ['all']);
 
+  A class marked safe for ``html_attr`` is also safe for ``html_attr_relaxed``
+  and ``html``, and a class marked safe for ``html_attr_relaxed`` is also safe
+  for ``html``, as the stricter escaping covers the looser contexts.
+
 * Escaping is applied before printing, after any other filter is applied:
 
   .. code-block:: twig
