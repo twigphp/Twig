@@ -12,7 +12,7 @@
  * Fix the sandbox resolving `use` trait templates before checking that the `use` tag is allowed
  * Fix `html_attr` dropping `style` declarations whose value is `0`, `0.0` or `'0'`
  * Fix the `default` filter fallback emitting an undefined variable warning when it uses the null-safe operator
- * Fix the `matches` operator silently treating PCRE execution errors as non-matches
+ * Fix the `matches` operator silently treating PCRE execution errors as non-matches; it now throws a `RuntimeError`
  * Fix `TemplateWrapper::streamBlock()`, `TemplateWrapper::hasBlock()`, and `TemplateWrapper::getBlockNames()` omitting environment globals
  * Fix exceptions from dynamic parent expressions escaping without template context
  * Add the `BlockChain` class to compose blocks from multiple templates without using template internals
