@@ -165,11 +165,13 @@ EOF, 'index')));
      */
     #[DataProvider('provideMacroTargetExpressionsWithoutParentheses')]
     #[Group('legacy')]
-    public function testMacroTargetsWithoutParenthesesAreDeprecated(string $expression): void
+    public function testMacroTargetsWithoutParenthesesAreDeprecated(string $expression, ?string $macroName): void
     {
         $twig = new Environment(new ArrayLoader());
 
-        $this->expectDeprecation('Since twig/twig 3.29: Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.');
+        $this->expectDeprecation(null === $macroName
+            ? 'Since twig/twig 3.29: Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.'
+            : \sprintf('Since twig/twig 3.29: Omitting parentheses when calling the macro "%s" is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.', $macroName));
 
         $module = $twig->parse($twig->tokenize(new Source("{% import _self as macros %}{{ $expression }}", 'index')));
         $macroReferences = [];
@@ -184,18 +186,120 @@ EOF, 'index')));
     public static function provideMacroTargetExpressionsWithoutParentheses(): iterable
     {
         foreach (['_self', 'macros'] as $target) {
-            yield $target.' static without parentheses' => [$target.'.foo'];
-            yield $target.' grouped static without parentheses' => ['('.$target.'.foo)'];
-            yield $target.' dynamic without parentheses' => [$target.'.(name)'];
-            yield $target.' grouped dynamic without parentheses' => ['('.$target.'.(name))'];
+            yield $target.' static without parentheses' => [$target.'.foo', 'foo'];
+            yield $target.' grouped static without parentheses' => ['('.$target.'.foo)', 'foo'];
+            yield $target.' dynamic without parentheses' => [$target.'.(name)', null];
+            yield $target.' grouped dynamic without parentheses' => ['('.$target.'.(name))', null];
         }
+    }
+
+    /**
+     * @dataProvider provideExpressionsReusingAMacroReference
+     *
+     * @group legacy
+     */
+    #[DataProvider('provideExpressionsReusingAMacroReference')]
+    #[Group('legacy')]
+    public function testAMacroCallWithoutParenthesesIsReportedOncePerCallSite(string $expression): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $source = new Source("{% import _self as macros %}{{ $expression }}", 'index');
+
+        $deprecations = $this->collectDeprecations(static function () use ($twig, $source) {
+            $twig->parse($twig->tokenize($source));
+        });
+
+        $this->assertSame([
+            'Since twig/twig 3.29: Omitting parentheses when calling the macro "foo" is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.',
+        ], $deprecations);
+    }
+
+    public static function provideExpressionsReusingAMacroReference(): iterable
+    {
+        yield 'null-coalescing operator' => ['macros.foo ?? "x"'];
+        yield 'elvis operator' => ['macros.foo ?: "x"'];
+        yield 'default filter' => ['name|default(macros.foo)'];
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testEachMacroCallWithoutParenthesesIsReportedOnItsOwnLine(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $source = new Source("{% import _self as macros %}{{ macros.foo ?: 'x' }}\n{{ macros.foo ?: 'x' }}", 'index');
+
+        $deprecations = $this->collectDeprecations(static function () use ($twig, $source) {
+            $twig->parse($twig->tokenize($source));
+        });
+
+        $this->assertSame([
+            'Since twig/twig 3.29: Omitting parentheses when calling the macro "foo" is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.',
+            'Since twig/twig 3.29: Omitting parentheses when calling the macro "foo" is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 2.',
+        ], $deprecations);
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testDistinctMacroCallsWithoutParenthesesOnTheSameLineAreBothReported(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $source = new Source('{% import _self as macros %}{{ macros.foo }}{{ macros.bar }}', 'index');
+
+        $deprecations = $this->collectDeprecations(static function () use ($twig, $source) {
+            $twig->parse($twig->tokenize($source));
+        });
+
+        $this->assertSame([
+            'Since twig/twig 3.29: Omitting parentheses when calling the macro "foo" is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.',
+            'Since twig/twig 3.29: Omitting parentheses when calling the macro "bar" is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.',
+        ], $deprecations);
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testADynamicMacroCallWithoutParenthesesIsReportedWithoutAName(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $source = new Source('{% import _self as macros %}{{ macros.(name) ?: "x" }}', 'index');
+
+        $deprecations = $this->collectDeprecations(static function () use ($twig, $source) {
+            $twig->parse($twig->tokenize($source));
+        });
+
+        $this->assertSame([
+            'Since twig/twig 3.29: Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.',
+        ], $deprecations);
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testAMacroCallWithParenthesesDoesNotSilenceOneWithoutOnTheSameLine(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $source = new Source('{% import _self as macros %}{{ macros.foo() }}{{ macros.foo }}', 'index');
+
+        $deprecations = $this->collectDeprecations(static function () use ($twig, $source) {
+            $twig->parse($twig->tokenize($source));
+        });
+
+        $this->assertSame([
+            'Since twig/twig 3.29: Omitting parentheses when calling the macro "foo" is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "index" at line 1.',
+        ], $deprecations);
     }
 
     /**
      * @dataProvider provideMacroTargetExpressionsWithoutParentheses
      */
     #[DataProvider('provideMacroTargetExpressionsWithoutParentheses')]
-    public function testMacroTargetsWithoutParenthesesAreAllowedInDefinedTest(string $expression): void
+    public function testMacroTargetsWithoutParenthesesAreAllowedInDefinedTest(string $expression, ?string $macroName): void
     {
         $twig = new Environment(new ArrayLoader());
 
@@ -531,6 +635,31 @@ EOF, 'index')));
         foreach ($node as $child) {
             $this->collectExpressions($child, $macroReferences, $attributeExpressions);
         }
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function collectDeprecations(callable $fn): array
+    {
+        $deprecations = [];
+        set_error_handler(static function ($type, $message) use (&$deprecations) {
+            if (\E_USER_DEPRECATED === $type) {
+                $deprecations[] = $message;
+
+                return true;
+            }
+
+            return false;
+        });
+
+        try {
+            $fn();
+        } finally {
+            restore_error_handler();
+        }
+
+        return $deprecations;
     }
 
     protected function getParser()
