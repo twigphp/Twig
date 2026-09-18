@@ -1,5 +1,6 @@
 # 3.30.0 (2026-XX-XX)
 
+ * Fix `IntlExtension` letting the pattern derived from a date formatter prototype override an explicit locale
  * Fix `IntlExtension` failing when a date formatter prototype renders nothing locale dependent
  * Report a clear error when `random`, `reverse`, `shuffle`, and `split` receive a string that is not valid UTF-8
  * Fix the deprecation about omitting parentheses when calling a macro being reported twice for the same call
