@@ -473,7 +473,7 @@ final class IntlExtension extends AbstractExtension
 
         if (null === $locale) {
             if ($this->dateFormatterPrototype) {
-                $locale = $this->dateFormatterPrototype->getLocale();
+                $locale = $this->prototypeLocale();
             }
             $locale = $locale ?: \Locale::getDefault();
         }
@@ -525,6 +525,16 @@ final class IntlExtension extends AbstractExtension
         }
 
         return $this->dateFormatters[$hash];
+    }
+
+    /**
+     * ICU reports "root" for a prototype with no locale dependent content, and rejects it as an input locale.
+     */
+    private function prototypeLocale(): ?string
+    {
+        $locale = $this->dateFormatterPrototype->getLocale();
+
+        return \is_string($locale) && 'root' !== $locale ? $locale : null;
     }
 
     private function createNumberFormatter(?string $locale, string $style, array $attrs = []): \NumberFormatter

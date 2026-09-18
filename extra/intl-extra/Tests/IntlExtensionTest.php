@@ -194,6 +194,16 @@ class IntlExtensionTest extends TestCase
         $this->assertSame('22:22:00', $ext->formatTime($env, $date));
     }
 
+    public function testFormatterProtoWithoutLocaleDependentContent(): void
+    {
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2019-08-07T23:39:12+00:00');
+        // ICU reports the "root" locale for this prototype, and rejects it as an input locale
+        $proto = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', \IntlDateFormatter::GREGORIAN, 'yyyy-MM-dd');
+
+        $this->assertSame('2019-08-07', (new IntlExtension($proto))->formatDateTime($env, $date, timezone: 'UTC'));
+    }
+
     public function testDateFormatterCacheIsBounded(): void
     {
         $ext = new IntlExtension();
