@@ -353,6 +353,30 @@ class TemplateTest extends TestCase
     }
 
     /**
+     * @dataProvider getStringableKeySubclassArrayAccessContainers
+     */
+    #[DataProvider('getStringableKeySubclassArrayAccessContainers')]
+    public function testStringableKeyIsCoercedForSubclassesOfInternalArrayAccess(bool $strict, \ArrayAccess $data): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '{{ data[key] }}']), [
+            'strict_variables' => $strict,
+            'autoescape' => false,
+        ]);
+        $key = new TemplateStringableKey();
+
+        $this->assertSame('value', $twig->render('index', ['data' => $data, 'key' => $key]));
+        $this->assertSame(1, $key->toStringCalls);
+    }
+
+    public static function getStringableKeySubclassArrayAccessContainers(): iterable
+    {
+        foreach (['lax' => false, 'strict' => true] as $mode => $strict) {
+            yield $mode.' ArrayObject subclass' => [$strict, new TemplateArrayObjectSubclass(['string' => 'value'])];
+            yield $mode.' ArrayIterator subclass' => [$strict, new TemplateArrayIteratorSubclass(['string' => 'value'])];
+        }
+    }
+
+    /**
      * @dataProvider getStrictVariablesModes
      */
     #[DataProvider('getStrictVariablesModes')]
@@ -827,6 +851,14 @@ class TemplateForTest extends Template
     public function block_name($context, array $blocks = []): void
     {
     }
+}
+
+final class TemplateArrayObjectSubclass extends \ArrayObject
+{
+}
+
+final class TemplateArrayIteratorSubclass extends \ArrayIterator
+{
 }
 
 final class TemplateStringableKey implements \Stringable

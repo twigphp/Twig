@@ -131,14 +131,6 @@ final class CoreExtension extends AbstractExtension
         'SplStack',
         'WeakMap',
     ];
-    /**
-     * @internal
-     */
-    public const STRINGABLE_KEY_ARRAY_ACCESS_CLASSES = [
-        'ArrayIterator',
-        'ArrayObject',
-        'RecursiveArrayIterator',
-    ];
 
     private const DEFAULT_TRIM_CHARS = " \t\n\r\0\x0B";
 
@@ -1769,7 +1761,7 @@ final class CoreExtension extends AbstractExtension
                 }
             }
 
-            if ($object instanceof \ArrayAccess && $arrayItem instanceof \Stringable && \in_array($object::class, self::STRINGABLE_KEY_ARRAY_ACCESS_CLASSES, true)) {
+            if ($arrayItem instanceof \Stringable && ($object instanceof \ArrayObject || $object instanceof \ArrayIterator)) {
                 $arrayItem = (string) $arrayItem;
             }
 
