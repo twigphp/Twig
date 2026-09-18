@@ -146,12 +146,13 @@ final class SecurityPolicy implements SecurityPolicyInterface
 
     public function checkMethodAllowed($obj, $method): void
     {
-        if ($obj instanceof Template || $obj instanceof Markup) {
+        $method = strtolower($method);
+
+        if ($obj instanceof Template || ($obj instanceof Markup && 'withcontent' !== $method)) {
             return;
         }
 
         $allowed = false;
-        $method = strtolower($method);
         foreach ($this->allowedMethods as $class => $methods) {
             if ($obj instanceof $class && \in_array($method, $methods, true)) {
                 $allowed = true;

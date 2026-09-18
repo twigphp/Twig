@@ -218,6 +218,26 @@ class SandboxTest extends TestCase
         $this->assertSame('<b>b</b>', $sandbox->render('index', ['m' => new Markup('<b>b</b>', 'UTF-8')]));
     }
 
+    public function testMarkupSafeStrategiesCanBeChecked(): void
+    {
+        $sandbox = new Sandbox(self::env(['index' => '{{ m.isSafeFor("html") ? "yes" : "no" }}']), self::strictPolicy());
+
+        $this->assertSame('yes', $sandbox->render('index', ['m' => new Markup('b', 'UTF-8', ['html'])]));
+    }
+
+    public function testMarkupWithContentIsGovernedByThePolicy(): void
+    {
+        $templates = ['index' => '{{ m.withContent("<b>b</b>") }}'];
+
+        $allowing = new Sandbox(self::env($templates), self::strictPolicy(methods: [Markup::class => ['withContent']]));
+        $this->assertSame('<b>b</b>', $allowing->render('index', ['m' => new Markup('a', 'UTF-8')]));
+
+        $denying = new Sandbox(self::env($templates), self::strictPolicy());
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "withcontent" method on a "Twig\Markup" object is not allowed');
+        $denying->render('index', ['m' => new Markup('a', 'UTF-8')]);
+    }
+
     public function testIncludedTemplatesAreSandboxed(): void
     {
         $sandbox = new Sandbox(self::env([

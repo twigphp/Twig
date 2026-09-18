@@ -23,6 +23,7 @@ namespace Twig\Tests\Runtime;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Error\RuntimeError;
+use Twig\Markup;
 use Twig\Runtime\EscaperRuntime;
 
 class EscaperRuntimeTest extends TestCase
@@ -460,6 +461,43 @@ class EscaperRuntimeTest extends TestCase
         $escaper->addSafeClass(Extension_SafeHtmlInterface::class, ['html_attr']);
 
         $this->assertSame('<br />', $escaper->escape(new Extension_TestClass(), 'html', null, true));
+    }
+
+    /**
+     * @dataProvider provideMarkupSafeStrategies
+     */
+    #[DataProvider('provideMarkupSafeStrategies')]
+    public function testMarkupIsOnlySafeForItsOwnStrategies(string $expected, ?array $safeStrategies, string $strategy): void
+    {
+        $markup = null === $safeStrategies ? new Markup('<br />', 'UTF-8') : new Markup('<br />', 'UTF-8', $safeStrategies);
+
+        $this->assertSame($expected, (string) (new EscaperRuntime())->escape($markup, $strategy, null, true));
+    }
+
+    public static function provideMarkupSafeStrategies()
+    {
+        return [
+            'no argument stays safe everywhere' => ['<br />', null, 'js'],
+            'all' => ['<br />', ['all'], 'js'],
+            'current strategy' => ['<br />', ['html'], 'html'],
+            'other strategy' => ['\u003Cbr\u0020\/\u003E', ['html'], 'js'],
+            'several strategies' => ['<br />', ['html', 'js'], 'js'],
+            'implied strategy' => ['<br />', ['html_attr'], 'html'],
+            'no strategy' => ['&lt;br /&gt;', [], 'html'],
+        ];
+    }
+
+    public function testMarkupStrategiesTakePrecedenceOverSafeClasses(): void
+    {
+        $escaper = new EscaperRuntime();
+        $escaper->addSafeClass(Markup::class, ['html']);
+
+        $this->assertSame('&lt;br /&gt;', $escaper->escape(new Markup('<br />', 'UTF-8', ['js']), 'html', null, true));
+    }
+
+    public function testMarkupIsEscapedWhenTheDeveloperCallsTheEscapeFilter(): void
+    {
+        $this->assertSame('&lt;br /&gt;', (new EscaperRuntime())->escape(new Markup('<br />', 'UTF-8', ['html']), 'html'));
     }
 }
 
