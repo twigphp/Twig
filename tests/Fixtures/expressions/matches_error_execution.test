@@ -5,4 +5,4 @@ Twig reports PCRE execution failures for the "matches" operator
 --DATA--
 return ['subject' => 'aX', 'regexp' => '~(*LIMIT_MATCH=1)^(a+)+$~'];
 --EXCEPTION--
-Twig\Error\RuntimeError: Regexp "~(*LIMIT_MATCH=1)^(a+)+$~" passed to "matches" failed: Backtrack limit exhausted in "index.twig" at line 2.
+Twig\Error\RuntimeError: Regexp "~(*LIMIT_MATCH=1)^(a+)+$~" passed to "matches" failed: "Backtrack limit exhausted" in "index.twig" at line 2.
