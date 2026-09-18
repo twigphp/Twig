@@ -53,6 +53,10 @@ final class MacroNamespace
      */
     public function call(string $name, array $arguments, array $context, int $line, Source $source): string|Markup
     {
+        if (null !== $macro = $this->getDeclared($name)) {
+            return $macro->callLegacy($arguments, $source, $line);
+        }
+
         if (null === $macro = $this->resolve($name, $context)) {
             if (!str_starts_with($name, 'macro_') || null === $macro = $this->resolve($bareName = substr($name, \strlen('macro_')), $context)) {
                 throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', $name, $this->template->getTemplateName()), $line, $source);
