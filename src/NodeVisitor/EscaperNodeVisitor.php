@@ -16,17 +16,23 @@ use Twig\Extension\EscaperExtension;
 use Twig\Node\AutoEscapeNode;
 use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
+use Twig\Node\CaptureNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\EscapeFilter;
 use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
+use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
 use Twig\Node\ImportNode;
+use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
+use Twig\Node\SetNode;
 use Twig\NodeTraverser;
+use Twig\TwigFilter;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -66,6 +72,10 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             $this->statusStack[] = $this->blocks[$node->getAttribute('name')] ?? $this->needEscaping();
         } elseif ($node instanceof ImportNode) {
             $this->safeVars[] = $node->getNode('var')->getNode('var')->getAttribute('name');
+        } elseif ($node instanceof CaptureNode || $node instanceof MacroNode || ($node instanceof SetNode && $node->getAttribute('safe'))) {
+            // captured content is only proven safe for the strategy it was captured under;
+            // the legacy "{% autoescape true %}" strategy names no escaper, so it proves nothing
+            $node->setAttribute('strategy', \is_string($strategy = $this->needEscaping()) ? $strategy : false);
         }
 
         return $node;
@@ -122,32 +132,69 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
 
     private function escapeExpression(AbstractExpression $expression, Environment $env, string $type): AbstractExpression
     {
-        return $this->isSafeFor($type, $expression, $env) ? $expression : $this->getEscaperFilter($env, $type, $expression);
+        if ($this->isSafeFor($type, $expression, $env) || $this->escapeProducedContent($expression, $env, $type)) {
+            return $expression;
+        }
+
+        return $this->getEscaperFilter($env, $type, $expression);
+    }
+
+    /**
+     * Escapes content produced by a template or a macro before the filters preserving its safety.
+     *
+     * Only the produced Markup instance knows the strategy it is safe for, and these
+     * filters return a plain string.
+     */
+    private function escapeProducedContent(AbstractExpression $expression, Environment $env, string $type): bool
+    {
+        if (!$expression instanceof FilterExpression || !$this->preservesSafetyFor($type, $expression, $env)) {
+            return false;
+        }
+
+        /** @var AbstractExpression $node */
+        $node = $expression->getNode('node');
+        if (!$node instanceof MacroReferenceExpression && !($node instanceof FunctionExpression && \in_array($node->getAttribute('name'), ['include', 'include_only'], true))) {
+            return $this->escapeProducedContent($node, $env, $type);
+        }
+
+        $expression->setNode('node', $this->getEscaperFilter($env, $type, $node));
+
+        return true;
+    }
+
+    private function preservesSafetyFor(string $type, FilterExpression $expression, Environment $env): bool
+    {
+        $filter = $this->getFilter($expression, $env);
+        if ($filter->getSafe($expression->getNode('arguments'))) {
+            return false;
+        }
+
+        $preserved = SafeAnalysisNodeVisitor::addImpliedStrategies($filter->getPreservesSafety());
+
+        return \in_array($type, $preserved, true) || \in_array('all', $preserved, true);
     }
 
     private function preEscapeFilterNode(FilterExpression $filter, Environment $env): FilterExpression
     {
-        if ($filter->hasAttribute('twig_callable')) {
-            $type = $filter->getAttribute('twig_callable')->getPreEscape();
-        } else {
-            // legacy
-            $name = $filter->getNode('filter', false)->getAttribute('value');
-            $type = $env->getFilter($name)->getPreEscape();
-        }
-
-        if (null === $type) {
+        if (null === $type = $this->getFilter($filter, $env)->getPreEscape()) {
             return $filter;
         }
 
         /** @var AbstractExpression $node */
         $node = $filter->getNode('node');
-        if ($this->isSafeFor($type, $node, $env)) {
-            return $filter;
-        }
-
-        $filter->setNode('node', $this->getEscaperFilter($env, $type, $node));
+        $filter->setNode('node', $this->escapeExpression($node, $env, $type));
 
         return $filter;
+    }
+
+    private function getFilter(FilterExpression $filter, Environment $env): TwigFilter
+    {
+        if ($filter->hasAttribute('twig_callable')) {
+            return $filter->getAttribute('twig_callable');
+        }
+
+        // legacy
+        return $env->getFilter($filter->getNode('filter', false)->getAttribute('value'));
     }
 
     private function isSafeFor(string $type, AbstractExpression $expression, Environment $env): bool

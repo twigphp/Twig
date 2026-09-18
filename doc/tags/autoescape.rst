@@ -35,8 +35,23 @@ the :doc:`raw<../filters/raw>` filter:
         {{ safe_value|raw }}
     {% endautoescape %}
 
-Functions returning template data (like :doc:`macros<macro>` and
-:doc:`parent<../functions/parent>`) always return safe markup.
+The :doc:`parent<../functions/parent>` and :doc:`block<../functions/block>`
+functions always return markup that is safe for every strategy.
+
+.. deprecated:: 3.31
+
+    Content produced by a template is only safe for the strategy it was
+    produced under as of Twig 3.31. Printing it in a context using another
+    strategy triggers a deprecation and will escape it in Twig 4.0.
+
+Content a template produces carries the escaping strategy it was produced
+under: the result of a :doc:`macro<macro>`, content captured with
+:doc:`set<set>`, and the result of the
+:doc:`include()<../functions/include>` and
+:doc:`include_only()<../functions/include_only>` functions. Printing it in a
+context using another strategy is deprecated, as content escaped for one
+context is not escaped for another one. A macro carries the default strategy of
+the template defining it, not the one in effect where it is called.
 
 .. note::
 

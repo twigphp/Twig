@@ -61,7 +61,10 @@ The ``set`` tag can also be used to "capture" chunks of text:
 .. caution::
 
     If you enable automatic output escaping, Twig will only consider the
-    content to be safe when capturing chunks of text.
+    content to be safe when capturing chunks of text. The content is safe for
+    the escaping strategy it was captured under; as of Twig 3.31, printing it
+    in a context using another strategy is deprecated and will escape it in
+    Twig 4.0.
 
 .. note::
 

@@ -1,0 +1,14 @@
+--TEST--
+Content produced under another escaping strategy is detected through filters preserving the safety
+--DEPRECATION--
+Since twig/twig 3.31: Printing content produced with the "js" escaping strategy in a "html" context is deprecated; it will be escaped in 4.0.
+--TEMPLATE--
+{{ include('fragment.js.twig')|preserves_safety }}
+--TEMPLATE(fragment.js.twig)--
+var x = {{ '<b>' }};
+--DATA--
+return []
+--CONFIG--
+return ['autoescape' => 'name']
+--EXPECT--
+VAR X = <B>;

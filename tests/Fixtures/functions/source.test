@@ -3,6 +3,7 @@
 --TEMPLATE--
 FOO
 {{ source("foo.twig") }}
+{{ source("foo.twig") ends with "<br />" ? "a string" : "not a string" }}
 
 BAR
 --TEMPLATE(foo.twig)--
@@ -13,5 +14,6 @@ return []
 FOO
 
 {{ foo }}<br />
+a string
 
 BAR

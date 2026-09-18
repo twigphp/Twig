@@ -302,8 +302,8 @@ final class CoreExtension extends AbstractExtension
             new TwigFunction('cycle', [self::class, 'cycle']),
             new TwigFunction('random', [self::class, 'random'], ['needs_charset' => true]),
             new TwigFunction('date', [$this, 'convertDate']),
-            new TwigFunction('include', [self::class, 'include'], ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]),
-            new TwigFunction('include_only', [self::class, 'includeOnly'], ['needs_environment' => true, 'is_safe' => ['all']]),
+            new TwigFunction('include', [self::class, 'include'], ['needs_environment' => true, 'needs_context' => true]),
+            new TwigFunction('include_only', [self::class, 'includeOnly'], ['needs_environment' => true]),
             new TwigFunction('source', [self::class, 'source'], ['needs_environment' => true, 'is_safe' => ['all']]),
             new TwigFunction('enum_cases', [self::class, 'enumCases'], ['node_class' => EnumCasesFunction::class]),
             new TwigFunction('enum', [self::class, 'enum'], ['node_class' => EnumFunction::class]),
@@ -1574,7 +1574,7 @@ final class CoreExtension extends AbstractExtension
 
             $rendered = $loaded->render($variables);
 
-            return '' === $rendered ? '' : new Markup($rendered, $env->getCharset());
+            return '' === $rendered ? '' : Markup::createForStrategy($rendered, $env->getCharset(), $loaded->getDefaultEscapeStrategy());
         } finally {
             if ($isSandboxed && !$alreadySandboxed) {
                 $sandbox->setSandboxed(false);

@@ -29,6 +29,8 @@ final class EscaperRuntime implements RuntimeExtensionInterface
         'html_attr_relaxed' => ['html'],
     ];
 
+    private const BUILT_IN_STRATEGIES = ['html', 'js', 'css', 'html_attr', 'html_attr_relaxed', 'url'];
+
     /** @var array<string, callable(string, string): string> */
     private $escapers = [];
 
@@ -118,7 +120,21 @@ final class EscaperRuntime implements RuntimeExtensionInterface
     public function escape($string, string $strategy = 'html', ?string $charset = null, bool $autoescape = false)
     {
         if ($autoescape && $string instanceof Markup) {
-            return $string->isSafeFor($strategy) ? $string : $this->escape((string) $string, $strategy, $charset);
+            if ($string->isSafeFor($strategy)) {
+                return $string;
+            }
+
+            if (null !== $producedStrategy = $string->getProducedStrategy()) {
+                // 4.0 cleanup: drop this block, such content is then escaped like any other value;
+                // the legacy "{% autoescape true %}" names no escaper, so there is nothing to warn about
+                if (isset($this->escapers[$strategy]) || \in_array($strategy, self::BUILT_IN_STRATEGIES, true)) {
+                    trigger_deprecation('twig/twig', '3.31', 'Printing content produced with the "%s" escaping strategy in a "%s" context is deprecated; it will be escaped in 4.0.', $producedStrategy, $strategy);
+                }
+
+                return $string;
+            }
+
+            return $this->escape((string) $string, $strategy, $charset);
         }
 
         if (!\is_string($string)) {
@@ -140,7 +156,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
                 }
 
                 $string = (string) $string;
-            } elseif (\in_array($strategy, ['html', 'js', 'css', 'html_attr', 'html_attr_relaxed', 'url'], true)) {
+            } elseif (\in_array($strategy, self::BUILT_IN_STRATEGIES, true)) {
                 // we return the input as is (which can be of any type)
                 return $string;
             }

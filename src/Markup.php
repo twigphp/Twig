@@ -33,6 +33,8 @@ class Markup implements \Countable, \JsonSerializable, \Stringable
 {
     private $content;
     private ?string $charset;
+    // strategy of content Twig escaped itself, as opposed to content someone else declared safe
+    private ?string $producedStrategy = null;
 
     /**
      * @param string[] $safeStrategies The escaping strategies the content is safe for, `['all']` for all of them
@@ -57,6 +59,36 @@ class Markup implements \Countable, \JsonSerializable, \Stringable
     }
 
     /**
+     * Creates a Markup instance for content Twig escaped with a given strategy.
+     *
+     * Use it when returning the output of a rendered template, passing the strategy
+     * that template was compiled with:
+     *
+     *     $template = $twig->load('widget.html.twig');
+     *
+     *     return Markup::createForStrategy($template->render($context), $twig->getCharset(), $template->getDefaultEscapeStrategy());
+     *
+     * Such content is safe in a context using that strategy, and escaped in any other
+     * one. Until 4.0, it stays safe everywhere, with a deprecation instead of escaping.
+     *
+     * Content produced without autoescaping (a `false` strategy) is safe everywhere, as
+     * it always has been.
+     *
+     * @param string|false $strategy The strategy the content was escaped with
+     */
+    public static function createForStrategy(string $content, string $charset, $strategy): self
+    {
+        if (false === $strategy) {
+            return new self($content, $charset);
+        }
+
+        $markup = new self($content, $charset, [$strategy]);
+        $markup->producedStrategy = $strategy;
+
+        return $markup;
+    }
+
+    /**
      * @internal
      */
     public function withContent(string $content): self
@@ -76,6 +108,14 @@ class Markup implements \Countable, \JsonSerializable, \Stringable
         }
 
         return false;
+    }
+
+    /**
+     * @internal
+     */
+    public function getProducedStrategy(): ?string
+    {
+        return $this->producedStrategy;
     }
 
     /**

@@ -24,7 +24,7 @@ class CaptureNode extends Node
 {
     public function __construct(Node $body, int $lineno)
     {
-        parent::__construct(['body' => $body], ['raw' => false], $lineno);
+        parent::__construct(['body' => $body], ['raw' => false, 'strategy' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void
@@ -49,7 +49,15 @@ class CaptureNode extends Node
             $compiler->raw(')');
         }
         if (!$this->getAttribute('raw')) {
-            $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset());");
+            if (false === $strategy = $this->getAttribute('strategy')) {
+                $compiler->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset());");
+            } else {
+                $compiler
+                    ->raw(") ? '' : Markup::createForStrategy(\$tmp, \$this->env->getCharset(), ")
+                    ->repr($strategy)
+                    ->raw(');')
+                ;
+            }
         } else {
             $compiler->raw(';');
         }

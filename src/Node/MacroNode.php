@@ -73,7 +73,7 @@ class MacroNode extends Node
             $seen[$argName] = true;
         }
 
-        parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name, 'variadic_name' => $variadicName], $lineno);
+        parent::__construct(['body' => $body, 'arguments' => $arguments], ['name' => $name, 'variadic_name' => $variadicName, 'strategy' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void
@@ -132,6 +132,8 @@ class MacroNode extends Node
         }
 
         $node = new CaptureNode($this->getNode('body'), $this->getNode('body')->lineno);
+        // the body is captured with the strategy of the template defining the macro
+        $node->setAttribute('strategy', $this->getAttribute('strategy'));
 
         $compiler
             ->write('')
