@@ -33,7 +33,10 @@ use Twig\Node\TextNode;
 final class CorrectnessNodeVisitor implements NodeVisitorInterface
 {
     private ?\WeakMap $rootNodes = null;
-    private ?\WeakMap $checkedMacroReferences = null;
+    /**
+     * @var array<string, true>
+     */
+    private array $reportedMacroCallSites = [];
     /**
      * Stack of the output-wrapping tags ("if", "for", "set", ...) currently open;
      * the top one is the nearest tag a "block" definition would be nested under.
@@ -94,7 +97,6 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     {
         $this->resetState();
         $this->rootNodes = new \WeakMap();
-        $this->checkedMacroReferences = new \WeakMap();
         $this->hasParent = $node->hasNode('parent');
 
         foreach ($this->getRootNodes($node) as $n) {
@@ -108,7 +110,7 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     private function resetState(): void
     {
         $this->rootNodes = null;
-        $this->checkedMacroReferences = null;
+        $this->reportedMacroCallSites = [];
         $this->tagStack = [];
         $this->hasParent = false;
         $this->blockDepth = 0;
@@ -162,13 +164,27 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
 
     private function checkMacroCallParentheses(MacroReferenceExpression $node): void
     {
-        if (isset($this->checkedMacroReferences[$node])) {
+        if ($node->hasCallParentheses() || $node->isDefinedTestEnabled()) {
             return;
         }
-        $this->checkedMacroReferences[$node] = true;
 
-        if (false === $node->hasCallParentheses() && !$node->isDefinedTestEnabled()) {
-            trigger_deprecation('twig/twig', '3.29', 'Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "%s" at line %d.', $node->getSourceContext()->getName(), $node->getTemplateLine());
+        $sourceName = $node->getSourceContext()->getName();
+        $line = $node->getTemplateLine();
+        // A dynamic macro name is only known at runtime.
+        $name = $node->getAttribute('name');
+
+        // A single call site can be visited more than once: "??" reuses its left node,
+        // while "?:" and the "default" filter put a clone of it in the compiled tree.
+        $callSite = $sourceName."\0".$line."\0".$name;
+        if (isset($this->reportedMacroCallSites[$callSite])) {
+            return;
+        }
+        $this->reportedMacroCallSites[$callSite] = true;
+
+        if (null === $name) {
+            trigger_deprecation('twig/twig', '3.29', 'Omitting parentheses when calling a macro is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "%s" at line %d.', $sourceName, $line);
+        } else {
+            trigger_deprecation('twig/twig', '3.29', 'Omitting parentheses when calling the macro "%s" is deprecated and will throw a SyntaxError in Twig 4.0; add parentheses after the macro name in "%s" at line %d.', $name, $sourceName, $line);
         }
     }
 
