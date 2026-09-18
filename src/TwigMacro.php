@@ -100,6 +100,11 @@ final class TwigMacro
             return ($this->body)(...$arguments);
         }
 
+        // The keys are then exactly the declared names.
+        if (\count($arguments) === \count($this->arguments) && !array_diff_key($arguments, $this->argumentIndexes)) {
+            return ($this->body)(...$this->renameArguments($arguments));
+        }
+
         $positionalCount = 0;
         $namedRequired = 0;
         $sawNamed = false;
@@ -142,6 +147,16 @@ final class TwigMacro
             $this->triggerLegacyDeprecations($arguments, $positionalCount, $source, $lineno);
         }
 
+        return ($this->body)(...$this->renameArguments($arguments));
+    }
+
+    /**
+     * @param array<int|string, mixed> $arguments
+     *
+     * @return array<int|string, mixed>
+     */
+    private function renameArguments(array $arguments): array
+    {
         foreach ($this->renamedArguments as $name => $parameterName) {
             if (\array_key_exists($name, $arguments)) {
                 $arguments[$parameterName] = $arguments[$name];
@@ -149,7 +164,7 @@ final class TwigMacro
             }
         }
 
-        return ($this->body)(...$arguments);
+        return $arguments;
     }
 
     /**

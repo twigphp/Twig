@@ -134,6 +134,39 @@ class TwigMacroTest extends TestCase
             ['Since twig/twig 3.29: Passing the unknown named argument "extra" to the macro "test" is deprecated and will throw in Twig 4.0; declare a variadic argument ("...name") in the macro definition to accept it (in "index.twig" at line 7).'],
         ];
 
+        yield 'unknown named argument is still reported when the argument count matches the signature' => [
+            ['name' => false, 'value' => false],
+            false,
+            static function (&$captured) {
+                return static function ($name = null, $value = null, ...$varargs) use (&$captured) {
+                    $captured = [$name, $value, $varargs];
+
+                    return '';
+                };
+            },
+            ['name' => 'a', 'extra' => 'b'],
+            ['a', null, ['extra' => 'b']],
+            [
+                'Since twig/twig 3.29: Not passing a value for the "value" argument of macro "test" is deprecated and the argument will be required in Twig 4.0; give it a default value in the macro definition or pass a value when calling it (in "index.twig" at line 7).',
+                'Since twig/twig 3.29: Passing the unknown named argument "extra" to the macro "test" is deprecated and will throw in Twig 4.0; declare a variadic argument ("...name") in the macro definition to accept it (in "index.twig" at line 7).',
+            ],
+        ];
+
+        yield 'named arguments covering the whole signature bind to their parameter, reserved names included' => [
+            ['context' => false, 'value' => false],
+            false,
+            static function (&$captured) {
+                return static function ($͜context = null, $value = null, ...$varargs) use (&$captured) {
+                    $captured = [$͜context, $value, $varargs];
+
+                    return '';
+                };
+            },
+            ['value' => 'b', 'context' => 'a'],
+            ['a', 'b', []],
+            [],
+        ];
+
         yield 'null named argument value satisfies a required argument' => [
             ['name' => false],
             false,
