@@ -17,6 +17,7 @@
  * Fix destructuring patterns containing no variables (empty patterns or sequences with only empty slots) triggering a PHP fatal error instead of a `SyntaxError`
  * Fix object and mapping destructuring evaluating the right-hand expression more than once
  * Fix sequence destructuring of iterators throwing a `TypeError`
+ * Fix `MissingExtensionSuggestor` not suggesting the `twig/*-extra` package to install for some `html-extra`, `intl-extra`, and `string-extra` filters and functions
  * Add `TempestMarkdown` to use `tempest/markdown` as the `markdown_to_html` converter
  * Add the `include_only` function to render a template without giving it access to the current context
  * Add the `Twig\Sandbox\SandboxInterface` interface and `Twig\Sandbox\Sandbox` class to render untrusted templates through a dedicated, always-sandboxed environment crafted for it
