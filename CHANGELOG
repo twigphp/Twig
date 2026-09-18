@@ -3,6 +3,7 @@
  * Fix the deprecation about omitting parentheses when calling a macro being reported twice for the same call
  * Add the macro name to the deprecation about omitting parentheses when calling a macro
  * Deprecate cloning a `Twig\Environment` instance
+ * Fix array access with a `Stringable` key on subclasses of `ArrayObject` and `ArrayIterator`
 
 # 3.29.0 (2026-09-18)
 
