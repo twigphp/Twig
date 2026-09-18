@@ -1,7 +1,8 @@
-# 3.29.1 (2026-XX-XX)
+# 3.30.0 (2026-XX-XX)
 
  * Fix the deprecation about omitting parentheses when calling a macro being reported twice for the same call
  * Add the macro name to the deprecation about omitting parentheses when calling a macro
+ * Deprecate cloning a `Twig\Environment` instance
 
 # 3.29.0 (2026-09-18)
 

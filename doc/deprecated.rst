@@ -475,6 +475,11 @@ Testing Utilities
 Environment
 -----------
 
+* Cloning a ``Twig\Environment`` instance is deprecated as of Twig 3.30 and will
+  throw in Twig 4.0. A clone keeps the templates and runtimes created by the
+  original environment, and those resolve their globals, extensions, and charset
+  against the environment that created them. Build a new environment instead.
+
 * The ``Twig\Environment::mergeGlobals()`` method is deprecated as of Twig 3.14
   and will be removed in Twig 4.0:
 
