@@ -1,4 +1,4 @@
-# 3.29.0 (2026-XX-XX)
+# 3.29.0 (2026-09-18)
 
  * Fix the PHP warning and cryptic error when a block or a macro rendered on its own uses macros imported in the template body
  * Fix `{% cache %}` always missing in the Symfony bundle when `framework.cache.app` uses a natively tag aware adapter
