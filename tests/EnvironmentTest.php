@@ -96,6 +96,19 @@ class EnvironmentTest extends TestCase
         $twig->load($foreign->load('index'));
     }
 
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testCloningIsDeprecated(): void
+    {
+        $this->expectDeprecation('Since twig/twig 3.30: Cloning a "Twig\Environment" instance is deprecated and will throw in Twig 4.0; build a new environment instead.');
+
+        $twig = new Environment(new ArrayLoader());
+
+        $this->assertInstanceOf(Environment::class, clone $twig);
+    }
+
     public function escapingStrategyCallback($name)
     {
         return $name;
