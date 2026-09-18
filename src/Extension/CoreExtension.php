@@ -495,9 +495,7 @@ final class CoreExtension extends AbstractExtension
                 $values = self::convertEncoding($values, 'UTF-8', $charset);
             }
 
-            // unicode version of str_split()
-            // split at all positions, but not after the start and not before the end
-            $values = preg_split('/(?<!^)(?!$)/u', $values);
+            $values = self::splitIntoCharacters($values, 'random');
 
             if ('UTF-8' !== $charset) {
                 foreach ($values as $i => $value) {
@@ -897,7 +895,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ($limit <= 1) {
-            return preg_split('/(?<!^)(?!$)/u', $value);
+            return self::splitIntoCharacters($value, 'split');
         }
 
         $length = mb_strlen($value, $charset);
@@ -1004,9 +1002,7 @@ final class CoreExtension extends AbstractExtension
             $string = self::convertEncoding($string, 'UTF-8', $charset);
         }
 
-        preg_match_all('/./us', $string, $matches);
-
-        $string = implode('', array_reverse($matches[0]));
+        $string = implode('', array_reverse(self::splitIntoCharacters($string, 'reverse')));
 
         if ('UTF-8' !== $charset) {
             $string = self::convertEncoding($string, $charset, 'UTF-8');
@@ -1030,7 +1026,7 @@ final class CoreExtension extends AbstractExtension
                 $item = self::convertEncoding($item, 'UTF-8', $charset);
             }
 
-            $item = preg_split('/(?<!^)(?!$)/u', $item, -1);
+            $item = self::splitIntoCharacters($item, 'shuffle');
             shuffle($item);
             $item = implode('', $item);
 
@@ -1272,6 +1268,22 @@ final class CoreExtension extends AbstractExtension
         }
 
         return iconv($from, $to, $string ?? '');
+    }
+
+    /**
+     * Unicode version of str_split(): splits at every position except after the start and before the end.
+     *
+     * @return list<string>
+     *
+     * @throws RuntimeError When the string cannot be split into characters
+     */
+    private static function splitIntoCharacters(string $string, string $name): array
+    {
+        if (false === $characters = preg_split('/(?<!^)(?!$)/u', $string)) {
+            throw new RuntimeError(\sprintf('Unable to split the string passed to "%s" into characters: %s.', $name, preg_last_error_msg()));
+        }
+
+        return $characters;
     }
 
     /**

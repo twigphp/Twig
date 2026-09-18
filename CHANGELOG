@@ -1,5 +1,6 @@
 # 3.30.0 (2026-XX-XX)
 
+ * Report a clear error when `random`, `reverse`, `shuffle`, and `split` receive a string that is not valid UTF-8
  * Fix the deprecation about omitting parentheses when calling a macro being reported twice for the same call
  * Add the macro name to the deprecation about omitting parentheses when calling a macro
  * Deprecate cloning a `Twig\Environment` instance
@@ -11,7 +12,7 @@
  * Fix the sandbox resolving `use` trait templates before checking that the `use` tag is allowed
  * Fix `html_attr` dropping `style` declarations whose value is `0`, `0.0` or `'0'`
  * Fix the `default` filter fallback emitting an undefined variable warning when it uses the null-safe operator
- * Fix the `matches` operator silently treating PCRE execution errors as non-matches
+ * Fix the `matches` operator silently treating PCRE execution errors as non-matches; it now throws a `RuntimeError`
  * Fix `TemplateWrapper::streamBlock()`, `TemplateWrapper::hasBlock()`, and `TemplateWrapper::getBlockNames()` omitting environment globals
  * Fix exceptions from dynamic parent expressions escaping without template context
  * Add the `BlockChain` class to compose blocks from multiple templates without using template internals
