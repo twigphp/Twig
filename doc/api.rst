@@ -48,6 +48,17 @@ returns a ``\Twig\TemplateWrapper`` instance::
 
     $template = $twig->load('index.html.twig');
 
+.. versionadded:: 3.30
+
+    The ``TemplateWrapper::getDefaultEscapeStrategy()`` method was introduced in
+    Twig 3.30.
+
+The wrapper tells which escaping strategy the template was compiled with, which
+is the strategy its content is safe for (``false`` when the template is not
+autoescaped)::
+
+    $strategy = $template->getDefaultEscapeStrategy();
+
 Rendering Templates
 -------------------
 
