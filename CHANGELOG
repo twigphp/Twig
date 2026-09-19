@@ -1,5 +1,6 @@
 # 3.30.0 (2026-XX-XX)
 
+ * Add `TemplateWrapper::getDefaultEscapeStrategy()` to know the escaping strategy a template was compiled with
  * Report a clear error when `random`, `reverse`, `shuffle`, and `split` receive a string that is not valid UTF-8
  * Fix the deprecation about omitting parentheses when calling a macro being reported twice for the same call
  * Add the macro name to the deprecation about omitting parentheses when calling a macro

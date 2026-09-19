@@ -97,6 +97,19 @@ final class TemplateWrapper
     }
 
     /**
+     * Returns the escaping strategy the template body was compiled with.
+     *
+     * Individual parts of the template can use another strategy, through an
+     * `autoescape` tag or an explicit `escape` filter.
+     *
+     * @return string|false The strategy name or false when the template is not autoescaped
+     */
+    public function getDefaultEscapeStrategy(): string|false
+    {
+        return $this->template->getDefaultEscapeStrategy();
+    }
+
+    /**
      * @internal
      */
     public function isOwnedBy(Environment $env): bool
