@@ -194,6 +194,47 @@ class IntlExtensionTest extends TestCase
         $this->assertSame('22:22:00', $ext->formatTime($env, $date));
     }
 
+    public function testFormatterProtoPatternDoesNotOverrideAnExplicitLocale(): void
+    {
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2019-08-07T23:39:12+00:00');
+
+        // this prototype has no configured pattern, but ICU still reports one
+        $derivedProto = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::LONG, \IntlDateFormatter::SHORT, 'UTC', \IntlDateFormatter::GREGORIAN);
+        $expected = (new \IntlDateFormatter('en_US', \IntlDateFormatter::LONG, \IntlDateFormatter::SHORT, 'UTC', \IntlDateFormatter::GREGORIAN))->format($date);
+
+        $this->assertSame($expected, (new IntlExtension($derivedProto))->formatDateTime($env, $date, timezone: 'UTC', locale: 'en_US'));
+
+        $patternProto = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::LONG, \IntlDateFormatter::SHORT, 'UTC', \IntlDateFormatter::GREGORIAN, 'yyyy-MM-dd');
+
+        $this->assertSame('2019-08-07', (new IntlExtension($patternProto))->formatDateTime($env, $date, timezone: 'UTC', locale: 'en_US'));
+
+        // ICU derives the pattern from the calendar of the prototype as well
+        $calendarProto = new \IntlDateFormatter('ja_JP@calendar=japanese', \IntlDateFormatter::LONG, \IntlDateFormatter::SHORT, 'UTC', \IntlDateFormatter::TRADITIONAL);
+
+        $this->assertSame($expected, (new IntlExtension($calendarProto))->formatDateTime($env, $date, timezone: 'UTC', locale: 'en_US'));
+    }
+
+    public function testFormatterProtoWithoutDateAndTimeStylesKeepsItsLocale(): void
+    {
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2019-08-07T23:39:12+00:00');
+        // ICU reports the "root" locale for a prototype with no date and no time style, and rejects it as an input locale
+        $proto = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', \IntlDateFormatter::GREGORIAN, 'yyyy-MM-dd');
+
+        $this->assertSame('2019-08-07', (new IntlExtension($proto))->formatDateTime($env, $date, timezone: 'UTC'));
+
+        $localeDependentProto = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::NONE, \IntlDateFormatter::NONE, 'UTC', \IntlDateFormatter::GREGORIAN, 'EEEE d MMMM y');
+        $default = \Locale::getDefault();
+        \Locale::setDefault('en_US');
+
+        try {
+            $this->assertSame('mercredi 7 août 2019', (new IntlExtension($localeDependentProto))->formatDateTime($env, $date, timezone: 'UTC'));
+        } finally {
+            \Locale::setDefault($default);
+        }
+    }
+
     public function testDateFormatterCacheIsBounded(): void
     {
         $ext = new IntlExtension();
