@@ -1,9 +1,9 @@
 --TEST--
 Content produced by a template or a macro and printed in a context using another escaping strategy
 --DEPRECATION--
-Since twig/twig 3.31: Printing content produced with the "js" escaping strategy in a "html" context is deprecated; it will be escaped in 4.0.
-Since twig/twig 3.31: Printing content produced with the "html" escaping strategy in a "js" context is deprecated; it will be escaped in 4.0.
-Since twig/twig 3.31: Printing content produced with the "html" escaping strategy in a "js" context is deprecated; it will be escaped in 4.0.
+Since twig/twig 3.31: Printing content produced with the "js" escaping strategy in a "html" context is deprecated in "index.twig" at line 4; it will be escaped in 4.0.
+Since twig/twig 3.31: Printing content produced with the "html" escaping strategy in a "js" context is deprecated in "index.twig" at line 6; it will be escaped in 4.0.
+Since twig/twig 3.31: Printing content produced with the "html" escaping strategy in a "js" context is deprecated in "index.twig" at line 7; it will be escaped in 4.0.
 --TEMPLATE--
 {% import 'macros.html.twig' as m %}
 {{- include('fragment.html.twig') }}
