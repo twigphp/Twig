@@ -131,14 +131,6 @@ final class CoreExtension extends AbstractExtension
         'SplStack',
         'WeakMap',
     ];
-    /**
-     * @internal
-     */
-    public const STRINGABLE_KEY_ARRAY_ACCESS_CLASSES = [
-        'ArrayIterator',
-        'ArrayObject',
-        'RecursiveArrayIterator',
-    ];
 
     private const DEFAULT_TRIM_CHARS = " \t\n\r\0\x0B";
 
@@ -1769,6 +1761,10 @@ final class CoreExtension extends AbstractExtension
         if (Template::METHOD_CALL !== $type) {
             $arrayItem = \is_bool($item) || \is_float($item) ? (int) $item : $item;
 
+            if ($arrayItem instanceof \Stringable && ($object instanceof \ArrayObject || $object instanceof \ArrayIterator)) {
+                $arrayItem = (string) $arrayItem;
+            }
+
             if ($sandboxed && $object instanceof \ArrayAccess && !\in_array($object::class, self::ARRAY_LIKE_CLASSES, true)) {
                 try {
                     $env->getExtension(SandboxExtension::class)->getChecker()->checkPropertyAllowed($object, $arrayItem, $lineno, $source);
@@ -1779,10 +1775,6 @@ final class CoreExtension extends AbstractExtension
                     $item = (string) $item;
                     goto methodCheck;
                 }
-            }
-
-            if ($object instanceof \ArrayAccess && $arrayItem instanceof \Stringable && \in_array($object::class, self::STRINGABLE_KEY_ARRAY_ACCESS_CLASSES, true)) {
-                $arrayItem = (string) $arrayItem;
             }
 
             if (match (true) {
