@@ -43,6 +43,13 @@ class TemplateWrapperTest extends TestCase
         $wrapper->unwrap(new Environment(new ArrayLoader()));
     }
 
+    public function testGetDefaultEscapeStrategy(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index.js.twig' => 'content']), ['autoescape' => 'name']);
+
+        $this->assertSame('js', $twig->load('index.js.twig')->getDefaultEscapeStrategy());
+    }
+
     public function testHasGetBlocks(): void
     {
         $twig = new Environment(new ArrayLoader([
