@@ -53,6 +53,16 @@ context using another strategy is deprecated, as content escaped for one
 context is not escaped for another one. A macro carries the default strategy of
 the template defining it, not the one in effect where it is called.
 
+Wrapping the whole body of a template in an ``autoescape`` tag makes that
+strategy the default one of the template, so its rendered content is marked for
+it. Use it to declare the strategy of a fragment when the ``autoescape``
+environment option does not already guess it from the template name:
+
+.. code-block:: twig
+
+    {# fragment.js.twig #}
+    {% autoescape 'js' %}var x = {{ value }};{% endautoescape %}
+
 .. note::
 
     Twig is smart enough to not escape an already escaped value by the

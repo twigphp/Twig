@@ -585,9 +585,10 @@ The escaping rules are implemented as follows:
         return \Twig\Markup::createForStrategy($template->render($context), $twig->getCharset(), $template->getDefaultEscapeStrategy());
 
   ``getDefaultEscapeStrategy()`` returns the strategy the template body was
-  compiled with, or ``false`` when the template is not autoescaped; parts coming
-  from a parent template, an embedded template, or an ``autoescape`` tag can use
-  another one.
+  compiled with, or ``false`` when the template is not autoescaped. Wrapping the
+  whole body of a template in an ``autoescape`` tag defines that strategy; parts
+  coming from a parent template, an embedded template, or a nested
+  ``autoescape`` tag can still use another one.
 
   Such content is safe in a context using that strategy, and escaped in any
   other one: content escaped for JavaScript is not safe in a CSS context. This

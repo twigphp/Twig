@@ -343,11 +343,17 @@ Templates
     {# after: the script element is declared as a JavaScript context #}
     {% autoescape 'js' %}<script>{{ include('fragment.js.twig') }}</script>{% endautoescape %}
 
-  On the producing side, the strategy is the *default* one the template was
-  compiled with, so an ``autoescape`` tag inside ``fragment.js.twig`` does not
-  change it. Make the default strategy itself be ``js``, typically by setting
-  the ``autoescape`` environment option to ``name`` and naming the template
-  ``fragment.js.twig``.
+  On the producing side, the content carries the strategy of the template that
+  rendered it, so ``fragment.js.twig`` must be produced with ``js``. Wrap its
+  whole body in an ``autoescape`` tag:
+
+  .. code-block:: twig
+
+    {# fragment.js.twig #}
+    {% autoescape 'js' %}var x = {{ value }};{% endautoescape %}
+
+  Setting the ``autoescape`` environment option to ``name`` does it for every
+  template at once, by guessing the strategy from the template name.
 
   Otherwise, produce the content in the context where it is printed, print it
   with the ``raw`` filter when you know it is safe there, or mark a value coming

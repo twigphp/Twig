@@ -1,0 +1,12 @@
+--TEST--
+A template whose body is entirely wrapped in an "autoescape" tag produces its content with that strategy
+--TEMPLATE--
+{% autoescape 'js' %}<script>{{ include('fragment.twig') }}</script>{% endautoescape %}
+--TEMPLATE(fragment.twig)--
+{%- autoescape 'js' %}var x = {{ value }};{% endautoescape %}
+--DATA--
+return ['value' => "a'b"]
+--CONFIG--
+return ['autoescape' => 'html']
+--EXPECT--
+<script>var x = a\u0027b;</script>

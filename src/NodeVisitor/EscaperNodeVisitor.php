@@ -31,6 +31,7 @@ use Twig\Node\Node;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
+use Twig\Node\TextNode;
 use Twig\NodeTraverser;
 use Twig\TwigFilter;
 
@@ -61,7 +62,8 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             if ($env->hasExtension(EscaperExtension::class) && $defaultStrategy = $env->getExtension(EscaperExtension::class)->getDefaultStrategy($node->getTemplateName())) {
                 $this->defaultStrategy = $defaultStrategy;
             }
-            $node->setAttribute('strategy', \is_string($this->defaultStrategy) ? $this->defaultStrategy : false);
+            $strategy = self::getBodyStrategy($node->getNode('body'), $this->defaultStrategy);
+            $node->setAttribute('strategy', \is_string($strategy) ? $strategy : false);
             $this->safeVars = [];
             $this->blocks = [];
             $this->statusStack = [];
@@ -112,6 +114,59 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
         }
 
         return $node;
+    }
+
+    /**
+     * Returns the escaping strategy the whole body is produced with.
+     *
+     * A body entirely wrapped in an `autoescape` tag is produced with the strategy of
+     * that tag, not with the default strategy of the environment.
+     *
+     * @param string|bool $defaultStrategy
+     *
+     * @return string|bool
+     */
+    private static function getBodyStrategy(Node $body, $defaultStrategy)
+    {
+        while (true) {
+            if ($body instanceof AutoEscapeNode) {
+                $defaultStrategy = $body->getAttribute('value');
+                $body = $body->getNode('body');
+
+                continue;
+            }
+
+            if (!$body = self::getOnlyStatement($body)) {
+                return $defaultStrategy;
+            }
+        }
+    }
+
+    /**
+     * Returns the only statement of a group of statements, or null when there is not exactly one.
+     */
+    private static function getOnlyStatement(Node $node): ?Node
+    {
+        $only = null;
+        foreach ($node as $name => $child) {
+            if (!\is_int($name)) {
+                // a node with named children, not a group of statements
+                return null;
+            }
+
+            // literal text is never escaped, so it belongs to no strategy in particular
+            if ($child instanceof TextNode) {
+                continue;
+            }
+
+            if ($only) {
+                return null;
+            }
+
+            $only = $child;
+        }
+
+        return $only;
     }
 
     /**
