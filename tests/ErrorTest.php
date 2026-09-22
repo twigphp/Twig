@@ -22,7 +22,6 @@ namespace Twig\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -305,7 +304,7 @@ EOHTML,
                 $lineno = $stream->getCurrent()->getLine();
                 $stream->expect(Token::BLOCK_END_TYPE);
 
-                return new #[YieldReady] class($lineno, $this->addDebugInfo, $this->exceptionWithLineAndContext) extends Node {
+                return new class($lineno, $this->addDebugInfo, $this->exceptionWithLineAndContext) extends Node {
                     public function __construct(int $lineno, private bool $addDebugInfo, private bool $exceptionWithLineAndContext)
                     {
                         parent::__construct([], [], $lineno);

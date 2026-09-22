@@ -11,7 +11,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 
@@ -20,7 +19,6 @@ use Twig\Node\Expression\AbstractExpression;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 class DoNode extends Node
 {
     public function __construct(AbstractExpression $expr, int $lineno)

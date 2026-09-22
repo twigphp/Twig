@@ -11,7 +11,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 
 /**
@@ -19,7 +18,6 @@ use Twig\Compiler;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 class WithNode extends Node
 {
     public function __construct(Node $body, ?Node $variables, bool $only, int $lineno)

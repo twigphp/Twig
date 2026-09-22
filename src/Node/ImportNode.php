@@ -11,7 +11,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Variable\AssignMacroVariable;
@@ -22,7 +21,6 @@ use Twig\Node\Expression\Variable\ContextVariable;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 class ImportNode extends Node implements CoercesChildrenToStringInterface
 {
     public function __construct(AbstractExpression $expr, AssignMacroVariable $var, int $lineno)

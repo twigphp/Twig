@@ -11,8 +11,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
-
 /**
  * Represents a node that has global side effects but does not generate template code.
  *
@@ -20,7 +18,6 @@ use Twig\Attribute\YieldReady;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 class ConfigNode extends Node
 {
     public function __construct(int $lineno)

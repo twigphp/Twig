@@ -86,9 +86,9 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     /**
      * Optimizes print nodes.
      *
-     * It replaces:
-     *
-     *   * "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()"
+     * It turns a printed constant into a text node, and lets a printed block
+     * reference yield straight to the output instead of being collected into a
+     * string first.
      */
     private function optimizePrintNode(Node $node): Node
     {

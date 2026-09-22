@@ -12,7 +12,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -23,7 +22,6 @@ use Twig\Node\Expression\ReturnStringInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 class PrintNode extends Node implements NodeOutputInterface, CoercesChildrenToStringInterface
 {
     public function __construct(AbstractExpression $expr, int $lineno)

@@ -12,7 +12,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Variable\AssignContextVariable;
@@ -22,7 +21,6 @@ use Twig\Node\Expression\Variable\AssignContextVariable;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 class ForNode extends Node
 {
     public function __construct(AssignContextVariable $keyTarget, AssignContextVariable $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?ForElseNode $else, int $lineno)
