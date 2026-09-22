@@ -379,7 +379,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         $compiler->subcompile($this->getNode('display_end'));
 
         if (!$this->hasNode('parent')) {
-            $compiler->write("yield from [];\n");
+            $compiler->write("return; yield;\n");
         }
 
         $compiler

@@ -159,7 +159,7 @@ class __TwigTemplate_%x extends Template
         \$macros = \$this->macros;
         // line 1
         yield "foo";
-        yield from [];
+        return; yield;
     }
 
     /**

@@ -65,7 +65,7 @@ EOF
 // line 1
 \$context["foo"] = ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
     yield "foo";
-    yield from [];
+    return; yield;
 })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
         ];
@@ -74,7 +74,7 @@ EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
 // line 1
 $context["foo"] = ('' === $tmp = \Twig\Extension\CoreExtension::captureOutput((function () use (&$context, $macros, $blocks) {
     yield "foo";
-    yield from [];
+    return; yield;
 })())) ? '' : new Markup($tmp, $this->env->getCharset());
 EOF, new Environment(new ArrayLoader(), ['use_yield' => false]),
         ];
