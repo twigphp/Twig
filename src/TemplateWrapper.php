@@ -121,11 +121,9 @@ final class TemplateWrapper
     /**
      * @internal
      */
-    public function unwrap(?Environment $env = null): Template
+    public function unwrap(Environment $env): Template
     {
-        if (null === $env) {
-            trigger_deprecation('twig/twig', '3.29', 'Calling "%s()" without arguments is deprecated, pass the Twig environment instead.', __METHOD__);
-        } elseif (!$this->isOwnedBy($env)) {
+        if (!$this->isOwnedBy($env)) {
             throw new RuntimeError(\sprintf('A "%s" can only be used with the "%s" that created it.', self::class, Environment::class));
         }
 

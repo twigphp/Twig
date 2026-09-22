@@ -92,6 +92,16 @@ class EnvironmentTest extends TestCase
         $twig->load($foreign->load('index'));
     }
 
+    public function testCloningAnEnvironmentIsRejected(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cloning a Twig environment is not supported; build a new environment instead.');
+
+        clone $twig;
+    }
+
     public function escapingStrategyCallback($name)
     {
         return $name;

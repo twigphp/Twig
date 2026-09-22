@@ -150,7 +150,7 @@ class Environment
 
     public function __clone()
     {
-        trigger_deprecation('twig/twig', '3.30', 'Cloning a "%s" instance is deprecated and will throw in Twig 4.0; build a new environment instead.', self::class);
+        throw new \LogicException('Cloning a Twig environment is not supported; build a new environment instead.');
     }
 
     /**
