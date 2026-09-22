@@ -43,7 +43,7 @@ class MacroReferenceTest extends TestCase
         $compiler->compile($node);
 
         $this->assertStringContainsString('->call(', $compiler->getSource());
-        $this->assertStringContainsString('($context["name"] ?? null), [], $context, 1, $this->getSourceContext())', $compiler->getSource());
+        $this->assertStringContainsString('($context["name"] ?? null), [], $context, 1, $this->source)', $compiler->getSource());
         $this->assertStringNotContainsString("'macro_'.", $compiler->getSource());
     }
 }

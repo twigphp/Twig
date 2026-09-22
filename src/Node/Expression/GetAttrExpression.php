@@ -197,7 +197,7 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
         $compiler
             ->raw('(('.$key.' = ')
             ->subcompile($attribute)
-            ->raw(') instanceof \Stringable && (is_array('.$var.') || in_array('.$var.'::class, CoreExtension::STRINGABLE_KEY_ARRAY_ACCESS_CLASSES, true)) ? (string) '.$key.' : '.$key.')')
+            ->raw(') instanceof \Stringable && (is_array('.$var.') || '.$var.' instanceof \ArrayObject || '.$var.' instanceof \ArrayIterator) ? (string) '.$key.' : '.$key.')')
         ;
     }
 

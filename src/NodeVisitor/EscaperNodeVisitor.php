@@ -58,6 +58,8 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             if ($env->hasExtension(EscaperExtension::class) && $defaultStrategy = $env->getExtension(EscaperExtension::class)->getDefaultStrategy($node->getTemplateName())) {
                 $this->defaultStrategy = $defaultStrategy;
             }
+            // the compiled template exposes the strategy it was compiled with
+            $node->setAttribute('strategy', \is_string($this->defaultStrategy) ? $this->defaultStrategy : false);
             $this->safeVars = [];
             $this->blocks = [];
         } elseif ($node instanceof AutoEscapeNode) {

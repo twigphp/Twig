@@ -1,0 +1,8 @@
+--TEST--
+"split" filter with an empty delimiter and a string that is not valid UTF-8
+--TEMPLATE--
+{{ value|split('')|join('-') }}
+--DATA--
+return ['value' => "\xC3\x28abc"]
+--EXCEPTION--
+Twig\Error\RuntimeError: Unable to split the string passed to "split" into characters: Malformed UTF-8 characters, possibly incorrectly encoded in "index.twig" at line 2.

@@ -83,6 +83,10 @@ class Environment
     private string $optionsHash;
     private FactoryRuntimeLoader $defaultRuntimeLoader;
     private array $hotCache = [];
+    /**
+     * @var array<string, TemplateWrapper>
+     */
+    private array $loadedWrappers = [];
 
     /**
      * Constructor.
@@ -142,6 +146,11 @@ class Environment
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
         $this->addExtension(new OptimizerExtension($options['optimizations']));
+    }
+
+    public function __clone()
+    {
+        trigger_deprecation('twig/twig', '3.30', 'Cloning a "%s" instance is deprecated and will throw in Twig 4.0; build a new environment instead.', self::class);
     }
 
     /**
@@ -230,6 +239,7 @@ class Environment
     {
         $cls = $this->getTemplateClass($name);
         $this->hotCache[$name] = $cls.'_'.bin2hex(random_bytes(16));
+        unset($this->loadedWrappers[$cls]);
 
         if ($this->cache instanceof RemovableCacheInterface) {
             $this->cache->remove($name, $cls);
@@ -340,7 +350,9 @@ class Environment
             return $name;
         }
 
-        return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
+        $cls = $this->getTemplateClass($name);
+
+        return $this->loadedWrappers[$cls] ??= new TemplateWrapper($this, $this->loadTemplate($cls, $name));
     }
 
     /**

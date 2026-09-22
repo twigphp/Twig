@@ -75,6 +75,20 @@ abstract class Template
     abstract protected function doDisplay(array $context, array $blocks = []): iterable;
 
     /**
+     * Returns the escaping strategy the template body was compiled with.
+     *
+     * This describes the template's own source, not its output: `autoescape`,
+     * `escape`, and anything rendered by a parent, embedded, or included
+     * template can use another strategy.
+     *
+     * @return string|false The strategy name or false when the template is not autoescaped
+     */
+    public function getDefaultEscapeStrategy(): string|false
+    {
+        return false;
+    }
+
+    /**
      * Returns the parent template.
      *
      * This method is for internal use only and should never be called

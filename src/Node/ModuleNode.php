@@ -51,6 +51,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         parent::__construct($nodes, [
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
+            'strategy' => false,
         ], 1);
 
         // populate the template name of all node children
@@ -98,6 +99,8 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         $this->compileGetTemplateName($compiler);
 
         $this->compileIsTraitable($compiler);
+
+        $this->compileGetDefaultEscapeStrategy($compiler);
 
         $this->compileDebugInfo($compiler);
 
@@ -430,6 +433,26 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
             ->write("public function isTraitable(): bool\n", "{\n")
             ->indent()
             ->write("return false;\n")
+            ->outdent()
+            ->write("}\n\n")
+        ;
+    }
+
+    protected function compileGetDefaultEscapeStrategy(Compiler $compiler): void
+    {
+        if (false === $strategy = $this->getAttribute('strategy')) {
+            return;
+        }
+
+        $compiler
+            ->write("/**\n")
+            ->write(" * @codeCoverageIgnore\n")
+            ->write(" */\n")
+            ->write("public function getDefaultEscapeStrategy(): string|false\n", "{\n")
+            ->indent()
+            ->write('return ')
+            ->repr($strategy)
+            ->raw(";\n")
             ->outdent()
             ->write("}\n\n")
         ;

@@ -33,7 +33,6 @@ use Twig\Node\TextNode;
 final class CorrectnessNodeVisitor implements NodeVisitorInterface
 {
     private ?\WeakMap $rootNodes = null;
-    private ?\WeakMap $checkedMacroReferences = null;
     /**
      * Stack of the output-wrapping tags ("if", "for", "set", ...) currently open;
      * the top one is the nearest tag a "block" definition would be nested under.
@@ -94,7 +93,6 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     {
         $this->resetState();
         $this->rootNodes = new \WeakMap();
-        $this->checkedMacroReferences = new \WeakMap();
         $this->hasParent = $node->hasNode('parent');
 
         foreach ($this->getRootNodes($node) as $n) {
@@ -108,7 +106,6 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
     private function resetState(): void
     {
         $this->rootNodes = null;
-        $this->checkedMacroReferences = null;
         $this->tagStack = [];
         $this->hasParent = false;
         $this->blockDepth = 0;
@@ -162,14 +159,11 @@ final class CorrectnessNodeVisitor implements NodeVisitorInterface
 
     private function checkMacroCallParentheses(MacroReferenceExpression $node): void
     {
-        if (isset($this->checkedMacroReferences[$node])) {
+        if ($node->hasCallParentheses() || $node->isDefinedTestEnabled()) {
             return;
         }
-        $this->checkedMacroReferences[$node] = true;
 
-        if (false === $node->hasCallParentheses() && !$node->isDefinedTestEnabled()) {
-            throw new SyntaxError('Omitting parentheses when calling a macro is not allowed; add parentheses after the macro name.', $node->getTemplateLine(), $node->getSourceContext());
-        }
+        throw new SyntaxError('Omitting parentheses when calling a macro is not allowed; add parentheses after the macro name.', $node->getTemplateLine(), $node->getSourceContext());
     }
 
     private function checkConfigTag(ConfigNode $node): void

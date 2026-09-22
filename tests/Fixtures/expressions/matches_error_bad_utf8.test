@@ -1,0 +1,8 @@
+--TEST--
+Twig reports a PCRE failure when the "matches" subject is not valid UTF-8
+--TEMPLATE--
+{{ subject matches regexp }}
+--DATA--
+return ['subject' => "\xC3\x28abc", 'regexp' => '/^\p{L}+$/u'];
+--EXCEPTION--
+Twig\Error\RuntimeError: Regexp "/^\p{L}+$/u" passed to "matches" failed: Malformed UTF-8 characters, possibly incorrectly encoded in "index.twig" at line 2.

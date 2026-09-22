@@ -21,7 +21,9 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -31,6 +33,8 @@ use Twig\TwigFunction;
 
 class TemplateWrapperTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testUnwrapChecksTheEnvironment(): void
     {
         $twig = new Environment(new ArrayLoader(['index' => 'content']));
@@ -41,6 +45,27 @@ class TemplateWrapperTest extends TestCase
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('can only be used with the "Twig\\Environment" that created it');
         $wrapper->unwrap(new Environment(new ArrayLoader()));
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testUnwrapCanBeCalledWithoutArguments(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => 'content']));
+        $wrapper = $twig->load('index');
+
+        $this->expectDeprecation('Since twig/twig 3.29: Calling "Twig\TemplateWrapper::unwrap()" without arguments is deprecated, pass the Twig environment instead.');
+
+        $this->assertInstanceOf(Template::class, $wrapper->unwrap());
+    }
+
+    public function testGetDefaultEscapeStrategy(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index.js.twig' => 'content']), ['autoescape' => 'name']);
+
+        $this->assertSame('js', $twig->load('index.js.twig')->getDefaultEscapeStrategy());
     }
 
     public function testHasGetBlocks(): void
