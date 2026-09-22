@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2026-09-21T18:56:05Z
+
+We should at least add a deprecation notice.
+
+---------------------------------------------------------------------------
+
+by derrabus at 2026-09-22T06:13:19Z
+
+> We should at least add a deprecation notice.
+
+Done. This will mean that Symfony 5.4 apps will see deprecations that they can't get rid of, but that's probably acceptable.
