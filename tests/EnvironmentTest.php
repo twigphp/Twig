@@ -598,6 +598,63 @@ EOF
             FilesystemHelper::removeDir($dir);
         }
     }
+
+    public function testLoadReusesTheWrapperOfAnAlreadyLoadedTemplate(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index.twig' => 'x']));
+
+        $this->assertSame($twig->load('index.twig'), $twig->load('index.twig'));
+    }
+
+    public function testRepeatedlyRemovingACacheDoesNotAccumulateWrappers(): void
+    {
+        $dir = sys_get_temp_dir().'/twig-wrapper-growth-test';
+        if (is_dir($dir)) {
+            FilesystemHelper::removeDir($dir);
+        }
+        mkdir($dir.'/cache', 0777, true);
+        file_put_contents($dir.'/index.twig', 'x');
+
+        try {
+            $twig = new Environment(new FilesystemLoader($dir), ['cache' => $dir.'/cache', 'auto_reload' => false]);
+            for ($i = 0; $i < 10; ++$i) {
+                $twig->load('index.twig');
+                $twig->removeCache('index.twig');
+            }
+            $twig->load('index.twig');
+
+            $wrappers = (new \ReflectionObject($twig))->getProperty('loadedWrappers')->getValue($twig);
+            $this->assertCount(1, $wrappers);
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
+    }
+
+    public function testLoadFollowsALoaderThatResolvesANameDifferently(): void
+    {
+        $dir = sys_get_temp_dir().'/twig-loader-change-test';
+        if (is_dir($dir)) {
+            FilesystemHelper::removeDir($dir);
+        }
+        mkdir($dir.'/a', 0777, true);
+        mkdir($dir.'/b', 0777, true);
+        file_put_contents($dir.'/a/index.twig', 'a');
+        file_put_contents($dir.'/b/index.twig', 'b');
+
+        try {
+            $loader = new FilesystemLoader([$dir.'/a']);
+            $twig = new Environment($loader, ['cache' => false]);
+
+            $this->assertSame('a', $twig->load('index.twig')->render([]));
+
+            // the loader now resolves the same name to another file
+            $loader->prependPath($dir.'/b');
+
+            $this->assertSame('b', $twig->load('index.twig')->render([]));
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
+    }
 }
 
 class EnvironmentTest_Extension_WithGlobals extends AbstractExtension

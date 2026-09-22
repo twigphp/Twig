@@ -72,6 +72,10 @@ class Environment
     private $useYield;
     private $defaultRuntimeLoader;
     private array $hotCache = [];
+    /**
+     * @var array<string, TemplateWrapper>
+     */
+    private array $loadedWrappers = [];
 
     /**
      * Constructor.
@@ -255,6 +259,7 @@ class Environment
     {
         $cls = $this->getTemplateClass($name);
         $this->hotCache[$name] = $cls.'_'.bin2hex(random_bytes(16));
+        unset($this->loadedWrappers[$cls]);
 
         if ($this->cache instanceof RemovableCacheInterface) {
             $this->cache->remove($name, $cls);
@@ -374,7 +379,9 @@ class Environment
             return $name;
         }
 
-        return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
+        $cls = $this->getTemplateClass($name);
+
+        return $this->loadedWrappers[$cls] ??= new TemplateWrapper($this, $this->loadTemplate($cls, $name));
     }
 
     /**
