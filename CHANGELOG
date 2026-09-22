@@ -1,5 +1,6 @@
 # 3.30.0 (2026-XX-XX)
 
+ * Fix the escaping safe analysis retaining every compiled template node for the lifetime of the environment
  * Fix `IntlExtension` letting the pattern derived from a date formatter prototype override an explicit locale
  * Fix `IntlExtension` not honoring the locale of a date formatter prototype configured with no date and time styles
  * Speed up macro calls

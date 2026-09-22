@@ -29,8 +29,16 @@ use Twig\Node\Node;
  */
 final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
 {
-    private $data = [];
+    /**
+     * @var \WeakMap<Node, array>
+     */
+    private \WeakMap $data;
     private $safeVars = [];
+
+    public function __construct()
+    {
+        $this->data = new \WeakMap();
+    }
 
     public function setSafeVars(array $safeVars): void
     {
@@ -42,47 +50,23 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
      */
     public function getSafe(Node $node)
     {
-        $hash = spl_object_id($node);
-        if (!isset($this->data[$hash])) {
-            return [];
+        $safe = $this->data[$node] ?? [];
+
+        if (\in_array('html_attr', $safe, true)) {
+            $safe[] = 'html';
+            $safe[] = 'html_attr_relaxed';
         }
 
-        foreach ($this->data[$hash] as $bucket) {
-            if ($bucket['key'] !== $node) {
-                continue;
-            }
-
-            if (\in_array('html_attr', $bucket['value'], true)) {
-                $bucket['value'][] = 'html';
-                $bucket['value'][] = 'html_attr_relaxed';
-            }
-
-            if (\in_array('html_attr_relaxed', $bucket['value'], true)) {
-                $bucket['value'][] = 'html';
-            }
-
-            return $bucket['value'];
+        if (\in_array('html_attr_relaxed', $safe, true)) {
+            $safe[] = 'html';
         }
 
-        return [];
+        return $safe;
     }
 
     private function setSafe(Node $node, array $safe): void
     {
-        $hash = spl_object_id($node);
-        if (isset($this->data[$hash])) {
-            foreach ($this->data[$hash] as &$bucket) {
-                if ($bucket['key'] === $node) {
-                    $bucket['value'] = $safe;
-
-                    return;
-                }
-            }
-        }
-        $this->data[$hash][] = [
-            'key' => $node,
-            'value' => $safe,
-        ];
+        $this->data[$node] = $safe;
     }
 
     public function enterNode(Node $node, Environment $env): Node
