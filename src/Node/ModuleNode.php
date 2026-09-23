@@ -12,7 +12,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -27,7 +26,6 @@ use Twig\Source;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 final class ModuleNode extends Node implements CoercesChildrenToStringInterface
 {
     public function __construct(BodyNode $body, ?AbstractExpression $parent, Node $blocks, MacrosNode $macros, Node $traits, Node $embeddedTemplates, Source $source)

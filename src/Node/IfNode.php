@@ -12,7 +12,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\Test\TrueTest;
@@ -22,7 +21,6 @@ use Twig\Node\Expression\Test\TrueTest;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 class IfNode extends Node
 {
     public function __construct(Node $tests, ?Node $else, int $lineno)

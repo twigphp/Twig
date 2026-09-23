@@ -78,7 +78,7 @@ protected function loadDeclaredMacros(): array
         }, ["foo" => true], false),
     ];
 }
-EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
+EOF, new Environment(new ArrayLoader()),
         ];
     }
 }

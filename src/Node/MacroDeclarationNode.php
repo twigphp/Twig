@@ -11,8 +11,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
-
 /**
  * Represents the occurrence of a macro declaration in a template body.
  *
@@ -22,7 +20,6 @@ use Twig\Attribute\YieldReady;
  *
  * @internal
  */
-#[YieldReady]
 final class MacroDeclarationNode extends ConfigNode
 {
     public function __construct(string $name, int $lineno)

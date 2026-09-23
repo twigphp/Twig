@@ -26,8 +26,6 @@ class Compiler
     private int $sourceOffset;
     private int $sourceLine;
     private int $varNameSalt;
-    private string|false $didUseEcho = false;
-    private array $didUseEchoStack = [];
 
     public function __construct(
         private Environment $env,
@@ -68,20 +66,9 @@ class Compiler
     public function compile(Node $node, int $indentation = 0)
     {
         $this->reset($indentation);
-        $this->didUseEchoStack[] = $this->didUseEcho;
+        $node->compile($this);
 
-        try {
-            $this->didUseEcho = false;
-            $node->compile($this);
-
-            if ($this->didUseEcho) {
-                throw new \LogicException(\sprintf('Using "%s" is not supported; use "yield" instead in "%s".', $this->didUseEcho, $node::class));
-            }
-
-            return $this;
-        } finally {
-            $this->didUseEcho = array_pop($this->didUseEchoStack);
-        }
+        return $this;
     }
 
     /**
@@ -93,20 +80,9 @@ class Compiler
             $this->source .= str_repeat(' ', $this->indentation * 4);
         }
 
-        $this->didUseEchoStack[] = $this->didUseEcho;
+        $node->compile($this);
 
-        try {
-            $this->didUseEcho = false;
-            $node->compile($this);
-
-            if ($this->didUseEcho) {
-                throw new \LogicException(\sprintf('Using "%s" is not supported; use "yield" instead in "%s".', $this->didUseEcho, $node::class));
-            }
-
-            return $this;
-        } finally {
-            $this->didUseEcho = array_pop($this->didUseEchoStack);
-        }
+        return $this;
     }
 
     /**
@@ -116,7 +92,6 @@ class Compiler
      */
     public function raw(string $string)
     {
-        $this->checkForEcho($string);
         $this->source .= $string;
 
         return $this;
@@ -130,7 +105,6 @@ class Compiler
     public function write(...$strings)
     {
         foreach ($strings as $string) {
-            $this->checkForEcho($string);
             $this->source .= str_repeat(' ', $this->indentation * 4).$string;
         }
 
@@ -251,14 +225,5 @@ class Compiler
     public function getVarName(): string
     {
         return \sprintf('_v%d', $this->varNameSalt++);
-    }
-
-    private function checkForEcho(string $string): void
-    {
-        if ($this->didUseEcho) {
-            return;
-        }
-
-        $this->didUseEcho = preg_match('/^\s*+(echo|print)\b/', $string, $m) ? $m[1] : false;
     }
 }

@@ -11,14 +11,11 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
-
 /**
  * Represents a type declaration node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 final class TypeNode extends Node
 {
     /**

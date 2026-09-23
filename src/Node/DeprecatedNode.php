@@ -11,7 +11,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -21,7 +20,6 @@ use Twig\Node\Expression\ConstantExpression;
  *
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
-#[YieldReady]
 class DeprecatedNode extends Node implements CoercesChildrenToStringInterface
 {
     public function __construct(AbstractExpression $expr, int $lineno)

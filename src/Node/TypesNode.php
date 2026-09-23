@@ -11,7 +11,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 
 /**
@@ -19,7 +18,6 @@ use Twig\Compiler;
  *
  * @author Jeroen Versteeg <jeroen@alisqi.com>
  */
-#[YieldReady]
 class TypesNode extends Node
 {
     /**

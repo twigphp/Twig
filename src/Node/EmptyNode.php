@@ -11,14 +11,11 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
-
 /**
  * Represents an empty node.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 final class EmptyNode extends Node
 {
     public function __construct(int $lineno = 0)

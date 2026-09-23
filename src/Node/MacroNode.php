@@ -11,7 +11,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
@@ -23,7 +22,6 @@ use Twig\TwigMacro;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 final class MacroNode extends Node
 {
     private const RESERVED_NAME_PREFIX = "\u{035C}";

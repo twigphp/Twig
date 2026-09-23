@@ -11,14 +11,11 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
-
 /**
  * Represents a list of nodes.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-#[YieldReady]
 final class Nodes extends Node
 {
     public function __construct(array $nodes = [], int $lineno = 0)

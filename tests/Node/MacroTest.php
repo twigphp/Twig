@@ -62,7 +62,7 @@ class MacroTest extends NodeTestCase
 
     public static function provideTests(): iterable
     {
-        yield 'with use_yield = true' => [self::createNode(), <<<EOF
+        yield [self::createNode(), <<<EOF
 new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null): string|Markup {
     // line 1
     \$macros = \$this->macros;
@@ -79,27 +79,7 @@ new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscor
         yield from [];
     })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }, ["foo" => true, "bar" => true, "_underscore" => true], false)
-EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
-        ];
-
-        yield 'with use_yield = false' => [self::createNode(), <<<EOF
-new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscore = null): string|Markup {
-    // line 1
-    \$macros = \$this->macros;
-    \$context = [
-        "foo" => \$foo,
-        "bar" => \$bar,
-        "_underscore" => \$_underscore,
-    ] + \$this->env->getGlobals();
-
-    \$blocks = [];
-
-    return ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
-        yield "foo";
-        yield from [];
-    })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
-}, ["foo" => true, "bar" => true, "_underscore" => true], false)
-EOF, new Environment(new ArrayLoader(), ['use_yield' => false]),
+EOF, new Environment(new ArrayLoader()),
         ];
     }
 }

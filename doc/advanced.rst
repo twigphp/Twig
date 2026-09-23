@@ -168,8 +168,8 @@ For instance, the following code:
 
 is compiled to something like the following::
 
-    <?php echo strtolower('TWIG') ?>
-    <?php echo twig_date_format_filter($now, 'd/m/Y') ?>
+    yield \Twig\Extension\CoreExtension::lower($this->env->getCharset(), 'TWIG');
+    yield $this->extensions['Twig\Extension\CoreExtension']->formatDate($now, 'd/m/Y');
 
 The ``\Twig\TwigFilter`` class takes an array of options as its last argument::
 

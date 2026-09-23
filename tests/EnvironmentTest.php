@@ -25,7 +25,6 @@ use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use Twig\ExpressionParser\Infix\BinaryOperatorExpressionParser;
 use Twig\ExpressionParser\InfixExpressionParserInterface;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
@@ -483,19 +482,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('dynamic', $parser->getTag());
     }
 
-    public function testLegacyEchoingNode(): void
-    {
-        $loader = new ArrayLoader(['echo_bar' => 'A{% set v %}B{% test %}C{% endset %}D{% test %}E{{ v }}F{% set w %}{% test %}{% endset %}G{{ w }}H']);
-
-        $twig = new Environment($loader);
-        $twig->addExtension(new EnvironmentTest_Extension());
-
-        $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage('An exception has been thrown during the compilation of a template ("Using "echo" is not supported; use "yield" instead in "Twig\Tests\EnvironmentTest_LegacyEchoingNode".") in "echo_bar".');
-
-        $this->assertSame('ADbarEBbarCFGbarH', $twig->render('echo_bar'));
-    }
-
     protected function getMockLoader($templateName, $templateContent)
     {
         $loader = $this->createMock(LoaderInterface::class);
@@ -712,7 +698,7 @@ class EnvironmentTest_TokenParser extends AbstractTokenParser
     {
         $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
-        return new EnvironmentTest_LegacyEchoingNode([], [], 1);
+        return new EnvironmentTest_Node([], [], 1);
     }
 
     public function getTag(): string
@@ -758,13 +744,13 @@ class EnvironmentTest_Runtime
     }
 }
 
-class EnvironmentTest_LegacyEchoingNode extends Node
+class EnvironmentTest_Node extends Node
 {
     public function compile($compiler): void
     {
         $compiler
             ->addDebugInfo($this)
-            ->write('echo "bar";')
+            ->write('yield "bar";')
         ;
     }
 }

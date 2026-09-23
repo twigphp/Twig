@@ -1,5 +1,5 @@
 --TEST--
-When use_yield is true, CaptureNode fall in iterator_to_array pitfall regarding index overwrite
+CaptureNode does not fall in the iterator_to_array pitfall regarding index overwrite
 --TEMPLATE--
 {%- set tmp -%}
   {%- block foo 'foo' -%}
@@ -8,7 +8,5 @@ When use_yield is true, CaptureNode fall in iterator_to_array pitfall regarding 
 {{ tmp }}
 --DATA--
 return []
---CONFIG--
-return ['use_yield' => true]
 --EXPECT--
 foobar

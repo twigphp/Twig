@@ -12,7 +12,6 @@
 
 namespace Twig\Node;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Source;
 
@@ -23,7 +22,6 @@ use Twig\Source;
  *
  * @implements \IteratorAggregate<int|string, Node>
  */
-#[YieldReady]
 abstract class Node implements \Countable, \IteratorAggregate
 {
     /**
