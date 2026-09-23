@@ -283,4 +283,134 @@ class IntlExtensionTest extends TestCase
 
         (new IntlExtension())->formatList($strings, locale: 'en');
     }
+
+    public function testSortLocalized(): void
+    {
+        // a byte comparison gives "Boxe, Yoga, athlétisme, judo, Échecs, équitation"
+        $this->assertSame(
+            ['athlétisme', 'Boxe', 'Échecs', 'équitation', 'judo', 'Yoga'],
+            array_values((new IntlExtension())->sortLocalized(['Yoga', 'équitation', 'Boxe', 'athlétisme', 'Échecs', 'judo'], locale: 'fr'))
+        );
+    }
+
+    public function testSortLocalizedDependsOnTheLocale(): void
+    {
+        $ext = new IntlExtension();
+
+        // Czech sorts "ch" after "h"
+        $this->assertSame(['hrad', 'chata', 'ideal'], array_values($ext->sortLocalized(['ideal', 'chata', 'hrad'], locale: 'cs')));
+        $this->assertSame(['chata', 'hrad', 'ideal'], array_values($ext->sortLocalized(['ideal', 'chata', 'hrad'], locale: 'en')));
+
+        // German sorts "Ö" with "O", Swedish after "Z"
+        $this->assertSame(['Öl', 'Ost', 'Zoo'], array_values($ext->sortLocalized(['Zoo', 'Öl', 'Ost'], locale: 'de')));
+        $this->assertSame(['Ost', 'Zoo', 'Öl'], array_values($ext->sortLocalized(['Zoo', 'Öl', 'Ost'], locale: 'sv')));
+    }
+
+    public function testSortLocalizedUsesTheDefaultLocale(): void
+    {
+        $default = \Locale::getDefault();
+        \Locale::setDefault('cs');
+
+        try {
+            $this->assertSame(['hrad', 'chata', 'ideal'], array_values((new IntlExtension())->sortLocalized(['ideal', 'chata', 'hrad'])));
+        } finally {
+            \Locale::setDefault($default);
+        }
+    }
+
+    public function testSortLocalizedKeepsTheKeys(): void
+    {
+        $this->assertSame(
+            ['h' => 'hrad', 'ch' => 'chata', 'i' => 'ideal'],
+            (new IntlExtension())->sortLocalized(['i' => 'ideal', 'ch' => 'chata', 'h' => 'hrad'], locale: 'cs')
+        );
+    }
+
+    public function testSortLocalizedComparesScalarsAsStrings(): void
+    {
+        $this->assertSame(
+            [3 => null, 0 => 10, 2 => 2, 1 => 'b'],
+            (new IntlExtension())->sortLocalized([10, 'b', 2, null], locale: 'en')
+        );
+    }
+
+    public function testSortLocalizedWithATraversable(): void
+    {
+        $words = static function (): \Generator {
+            yield 'z' => 'Zoo';
+            yield 'ö' => 'Öl';
+            yield 'o' => 'Ost';
+        };
+
+        $this->assertSame(['o' => 'Ost', 'z' => 'Zoo', 'ö' => 'Öl'], (new IntlExtension())->sortLocalized($words(), locale: 'sv'));
+    }
+
+    public function testSortLocalizedWithAnEmptySequence(): void
+    {
+        $this->assertSame([], (new IntlExtension())->sortLocalized([], locale: 'fr'));
+    }
+
+    public function testSortLocalizedWithAnArrow(): void
+    {
+        $sports = [
+            ['name' => 'Yoga'],
+            ['name' => 'Échecs'],
+            ['name' => 'Boxe'],
+        ];
+
+        $this->assertSame(
+            ['Boxe', 'Échecs', 'Yoga'],
+            array_column((new IntlExtension())->sortLocalized($sports, static fn (array $sport) => $sport['name'], 'fr'), 'name')
+        );
+    }
+
+    public function testSortLocalizedIsStable(): void
+    {
+        $people = [];
+        for ($i = 0; $i < 40; ++$i) {
+            $people[] = ['id' => $i, 'name' => 0 === $i % 2 ? 'Éric' : 'Benoît'];
+        }
+
+        $sorted = (new IntlExtension())->sortLocalized($people, static fn (array $person) => $person['name'], 'fr');
+
+        $this->assertSame(
+            array_merge(range(1, 39, 2), range(0, 38, 2)),
+            array_column($sorted, 'id')
+        );
+    }
+
+    public function testSortLocalizedWithValuesThatAreNotStrings(): void
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The "sort_localized" filter cannot sort "stdClass" values; pass an arrow function returning the string to sort each item on.');
+
+        (new IntlExtension())->sortLocalized([new \stdClass()], locale: 'fr');
+    }
+
+    public function testSortLocalizedWithSomethingThatIsNotASequenceOrAMapping(): void
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The "sort_localized" filter expects a sequence or a mapping, got "string".');
+
+        (new IntlExtension())->sortLocalized('Yoga', locale: 'fr');
+    }
+
+    public function testSortLocalizedWithInvalidUtf8(): void
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Unable to sort the given values: "');
+
+        (new IntlExtension())->sortLocalized(["\xff"], locale: 'fr');
+    }
+
+    public function testCollatorCacheIsBounded(): void
+    {
+        $ext = new IntlExtension();
+
+        for ($i = 0; $i < 250; ++$i) {
+            $ext->sortLocalized(['b', 'a'], locale: 'en_US@x='.$i);
+        }
+
+        $this->assertLessThanOrEqual(100, \count((new \ReflectionProperty(IntlExtension::class, 'collators'))->getValue($ext)));
+    }
 }
