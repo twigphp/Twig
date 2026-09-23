@@ -1,0 +1,13 @@
+--TEST--
+"date" filter with relative dates and timezone
+--TEMPLATE--
+{{ "today"|date('e', 'Australia/Sydney') }}
+{{ "today"|date('e', 'Europe/Paris') }}
+{{ "today"|date('e', 'UTC') }}
+--DATA--
+date_default_timezone_set('UTC');
+return []
+--EXPECT--
+Australia/Sydney
+Europe/Paris
+UTC
