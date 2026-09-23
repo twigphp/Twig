@@ -1,0 +1,14 @@
+--TEST--
+"sort_localized" filter
+--TEMPLATE--
+{{ ['Yoga', 'équitation', 'Boxe', 'athlétisme', 'Échecs', 'judo']|sort_localized(locale: 'fr')|join(', ') }}
+{{ {i: 'ideal', ch: 'chata', h: 'hrad'}|sort_localized(locale: 'cs')|keys|join(', ') }}
+{{ words|sort_localized(word => word.label, 'sv')|column('label')|join(', ') }}
+{{ words|sort_localized(word => word.label, 'de')|column('label')|join(', ') }}
+--DATA--
+return ['words' => [['label' => 'Zoo'], ['label' => 'Öl'], ['label' => 'Ost']]]
+--EXPECT--
+athlétisme, Boxe, Échecs, équitation, judo, Yoga
+h, ch, i
+Ost, Zoo, Öl
+Öl, Ost, Zoo
