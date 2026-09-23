@@ -1,5 +1,6 @@
 # 3.30.0 (2026-XX-XX)
 
+ * Add the `sort_localized` filter to `twig/intl-extra` to sort values in the alphabetical order of a locale
  * Speed up adding extensions to an environment
  * Fix the escaping safe analysis retaining every compiled template node for the lifetime of the environment
  * Speed up loading a template that the environment has already loaded
