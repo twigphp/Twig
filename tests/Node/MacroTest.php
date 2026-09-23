@@ -77,7 +77,7 @@ new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscor
 
     return ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
         yield "foo";
-        yield from [];
+        return; yield;
     })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }, ["foo" => true, "bar" => true, "_underscore" => true], false)
 EOF, new Environment(new ArrayLoader(), ['use_yield' => true]),
@@ -98,7 +98,7 @@ new \\Twig\\TwigMacro("foo", function (\$foo = null, \$bar = "Foo", \$_underscor
 
     return ('' === \$tmp = \\Twig\\Extension\\CoreExtension::captureOutput((function () use (&\$context, \$macros, \$blocks) {
         yield "foo";
-        yield from [];
+        return; yield;
     })())) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 }, ["foo" => true, "bar" => true, "_underscore" => true], false)
 EOF, new Environment(new ArrayLoader(), ['use_yield' => false]),
