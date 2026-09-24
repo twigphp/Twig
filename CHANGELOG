@@ -1,5 +1,6 @@
 # 3.30.0 (2026-XX-XX)
 
+ * Speed up adding extensions to an environment
  * Fix the escaping safe analysis retaining every compiled template node for the lifetime of the environment
  * Speed up loading a template that the environment has already loaded
  * Speed up rendering by compiling a cheaper generator guard into templates
