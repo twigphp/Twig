@@ -169,7 +169,7 @@ class Environment
     public function enableDebug()
     {
         $this->debug = true;
-        $this->updateOptionsHash();
+        $this->optionsHash = null;
     }
 
     /**
@@ -180,7 +180,7 @@ class Environment
     public function disableDebug()
     {
         $this->debug = false;
-        $this->updateOptionsHash();
+        $this->optionsHash = null;
     }
 
     /**
@@ -231,7 +231,7 @@ class Environment
     public function enableStrictVariables()
     {
         $this->strictVariables = true;
-        $this->updateOptionsHash();
+        $this->optionsHash = null;
     }
 
     /**
@@ -242,7 +242,7 @@ class Environment
     public function disableStrictVariables()
     {
         $this->strictVariables = false;
-        $this->updateOptionsHash();
+        $this->optionsHash = null;
     }
 
     /**
@@ -324,7 +324,7 @@ class Environment
      */
     public function getTemplateClass(string $name, ?int $index = null): string
     {
-        $key = ($this->hotCache[$name] ?? $this->getLoader()->getCacheKey($name)).$this->optionsHash;
+        $key = ($this->hotCache[$name] ?? $this->getLoader()->getCacheKey($name)).($this->optionsHash ??= $this->getOptionsHash());
 
         return '__TwigTemplate_'.hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $key).(null === $index ? '' : '___'.$index);
     }
@@ -701,7 +701,7 @@ class Environment
     public function addExtension(ExtensionInterface $extension)
     {
         $this->extensionSet->addExtension($extension);
-        $this->updateOptionsHash();
+        $this->optionsHash = null;
     }
 
     /**
@@ -712,7 +712,7 @@ class Environment
     public function setExtensions(array $extensions)
     {
         $this->extensionSet->setExtensions($extensions);
-        $this->updateOptionsHash();
+        $this->optionsHash = null;
     }
 
     /**
@@ -952,9 +952,9 @@ class Environment
         return $this->extensionSet->getExpressionParsers();
     }
 
-    private function updateOptionsHash(): void
+    private function getOptionsHash(): string
     {
-        $this->optionsHash = implode(':', [
+        return implode(':', [
             $this->extensionSet->getSignature(),
             \PHP_MAJOR_VERSION,
             \PHP_MINOR_VERSION,
