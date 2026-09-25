@@ -186,7 +186,10 @@ final class IntlExtension extends AbstractExtension
     private $listFormatters = [];
     private $dateFormatterPrototype;
     private $numberFormatterPrototype;
-    private array $prototypeDerivedPatterns = [];
+    /**
+     * @var array<string, string>
+     */
+    private array $prototypePatterns = [];
 
     public function __construct(?\IntlDateFormatter $dateFormatterPrototype = null, ?\NumberFormatter $numberFormatterPrototype = null)
     {
@@ -552,11 +555,19 @@ final class IntlExtension extends AbstractExtension
     private function prototypePattern(): string
     {
         $pattern = $this->dateFormatterPrototype->getPattern();
+        if (!\is_string($pattern) || '' === $pattern) {
+            return '';
+        }
+
+        return $this->prototypePatterns[$pattern] ??= $pattern === $this->derivedPrototypePattern() ? '' : $pattern;
+    }
+
+    private function derivedPrototypePattern(): ?string
+    {
         $dateType = $this->dateFormatterPrototype->getDateType();
         $timeType = $this->dateFormatterPrototype->getTimeType();
-
-        if (!\is_string($pattern) || '' === $pattern || false === $dateType || false === $timeType) {
-            return \is_string($pattern) ? $pattern : '';
+        if (false === $dateType || false === $timeType) {
+            return null;
         }
 
         $locale = $this->prototypeLocale() ?: \Locale::getDefault();
@@ -566,10 +577,9 @@ final class IntlExtension extends AbstractExtension
             $locale .= '@calendar='.$calendar->getType();
         }
 
-        $key = $locale.'|'.$dateType.'|'.$timeType;
-        $this->prototypeDerivedPatterns[$key] ??= (new \IntlDateFormatter($locale, $dateType, $timeType))->getPattern();
+        $pattern = (new \IntlDateFormatter($locale, $dateType, $timeType))->getPattern();
 
-        return $pattern === $this->prototypeDerivedPatterns[$key] ? '' : $pattern;
+        return \is_string($pattern) ? $pattern : null;
     }
 
     private function createNumberFormatter(?string $locale, string $style, array $attrs = []): \NumberFormatter
