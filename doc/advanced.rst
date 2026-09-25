@@ -846,7 +846,7 @@ The ``getTests()`` method lets you add new test functions::
         public function getTests()
         {
             return [
-                new \Twig\TwigTest('even', 'twig_test_even'),
+                new \Twig\TwigTest('even', fn (int $value): bool => 0 === $value % 2),
             ];
         }
 
