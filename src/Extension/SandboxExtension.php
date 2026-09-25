@@ -21,7 +21,7 @@ use Twig\Source;
  * This extension is the wiring behind "Twig\Sandbox\Sandbox" and should not
  * be used directly, use a "Sandbox" to render untrusted templates instead.
  *
- * @internal since Twig 3.29
+ * @internal
  */
 final class SandboxExtension extends AbstractExtension
 {
