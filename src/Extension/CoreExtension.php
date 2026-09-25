@@ -1867,7 +1867,7 @@ final class CoreExtension extends AbstractExtension
             static $propertyCheckers = [];
 
             if (isset($object->$item)
-                || ($propertyCheckers[$object::class][$item] ??= self::getPropertyChecker($object::class, $item))($object, $item)
+                || (($propertyChecker = $propertyCheckers[$object::class][$item] ??= self::getPropertyChecker($object::class, $item)) && $propertyChecker($object, $item))
             ) {
                 if ($isDefinedTest) {
                     return true;
@@ -1884,7 +1884,9 @@ final class CoreExtension extends AbstractExtension
                 return ((array) $object)[$item];
             }
 
-            if (\defined($object::class.'::'.$item)) {
+            static $constants = [];
+
+            if ($constants[$object::class][$item] ??= \defined($object::class.'::'.$item)) {
                 if ($isDefinedTest) {
                     return true;
                 }
@@ -2266,7 +2268,7 @@ final class CoreExtension extends AbstractExtension
         return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
     }
 
-    private static function getPropertyChecker(string $class, string $property): \Closure
+    private static function getPropertyChecker(string $class, string $property): \Closure|false
     {
         static $classReflectors = [];
 
@@ -2281,9 +2283,7 @@ final class CoreExtension extends AbstractExtension
         $property = $class->getProperty($property);
 
         if (!$property->isPublic() || $property->isStatic()) {
-            static $false;
-
-            return $false ??= static fn () => false;
+            return false;
         }
 
         return static fn ($object) => $property->isInitialized($object);
