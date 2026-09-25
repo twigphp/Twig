@@ -1,6 +1,7 @@
 # 3.30.1 (2026-XX-XX)
 
  * Reject a deprecated `Template` instance created by another environment in `Environment::resolveTemplate()`
+ * Fix a compilation error inside an `autoescape` tag leaking its escaping strategy into the next compiled template
  * Speed up reading object attributes backed by getters or class constants
  * Fix the sandbox not reporting the line of a rejected `guard` tag
 
