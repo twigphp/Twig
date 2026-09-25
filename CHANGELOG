@@ -1,4 +1,4 @@
-# 3.30.0 (2026-XX-XX)
+# 3.30.0 (2026-09-25)
 
  * Fix `split`, `random`, and `shuffle` merging a trailing newline into the last character of a string
  * Speed up splitting a string into characters in `split`, `random`, and `shuffle`
