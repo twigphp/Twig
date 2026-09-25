@@ -10,6 +10,7 @@
  * Fix sandbox `__toString()` policy bypasses through spread arguments
  * Fix the `html_to_markdown` filter keeping an unbounded number of converters in memory
  * Fix compiled template cache collisions for resolved autoescaping strategies and sandbox always-allowed registrations
+ * Fix the `cache` tag calling `__toString()` on its key and tags without checking the sandbox policy
 
 # 3.31.0 (2026-11-23)
 

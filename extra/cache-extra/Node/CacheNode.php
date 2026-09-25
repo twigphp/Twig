@@ -13,10 +13,11 @@ namespace Twig\Extra\Cache\Node;
 
 use Twig\Compiler;
 use Twig\Node\CaptureNode;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
 
-class CacheNode extends AbstractExpression
+class CacheNode extends AbstractExpression implements CoercesChildrenToStringInterface
 {
     public function __construct(AbstractExpression $key, ?AbstractExpression $ttl, ?AbstractExpression $tags, Node $body, int $lineno)
     {
@@ -32,6 +33,11 @@ class CacheNode extends AbstractExpression
         }
 
         parent::__construct($nodes, [], $lineno);
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        return $this->hasNode('tags') ? ['key', 'tags'] : ['key'];
     }
 
     public function compile(Compiler $compiler): void
