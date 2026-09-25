@@ -50,7 +50,7 @@ final class MacroNamespace
             return $macro->call($arguments, $source, $line);
         }
 
-        if (null === $macro = $this->resolve($name, $context)) {
+        if (null === $macro = $this->getParent($context)?->resolve($name, $context)) {
             throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', $name, $this->template->getTemplateName()), $line, $source);
         }
 

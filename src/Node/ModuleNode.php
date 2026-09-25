@@ -50,6 +50,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
             'index' => null,
             'embedded_templates' => $embeddedTemplates,
             'strategy' => false,
+            'escaper' => false,
         ], 1);
 
         // populate the template name of all node children
@@ -177,8 +178,14 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
             ->write("/**\n")
             ->write(" * @var array<string, MacroNamespace>\n")
             ->write(" */\n")
-            ->write("private array \$macros = [];\n\n")
+            ->write("private array \$macros = [];\n")
         ;
+
+        if ($this->getAttribute('escaper')) {
+            $compiler->write("private \\Twig\\Runtime\\EscaperRuntime \$escaper;\n");
+        }
+
+        $compiler->raw("\n");
     }
 
     protected function compileConstructor(Compiler $compiler): void
@@ -190,6 +197,10 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
             ->write("parent::__construct(\$env);\n\n")
             ->write("\$this->source = \$this->getSourceContext();\n\n")
         ;
+
+        if ($this->getAttribute('escaper')) {
+            $compiler->write("\$this->escaper = \$env->getRuntime('Twig\\Runtime\\EscaperRuntime');\n\n");
+        }
 
         // parent
         if (!$this->hasNode('parent')) {
@@ -355,7 +366,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         $compiler->subcompile($this->getNode('display_end'));
 
         if (!$this->hasNode('parent')) {
-            $compiler->write("yield from [];\n");
+            $compiler->write("return; yield;\n");
         }
 
         $compiler

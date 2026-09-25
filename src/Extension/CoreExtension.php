@@ -1236,19 +1236,19 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * Unicode version of str_split(): splits at every position except after the start and before the end.
+     * Unicode version of str_split(), an empty string giving a single empty character.
      *
-     * @return list<string>
+     * @return non-empty-list<string>
      *
      * @throws RuntimeError When the string cannot be split into characters
      */
     private static function splitIntoCharacters(string $string, string $name): array
     {
-        if (false === $characters = preg_split('/(?<!^)(?!$)/u', $string)) {
+        if (false === preg_match_all('/./us', $string, $matches)) {
             throw new RuntimeError(\sprintf('Unable to split the string passed to "%s" into characters: %s.', $name, preg_last_error_msg()));
         }
 
-        return $characters;
+        return $matches[0] ?: [''];
     }
 
     /**
@@ -1785,7 +1785,7 @@ final class CoreExtension extends AbstractExtension
             static $propertyCheckers = [];
 
             if (isset($object->$item)
-                || ($propertyCheckers[$object::class][$item] ??= self::getPropertyChecker($object::class, $item))($object, $item)
+                || (($propertyChecker = $propertyCheckers[$object::class][$item] ??= self::getPropertyChecker($object::class, $item)) && $propertyChecker($object, $item))
             ) {
                 if ($isDefinedTest) {
                     return true;
@@ -1802,7 +1802,9 @@ final class CoreExtension extends AbstractExtension
                 return ((array) $object)[$item];
             }
 
-            if (\defined($object::class.'::'.$item)) {
+            static $constants = [];
+
+            if ($constants[$object::class][$item] ??= \defined($object::class.'::'.$item)) {
                 if ($isDefinedTest) {
                     return true;
                 }
@@ -2139,7 +2141,7 @@ final class CoreExtension extends AbstractExtension
         return $expr;
     }
 
-    private static function getPropertyChecker(string $class, string $property): \Closure
+    private static function getPropertyChecker(string $class, string $property): \Closure|false
     {
         static $classReflectors = [];
 
@@ -2154,9 +2156,7 @@ final class CoreExtension extends AbstractExtension
         $property = $class->getProperty($property);
 
         if (!$property->isPublic() || $property->isStatic()) {
-            static $false;
-
-            return $false ??= static fn () => false;
+            return false;
         }
 
         return static fn ($object) => $property->isInitialized($object);

@@ -86,7 +86,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     }
     unset(\$context['key'], \$context['item']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
-    yield from [];
+    return; yield;
 })(\$_v0, \$context, \$blocks, \$_v1, 0);
 EOF
         ];
@@ -111,7 +111,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
-    yield from [];
+    return; yield;
 })(\$_v0, \$context, \$blocks, \$_v1, 0);
 EOF
         ];
@@ -136,7 +136,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
-    yield from [];
+    return; yield;
 })(\$_v0, \$context, \$blocks, \$_v1, 0);
 EOF
         ];
@@ -169,7 +169,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     }
     unset(\$context['k'], \$context['v'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
-    yield from [];
+    return; yield;
 })(\$_v0, \$context, \$blocks, \$_v1, 0);
 EOF
         ];
@@ -190,7 +190,7 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     }
     unset(\$context['_key'], \$context['item'], \$context['loop']);
     \$context = array_intersect_key(\$context, \$parent) + \$parent;
-    yield from [];
+    return; yield;
 })(\$_v0, \$context, \$blocks, \$_v1, 0);
 EOF, $env];
 

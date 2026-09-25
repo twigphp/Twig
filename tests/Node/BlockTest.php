@@ -50,7 +50,7 @@ public function block_foo(array \$context, array \$blocks = []): iterable
 {
     \$macros = \$this->macros;
     yield "foo";
-    yield from [];
+    return; yield;
 }
 EOF, new Environment(new ArrayLoader()),
         ];
@@ -63,7 +63,7 @@ EOF, new Environment(new ArrayLoader()),
 public function block_foo(array \$context, array \$blocks = []): iterable
 {
     \$macros = \$this->macros;
-    yield from [];
+    return; yield;
 }
 EOF, new Environment(new ArrayLoader()),
         ];

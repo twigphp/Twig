@@ -80,7 +80,7 @@ final class TwigMacro
             return ($this->body)(...$arguments);
         }
 
-        // The keys are then exactly the declared names.
+        // Every declared argument is named: none can be missing, unknown, duplicated, or misordered.
         if (\count($arguments) === \count($this->arguments) && !array_diff_key($arguments, $this->argumentIndexes)) {
             return ($this->body)(...$this->renameArguments($arguments));
         }

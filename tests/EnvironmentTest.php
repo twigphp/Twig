@@ -627,6 +627,44 @@ class EnvironmentTest extends TestCase
             FilesystemHelper::removeDir($dir);
         }
     }
+
+    public function testTemplateClassFollowsExtensionsAddedAfterItWasComputed(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '']));
+        $cls = $twig->getTemplateClass('index');
+
+        $twig->addExtension(new EnvironmentTest_Extension_WithGlobals());
+        $this->assertNotSame($cls, $cls = $twig->getTemplateClass('index'));
+
+        $twig->setExtensions([new EnvironmentTest_ExtensionWithoutRuntime()]);
+        $this->assertNotSame($cls, $cls = $twig->getTemplateClass('index'));
+
+        $other = new Environment(new ArrayLoader(['index' => '']));
+        $other->setExtensions([new EnvironmentTest_Extension_WithGlobals(), new EnvironmentTest_ExtensionWithoutRuntime()]);
+        $this->assertSame($cls, $other->getTemplateClass('index'));
+    }
+
+    public function testTemplateClassFollowsDebugAndStrictVariablesChanges(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '']));
+        $cls = $twig->getTemplateClass('index');
+
+        $twig->enableDebug();
+        $debugCls = $twig->getTemplateClass('index');
+        $this->assertNotSame($cls, $debugCls);
+        $this->assertSame((new Environment(new ArrayLoader(['index' => '']), ['debug' => true]))->getTemplateClass('index'), $debugCls);
+
+        $twig->disableDebug();
+        $this->assertSame($cls, $twig->getTemplateClass('index'));
+
+        $twig->enableStrictVariables();
+        $strictCls = $twig->getTemplateClass('index');
+        $this->assertNotSame($cls, $strictCls);
+        $this->assertSame((new Environment(new ArrayLoader(['index' => '']), ['strict_variables' => true]))->getTemplateClass('index'), $strictCls);
+
+        $twig->disableStrictVariables();
+        $this->assertSame($cls, $twig->getTemplateClass('index'));
+    }
 }
 
 class EnvironmentTest_Extension_WithGlobals extends AbstractExtension

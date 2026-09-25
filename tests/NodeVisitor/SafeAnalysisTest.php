@@ -19,7 +19,7 @@ use Twig\Source;
 
 class SafeAnalysisTest extends TestCase
 {
-    public function testCompilingDoesNotRetainTheAst()
+    public function testCompilingDoesNotRetainTheAst(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => 'html']);
         $source = new Source('{{ "a"|upper }}{{ foo.bar }}{{ [1, 2]|join("-") }}{{ b ? "y" : "n" }}', 'index');

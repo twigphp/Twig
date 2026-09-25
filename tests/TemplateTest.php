@@ -698,6 +698,34 @@ class TemplateTest extends TestCase
         // 0 should be in the method cache now, so this should fail
         $this->assertNull(CoreExtension::getAttribute($twig, $template->getSourceContext(), $getIsObject, 0));
     }
+
+    public function testRepeatedObjectAttributeLookupsResolveConsistently(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
+        $source = new Source('', 'index.twig');
+        $object = new TemplateAttributeResolution();
+
+        for ($i = 0; $i < 2; ++$i) {
+            $this->assertSame('constant', CoreExtension::getAttribute($twig, $source, $object, 'NAME'));
+            $this->assertTrue(CoreExtension::getAttribute($twig, $source, $object, 'NAME', [], Template::ANY_CALL, true));
+            $this->assertSame('getter', CoreExtension::getAttribute($twig, $source, $object, 'hidden'));
+            $this->assertTrue(CoreExtension::getAttribute($twig, $source, $object, 'hidden', [], Template::ANY_CALL, true));
+            $this->assertFalse(CoreExtension::getAttribute($twig, $source, $object, 'secret', [], Template::ANY_CALL, true));
+        }
+    }
+}
+
+class TemplateAttributeResolution
+{
+    public const NAME = 'constant';
+
+    private $hidden = 'property';
+    private $secret = 'property';
+
+    public function getHidden()
+    {
+        return 'getter';
+    }
 }
 
 class TemplateForTest extends Template

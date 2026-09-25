@@ -73,7 +73,7 @@ protected function loadDeclaredMacros(): array
 
             return ('' === \$tmp = implode('', iterator_to_array((function () use (&\$context, \$macros, \$blocks) {
                 yield "foo";
-                yield from [];
+                return; yield;
             })(), false))) ? '' : new Markup(\$tmp, \$this->env->getCharset());
         }, ["foo" => true], false),
     ];

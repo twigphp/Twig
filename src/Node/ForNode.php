@@ -84,7 +84,7 @@ class ForNode extends Node
         $compiler->write("\$context = array_intersect_key(\$context, \$parent) + \$parent;\n");
 
         $compiler
-            ->write("yield from [];\n")
+            ->write("return; yield;\n")
             ->outdent()
             ->write("})(\$$iteratorVar, \$context, \$blocks, \$$functionVar, 0);\n")
         ;
