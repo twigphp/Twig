@@ -58,6 +58,7 @@ final class Extensions
                 'format_currency', 'format_number', 'format_decimal_number', 'format_currency_number',
                 'format_percent_number', 'format_scientific_number', 'format_spellout_number', 'format_ordinal_number',
                 'format_duration_number', 'format_date', 'format_datetime', 'format_time', 'format_list',
+                'sort_localized',
             ],
             'functions' => ['country_timezones', 'language_names', 'script_names', 'country_names',
                 'locale_names', 'currency_names', 'timezone_names',

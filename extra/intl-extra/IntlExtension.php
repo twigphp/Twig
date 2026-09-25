@@ -184,6 +184,7 @@ final class IntlExtension extends AbstractExtension
     private $dateFormatters = [];
     private $numberFormatters = [];
     private $listFormatters = [];
+    private array $collators = [];
     private $dateFormatterPrototype;
     private $numberFormatterPrototype;
     private array $prototypeDerivedPatterns = [];
@@ -213,6 +214,9 @@ final class IntlExtension extends AbstractExtension
             new TwigFilter('format_date', [$this, 'formatDate'], ['needs_environment' => true]),
             new TwigFilter('format_time', [$this, 'formatTime'], ['needs_environment' => true]),
             new TwigFilter('format_list', [$this, 'formatList']),
+
+            // localized sorting
+            new TwigFilter('sort_localized', [$this, 'sortLocalized']),
         ];
     }
 
@@ -460,6 +464,44 @@ final class IntlExtension extends AbstractExtension
         return $ret;
     }
 
+    /**
+     * Sorts a sequence or a mapping in the order of a locale, keeping the keys.
+     *
+     * @param array|\Traversable $values
+     * @param ?\Closure          $arrow  An arrow function returning the value to sort each item on
+     */
+    public function sortLocalized($values, ?\Closure $arrow = null, ?string $locale = null): array
+    {
+        if ($values instanceof \Traversable) {
+            $values = iterator_to_array($values);
+        } elseif (!\is_array($values)) {
+            throw new RuntimeError(\sprintf('The "sort_localized" filter expects a sequence or a mapping, got "%s".', get_debug_type($values)));
+        }
+
+        $collator = $this->createCollator($locale);
+
+        // sort keys are computed once per item and compare as binary strings;
+        // asort() is stable, unlike \Collator::asort()
+        $sortKeys = [];
+        foreach ($values as $key => $value) {
+            if (null !== $arrow) {
+                $value = $arrow($value);
+            }
+
+            if (null !== $value && !\is_scalar($value) && !$value instanceof \Stringable) {
+                throw new RuntimeError(\sprintf('The "sort_localized" filter cannot sort "%s" values; pass an arrow function returning the string to sort each item on.', get_debug_type($value)));
+            }
+
+            if (false === $sortKeys[$key] = $collator->getSortKey((string) $value)) {
+                throw new RuntimeError(\sprintf('Unable to sort the given values: "%s"', $collator->getErrorMessage()));
+            }
+        }
+
+        asort($sortKeys, \SORT_STRING);
+
+        return array_replace($sortKeys, $values);
+    }
+
     private function createDateFormatter(?string $locale, ?string $dateFormat, ?string $timeFormat, string $pattern, ?\DateTimeZone $timezone, ?string $calendar): \IntlDateFormatter
     {
         $dateFormats = self::availableDateFormats();
@@ -682,5 +724,21 @@ final class IntlExtension extends AbstractExtension
         }
 
         return $this->listFormatters[$hash];
+    }
+
+    private function createCollator(?string $locale): \Collator
+    {
+        if (null === $locale) {
+            $locale = \Locale::getDefault();
+        }
+
+        if (!isset($this->collators[$locale])) {
+            if (\count($this->collators) >= self::MAX_CACHED_FORMATTERS) {
+                array_shift($this->collators);
+            }
+            $this->collators[$locale] = new \Collator($locale);
+        }
+
+        return $this->collators[$locale];
     }
 }

@@ -57,6 +57,7 @@ Filters
     slice
     slug
     sort
+    sort_localized
     spaceless
     split
     striptags
