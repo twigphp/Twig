@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2026-09-25T10:44:12Z
+
+> Do you have benchmark results to share about that ?
+
+On a corpus of about 2,600 real templates from Shopware, Sylius, Mautic, Kimai, CoreShop, Symfony Demo and symfony.com, it's about -3% (warm render). On pages like the symfony.com releases chart page (with 73 escaped values), it's -6%.
