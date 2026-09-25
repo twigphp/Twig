@@ -32,7 +32,7 @@ final class SecurityChecker
     ) {
     }
 
-    public function isSandboxed(?Source $source = null): bool
+    public function isSandboxed(): bool
     {
         return $this->sandboxed;
     }
@@ -47,9 +47,9 @@ final class SecurityChecker
         return $this->policy;
     }
 
-    public function checkSecurity(array $tags, array $filters, array $functions, array $tests, ?Source $source): void
+    public function checkSecurity(array $tags, array $filters, array $functions, array $tests, Source $source): void
     {
-        if (!$this->isSandboxed($source)) {
+        if (!$this->isSandboxed()) {
             return;
         }
 
@@ -64,7 +64,7 @@ final class SecurityChecker
 
     public function checkMethodAllowed(mixed $obj, mixed $method, int $lineno = -1, ?Source $source = null): void
     {
-        if ($this->isSandboxed($source)) {
+        if ($this->isSandboxed()) {
             try {
                 $this->policy->checkMethodAllowed($obj, $method);
             } catch (SecurityNotAllowedMethodError $e) {
@@ -78,7 +78,7 @@ final class SecurityChecker
 
     public function checkPropertyAllowed(mixed $obj, mixed $property, int $lineno = -1, ?Source $source = null): void
     {
-        if ($this->isSandboxed($source)) {
+        if ($this->isSandboxed()) {
             try {
                 $this->policy->checkPropertyAllowed($obj, $property);
             } catch (SecurityNotAllowedPropertyError $e) {
@@ -124,7 +124,7 @@ final class SecurityChecker
             return $obj;
         }
 
-        if (!$this->isSandboxed($source)) {
+        if (!$this->isSandboxed()) {
             return $obj;
         }
 
