@@ -17,6 +17,11 @@
 {{ {"a": "w", "b": "x", "c": "y", "d": "z"}|join }}
 {{ {"a": "w", "b": "x", "c": "y", "d": "z"}|join(',') }}
 {{ {"a": "w", "b": "x", "c": "y", "d": "z"}|join(',','-') }}
+
+{{ "abc"|join(',') }}
+{{ 12|join(',', ' and ') }}
+{{ null|join(',') }}
+{{ false|join(',') }}
 --DATA--
 return ['foo' => new Twig\Tests\TwigTestFoo(), 'bar' => new \ArrayObject([3, 4])]
 --EXPECT--
@@ -36,3 +41,8 @@ hello
 wxyz
 w,x,y,z
 w,x,y-z
+
+abc
+12
+
+
