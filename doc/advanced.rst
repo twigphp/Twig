@@ -917,8 +917,8 @@ a runtime extension using one of the runtime loaders::
     }
 
     $twig = new \Twig\Environment($loader);
-    $twig->addExtension(new \Twig\Extension\AttributeExtension(ProjectExtension::class);
-    $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryLoader([
+    $twig->addExtension(new \Twig\Extension\AttributeExtension(ProjectExtension::class));
+    $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryRuntimeLoader([
         ProjectExtension::class => function () use ($lipsumProvider) {
             return new ProjectExtension($lipsumProvider);
         },
