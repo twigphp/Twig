@@ -362,6 +362,19 @@ Only allow operations whose behavior is safe for the objects you expose to
 sandboxed templates. If this is not guaranteed, convert objects to plain
 arrays or scalars before passing them in.
 
+The sandbox also relies on context values behaving consistently. Before an
+operation converts values to strings, the sandbox checks that the policy allows
+``__toString()`` on them; for an iterable passed to ``join``, for instance, it
+iterates the value and checks every element. The operation then iterates the
+value again, so the check only holds if both iterations produce the same
+elements. An object that produces different elements on each iteration (because
+it consumes a queue, re-runs a query, or reads from a stream) can give the
+operation elements the sandbox never checked. Such an object is an unsafe
+context value, not a sandbox vulnerability: Twig does not consider a policy
+bypass that depends on a context value changing between the sandbox check and
+its use to be a security issue. Convert such values to arrays before passing
+them to sandboxed templates.
+
 Limiting Resource Usage
 -----------------------
 
