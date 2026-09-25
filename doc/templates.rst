@@ -959,9 +959,6 @@ The following operators don't fit into any of the other categories:
       {{ user.('get' ~ name) }}
       {{ user?.(name) }}
 
-  Before Twig 3.15, use the :doc:`attribute <functions/attribute>` function
-  instead for the two previous use cases.
-
   Twig supports a specific syntax via the ``[]`` operator for accessing items
   on sequences and mappings:
 

@@ -159,7 +159,6 @@ class FilesystemLoader implements LoaderInterface
 
     public function isFresh(string $name, int $time): bool
     {
-        // false support to be removed in 3.0
         if (null === $path = $this->findTemplate($name)) {
             return false;
         }
