@@ -100,6 +100,22 @@ class EnvironmentTest extends TestCase
      * @group legacy
      */
     #[Group('legacy')]
+    public function testResolveTemplateRejectsTemplateFromAnotherEnvironment(): void
+    {
+        $foreign = new Environment(new ArrayLoader(['index' => 'foreign']));
+        $twig = new Environment(new ArrayLoader());
+
+        $this->expectDeprecation('Since twig/twig 3.9: Passing a "Twig\Template" instance to "Twig\Environment::resolveTemplate" is deprecated.');
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('A "Twig\Template" can only be used with the "Twig\Environment" that created it.');
+
+        $twig->resolveTemplate([$foreign->load('index')->unwrap($foreign)]);
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
     public function testCloningIsDeprecated(): void
     {
         $this->expectDeprecation('Since twig/twig 3.30: Cloning a "Twig\Environment" instance is deprecated and will throw in Twig 4.0; build a new environment instead.');
