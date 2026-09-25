@@ -6,6 +6,7 @@
  * Remove the now inert `#[YieldReady]` attribute from the built-in nodes; the attribute itself is kept so 3.x extensions still load
  * Add an optional `string $template = ''` argument to `IncludeNode::addGetTemplate()`; subclasses overriding this method must declare a compatible parameter
  * Remove the obsolete `Twig\Test\NodeTestCase::getTests()` method; override `provideTests()` instead
+ * Make `Twig\Markup` final
  * Add native return types to the protected extension points in `Twig\Test\IntegrationTestCase` and `Twig\Test\NodeTestCase` and require overriding methods to declare compatible return types
  * Remove `TemplateVariable` and `AssignTemplateVariable`; use `MacroVariable` and `AssignMacroVariable` instead
  * Add the `isAlwaysAllowedInSandbox()` method to `Twig\TwigCallableInterface` and `Twig\TokenParser\TokenParserInterface`
