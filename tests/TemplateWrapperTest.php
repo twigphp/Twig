@@ -56,7 +56,7 @@ class TemplateWrapperTest extends TestCase
         $twig = new Environment(new ArrayLoader(['index' => 'content']));
         $wrapper = $twig->load('index');
 
-        $this->expectDeprecation('Since twig/twig 3.29: Calling "Twig\TemplateWrapper::unwrap()" without arguments is deprecated, pass the Twig environment instead.');
+        $this->expectDeprecation('Since twig/twig 3.30: Calling "Twig\TemplateWrapper::unwrap()" without arguments is deprecated, pass the Twig environment instead.');
 
         $this->assertInstanceOf(Template::class, $wrapper->unwrap());
     }

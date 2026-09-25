@@ -8,6 +8,7 @@
  * Fix `IntlExtension` letting the pattern derived from a date formatter prototype override an explicit locale
  * Fix `IntlExtension` not honoring the locale of a date formatter prototype configured with no date and time styles
  * Speed up macro calls
+ * Fix `TemplateWrapper::unwrap()` failing when called without arguments, which is now deprecated
  * Add `TemplateWrapper::getDefaultEscapeStrategy()` to know the escaping strategy a template was compiled with
  * Report a clear error when `random`, `reverse`, `shuffle`, and `split` receive a string that is not valid UTF-8
  * Fix the deprecation about omitting parentheses when calling a macro being reported twice for the same call
