@@ -1,5 +1,7 @@
 # 3.30.0 (2026-XX-XX)
 
+ * Fix `split`, `random`, and `shuffle` merging a trailing newline into the last character of a string
+ * Speed up splitting a string into characters in `split`, `random`, and `shuffle`
  * Speed up adding extensions to an environment
  * Fix the escaping safe analysis retaining every compiled template node for the lifetime of the environment
  * Speed up loading a template that the environment has already loaded

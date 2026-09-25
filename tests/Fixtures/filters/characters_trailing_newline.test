@@ -1,0 +1,14 @@
+--TEST--
+"reverse", "split", "shuffle", and "random" keep a trailing newline as its own character
+--TEMPLATE--
+{{ value|reverse|json_encode|raw }}
+{{ value|split('')|json_encode|raw }}
+{{ value|shuffle|length }}
+{{ random("a\n")|length }}
+--DATA--
+return ['value' => "ab\n"]
+--EXPECT--
+"\nba"
+["a","b","\n"]
+3
+1
