@@ -87,32 +87,40 @@ class FilesystemLoader implements LoaderInterface
     }
 
     /**
+     * @param bool $check Whether to check that the directory exists; pass false when the caller already checked it
+     *
      * @throws LoaderError
      */
-    public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE): void
+    public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE/* , bool $check = true */): void
     {
         // invalidate the cache
         $this->cache = $this->errorCache = [];
 
-        $checkPath = $this->isAbsolutePath($path) ? $path : $this->rootPath.$path;
-        if (!is_dir($checkPath)) {
-            throw new LoaderError(\sprintf('The "%s" directory does not exist ("%s").', $path, $checkPath));
+        if (\func_num_args() < 3 || func_get_arg(2)) {
+            $checkPath = $this->isAbsolutePath($path) ? $path : $this->rootPath.$path;
+            if (!is_dir($checkPath)) {
+                throw new LoaderError(\sprintf('The "%s" directory does not exist ("%s").', $path, $checkPath));
+            }
         }
 
         $this->paths[$namespace][] = rtrim($path, '/\\');
     }
 
     /**
+     * @param bool $check Whether to check that the directory exists; pass false when the caller already checked it
+     *
      * @throws LoaderError
      */
-    public function prependPath(string $path, string $namespace = self::MAIN_NAMESPACE): void
+    public function prependPath(string $path, string $namespace = self::MAIN_NAMESPACE/* , bool $check = true */): void
     {
         // invalidate the cache
         $this->cache = $this->errorCache = [];
 
-        $checkPath = $this->isAbsolutePath($path) ? $path : $this->rootPath.$path;
-        if (!is_dir($checkPath)) {
-            throw new LoaderError(\sprintf('The "%s" directory does not exist ("%s").', $path, $checkPath));
+        if (\func_num_args() < 3 || func_get_arg(2)) {
+            $checkPath = $this->isAbsolutePath($path) ? $path : $this->rootPath.$path;
+            if (!is_dir($checkPath)) {
+                throw new LoaderError(\sprintf('The "%s" directory does not exist ("%s").', $path, $checkPath));
+            }
         }
 
         $path = rtrim($path, '/\\');
