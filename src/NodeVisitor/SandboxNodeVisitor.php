@@ -17,7 +17,10 @@ use Twig\Node\CheckSecurityNode;
 use Twig\Node\CheckToStringNode;
 use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\Binary\ObjectDestructuringSetBinary;
 use Twig\Node\Expression\Binary\RangeBinary;
+use Twig\Node\Expression\Binary\SequenceDestructuringSetBinary;
+use Twig\Node\Expression\Binary\SetBinary;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
@@ -206,7 +209,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             foreach ($expr->getOperandNamesToEscape() as $operandName) {
                 $this->wrapNode($expr, $operandName);
             }
-        } elseif ($expr instanceof FilterExpression || $expr instanceof FunctionExpression) {
+        } elseif ($expr instanceof FilterExpression || $expr instanceof FunctionExpression || $expr instanceof SetBinary || $expr instanceof SequenceDestructuringSetBinary || $expr instanceof ObjectDestructuringSetBinary) {
             $node->setNode($name, new CheckToStringNode($expr));
         }
     }
