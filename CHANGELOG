@@ -1,6 +1,7 @@
 # 3.30.1 (2026-XX-XX)
 
  * Speed up reading object attributes backed by getters or class constants
+ * Speed up loading compiled templates that OPcache already holds
 
 # 3.30.0 (2026-09-25)
 
