@@ -1263,19 +1263,19 @@ final class CoreExtension extends AbstractExtension
     }
 
     /**
-     * Unicode version of str_split(): splits at every position except after the start and before the end.
+     * Unicode version of str_split(), an empty string giving a single empty character.
      *
-     * @return list<string>
+     * @return non-empty-list<string>
      *
      * @throws RuntimeError When the string cannot be split into characters
      */
     private static function splitIntoCharacters(string $string, string $name): array
     {
-        if (false === $characters = preg_split('/(?<!^)(?!$)/u', $string)) {
+        if (false === preg_match_all('/./us', $string, $matches)) {
             throw new RuntimeError(\sprintf('Unable to split the string passed to "%s" into characters: %s.', $name, preg_last_error_msg()));
         }
 
-        return $characters;
+        return $matches[0] ?: [''];
     }
 
     /**
