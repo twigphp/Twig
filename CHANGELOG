@@ -4,6 +4,7 @@
  * Remove support for calling `TemplateWrapper::unwrap()` without an environment argument
  * Stop detecting `echo` and `print` in compiled nodes; `yield` is the only supported mode and 3.x deprecates the alternative
  * Remove the now inert `#[YieldReady]` attribute from the built-in nodes; the attribute itself is kept so 3.x extensions still load
+ * Remove the now inert `#[FirstClassTwigCallableReady]` attribute from the built-in nodes; the attribute itself is kept so 3.x extensions still load
  * Add an optional `string $template = ''` argument to `IncludeNode::addGetTemplate()`; subclasses overriding this method must declare a compatible parameter
  * Remove the obsolete `Twig\Test\NodeTestCase::getTests()` method; override `provideTests()` instead
  * Make `Twig\Markup` final

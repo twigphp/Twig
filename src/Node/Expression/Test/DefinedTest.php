@@ -11,7 +11,6 @@
 
 namespace Twig\Node\Expression\Test;
 
-use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
@@ -32,7 +31,6 @@ use Twig\TwigTest;
  */
 class DefinedTest extends TestExpression
 {
-    #[FirstClassTwigCallableReady]
     public function __construct(AbstractExpression $node, TwigTest $name, ?Node $arguments, int $lineno)
     {
         if (!$node instanceof SupportDefinedTestInterface) {

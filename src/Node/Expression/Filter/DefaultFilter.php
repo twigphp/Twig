@@ -11,7 +11,6 @@
 
 namespace Twig\Node\Expression\Filter;
 
-use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
@@ -34,7 +33,6 @@ use Twig\TwigTest;
  */
 class DefaultFilter extends FilterExpression
 {
-    #[FirstClassTwigCallableReady]
     public function __construct(AbstractExpression $node, TwigFilter $filter, Node $arguments, int $lineno)
     {
         $name = $filter->getName();
