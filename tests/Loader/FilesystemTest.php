@@ -163,6 +163,75 @@ class FilesystemTest extends TestCase
         $this->assertEquals([FilesystemLoader::MAIN_NAMESPACE, 'named'], $loader->getNamespaces());
     }
 
+    /**
+     * @dataProvider getPathsThatAreNotDirectories
+     */
+    #[DataProvider('getPathsThatAreNotDirectories')]
+    public function testAddingAPathThatIsNotADirectoryThrows(string $method, string $path, array $extraArgs): void
+    {
+        $loader = new FilesystemLoader([], __DIR__);
+
+        try {
+            $loader->$method($path, 'named', ...$extraArgs);
+            $this->fail('A LoaderError should have been thrown.');
+        } catch (LoaderError $e) {
+            $this->assertSame(\sprintf('The "%s" directory does not exist ("%s").', $path, realpath(__DIR__).\DIRECTORY_SEPARATOR.$path), $e->getMessage());
+        }
+
+        $this->assertSame([], $loader->getPaths('named'));
+    }
+
+    public static function getPathsThatAreNotDirectories(): iterable
+    {
+        foreach (['addPath', 'prependPath'] as $method) {
+            foreach (['Fixtures/missing', 'Fixtures/normal/index.html'] as $path) {
+                yield [$method, $path, []];
+                yield [$method, $path, [true]];
+            }
+        }
+    }
+
+    /**
+     * @dataProvider getPathMethods
+     */
+    #[DataProvider('getPathMethods')]
+    public function testAddingAPathWithoutCheckingItAcceptsAMissingDirectory(string $method): void
+    {
+        $loader = new FilesystemLoader([], __DIR__);
+        $loader->addPath('Fixtures/named', 'named', false);
+        $loader->$method('Fixtures/missing/', 'named', false);
+
+        $expected = 'addPath' === $method ? ['Fixtures/named', 'Fixtures/missing'] : ['Fixtures/missing', 'Fixtures/named'];
+        $this->assertSame($expected, $loader->getPaths('named'));
+        $this->assertSame("named path\n", $loader->getSourceContext('@named/index.html')->getCode());
+
+        $this->expectException(LoaderError::class);
+        $this->expectExceptionMessage(\sprintf('Unable to find template "@named/nowhere.html" (looked into: %s).', implode(', ', $expected)));
+
+        $loader->getSourceContext('@named/nowhere.html');
+    }
+
+    /**
+     * @dataProvider getPathMethods
+     */
+    #[DataProvider('getPathMethods')]
+    public function testAddingAPathWithoutCheckingItInvalidatesTheCache(string $method): void
+    {
+        $loader = new FilesystemLoader([], __DIR__);
+        $loader->addPath('Fixtures/normal', 'named');
+        $this->assertFalse($loader->exists('@named/named_absolute.html'));
+
+        $loader->$method('Fixtures/named_quater', 'named', false);
+
+        $this->assertSame("named path (quater)\n", $loader->getSourceContext('@named/named_absolute.html')->getCode());
+    }
+
+    public static function getPathMethods(): iterable
+    {
+        yield ['addPath'];
+        yield ['prependPath'];
+    }
+
     public function testFindTemplateExceptionNamespace(): void
     {
         $basePath = __DIR__.'/Fixtures';

@@ -472,6 +472,13 @@ Testing Utilities
 * The data providers ``getTests()`` and ``getLegacyTests()`` on
   ``Twig\Test\IntegrationTestCase`` are considered final as of Twig 3.13.
 
+Loaders
+-------
+
+* Overriding ``Twig\Loader\FilesystemLoader::addPath()`` or ``prependPath()``
+  without declaring their ``bool $check = true`` third argument is deprecated as
+  of Twig 3.31; the argument will be part of their signature in Twig 4.0.
+
 Environment
 -----------
 
