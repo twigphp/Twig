@@ -9,6 +9,7 @@
  * Remove the obsolete `Twig\Test\NodeTestCase::getTests()` method; override `provideTests()` instead
  * Make `Twig\Markup` final
  * Remove `getDeprecatingPackage()`, `getDeprecatedVersion()`, and `getAlternative()` from `Twig\TwigCallableInterface` and `Twig\AbstractTwigCallable`; use `Twig\AbstractTwigCallable::triggerDeprecation()` instead
+ * Remove the `Twig\Test\IntegrationTestCase::getTests()` and `getLegacyTests()` data providers; use `provideTests()` and `provideLegacyTests()` instead
  * Add native return types to the protected extension points in `Twig\Test\IntegrationTestCase` and `Twig\Test\NodeTestCase` and require overriding methods to declare compatible return types
  * Remove `TemplateVariable` and `AssignTemplateVariable`; use `MacroVariable` and `AssignMacroVariable` instead
  * Add the `isAlwaysAllowedInSandbox()` method to `Twig\TwigCallableInterface` and `Twig\TokenParser\TokenParserInterface`
