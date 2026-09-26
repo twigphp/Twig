@@ -22,11 +22,18 @@ class FilesystemCache implements CacheInterface, RemovableCacheInterface
 
     private $directory;
     private $options;
+    private bool $checkOpcache;
 
     public function __construct(string $directory, int $options = 0)
     {
         $this->directory = rtrim($directory, '\/').'/';
         $this->options = $options;
+        // OPcache can still hold a compiled file removed from disk, which FORCE_BYTECODE_INVALIDATION wants compiled again.
+        // Its API also warns on each call when restricted, and it checks the file anyway when it validates timestamps on each call.
+        $this->checkOpcache = !($options & self::FORCE_BYTECODE_INVALIDATION)
+            && \function_exists('opcache_is_script_cached')
+            && !\ini_get('opcache.restrict_api')
+            && (!filter_var(\ini_get('opcache.validate_timestamps'), \FILTER_VALIDATE_BOOLEAN) || \ini_get('opcache.revalidate_freq'));
     }
 
     public function generateKey(string $name, string $className): string
@@ -38,7 +45,7 @@ class FilesystemCache implements CacheInterface, RemovableCacheInterface
 
     public function load(string $key): void
     {
-        if (is_file($key)) {
+        if (($this->checkOpcache && opcache_is_script_cached($key)) || is_file($key)) {
             @include_once $key;
         }
     }
