@@ -296,6 +296,18 @@ Namespaced templates can be accessed via the special
 
     $twig->render('@admin/index.html.twig', []);
 
+``addPath()`` and ``prependPath()`` throw an exception when the directory does
+not exist. If you already know that it does, for instance because a build step
+checked it, pass ``false`` as the third argument to skip the check and save a
+filesystem call::
+
+    $loader->addPath($templateDir, 'admin', false);
+
+.. versionadded:: 3.31
+
+    The third argument of ``addPath()`` and ``prependPath()`` was added in
+    Twig 3.31.
+
 ``\Twig\Loader\FilesystemLoader`` supports absolute and relative paths. Using relative
 paths is preferred as it makes the cache keys independent of the project root
 directory (for instance, it allows warming the cache from a build server where
