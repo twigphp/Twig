@@ -33,8 +33,8 @@ templates and a security policy::
     ]);
 
     $policy = new SecurityPolicy(
-        allowedTags: ['if', 'for'],
-        allowedFilters: ['escape', 'upper'],
+        allowedTags: ['include'],
+        allowedFilters: ['date', 'escape'],
         allowedMethods: [Article::class => ['getTitle']],
     );
     $policy->setStrict(true);
@@ -76,8 +76,8 @@ A ``SecurityPolicy`` allow-lists what templates can use; everything else is
 rejected with a ``Twig\Sandbox\SecurityError`` exception::
 
     $policy = new SecurityPolicy(
-        allowedTags: ['if', 'for'],
-        allowedFilters: ['escape', 'upper', 'date'],
+        allowedTags: ['include'],
+        allowedFilters: ['date', 'escape'],
         allowedMethods: [
             Article::class => ['getTitle', 'getBody', '__toString'],
         ],
@@ -94,9 +94,10 @@ rejected with a ``Twig\Sandbox\SecurityError`` exception::
     were allowed.
 
 When auto-escaping is enabled (the default), Twig applies the ``escape``
-filter to every printed expression, so allow it. The ``..`` operator calls the
-``range`` function, so ``{% for i in 1..10 %}`` requires allowing both the
-``for`` tag and the ``range`` function.
+filter to every printed expression, so allow it until Twig 4.0, where it is
+always allowed. The ``..`` operator calls the ``range`` function, so
+``{% for i in 1..10 %}`` requires allowing the ``range`` function (and the
+``for`` tag until Twig 4.0).
 
 Tags, filters, functions, and tests are checked when each template starts
 rendering, and methods and properties when a template uses them. A render can
