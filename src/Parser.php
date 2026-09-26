@@ -159,14 +159,19 @@ class Parser
         return $this->ignoreUnknownTwigCallables;
     }
 
+    /**
+     * Parses a discarded part of the template: what it registers (parent, blocks, macros, ...) is discarded as well.
+     */
     public function subparseIgnoreUnknownTwigCallables($test, bool $dropNeedle = false): void
     {
         $previous = $this->ignoreUnknownTwigCallables;
+        $state = [$this->parent, $this->blocks, $this->documentationTargets, $this->macros, $this->importedSymbols, $this->traits, $this->embeddedTemplates];
         $this->ignoreUnknownTwigCallables = true;
         try {
             $this->subparse($test, $dropNeedle);
         } finally {
             $this->ignoreUnknownTwigCallables = $previous;
+            [$this->parent, $this->blocks, $this->documentationTargets, $this->macros, $this->importedSymbols, $this->traits, $this->embeddedTemplates] = $state;
         }
     }
 

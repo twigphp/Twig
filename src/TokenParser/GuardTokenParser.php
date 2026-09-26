@@ -55,7 +55,11 @@ final class GuardTokenParser extends AbstractTokenParser
         $else = new EmptyNode();
         if ('else' === $stream->next()->getValue()) {
             $stream->expect(Token::BLOCK_END_TYPE);
-            $else = $this->parser->subparse([$this, 'decideGuardEnd'], true);
+            if ($exists) {
+                $this->parser->subparseIgnoreUnknownTwigCallables([$this, 'decideGuardEnd'], true);
+            } else {
+                $else = $this->parser->subparse([$this, 'decideGuardEnd'], true);
+            }
         }
         $stream->expect(Token::BLOCK_END_TYPE);
 
