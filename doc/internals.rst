@@ -95,7 +95,7 @@ Here is the output for the ``Hello {{ name }}`` template:
     \Twig\Node\ModuleNode(
       \Twig\Node\TextNode(Hello )
       \Twig\Node\PrintNode(
-        \Twig\Node\Expression\NameExpression(name)
+        \Twig\Node\Expression\Variable\ContextVariable(name)
       )
     )
 

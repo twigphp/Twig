@@ -57,12 +57,14 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     public function enterNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode) {
+            $this->defaultStrategy = false;
             if ($env->hasExtension(EscaperExtension::class) && $defaultStrategy = $env->getExtension(EscaperExtension::class)->getDefaultStrategy($node->getTemplateName())) {
                 $this->defaultStrategy = $defaultStrategy;
             }
             $node->setAttribute('strategy', \is_string($this->defaultStrategy) ? $this->defaultStrategy : false);
             $this->safeVars = [];
             $this->blocks = [];
+            $this->statusStack = [];
             $this->usesEscaper = false;
         } elseif ($node instanceof AutoEscapeNode) {
             $this->statusStack[] = $node->getAttribute('value');

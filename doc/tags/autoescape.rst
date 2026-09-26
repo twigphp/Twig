@@ -46,7 +46,8 @@ Functions returning template data (like :doc:`macros<macro>` and
 
 .. note::
 
-    Twig does not escape static expressions:
+    Twig does not escape string literals printed directly, but it escapes
+    variables, even when they were set to a literal:
 
     .. code-block:: html+twig
 
@@ -54,7 +55,12 @@ Functions returning template data (like :doc:`macros<macro>` and
         {{ hello }}
         {{ "<strong>world</strong>" }}
 
-    Will be rendered "<strong>Hello</strong> **world**".
+    Will be rendered as:
+
+    .. code-block:: html
+
+        &lt;strong&gt;Hello&lt;/strong&gt;
+        <strong>world</strong>
 
 .. note::
 

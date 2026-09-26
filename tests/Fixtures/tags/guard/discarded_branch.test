@@ -1,0 +1,9 @@
+--TEST--
+"guard" ignores the blocks and macros defined in the discarded branch
+--TEMPLATE--
+{% guard function constant %}{% else %}{% block discarded %}{% endblock %}{% macro discarded() %}{% endmacro %}{% endguard %}
+{{ block('discarded') is defined ? 'NEVER' : 'no block' }} {{ _self.discarded is defined ? 'NEVER' : 'no macro' }}
+--DATA--
+return []
+--EXPECT--
+no block no macro
