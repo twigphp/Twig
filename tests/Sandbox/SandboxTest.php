@@ -55,7 +55,7 @@ class SandboxTest extends TestCase
 
     public function testRenderingDirectlyOnTheSandboxEnvironmentIsSandboxed(): void
     {
-        $env = self::env(['index' => '{{ "a"|upper }}']);
+        $env = self::env(['index' => '{{ "a"|json_encode }}']);
         new Sandbox($env, self::strictPolicy());
 
         $this->expectException(SecurityNotAllowedFilterError::class);
@@ -93,7 +93,7 @@ class SandboxTest extends TestCase
 
         $sandbox = new Sandbox(self::env([
             'static' => 'static text',
-            'filtered' => '{{ "a"|upper }}',
+            'filtered' => '{{ "a"|json_encode }}',
         ]), $policy);
 
         $this->assertSame('static text', $sandbox->render('static'));
@@ -104,10 +104,10 @@ class SandboxTest extends TestCase
 
     public function testDisallowedTagIsRejected(): void
     {
-        $sandbox = new Sandbox(self::env(['index' => '{% if 1 %}x{% endif %}']), self::strictPolicy());
+        $sandbox = new Sandbox(self::env(['index' => '{% autoescape false %}x{% endautoescape %}']), self::strictPolicy());
 
         $this->expectException(SecurityNotAllowedTagError::class);
-        $this->expectExceptionMessage('Tag "if" is not allowed');
+        $this->expectExceptionMessage('Tag "autoescape" is not allowed');
         $sandbox->render('index');
     }
 
@@ -126,19 +126,19 @@ class SandboxTest extends TestCase
 
     public function testDisallowedFilterIsRejected(): void
     {
-        $sandbox = new Sandbox(self::env(['index' => '{{ "a"|upper }}']), self::strictPolicy());
+        $sandbox = new Sandbox(self::env(['index' => '{{ "a"|json_encode }}']), self::strictPolicy());
 
         $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "upper" is not allowed');
+        $this->expectExceptionMessage('Filter "json_encode" is not allowed');
         $sandbox->render('index');
     }
 
     public function testDisallowedFunctionIsRejected(): void
     {
-        $sandbox = new Sandbox(self::env(['index' => '{{ max(1, 2) }}']), self::strictPolicy());
+        $sandbox = new Sandbox(self::env(['index' => '{{ random() }}']), self::strictPolicy());
 
         $this->expectException(SecurityNotAllowedFunctionError::class);
-        $this->expectExceptionMessage('Function "max" is not allowed');
+        $this->expectExceptionMessage('Function "random" is not allowed');
         $sandbox->render('index');
     }
 
@@ -214,11 +214,11 @@ class SandboxTest extends TestCase
     {
         $sandbox = new Sandbox(self::env([
             'index' => '{{ include("partial") }}',
-            'partial' => '{{ "a"|upper }}',
+            'partial' => '{{ "a"|json_encode }}',
         ]), self::strictPolicy(functions: ['include']));
 
         $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "upper" is not allowed');
+        $this->expectExceptionMessage('Filter "json_encode" is not allowed');
         $sandbox->render('index');
     }
 
@@ -347,18 +347,11 @@ class SandboxTest extends TestCase
         new Sandbox($env, self::strictPolicy());
     }
 
-    public function testAutoEscapingRequiresTheEscapeFilterToBeAllowed(): void
+    public function testAutoEscapingIsAlwaysAllowed(): void
     {
-        $denying = new Sandbox(new Environment(new ArrayLoader(['index' => '{{ v }}'])), self::strictPolicy());
-        try {
-            $denying->render('index', ['v' => 'a&b']);
-            $this->fail('Auto-escaping must be subject to the filter allow-list.');
-        } catch (SecurityNotAllowedFilterError $e) {
-            $this->assertStringContainsString('Filter "escape" is not allowed', $e->getMessage());
-        }
+        $sandbox = new Sandbox(new Environment(new ArrayLoader(['index' => '{{ v }}'])), self::strictPolicy());
 
-        $allowing = new Sandbox(new Environment(new ArrayLoader(['index' => '{{ v }}'])), self::strictPolicy(filters: ['escape']));
-        $this->assertSame('a&amp;b', $allowing->render('index', ['v' => 'a&b']));
+        $this->assertSame('a&amp;b', $sandbox->render('index', ['v' => 'a&b']));
     }
 
     public function testDisplay(): void
@@ -428,13 +421,13 @@ class SandboxTest extends TestCase
 
     public function testCreateTemplateIsSandboxed(): void
     {
-        $sandbox = new Sandbox(self::env(), self::strictPolicy(filters: ['upper']));
+        $sandbox = new Sandbox(self::env(), self::strictPolicy(filters: ['json_encode']));
 
-        $this->assertSame('FABIEN', $sandbox->createTemplate('{{ name|upper }}')->render(['name' => 'fabien']));
+        $this->assertSame('"fabien"', $sandbox->createTemplate('{{ name|json_encode }}')->render(['name' => 'fabien']));
 
         $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "lower" is not allowed');
-        $sandbox->createTemplate('{{ name|lower }}')->render(['name' => 'fabien']);
+        $this->expectExceptionMessage('Filter "raw" is not allowed');
+        $sandbox->createTemplate('{{ name|raw }}')->render(['name' => 'fabien']);
     }
 
     public function testCreateTemplateCanReferenceLoaderTemplates(): void

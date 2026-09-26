@@ -76,17 +76,17 @@ class SandboxTest extends TestCase
 
         self::$templates = [
             '1_basic1' => '{{ obj.foo }}',
-            '1_basic2' => '{{ name|upper }}',
-            '1_basic3' => '{% if name %}foo{% endif %}',
+            '1_basic2' => '{{ name|json_encode }}',
+            '1_basic3' => '{% autoescape false %}foo{% endautoescape %}',
             '1_basic4' => '{{ obj.bar }}',
             '1_basic5' => '{{ obj }}',
-            '1_basic7' => '{{ cycle(["foo","bar"], 1) }}',
+            '1_basic7' => '{{ random(["bar"]) }}',
             '1_basic8' => '{{ obj.getfoobar }}{{ obj.getFooBar }}',
             '1_basic9' => '{{ obj.foobar }}{{ obj.fooBar }}',
             '1_basic' => '{% if obj.foo %}{{ obj.foo|upper }}{% endif %}',
             '1_layout' => '{% block content %}{% endblock %}',
             '1_child' => "{% extends \"1_layout\" %}\n{% block content %}\n{{ \"a\"|json_encode }}\n{% endblock %}",
-            '1_basic2_include_template_from_string' => '{{ include(template_from_string("{{ name|upper }}")) }}',
+            '1_basic2_include_template_from_string' => '{{ include(template_from_string("{{ name|json_encode }}")) }}',
             '1_range_operator' => '{{ (1..2)[0] }}',
             '1_childobj_parentmethod' => '{{ child_obj.ParentMethod() }}',
             '1_childobj_childmethod' => '{{ child_obj.ChildMethod() }}',
@@ -108,24 +108,16 @@ class SandboxTest extends TestCase
 
     public static function getSandboxedForCoreTagsTests()
     {
-        yield ['apply', '{% apply upper %}foo{% endapply %}'];
         yield ['autoescape', '{% autoescape %}foo{% endautoescape %}'];
-        yield ['block', '{% block foo %}foo{% endblock %}'];
         yield ['deprecated', '{% deprecated "message" %}'];
-        yield ['do', '{% do 1 + 2 %}'];
         yield ['embed', '{% embed "base.twig" %}{% endembed %}'];
         yield ['extends', '{% extends "base.twig" %}'];
         yield ['flush', '{% flush %}'];
-        yield ['for', '{% for i in 1..2 %}{% endfor %}'];
         yield ['from', '{% from "macros" import foo %}'];
-        yield ['if', '{% if false %}{% endif %}'];
         yield ['import', '{% import "macros" as macros %}'];
         yield ['include', '{% include "macros" %}'];
-        yield ['macro', '{% macro foo() %}{% endmacro %}'];
-        yield ['set', '{% set foo = 1 %}'];
         yield ['extends', '{% extends "1_empty" %}'];
         yield ['use', '{% use "1_empty" %}'];
-        yield ['with', '{% with foo %}{% endwith %}'];
     }
 
     #[DataProvider('getUnallowedParserCallableFunctionsTests')]
@@ -312,6 +304,59 @@ class SandboxTest extends TestCase
         yield ['{{ 4 is divisible by(2) ? "y" }}'];
         yield ['{{ [] is sequence ? "y" }}'];
         yield ['{{ {"a": 1} is mapping ? "y" }}'];
+    }
+
+    #[DataProvider('getAlwaysAllowedCoreTagsFiltersAndFunctions')]
+    public function testSandboxAllowsAlwaysAllowedCoreTagsFiltersAndFunctions(string $template, string $expected): void
+    {
+        $twig = $this->getEnvironment(true, ['autoescape' => 'html'], self::$templates);
+
+        $this->assertSame($expected, $twig->createTemplate($template, 'index')->render(['v' => '<b>']));
+    }
+
+    public static function getAlwaysAllowedCoreTagsFiltersAndFunctions()
+    {
+        yield 'apply tag' => ['{% apply lower %}Y{% endapply %}', 'y'];
+        yield 'block tag' => ['{% block b %}y{% endblock %}', 'y'];
+        yield 'do tag' => ['{% do 1 %}y', 'y'];
+        yield 'for tag' => ['{% for i in [1] %}y{% endfor %}', 'y'];
+        yield 'if tag' => ['{% if true %}y{% endif %}', 'y'];
+        yield 'macro tag' => ['{% macro m() %}y{% endmacro %}{{ _self.m() }}', 'y'];
+        yield 'set tag' => ['{% set a = "y" %}{{ a }}', 'y'];
+        yield 'types tag' => ['{% types {a: "string"} %}y', 'y'];
+        yield 'with tag' => ['{% with {a: "y"} %}{{ a }}{% endwith %}', 'y'];
+
+        yield 'abs filter' => ['{{ -1|abs }}', '1'];
+        yield 'batch filter' => ['{{ [1, 2]|batch(1)|length }}', '2'];
+        yield 'capitalize filter' => ['{{ "y"|capitalize }}', 'Y'];
+        yield 'convert_encoding filter' => ['{{ "y"|convert_encoding("UTF-8", "UTF-8") }}', 'y'];
+        yield 'default filter' => ['{{ null|default("y") }}', 'y'];
+        yield 'e filter' => ['{{ v|e }}', '&lt;b&gt;'];
+        yield 'escape filter' => ['{{ v|escape }}', '&lt;b&gt;'];
+        yield 'first filter' => ['{{ "yz"|first }}', 'y'];
+        yield 'format filter' => ['{{ "%s"|format("y") }}', 'y'];
+        yield 'join filter' => ['{{ ["y", "z"]|join }}', 'yz'];
+        yield 'keys filter' => ['{{ {y: 1}|keys|first }}', 'y'];
+        yield 'last filter' => ['{{ "zy"|last }}', 'y'];
+        yield 'length filter' => ['{{ "yz"|length }}', '2'];
+        yield 'lower filter' => ['{{ "Y"|lower }}', 'y'];
+        yield 'merge filter' => ['{{ ["y"]|merge(["z"])|join }}', 'yz'];
+        yield 'nl2br filter' => ['{{ "y"|nl2br }}', 'y'];
+        yield 'number_format filter' => ['{{ 1|number_format }}', '1'];
+        yield 'replace filter' => ['{{ "z"|replace({z: "y"}) }}', 'y'];
+        yield 'reverse filter' => ['{{ "zy"|reverse }}', 'yz'];
+        yield 'round filter' => ['{{ 1.2|round }}', '1'];
+        yield 'slice filter' => ['{{ "yz"|slice(0, 1) }}', 'y'];
+        yield 'split filter' => ['{{ "y,z"|split(",")|first }}', 'y'];
+        yield 'striptags filter' => ['{{ "<i>y</i>"|striptags }}', 'y'];
+        yield 'title filter' => ['{{ "y"|title }}', 'Y'];
+        yield 'trim filter' => ['{{ " y "|trim }}', 'y'];
+        yield 'upper filter' => ['{{ "y"|upper }}', 'Y'];
+        yield 'url_encode filter' => ['{{ "y z"|url_encode }}', 'y%20z'];
+
+        yield 'cycle function' => ['{{ cycle(["y", "z"], 0) }}', 'y'];
+        yield 'max function' => ['{{ max(1, 2) }}', '2'];
+        yield 'min function' => ['{{ min(1, 2) }}', '1'];
     }
 
     public function testSandboxAllowsAllowListedTest(): void
@@ -501,7 +546,7 @@ class SandboxTest extends TestCase
     {
         $twig = $this->getEnvironment(false, [], self::$templates);
         $twig->addExtension(new StringLoaderExtension());
-        $this->assertSame('FABIEN', $twig->load('1_basic2_include_template_from_string')->render(self::$params));
+        $this->assertSame('"Fabien"', $twig->load('1_basic2_include_template_from_string')->render(self::$params));
     }
 
     public function testSandboxGloballyTrueUnallowedFilterWithIncludeTemplateFromStringNotSandboxed(): void
@@ -512,7 +557,7 @@ class SandboxTest extends TestCase
             $twig->load('1_basic2_include_template_from_string')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed filter is called');
         } catch (SecurityNotAllowedFilterError $e) {
-            $this->assertEquals('upper', $e->getFilterName(), 'Exception should be raised on the "upper" filter');
+            $this->assertEquals('json_encode', $e->getFilterName(), 'Exception should be raised on the "json_encode" filter');
         }
     }
 
@@ -523,7 +568,7 @@ class SandboxTest extends TestCase
             $twig->load('1_basic2')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed filter is called');
         } catch (SecurityNotAllowedFilterError $e) {
-            $this->assertEquals('upper', $e->getFilterName(), 'Exception should be raised on the "upper" filter');
+            $this->assertEquals('json_encode', $e->getFilterName(), 'Exception should be raised on the "json_encode" filter');
         }
     }
 
@@ -534,7 +579,7 @@ class SandboxTest extends TestCase
             $twig->load('1_basic3')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed tag is used in the template');
         } catch (SecurityNotAllowedTagError $e) {
-            $this->assertEquals('if', $e->getTagName(), 'Exception should be raised on the "if" tag');
+            $this->assertEquals('autoescape', $e->getTagName(), 'Exception should be raised on the "autoescape" tag');
         }
     }
 
@@ -918,7 +963,7 @@ class SandboxTest extends TestCase
             $twig->load('1_basic7')->render(self::$params);
             $this->fail('Sandbox throws a SecurityError exception if an unallowed function is called in the template');
         } catch (SecurityNotAllowedFunctionError $e) {
-            $this->assertEquals('cycle', $e->getFunctionName(), 'Exception should be raised on the "cycle" function');
+            $this->assertEquals('random', $e->getFunctionName(), 'Exception should be raised on the "random" function');
         }
     }
 
@@ -943,13 +988,13 @@ class SandboxTest extends TestCase
 
     public function testSandboxAllowFilter(): void
     {
-        $twig = $this->getEnvironment(true, [], self::$templates, [], ['upper']);
-        $this->assertEquals('FABIEN', $twig->load('1_basic2')->render(self::$params), 'Sandbox allow some filters');
+        $twig = $this->getEnvironment(true, [], self::$templates, [], ['json_encode']);
+        $this->assertEquals('"Fabien"', $twig->load('1_basic2')->render(self::$params), 'Sandbox allow some filters');
     }
 
     public function testSandboxAllowTag(): void
     {
-        $twig = $this->getEnvironment(true, [], self::$templates, ['if']);
+        $twig = $this->getEnvironment(true, [], self::$templates, ['autoescape']);
         $this->assertEquals('foo', $twig->load('1_basic3')->render(self::$params), 'Sandbox allow some tags');
     }
 
@@ -995,7 +1040,7 @@ class SandboxTest extends TestCase
 
     public function testSandboxAllowFunction(): void
     {
-        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], ['cycle']);
+        $twig = $this->getEnvironment(true, [], self::$templates, [], [], [], [], ['random']);
         $this->assertEquals('bar', $twig->load('1_basic7')->render(self::$params), 'Sandbox allow some functions');
     }
 

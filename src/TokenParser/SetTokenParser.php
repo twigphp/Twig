@@ -72,6 +72,11 @@ final class SetTokenParser extends AbstractTokenParser
         return 'set';
     }
 
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return true;
+    }
+
     private function parseMultitargetExpression(): Nodes
     {
         $targets = [];

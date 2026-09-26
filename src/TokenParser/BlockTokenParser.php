@@ -75,4 +75,9 @@ final class BlockTokenParser extends AbstractTokenParser
     {
         return 'block';
     }
+
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return true;
+    }
 }

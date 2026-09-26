@@ -40,8 +40,8 @@ allowed to execute::
     $env->addExtension(new IntlExtension());
 
     $policy = new SecurityPolicy(
-        allowedTags: ['if'],
-        allowedFilters: ['upper', 'escape'],
+        allowedTags: ['include'],
+        allowedFilters: ['format_datetime'],
     );
 
     $sandbox = new Sandbox($env, $policy);
@@ -78,12 +78,6 @@ Rendering From a Trusted Template
 To render an untrusted template from a trusted template, use the
 :doc:`render_sandboxed() function <functions/render_sandboxed>`.
 
-.. note::
-
-    When auto-escaping is enabled (the default), the ``escape`` filter is
-    applied to every printed expression, so it must be part of the filter
-    allow-list for sandboxed templates to render.
-
 .. caution::
 
     PHP code invoked during a sandboxed render (a filter, function, or
@@ -102,8 +96,8 @@ By default, Twig comes with one policy class: ``\Twig\Sandbox\SecurityPolicy``.
 This class allows you to allow-list some tags, filters, functions, and
 properties and methods on objects::
 
-    $tags = ['if'];
-    $filters = ['upper'];
+    $tags = ['include'];
+    $filters = ['date'];
     $methods = [
         'Article' => ['getTitle', 'getBody'],
     ];
@@ -115,8 +109,8 @@ properties and methods on objects::
     $policy = new \Twig\Sandbox\SecurityPolicy($tags, $filters, $methods, $properties, $functions, $tests);
 
 With the above configuration, the security policy will only allow usage of the
-``if`` tag, the ``upper`` filter, and the ``my_test`` test (on top of the
-built-in tests that are always allowed, see below). Moreover, the templates
+``include`` tag, the ``date`` filter, the ``range`` function, and the
+``my_test`` test (on top of the built-ins that are always allowed, see below). Moreover, the templates
 will only be able to call the ``getTitle()`` and ``getBody()`` methods on
 ``Article`` objects, and the ``title`` and ``body`` public properties.
 Everything else won't be allowed and will generate a
@@ -252,8 +246,8 @@ Built-ins That Are Always Allowed
 The following Twig built-ins meet the criteria above and have the
 ``always_allowed_in_sandbox`` flag set, so they never need to be allow-listed.
 
-* Tags: ``apply``, ``block``, ``do``, ``for``, ``guard``, ``if``, ``macro``,
-  ``set``, ``types``, ``with``.
+* Tags: ``apply``, ``block``, ``do``, ``for``, ``if``, ``macro``, ``set``,
+  ``types``, ``with``.
 * Filters: ``abs``, ``batch``, ``capitalize``, ``convert_encoding``,
   ``default``, ``e``, ``escape``, ``first``, ``format``, ``join``, ``keys``,
   ``last``, ``length``, ``lower``, ``merge``, ``nl2br``, ``number_format``,

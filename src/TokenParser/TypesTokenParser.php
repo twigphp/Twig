@@ -97,4 +97,9 @@ final class TypesTokenParser extends AbstractTokenParser
     {
         return 'types';
     }
+
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return true;
+    }
 }

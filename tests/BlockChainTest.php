@@ -331,8 +331,8 @@ class BlockChainTest extends TestCase
     public function testDynamicParentSecurityIsCheckedWhenTheLineageIsResolved(): void
     {
         $twig = new Environment(new ArrayLoader([
-            'theme' => '{% extends parent|upper %}',
-            'PARENT' => '',
+            'theme' => '{% extends parent|raw %}',
+            'parent' => '',
         ]));
         $twig->addExtension(new SandboxExtension(new SecurityPolicy(['extends']), true));
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent']);
@@ -345,7 +345,7 @@ class BlockChainTest extends TestCase
     public function testDefiningTemplateSecurityIsCheckedDuringRendering(): void
     {
         $twig = new Environment(new ArrayLoader([
-            'theme' => '{% block field %}{{ value|upper }}{% endblock %}',
+            'theme' => '{% block field %}{{ value|raw }}{% endblock %}',
         ]));
         $twig->addExtension(new SandboxExtension(new SecurityPolicy(['block']), true));
         $chain = new BlockChain($twig, ['theme']);
@@ -358,14 +358,14 @@ class BlockChainTest extends TestCase
     public function testSandboxPolicyChangesAreObservedAfterConstruction(): void
     {
         $twig = new Environment(new ArrayLoader([
-            'policy_theme' => '{% extends "parent" %}{% block field %}{{ value|upper }}{% endblock %}',
+            'policy_theme' => '{% extends "parent" %}{% block field %}{{ value|raw }}{% endblock %}',
             'parent' => '',
         ]), ['autoescape' => false]);
-        $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'block'], ['upper']), true);
+        $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'block'], ['raw']), true);
         $twig->addExtension($sandbox);
         $chain = new BlockChain($twig, ['policy_theme']);
 
-        $this->assertSame('VALUE', $chain->renderBlock('field', ['value' => 'value']));
+        $this->assertSame('value', $chain->renderBlock('field', ['value' => 'value']));
 
         $sandbox->setSecurityPolicy(new SecurityPolicy(['extends', 'block']));
         $this->expectException(SecurityNotAllowedFilterError::class);
@@ -377,10 +377,10 @@ class BlockChainTest extends TestCase
     {
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "middle" %}{% block field %}{{ parent() }}{% endblock %}',
-            'middle' => '{% extends parent|upper %}',
-            'GRANDPARENT' => '{% block field %}safe{% endblock %}',
+            'middle' => '{% extends parent|raw %}',
+            'grandparent' => '{% block field %}safe{% endblock %}',
         ]), ['autoescape' => false]);
-        $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'block'], ['upper'], allowedFunctions: ['parent']), true);
+        $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'block'], ['raw'], allowedFunctions: ['parent']), true);
         $twig->addExtension($sandbox);
         $chain = new BlockChain($twig, ['theme'], ['parent' => 'grandparent']);
 
@@ -397,14 +397,14 @@ class BlockChainTest extends TestCase
         $twig = new Environment(new ArrayLoader([
             'theme' => '{% extends "layout" %}{% import "macros" as macros %}{% block field %}{{ macros.label(value) }}{% endblock %}',
             'layout' => '{{ block("field") }}',
-            'macros' => '{% macro label(value) %}{{ value|upper }}{% endmacro %}',
+            'macros' => '{% macro label(value) %}{{ value|raw }}{% endmacro %}',
         ]), ['autoescape' => false]);
-        $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'import', 'block', 'macro'], ['upper'], allowedFunctions: ['block']), true);
+        $sandbox = new SandboxExtension(new SecurityPolicy(['extends', 'import', 'block', 'macro'], ['raw'], allowedFunctions: ['block']), true);
         $twig->addExtension($sandbox);
         $chain = new BlockChain($twig, ['theme']);
 
-        $this->assertSame('VALUE', $twig->render('theme', ['value' => 'value']));
-        $this->assertSame('VALUE', $chain->renderBlock('field', ['value' => 'value']));
+        $this->assertSame('value', $twig->render('theme', ['value' => 'value']));
+        $this->assertSame('value', $chain->renderBlock('field', ['value' => 'value']));
 
         $sandbox->setSecurityPolicy(new SecurityPolicy(['extends', 'import', 'block', 'macro'], allowedFunctions: ['block']));
         $this->expectException(SecurityNotAllowedFilterError::class);
