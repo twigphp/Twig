@@ -216,6 +216,8 @@ the first argument to the filter call (or the second one if
         // ...
     }, ['needs_context' => true, 'needs_environment' => true]);
 
+.. _sandbox-aware-filters:
+
 Sandbox-aware Filters
 ~~~~~~~~~~~~~~~~~~~~~
 
