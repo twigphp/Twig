@@ -25,12 +25,13 @@ class ForNode extends Node
 {
     public function __construct(AssignContextVariable $keyTarget, AssignContextVariable $valueTarget, AbstractExpression $seq, ?AbstractExpression $ifexpr, Node $body, ?ForElseNode $else, int $lineno)
     {
-        if ($ifexpr) {
-            $body = new IfNode(new Nodes([$ifexpr, $body]), null, $lineno);
+        $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq];
+        if (null !== $ifexpr) {
+            $nodes['ifexpr'] = $ifexpr;
         }
-
-        $nodes = ['key_target' => $keyTarget, 'value_target' => $valueTarget, 'seq' => $seq, 'body' => $body];
+        $nodes['body'] = $body;
         if (null !== $else) {
+            $else->setAttribute('with_condition', null !== $ifexpr);
             $nodes['else'] = $else;
         }
 
@@ -57,6 +58,11 @@ class ForNode extends Node
             $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);\n");
         }
 
+        $trackIterations = $this->hasNode('ifexpr') && $this->hasNode('else');
+        if ($trackIterations) {
+            $compiler->write("\$iterated = false;\n");
+        }
+
         $compiler
             ->write('foreach ($iterator as ')
             ->subcompile($this->getNode('key_target'))
@@ -64,6 +70,25 @@ class ForNode extends Node
             ->subcompile($this->getNode('value_target'))
             ->raw(") {\n")
             ->indent()
+        ;
+
+        if ($this->hasNode('ifexpr')) {
+            $compiler
+                ->write('if (!(')
+                ->subcompile($this->getNode('ifexpr'))
+                ->raw(")) {\n")
+                ->indent()
+                ->write("continue;\n")
+                ->outdent()
+                ->write("}\n")
+            ;
+        }
+
+        if ($trackIterations) {
+            $compiler->write("\$iterated = true;\n");
+        }
+
+        $compiler
             ->subcompile($this->getNode('body'))
             ->outdent()
             ->write("}\n")
