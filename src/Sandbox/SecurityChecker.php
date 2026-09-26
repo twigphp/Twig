@@ -12,6 +12,7 @@
 namespace Twig\Sandbox;
 
 use Twig\Markup;
+use Twig\Runtime\LoopContext;
 use Twig\Source;
 
 /**
@@ -26,6 +27,28 @@ use Twig\Source;
  */
 final class SecurityChecker
 {
+    /**
+     * Methods of the objects Twig itself exposes to templates, allowed whatever the security policy is.
+     */
+    private const ALWAYS_ALLOWED_METHODS = [
+        LoopContext::class => [
+            'cycle',
+            'getdepth',
+            'getdepth0',
+            'getindex',
+            'getindex0',
+            'getlength',
+            'getnext',
+            'getparent',
+            'getprevious',
+            'getrevindex',
+            'getrevindex0',
+            'haschanged',
+            'isfirst',
+            'islast',
+        ],
+    ];
+
     public function __construct(
         private SecurityPolicyInterface $policy,
         private bool $sandboxed = false,
@@ -64,7 +87,7 @@ final class SecurityChecker
 
     public function checkMethodAllowed(mixed $obj, mixed $method, int $lineno = -1, ?Source $source = null): void
     {
-        if ($this->isSandboxed()) {
+        if ($this->isSandboxed() && !\in_array(strtolower($method), self::ALWAYS_ALLOWED_METHODS[$obj::class] ?? [], true)) {
             try {
                 $this->policy->checkMethodAllowed($obj, $method);
             } catch (SecurityNotAllowedMethodError $e) {
