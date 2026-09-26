@@ -2,6 +2,7 @@
 
  * Reject a deprecated `Template` instance created by another environment in `Environment::resolveTemplate()`
  * Fix a compilation error inside an `autoescape` tag leaking its escaping strategy into the next compiled template
+ * Fix the non-selected branch of a `guard` tag registering its parent, blocks, and macros
  * Speed up reading object attributes backed by getters or class constants
  * Fix the sandbox not reporting the line of a rejected `guard` tag
 
