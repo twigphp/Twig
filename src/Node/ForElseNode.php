@@ -22,14 +22,14 @@ class ForElseNode extends Node
 {
     public function __construct(Node $body, int $lineno)
     {
-        parent::__construct(['body' => $body], [], $lineno);
+        parent::__construct(['body' => $body], ['with_condition' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void
     {
         $compiler
             ->addDebugInfo($this)
-            ->write("if (0 === \$iterator->getIndex0()) {\n")
+            ->write($this->getAttribute('with_condition') ? "if (!\$iterated) {\n" : "if (0 === \$iterator->getIndex0()) {\n")
             ->indent()
             ->subcompile($this->getNode('body'))
             ->outdent()

@@ -1,0 +1,12 @@
+--TEST--
+"for" tag renders the else branch when the condition skips every item
+--TEMPLATE--
+[{% for i in [1, 2, 3] if i > 5 %}{{ i }}{% else %}none{% endfor %}]
+[{% for i in [1, 2, 3] if i > 1 %}{{ i }}{% else %}none{% endfor %}]
+[{% for i in [] if i > 1 %}{{ i }}{% else %}none{% endfor %}]
+--DATA--
+return []
+--EXPECT--
+[none]
+[23]
+[none]

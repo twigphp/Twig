@@ -139,8 +139,8 @@ Skipping items during an iteration can be done in several ways:
   last item is skipped and ``loop.length`` returns the length of the unfiltered
   sequence/mapping.
 
-  This is just a convenient shortcut for using an ``if`` condition inside the
-  ``for`` body (both are equivalent):
+  Apart from the ``else`` clause (see below), this is just a convenient
+  shortcut for using an ``if`` condition inside the ``for`` body:
 
     .. code-block:: twig
 
@@ -183,6 +183,19 @@ replacement block by using ``else``:
             <li>{{ user.username|e }}</li>
         {% else %}
             <li><em>no user found</em></li>
+        {% endfor %}
+    </ul>
+
+When the loop has a condition, the ``else`` block is also rendered when no item
+satisfies it:
+
+.. code-block:: html+twig
+
+    <ul>
+        {% for user in users if user.active %}
+            <li>{{ user.username|e }}</li>
+        {% else %}
+            <li><em>no active user found</em></li>
         {% endfor %}
     </ul>
 

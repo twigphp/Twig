@@ -27,7 +27,6 @@ use Twig\Node\Expression\Variable\AssignContextVariable;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\ForElseNode;
 use Twig\Node\ForNode;
-use Twig\Node\IfNode;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Test\NodeTestCase;
@@ -48,15 +47,20 @@ class ForTest extends NodeTestCase
         $this->assertEquals($keyTarget, $node->getNode('key_target'));
         $this->assertEquals($valueTarget, $node->getNode('value_target'));
         $this->assertEquals($seq, $node->getNode('seq'));
-        $this->assertInstanceOf(IfNode::class, $node->getNode('body'));
-        $this->assertEquals($ifexpr, $node->getNode('body')->getNode('tests')->getNode(0));
-        $this->assertEquals($body, $node->getNode('body')->getNode('tests')->getNode(1));
+        $this->assertEquals($ifexpr, $node->getNode('ifexpr'));
+        $this->assertEquals($body, $node->getNode('body'));
         $this->assertFalse($node->hasNode('else'));
 
         $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 1), 1), 5);
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', false);
+        $this->assertFalse($node->hasNode('ifexpr'));
         $this->assertEquals($else, $node->getNode('else'));
+        $this->assertFalse($else->getAttribute('with_condition'));
+
+        $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 1), 1), 5);
+        new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
+        $this->assertTrue($else->getAttribute('with_condition'));
     }
 
     public static function provideTests(): iterable
@@ -157,13 +161,16 @@ yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \
     \$macros = \$this->macros;
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
+    \$iterated = false;
     foreach (\$iterator as \$context["k"] => \$context["v"]) {
-        if (true) {
-            yield (string) {$fooGetter};
+        if (!(true)) {
+            continue;
         }
+        \$iterated = true;
+        yield (string) {$fooGetter};
     }
     // line 5
-    if (0 === \$iterator->getIndex0()) {
+    if (!\$iterated) {
         // line 6
         yield (string) {$fooGetter};
     }
