@@ -120,6 +120,9 @@ any name and arguments. Reading a property handled by ``__get()`` or by a
 property hook runs that code, so only allow such a property if that code is
 safe to run.
 
+The attributes of the ``loop`` variable of the ``for`` tag (``loop.index``,
+``loop.cycle()``, and so on) are always allowed.
+
 Always Allowed Built-ins
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
