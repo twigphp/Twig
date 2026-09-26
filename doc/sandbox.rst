@@ -314,14 +314,18 @@ The following Twig built-ins meet the criteria above and will have the
 ``always_allowed_in_sandbox`` flag set in Twig 4.0. They still need to be
 explicitly allow-listed in 3.x.
 
-* Tags: ``apply``, ``block``, ``do``, ``for``, ``guard``, ``if``, ``macro``,
-  ``set``, ``types``, ``with``.
+* Tags: ``apply``, ``block``, ``do``, ``for``, ``if``, ``macro``, ``set``,
+  ``types``, ``with``.
 * Filters: ``abs``, ``batch``, ``capitalize``, ``convert_encoding``,
   ``default``, ``e``, ``escape``, ``first``, ``format``, ``join``, ``keys``,
   ``last``, ``length``, ``lower``, ``merge``, ``nl2br``, ``number_format``,
   ``replace``, ``reverse``, ``round``, ``slice``, ``split``, ``striptags``,
   ``title``, ``trim``, ``upper``, ``url_encode``.
 * Functions: ``cycle``, ``max``, ``min``.
+
+The ``guard`` tag is deliberately not part of this list: sandboxed templates
+are written for a known environment, so they have no reason to check whether a
+callable exists. Don't allow it in sandboxed templates.
 
 When upgrading to 4.0, you can drop these names from your ``SecurityPolicy``
 allow-lists. Leaving them in is harmless: listing a name that is always
