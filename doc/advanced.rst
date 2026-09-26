@@ -848,7 +848,7 @@ The ``getTests()`` method lets you add new test functions::
         public function getTests()
         {
             return [
-                new \Twig\TwigTest('even', 'twig_test_even'),
+                new \Twig\TwigTest('even', fn (int $value): bool => 0 === $value % 2),
             ];
         }
 
@@ -919,8 +919,8 @@ a runtime extension using one of the runtime loaders::
     }
 
     $twig = new \Twig\Environment($loader);
-    $twig->addExtension(new \Twig\Extension\AttributeExtension(ProjectExtension::class);
-    $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryLoader([
+    $twig->addExtension(new \Twig\Extension\AttributeExtension(ProjectExtension::class));
+    $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryRuntimeLoader([
         ProjectExtension::class => function () use ($lipsumProvider) {
             return new ProjectExtension($lipsumProvider);
         },
