@@ -35,87 +35,87 @@ class SandboxStateChangeTest extends TestCase
 {
     public function testSetSecurityPolicyTightening(): void
     {
-        $permissive = new SecurityPolicy(allowedFilters: ['upper', 'escape']);
-        [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], $permissive, true);
+        $permissive = new SecurityPolicy(allowedFilters: ['json_encode', 'escape']);
+        [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|json_encode }}'], $permissive, true);
 
-        $this->assertSame('FOO', $twig->render('t'));
+        $this->assertSame('"foo"', $twig->render('t'));
 
         $sandbox->setSecurityPolicy(new SecurityPolicy(allowedFilters: ['escape']));
 
         $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "upper" is not allowed');
+        $this->expectExceptionMessage('Filter "json_encode" is not allowed');
         $twig->render('t');
     }
 
     public function testSetSecurityPolicyLoosening(): void
     {
         $strict = new SecurityPolicy(allowedFilters: []);
-        [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|upper }}'], $strict, true);
+        [$twig, $sandbox] = $this->build(['t' => '{{ "foo"|json_encode }}'], $strict, true);
 
         try {
             $twig->render('t');
             $this->fail('Expected SecurityNotAllowedFilterError on first render');
         } catch (SecurityNotAllowedFilterError $e) {
-            $this->assertSame('upper', $e->getFilterName());
+            $this->assertSame('json_encode', $e->getFilterName());
         }
 
-        $sandbox->setSecurityPolicy(new SecurityPolicy(allowedFilters: ['upper']));
+        $sandbox->setSecurityPolicy(new SecurityPolicy(allowedFilters: ['json_encode']));
 
-        $this->assertSame('FOO', $twig->render('t'));
+        $this->assertSame('"foo"', $twig->render('t'));
     }
 
     public function testPreWarmedParentTemplateThroughExtends(): void
     {
         $templates = [
-            'parent.twig' => '{% block c %}default{% endblock %}{{ "hi"|upper }}',
+            'parent.twig' => '{% block c %}default{% endblock %}{{ "hi"|json_encode }}',
             'child.twig' => '{% extends "parent.twig" %}{% block c %}child{% endblock %}',
         ];
         $policy = new SecurityPolicy(
             allowedTags: ['extends', 'block'],
-            allowedFilters: ['upper'],
+            allowedFilters: ['json_encode'],
         );
         [$twig, $sandbox] = $this->build($templates, $policy, true);
 
         // pre-warm with a permissive policy: parent and child Template instances are now cached
-        $this->assertSame('childHI', $twig->render('child.twig'));
+        $this->assertSame('child"hi"', $twig->render('child.twig'));
 
         $sandbox->setSecurityPolicy(new SecurityPolicy(allowedTags: ['extends', 'block'], allowedFilters: []));
 
         $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "upper" is not allowed');
+        $this->expectExceptionMessage('Filter "json_encode" is not allowed');
         $twig->render('child.twig');
     }
 
     public function testMacroFromPreWarmedTemplate(): void
     {
         $templates = [
-            'macros.twig' => '{% macro greet(name) %}{{ name|upper }}{% endmacro %}',
+            'macros.twig' => '{% macro greet(name) %}{{ name|json_encode }}{% endmacro %}',
             'caller.twig' => '{% import "macros.twig" as m %}{{ m.greet("world") }}',
         ];
         $policy = new SecurityPolicy(
             allowedTags: ['import', 'macro'],
-            allowedFilters: ['upper'],
+            allowedFilters: ['json_encode'],
         );
         [$twig, $sandbox] = $this->build($templates, $policy, true);
 
         // pre-warm with a permissive policy
-        $this->assertSame('WORLD', $twig->render('caller.twig'));
+        $this->assertSame('"world"', $twig->render('caller.twig'));
 
         $sandbox->setSecurityPolicy(new SecurityPolicy(allowedTags: ['import', 'macro'], allowedFilters: []));
 
         $this->expectException(SecurityNotAllowedFilterError::class);
-        $this->expectExceptionMessage('Filter "upper" is not allowed');
+        $this->expectExceptionMessage('Filter "json_encode" is not allowed');
         $twig->render('caller.twig');
     }
 
     public function testTagBypassThroughPreWarmedParent(): void
     {
         $templates = [
-            'parent.twig' => '{% block c %}{% for i in 1..2 %}{{ i }}{% endfor %}{% endblock %}',
+            'parent.twig' => '{% block c %}{% autoescape false %}{% for i in 1..2 %}{{ i }}{% endfor %}{% endautoescape %}{% endblock %}',
             'child.twig' => '{% extends "parent.twig" %}{% block c %}{{ parent() }}{% endblock %}',
         ];
         $policy = new SecurityPolicy(
-            allowedTags: ['extends', 'block', 'for'],
+            allowedTags: ['extends', 'block', 'autoescape'],
             allowedFilters: [],
             allowedFunctions: ['parent', 'range'],
         );
@@ -126,7 +126,7 @@ class SandboxStateChangeTest extends TestCase
         $sandbox->setSecurityPolicy(new SecurityPolicy(allowedTags: ['extends', 'block'], allowedFunctions: ['parent', 'range']));
 
         $this->expectException(SecurityNotAllowedTagError::class);
-        $this->expectExceptionMessage('Tag "for" is not allowed');
+        $this->expectExceptionMessage('Tag "autoescape" is not allowed');
         $twig->render('child.twig');
     }
 

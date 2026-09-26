@@ -63,4 +63,9 @@ final class ApplyTokenParser extends AbstractTokenParser
     {
         return 'apply';
     }
+
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return true;
+    }
 }

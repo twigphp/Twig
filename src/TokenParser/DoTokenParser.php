@@ -35,4 +35,9 @@ final class DoTokenParser extends AbstractTokenParser
     {
         return 'do';
     }
+
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return true;
+    }
 }
