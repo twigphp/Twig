@@ -33,10 +33,9 @@ final class AutoEscapeTokenParser extends AbstractTokenParser
             $value = 'html';
         } else {
             $expr = $this->parser->parseExpression();
-            if (!$expr instanceof ConstantExpression) {
-                throw new SyntaxError('An escaping strategy must be a string or false.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+            if (!$expr instanceof ConstantExpression || (!\is_string($value = $expr->getAttribute('value')) && false !== $value)) {
+                throw new SyntaxError('An escaping strategy must be a string or false.', $expr->getTemplateLine(), $stream->getSourceContext());
             }
-            $value = $expr->getAttribute('value');
         }
 
         $stream->expect(Token::BLOCK_END_TYPE);

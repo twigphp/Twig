@@ -1,5 +1,6 @@
 # 4.0.0 (2026-XX-XX)
 
+ * Reject an `autoescape` tag strategy that is neither a string nor `false` at compile time instead of failing at runtime
  * Remove support for cloning `Twig\Environment`; create a new environment instead
  * Remove support for calling `TemplateWrapper::unwrap()` without an environment argument
  * Stop detecting `echo` and `print` in compiled nodes; `yield` is the only supported mode and 3.x deprecates the alternative

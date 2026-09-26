@@ -1,0 +1,8 @@
+--TEST--
+"autoescape" tag rejects a strategy that is neither a string nor false
+--TEMPLATE--
+{% autoescape true %}
+{{ var }}
+{% endautoescape %}
+--EXCEPTION--
+Twig\Error\SyntaxError: An escaping strategy must be a string or false in "index.twig" at line 2.

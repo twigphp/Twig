@@ -7,7 +7,7 @@
 
 {{ foo|e('html') -}}
 {{ foo|e('js') }}
-{% autoescape true %}
+{% autoescape 'html' %}
     {{ foo }}
 {% endautoescape %}
 --DATA--
