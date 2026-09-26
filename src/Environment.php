@@ -514,6 +514,10 @@ class Environment
             if ($name instanceof Template) {
                 trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', Template::class, __METHOD__);
 
+                if (!$name->isOwnedBy($this)) {
+                    throw new RuntimeError(\sprintf('A "%s" can only be used with the "%s" that created it.', Template::class, self::class));
+                }
+
                 return new TemplateWrapper($this, $name);
             }
             if ($name instanceof TemplateWrapper) {
