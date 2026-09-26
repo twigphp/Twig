@@ -1,413 +1,295 @@
 Twig Sandbox
 ============
 
-The sandbox can be used to evaluate untrusted code, restricting what template
-authors can reach through explicit allow-lists.
+The sandbox renders templates written by untrusted authors, such as your
+users. A sandboxed template can only use the tags, filters, functions, and
+tests you allow, and only access the object methods and properties you allow.
 
 .. warning::
 
-    Twig treats template source as trusted code by default. If an application
-    accepts templates from untrusted users, it must enable and correctly
-    configure the sandbox. The regular Twig environment is not a security
-    boundary, and any behavior caused by rendering an untrusted template
-    without the sandbox is not a security issue in Twig.
+    Twig treats templates as trusted code. The sandbox is the only security
+    boundary for templates written by untrusted authors: rendering such a
+    template without it gives its author the same power as your application
+    code.
 
 Rendering Untrusted Templates
 -----------------------------
 
 .. versionadded:: 3.29
 
-    The ``Twig\Sandbox\SandboxInterface`` interface and
-    ``Twig\Sandbox\Sandbox`` class were added in Twig 3.29.
+    The ``Twig\Sandbox\Sandbox`` class and its ``SandboxInterface`` were added
+    in Twig 3.29.
 
-The recommended way to render untrusted templates is the
-``Twig\Sandbox\Sandbox`` class, which implements ``SandboxInterface``. Type-hint
-``SandboxInterface`` when injecting a sandbox into an application service. A
-``Sandbox`` takes ownership of an environment crafted specifically for it and
-renders everything through it in
-sandbox mode. Being in full control of that environment, you decide exactly
-what untrusted templates can reach: its loader defines which templates exist,
-the extensions, filters, functions, tests, and globals you register on it
-define which capabilities exist, and the security policy defines what is
-allowed to execute::
+Create a ``Twig\Sandbox\Sandbox`` from an environment dedicated to untrusted
+templates and a security policy::
 
     use Twig\Environment;
-    use Twig\Extra\Intl\IntlExtension;
     use Twig\Loader\ArrayLoader;
     use Twig\Sandbox\Sandbox;
     use Twig\Sandbox\SecurityPolicy;
 
-    // craft an environment dedicated to untrusted templates
-    $env = new Environment(new ArrayLoader($untrustedTemplates), [
+    $env = new Environment(new ArrayLoader($userTemplates), [
         'cache' => '/path/to/sandbox/cache',
     ]);
-    // register the capabilities untrusted templates may use
-    $env->addExtension(new IntlExtension());
 
     $policy = new SecurityPolicy(
-        allowedTags: ['if'],
-        allowedFilters: ['upper', 'escape'],
+        allowedTags: ['if', 'for'],
+        allowedFilters: ['escape', 'upper'],
+        allowedMethods: [Article::class => ['getTitle']],
     );
     $policy->setStrict(true);
 
     $sandbox = new Sandbox($env, $policy);
 
     // render a template known to the environment loader
-    echo $sandbox->render('newsletter.twig', ['name' => 'Fabien']);
+    echo $sandbox->render('newsletter.twig', ['article' => $article]);
 
-    // render an untrusted template held as a string
-    echo $sandbox->createTemplate($userTemplate)->render(['name' => 'Fabien']);
+    // render a template held as a string
+    echo $sandbox->createTemplate($source)->render(['article' => $article]);
 
-The environment must be dedicated to the sandbox: build a fresh environment
-and pass it before its first use (the constructor throws a ``LogicException``
-otherwise). In particular, never pass your main application environment: all
-your application templates would suddenly be rendered in sandbox mode.
-Keeping the two environments separate also guarantees isolation in both
-directions: the sandbox cannot load or affect application templates, and
-application renders happening while a sandboxed render is in flight are not
-sandboxed.
+Everything rendered through the sandbox is sandboxed: ``render()``,
+``display()``, and ``stream()`` render a template; ``renderBlock()``,
+``displayBlock()``, and ``streamBlock()`` render one of its blocks; and
+``createTemplate()`` creates a template from a string. Templates included by
+a sandboxed template are sandboxed as well. Type-hint ``SandboxInterface``
+when injecting a sandbox into your services.
 
-A ``SecurityPolicy`` passed to the sandbox must be strict (call
-``setStrict(true)``) so it behaves the same way in Twig 3.x and 4.0; the
-constructor throws a ``LogicException`` otherwise.
+The environment defines everything untrusted templates can reach: its loader
+defines which templates exist, and the extensions, filters, functions, tests,
+and globals registered on it define which capabilities exist. That's why it
+must be dedicated to the sandbox: build a new environment and pass it to the
+sandbox before using it; the constructor throws a ``LogicException`` if the
+environment was already used. Never pass your application environment: every
+application template would then be rendered in the sandbox.
 
-Everything rendered through a ``Sandbox`` is sandboxed: ``render()``,
-``display()``, and ``stream()`` render a template from the environment loader
-by name; ``renderBlock()``, ``displayBlock()``, and ``streamBlock()`` render a
-single block of such a template; ``createTemplate()`` turns a string into a
-sandboxed template. Templates included by a sandboxed template are sandboxed
-as well.
+A ``SecurityPolicy`` must be strict (``setStrict(true)``): a non-strict policy
+allows some tags, functions, and tests implicitly and behaves differently from
+Twig 4.0. The constructor throws a ``LogicException`` otherwise.
 
-Data is passed through the render context (or registered as globals on the
-environment you crafted); the policy governs any method or property access on
-those values either way.
+To render an untrusted template from one of your templates, use the
+:doc:`render_sandboxed <functions/render_sandboxed>` function.
 
-Rendering From a Trusted Template
----------------------------------
+Configuring the Security Policy
+-------------------------------
 
-To render an untrusted template from a trusted template, use the
-:doc:`render_sandboxed() function <functions/render_sandboxed>`.
+A ``SecurityPolicy`` allow-lists what templates can use; everything else is
+rejected with a ``Twig\Sandbox\SecurityError`` exception::
 
-.. note::
-
-    When auto-escaping is enabled (the default), the ``escape`` filter is
-    applied to every printed expression, so it must be part of the filter
-    allow-list for sandboxed templates to render.
-
-.. caution::
-
-    PHP code invoked during a sandboxed render (a filter, function, or
-    extension you registered on the sandbox environment) runs with its full
-    PHP capabilities: the sandbox only restricts what the template source can
-    express. Only register extensions and callables that are safe to call
-    with attacker-chosen arguments.
-
-Using the Sandbox Extension Directly
-------------------------------------
-
-.. deprecated:: 3.29
-
-    The ``SandboxExtension`` is internal as of Twig 3.29 and should not be
-    used directly anymore; the ``sandboxed`` argument of the ``include``
-    function and the ``enableSandbox()``, ``disableSandbox()``, and
-    ``isSandboxedGlobally()`` methods are deprecated. Use the ``Sandbox``
-    class instead.
-
-Before the ``Sandbox`` class existed, sandboxing was configured by registering
-the ``SandboxExtension`` on the environment via the ``addExtension()``
-method::
-
-    $twig->addExtension(new \Twig\Extension\SandboxExtension($policy));
-
-By default, the sandbox mode is then disabled and gets enabled when including
-untrusted template code by using the ``sandboxed`` option of the ``include``
-function:
-
-.. code-block:: twig
-
-    {{ include('user.html.twig', sandboxed: true) }}
-
-You can also sandbox all templates by passing ``true`` as the second argument
-of the extension constructor::
-
-    $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
-
-Configuring the Sandbox Policy
-------------------------------
-
-The security policy is enforced the same way whether templates are rendered
-through a ``Sandbox`` or through the ``SandboxExtension`` directly.
-
-The sandbox security is managed by a policy instance, which must be passed to
-the ``SandboxExtension`` constructor.
-
-By default, Twig comes with one policy class: ``\Twig\Sandbox\SecurityPolicy``.
-This class allows you to allow-list some tags, filters, functions, and
-properties and methods on objects::
-
-    $tags = ['if'];
-    $filters = ['upper'];
-    $methods = [
-        'Article' => ['getTitle', 'getBody'],
-    ];
-    $properties = [
-        'Article' => ['title', 'body'],
-    ];
-    $functions = ['range'];
-    $tests = ['my_test'];
-    $policy = new \Twig\Sandbox\SecurityPolicy($tags, $filters, $methods, $properties, $functions, $tests);
-
-With the above configuration, the security policy will only allow usage of the
-``if`` tag, the ``upper`` filter, and the ``my_test`` test (on top of the
-built-in tests that are always allowed, see below). Moreover, the templates
-will only be able to call the ``getTitle()`` and ``getBody()`` methods on
-``Article`` objects, and the ``title`` and ``body`` public properties.
-Everything else won't be allowed and will generate a
-``\Twig\Sandbox\SecurityError`` exception.
-
-.. note::
-
-    The ``allowedTests`` argument is available since Twig 3.28 (in earlier
-    versions all tests were always allowed). Most built-in tests (``empty``,
-    ``defined``, ``even``, ``same as``, ``iterable``, etc.) are always allowed
-    and do not need to be listed. Only custom tests and the built-in
-    ``constant`` test must be allow-listed like filters and functions.
-
-.. note::
-
-    As of Twig 3.14.1 (and on Twig 3.11.2), if the ``Article`` class implements
-    the ``ArrayAccess`` interface, the templates will only be able to access
-    the ``title`` and ``body`` attributes.
-
-    Note that native array-like classes (like ``ArrayObject``) are always
-    allowed, you don't need to configure them.
-
-.. note::
-
-    When an attribute resolves through a PHP magic ``__call()`` method (the
-    class has no real method or property with that name), the sandbox checks
-    the **virtual method name written in the template**, not ``__call``. For
-    example, ``{{ article.slug }}`` on an object that handles ``slug`` via
-    ``__call()`` requires ``slug`` in the method allow-list::
-
-        $methods = [
-            'Article' => ['slug'],
-        ];
-
-    Allow-listing ``__call`` itself has no effect: it would only match a
-    template that literally writes ``{{ article.__call }}``. Allow each virtual
-    method by its own name so the policy stays granular.
-
-.. caution::
-
-    The ``extends`` and ``use`` tags, the ``parent``, ``block``, and
-    ``attribute`` functions, the ``constant`` test, and any custom test are
-    always allowed in a sandboxed template. That behavior will change in 4.0
-    where they will need to be explicitly allowed like any other tag, filter,
-    function, or test. To opt-in to the 4.0 behavior now (so they need to be
-    allow-listed or get rejected), enable strict mode on the security policy::
-
-        $policy->setStrict(true);
-
-Marking Filters, Functions, Tests, and Tags as Always Allowed
--------------------------------------------------------------
+    $policy = new SecurityPolicy(
+        allowedTags: ['if', 'for'],
+        allowedFilters: ['escape', 'upper', 'date'],
+        allowedMethods: [
+            Article::class => ['getTitle', 'getBody', '__toString'],
+        ],
+        allowedProperties: [
+            Article::class => ['title'],
+        ],
+        allowedFunctions: ['range'],
+        allowedTests: ['published'],
+    );
 
 .. versionadded:: 3.28
 
-    The ``always_allowed_in_sandbox`` option for filters, functions, and tests,
-    and the ``isAlwaysAllowedInSandbox()`` method for token parsers, were added
-    in Twig 3.28.
+    The ``allowedTests`` argument was added in Twig 3.28. Before, all tests
+    were allowed.
 
-Some filters, functions, tests, and tags are inherently safe and should always
-be usable in sandboxed templates without forcing every policy to allow-list
-them. Mark such callables by setting the ``always_allowed_in_sandbox`` option
-to ``true``::
+When auto-escaping is enabled (the default), Twig applies the ``escape``
+filter to every printed expression, so allow it. The ``..`` operator calls the
+``range`` function, so ``{% for i in 1..10 %}`` requires allowing both the
+``for`` tag and the ``range`` function.
 
-    $twig->addFilter(new \Twig\TwigFilter('upper', 'strtoupper', [
-        'always_allowed_in_sandbox' => true,
-    ]));
+Tags, filters, functions, and tests are checked when each template starts
+rendering, and methods and properties when a template uses them. A render can
+therefore fail after ``display()`` or ``stream()`` sent part of the output,
+for instance when an included template uses a forbidden filter; use
+``render()`` to get the output only if the whole template renders.
 
-    $twig->addFunction(new \Twig\TwigFunction('max', 'max', [
-        'always_allowed_in_sandbox' => true,
-    ]));
+Objects
+~~~~~~~
 
-    $twig->addTest(new \Twig\TwigTest('even', null, [
-        'always_allowed_in_sandbox' => true,
-    ]));
+Templates can only access the methods and properties allowed for the class of
+an object. An entry applies to the class, its subclasses, and, for an
+interface, the classes implementing it. Method names are case-insensitive,
+property names are case-sensitive:
 
-For tags, override ``isAlwaysAllowedInSandbox()`` on your token parser to
-return ``true``::
+* ``{{ article.title }}`` is allowed if the ``title`` public property or the
+  method it resolves to (``title()``, ``getTitle()``, ``isTitle()``, or
+  ``hasTitle()``) is allowed;
 
-    final class MyTagTokenParser extends \Twig\TokenParser\AbstractTokenParser
-    {
-        public function isAlwaysAllowedInSandbox(): bool
-        {
-            return true;
-        }
+* ``{{ article.getTitle() }}`` requires the ``getTitle`` method;
 
-        // ...
-    }
+* ``{{ article['title'] }}`` on an object implementing ``ArrayAccess`` reads
+  the offset if the ``title`` property is allowed, and otherwise resolves like
+  ``article.title``; native classes like ``ArrayObject``, ``ArrayIterator``,
+  ``SplFixedArray``, or ``SplObjectStorage`` don't need to be allowed, but
+  their subclasses do;
 
-Marked filters, functions, tests, and tags are skipped by the sandbox security
-check entirely, so they incur no runtime overhead, and they do not need to be
-listed in the ``SecurityPolicy`` allow-lists.
+* printing an object or converting it to a string in any other way (with a
+  filter like ``upper``, a concatenation, a comparison with a string, and so
+  on) requires its ``__toString`` method, except for ``Twig\Markup`` objects,
+  like the output of ``include()``.
 
-The sandbox assumes that attackers control template source, not the Twig
-environment, registered extensions, runtime configuration, security policy,
-custom escaping strategies, or context values passed by the application. Treat
-those application-provided pieces as trusted. If a callable or a value is not
-safe for untrusted template authors, don't register or expose it in the
-sandboxed environment.
+When a method is handled by ``__call()``, allow the name used in the
+template: ``{{ article.slug }}`` requires the ``slug`` method. Never allow
+magic methods like ``__call``, ``__get``, or ``__set``: a template could call
+them directly, as in ``{{ article.__call('anyMethod', ['argument']) }}``, with
+any name and arguments. Reading a property handled by ``__get()`` or by a
+property hook runs that code, so only allow such a property if that code is
+safe to run.
 
-Criteria for Marking an Item as Always Allowed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Always Allowed Built-ins
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Only mark a callable or tag as always allowed when **all** the following
-conditions hold:
+The built-in ``defined``, ``divisible by``, ``empty``, ``even``,
+``iterable``, ``mapping``, ``none``, ``null``, ``odd``, ``same as``,
+``sequence``, and ``true`` tests are always allowed. The ``constant`` test
+reads PHP constants, so allow it explicitly if you need it.
 
-* **No new capability.** The item must not expose anything beyond what the
-  sandbox already accepts. Pure value predicates (``is even``, ``is empty``),
-  pure value transformations (``upper``, ``trim``, ``abs``), and pure control
-  flow (``if``, ``for``, ``set``) qualify.
-* **No PHP runtime access.** The item must not read arbitrary PHP constants,
-  call arbitrary classes or functions, instantiate objects from
-  user-controlled names, or otherwise reach into the PHP runtime. This rules
-  out ``constant``, ``enum``, ``invoke``, and similar.
-* **No callable arguments.** The item must not accept a callable parameter it
-  dispatches to. This rules out higher-order operations like ``map``,
-  ``filter``, ``reduce``, ``find``, ``sort``, and ``column``: applications may
-  have deliberate reasons to forbid those, and they need the policy gate to do
-  so.
-* **No cross-template resolution.** The item must not resolve template names
-  at runtime or pivot through the loader. This rules out ``include``,
-  ``extends``, ``embed``, ``use``, ``import``, ``from``, ``source``, and
-  ``template_from_string``.
-* **No output-safety bypass.** The item must not let the template declare
-  its own output safe. This rules out ``raw``.
-* **No dedicated introspection or debugging surface.** The item must not be
-  intended to dump arbitrary object internals or call user-defined
-  serialization hooks. This rules out ``json_encode`` and ``dump``.
-* **No side effects on the PHP environment.** The item must not flush
-  output buffers, trigger deprecations, or otherwise affect global state.
-  This rules out ``flush`` and ``deprecated``.
-* **Deterministic output.** The item must return the same value for the same
-  arguments across renders. Applications that rely on sandboxed templates being
-  reproducible (for caching, content hashing, golden-output tests, or audit
-  comparisons) lose that property if a template can pull from the PHP random
-  number generator without the policy opting in. This rules out ``random`` and
-  ``shuffle``: applications that want them can still allow-list them
-  explicitly.
+In Twig 4.0, the following built-ins will be always allowed as well; allow
+them explicitly in 3.x:
 
-Note that several allowed items will still interact with PHP interfaces on
-objects passed as arguments (``Countable::count()``,
-``IteratorAggregate::getIterator()``, ``Stringable::__toString()`` on
-iterated items). That transitive behavior is documented separately under
-:ref:`Allowed Operations Apply Transitively to Their Arguments
-<allowed-operations-transitive>` and is considered an accepted property of
-the sandbox model. The criteria above are about what the item itself
-exposes, not about how its arguments behave.
+* Tags: ``apply``, ``block``, ``do``, ``for``, ``if``, ``macro``, ``set``,
+  ``types``, ``with``;
 
-Built-ins That Will Be Always Allowed in 4.0
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following Twig built-ins meet the criteria above and will have the
-``always_allowed_in_sandbox`` flag set in Twig 4.0. They still need to be
-explicitly allow-listed in 3.x.
-
-* Tags: ``apply``, ``block``, ``do``, ``for``, ``guard``, ``if``, ``macro``,
-  ``set``, ``types``, ``with``.
 * Filters: ``abs``, ``batch``, ``capitalize``, ``convert_encoding``,
   ``default``, ``e``, ``escape``, ``first``, ``format``, ``join``, ``keys``,
   ``last``, ``length``, ``lower``, ``merge``, ``nl2br``, ``number_format``,
   ``replace``, ``reverse``, ``round``, ``slice``, ``split``, ``striptags``,
-  ``title``, ``trim``, ``upper``, ``url_encode``.
+  ``title``, ``trim``, ``upper``, ``url_encode``;
+
 * Functions: ``cycle``, ``max``, ``min``.
 
-When upgrading to 4.0, you can drop these names from your ``SecurityPolicy``
-allow-lists. Leaving them in is harmless: listing a name that is always
-allowed has no effect.
+Keeping them in your policy after upgrading is harmless.
 
-The corresponding built-in tests (``defined``, ``divisible by``, ``empty``,
-``even``, ``iterable``, ``mapping``, ``none``, ``null``, ``odd``, ``same as``,
-``sequence``, ``true``) are **already** flagged as always allowed since Twig
-3.28, so they never need to be allow-listed. This is safe because tests were
-never enforced by the sandbox before 3.28: flagging them keeps existing
-templates working unchanged. The ``constant`` test is the exception: it reaches
-into the PHP runtime, so it is not always allowed and must be allow-listed (it
-is still implicitly allowed in 3.x with a deprecation, and rejected in 4.0).
+Unlike the tags above, never allow the ``guard`` tag: sandboxed templates are
+written for a known environment, so they have no reason to check which
+filters, functions, and tests it registers.
 
-.. _allowed-operations-transitive:
+.. _sandbox-limits:
 
-Allowed Operations Apply Transitively to Their Arguments
---------------------------------------------------------
+What the Sandbox Does Not Protect Against
+-----------------------------------------
 
-The method and property allow-lists only restrict attribute access written
-explicitly in the template (``obj.foo`` and ``obj.foo()``). Once an object is
-passed as an argument to an allowed tag, filter, function, or test, that
-operation can interact with it in any way PHP allows, without going through
-the sandbox allow-list.
+The sandbox assumes that template authors control the template source, and
+nothing else: the environment, its extensions, the policy, and the data you
+pass are yours, and Twig trusts them. Keep the following in mind when deciding
+what to expose.
 
-This is especially easy to miss for implicit calls made through PHP
-interfaces. For example, allowing ``json_encode`` may expose public object
-properties and call ``JsonSerializable::jsonSerialize()``; allowing sequence
-operations such as ``for``, ``keys``, ``slice``, ``random``, or ``join`` may
-call ``IteratorAggregate::getIterator()``, ``Iterator`` methods, or
-``Countable::count()``; allowing ``cycle`` with an ``ArrayAccess`` value may
-call ``offsetGet()``; allowing ``url_encode`` on arrays may expose public
-object properties through PHP's query-string serialization; allowing ``max``
-or ``min`` may compare objects by their public properties. None of these calls
-appear in the template source.
+**Data is visible.** Only pass the data, and register the globals, a template
+needs: a template can iterate over every variable through ``_context``. The
+policy only governs objects: array keys and values are readable without any
+check. If you show error messages to template authors, they also reveal names:
+security errors name the class of the object, reading a missing key with
+``strict_variables`` enabled lists the existing ones, and an unknown tag,
+filter, function, or test suggests registered names close to it.
 
-Only allow operations whose behavior is safe for the objects you expose to
-sandboxed templates. If this is not guaranteed, convert objects to plain
-arrays or scalars before passing them in.
+**Allowed operations use their arguments freely.** Allow-lists only restrict
+what the template source writes explicitly. An allowed filter, function, test,
+or tag can use the objects it receives in any way PHP allows: iteration calls
+``getIterator()``, ``Iterator``, or ``Countable`` methods, ``cycle`` calls
+``offsetGet()`` on ``ArrayAccess`` objects, ``json_encode`` calls
+``jsonSerialize()`` and, like ``url_encode``, exposes public properties,
+``min`` and ``max`` compare objects by their properties, and your own filters
+and functions do whatever their code does. Only allow operations that are safe
+for the objects you pass, or pass arrays and scalars instead.
 
-Limiting Resource Usage
------------------------
+**Objects must behave consistently.** Before an operation converts the
+elements of an iterable to strings (like ``join``), the sandbox iterates it to
+check them, then the operation iterates it again. An object producing
+different elements on each iteration (because it consumes a queue, re-runs a
+query, or reads from a stream) can give the operation elements that were never
+checked. Twig does not consider such bypasses security issues: convert these
+values to arrays before passing them.
 
-The sandbox prevents untrusted templates from reaching code, data, methods, or
-properties they shouldn't. It does **not** prevent a template from consuming
-CPU, memory, or wall-clock time, even under the strictest allow-list.
+**Your code runs with full power.** Filters, functions, and extensions
+registered on the sandbox environment run as regular PHP code; only register
+code that is safe to call with arguments chosen by template authors.
 
-This is by design: any limit baked into Twig itself would be both arbitrary
-and trivial to work around, since there are many ways a template can burn
-resources (large ranges, nested loops, large string operations, recursive
-macros, expensive filters, deeply nested includes, and so on).
+**Output is not sanitized.** The text of a template is output as written by
+its author, HTML and JavaScript included; auto-escaping only applies to
+printed expressions. Only use the output where content from its author is
+acceptable.
 
-If you render untrusted templates, you should contain them at the process level
-rather than at the template engine level.
+**Resources are not limited.** A template can consume as much CPU, memory, or
+time as it wants, even under the strictest policy: large ranges, nested loops,
+or recursive macros are enough. Contain sandboxed renders at the process level
+(time limits, memory limits, dedicated workers).
 
-Accepting Callables Arguments
------------------------------
+Defining Callables for Sandboxed Templates
+------------------------------------------
 
-The Twig sandbox allows you to configure which functions, filters, tests and
-dot operations are allowed. Many of these calls can accept arguments. As these
-arguments are not validated by the sandbox, you must be very careful.
+Filters, functions, and tests receive arguments chosen by template authors.
+Never accept a PHP ``callable`` argument, and never leave such an argument
+untyped: a template could pass the name of any PHP function, like ``system``.
+Type-hint ``\Closure`` instead, so that templates can only pass arrow
+functions::
 
-For instance, accepting a PHP ``callable`` as an argument is dangerous as it
-allows end user to call any PHP function (by passing a ``string``) or any
-static methods (by passing an ``array``). For instance, it would accept any PHP
-built-in functions like ``system()`` or ``exec()``::
-
-    $twig->addFilter(new \Twig\TwigFilter('custom', function (callable $callable) {
+    $custom = function (iterable $items, \Closure $callback) {
         // ...
-        $callable();
-        // ...
-    }));
+    };
+    $env->addFilter(new \Twig\TwigFilter('custom', $custom));
 
-To avoid this security issue, don't type-hint such arguments with ``callable``
-but use ``\Closure`` instead (not using a type-hint would also be problematic).
-This restricts the allowed callables to PHP closures only, which is enough to
-accept Twig arrow functions::
+To adapt the behavior of a filter, function, or test in sandboxed templates,
+use the ``needs_is_sandboxed`` option (see :ref:`sandbox-aware-filters`).
 
-    $twig->addFilter(new \Twig\TwigFilter('custom', function (\Closure $callable) {
-        // ...
-        $callable();
-        // ...
-    }));
+.. versionadded:: 3.28
 
-    {{ people|custom(p => p.username|join(', ') }}
+    The ``always_allowed_in_sandbox`` option and the
+    ``isAlwaysAllowedInSandbox()`` token parser method were added in Twig 3.28.
 
-Any PHP callable can easily be converted to a closure by using the `first-class callable syntax`_.
+A filter, function, or test can be always allowed, so that policies don't have
+to list it, with the ``always_allowed_in_sandbox`` option::
 
-.. _`first-class callable syntax`: https://www.php.net/manual/en/functions.first_class_callable_syntax.php
+    $env->addFilter(new \Twig\TwigFilter('rot13', 'str_rot13', [
+        'always_allowed_in_sandbox' => true,
+    ]));
+
+For a tag, return ``true`` from ``isAlwaysAllowedInSandbox()`` in its token
+parser. Only do so for items meeting all these criteria:
+
+* they expose no new capability: pure value predicates (``even``), value
+  transformations (``upper``), or control flow (``if``);
+
+* they don't reach the PHP runtime: no constants, classes, or functions chosen
+  by the template;
+
+* they don't accept callables, so applications can still forbid higher-order
+  operations like ``map`` or ``filter``;
+
+* they don't load templates, like ``include`` or ``source``;
+
+* they don't let templates mark arbitrary content as safe, like ``raw``;
+
+* they don't dump object internals or call serialization hooks, like
+  ``json_encode``;
+
+* they have no side effects on the PHP environment, like ``flush``;
+
+* they are deterministic, unlike ``random``.
+
+These criteria cover what the item itself exposes; how it uses the objects it
+receives is covered in :ref:`sandbox-limits`.
+
+Upgrading From the Sandbox Extension
+------------------------------------
+
+.. deprecated:: 3.29
+
+    The ``SandboxExtension`` is internal as of Twig 3.29, and its
+    ``enableSandbox()``, ``disableSandbox()``, and ``isSandboxedGlobally()``
+    methods and the ``sandboxed`` argument of the ``include`` function are
+    deprecated. Use the ``Sandbox`` class instead.
+
+Before the ``Sandbox`` class, the sandbox was enabled by registering the
+``SandboxExtension`` on an environment, either for all templates or only for
+templates included with the ``sandboxed`` argument::
+
+    $twig->addExtension(new \Twig\Extension\SandboxExtension($policy, true));
+
+To migrate, move untrusted templates to an environment dedicated to a
+``Sandbox``, and make the policy strict. A non-strict policy always allows the
+``extends`` and ``use`` tags, the ``parent``, ``block``, and ``attribute``
+functions, and every test; a strict one requires allowing them like anything
+else, as Twig 4.0 will. Replace ``include()`` calls using the ``sandboxed``
+argument, and the deprecated ``sandbox`` tag, with the
+:doc:`render_sandboxed <functions/render_sandboxed>` function.
