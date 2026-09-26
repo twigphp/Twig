@@ -142,6 +142,7 @@ class SandboxTest extends TestCase
         yield ['flush', '{% flush %}'];
         yield ['for', '{% for i in 1..2 %}{% endfor %}'];
         yield ['from', '{% from "macros" import foo %}'];
+        yield ['guard', '{% guard function max %}{% endguard %}'];
         yield ['if', '{% if false %}{% endif %}'];
         yield ['import', '{% import "macros" as macros %}'];
         yield ['include', '{% include "macros" %}'];

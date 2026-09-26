@@ -59,7 +59,7 @@ final class GuardTokenParser extends AbstractTokenParser
         }
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new Nodes([$exists ? $body : $else]);
+        return new Nodes([$exists ? $body : $else], $token->getLine());
     }
 
     public function decideGuardFork(Token $token): bool
