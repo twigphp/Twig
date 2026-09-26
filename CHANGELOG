@@ -1,5 +1,6 @@
 # 3.30.1 (2026-XX-XX)
 
+ * Fix the `loop` variable being undefined when used in the sequence of a nested `for` tag
  * Reject a deprecated `Template` instance created by another environment in `Environment::resolveTemplate()`
  * Fix a compilation error inside an `autoescape` tag leaking its escaping strategy into the next compiled template
  * Fix the non-selected branch of a `guard` tag registering its parent, blocks, and macros
