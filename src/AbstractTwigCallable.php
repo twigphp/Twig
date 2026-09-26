@@ -140,21 +140,6 @@ abstract class AbstractTwigCallable implements TwigCallableInterface
         $this->options['deprecation_info']->triggerDeprecation($file, $line);
     }
 
-    public function getDeprecatingPackage(): string
-    {
-        throw new \LogicException('Not available anymore.');
-    }
-
-    public function getDeprecatedVersion(): string
-    {
-        throw new \LogicException('Not available anymore.');
-    }
-
-    public function getAlternative(): ?string
-    {
-        throw new \LogicException('Not available anymore.');
-    }
-
     public function getMinimalNumberOfRequiredArguments(): int
     {
         return ($this->options['needs_charset'] ? 1 : 0) + ($this->options['needs_environment'] ? 1 : 0) + ($this->options['needs_context'] ? 1 : 0) + ($this->options['needs_is_sandboxed'] ? 1 : 0) + \count($this->arguments);

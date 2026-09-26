@@ -47,11 +47,5 @@ interface TwigCallableInterface extends \Stringable
 
     public function isDeprecated(): bool;
 
-    public function getDeprecatingPackage(): string;
-
-    public function getDeprecatedVersion(): string;
-
-    public function getAlternative(): ?string;
-
     public function getMinimalNumberOfRequiredArguments(): int;
 }

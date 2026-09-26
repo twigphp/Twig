@@ -11,7 +11,6 @@
 
 namespace Twig\Node\Expression;
 
-use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Node;
@@ -21,7 +20,6 @@ class FunctionExpression extends CallExpression implements SupportDefinedTestInt
 {
     use SupportDefinedTestTrait;
 
-    #[FirstClassTwigCallableReady]
     public function __construct(TwigFunction $function, Node $arguments, int $lineno)
     {
         parent::__construct(['arguments' => $arguments], ['name' => $function->getName(), 'type' => 'function', 'twig_callable' => $function], $lineno);

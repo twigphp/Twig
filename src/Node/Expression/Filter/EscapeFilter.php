@@ -11,7 +11,6 @@
 
 namespace Twig\Node\Expression\Filter;
 
-use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\FilterExpression;
@@ -25,7 +24,6 @@ use Twig\TwigFilter;
  */
 final class EscapeFilter extends FilterExpression
 {
-    #[FirstClassTwigCallableReady]
     public function __construct(AbstractExpression $node, TwigFilter $filter, Node $arguments, int $lineno)
     {
         parent::__construct($node, $filter, $arguments, $lineno);

@@ -22,7 +22,7 @@ namespace Twig;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Markup implements \Countable, \JsonSerializable, \Stringable
+final class Markup implements \Countable, \JsonSerializable, \Stringable
 {
     private string $content;
     private ?string $charset;

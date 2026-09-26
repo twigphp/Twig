@@ -11,7 +11,6 @@
 
 namespace Twig\Node\Expression\Filter;
 
-use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Compiler;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
@@ -24,7 +23,6 @@ use Twig\TwigFilter;
  */
 class RawFilter extends FilterExpression
 {
-    #[FirstClassTwigCallableReady]
     public function __construct(AbstractExpression $node, ?TwigFilter $filter = null, ?Node $arguments = null, int $lineno = 0)
     {
         parent::__construct($node, $filter ?: new TwigFilter('raw', null, ['is_safe' => ['all']]), $arguments ?: new EmptyNode(), $lineno ?: $node->getTemplateLine());

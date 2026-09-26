@@ -21,7 +21,7 @@ use Twig\Source;
  * This extension is the wiring behind "Twig\Sandbox\Sandbox" and should not
  * be used directly, use a "Sandbox" to render untrusted templates instead.
  *
- * @internal since Twig 3.29
+ * @internal
  */
 final class SandboxExtension extends AbstractExtension
 {
@@ -45,9 +45,9 @@ final class SandboxExtension extends AbstractExtension
         return $this->checker;
     }
 
-    public function isSandboxed(?Source $source = null): bool
+    public function isSandboxed(): bool
     {
-        return $this->checker->isSandboxed($source);
+        return $this->checker->isSandboxed();
     }
 
     public function setSecurityPolicy(SecurityPolicyInterface $policy): void
@@ -60,7 +60,7 @@ final class SandboxExtension extends AbstractExtension
         return $this->checker->getSecurityPolicy();
     }
 
-    public function checkSecurity($tags, $filters, $functions, $tests = [], ?Source $source = null): void
+    public function checkSecurity($tags, $filters, $functions, array $tests, Source $source): void
     {
         $this->checker->checkSecurity($tags, $filters, $functions, $tests, $source);
     }

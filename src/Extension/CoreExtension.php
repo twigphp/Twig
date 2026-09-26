@@ -1954,7 +1954,6 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ($isSandboxed) {
-            // $isSandboxed is computed against the call-site source, so check the policy directly to honor that decision.
             $policy = $env->getExtension(SandboxExtension::class)->getChecker()->getSecurityPolicy();
             foreach ($array as $item) {
                 if (\is_object($item)) {
