@@ -1,0 +1,10 @@
+--TEST--
+"for" tag gives access to the loop variable of the enclosing loop in the sequence of a nested loop
+--TEMPLATE--
+{% for i in ['a', 'b'] %}{% for j in [loop.index] %}{{ i }}{{ j }}{% endfor %}{% endfor %}
+--DATA--
+return []
+--CONFIG--
+return ['strict_variables' => true]
+--EXPECT--
+a1b2

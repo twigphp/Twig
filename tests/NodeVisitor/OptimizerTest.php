@@ -124,6 +124,10 @@ class OptimizerTest extends TestCase
 
             ['{% for i in foo %}{% for j in foo %}{{ loop.parent.loop.index }}{% endfor %}{% endfor %}', ['i' => true, 'j' => true]],
 
+            ['{% for i in foo %}{% for j in [loop.index] %}{% endfor %}{% endfor %}', ['i' => true, 'j' => false]],
+
+            ['{% for i in foo %}{% for j in loop %}{% endfor %}{% endfor %}', ['i' => true, 'j' => false]],
+
             ['{% for i in foo %}{% set l = loop %}{% for j in foo %}{{ l.index }}{% endfor %}{% endfor %}', ['i' => true, 'j' => false]],
 
             ['{% for i in foo %}{% for j in foo %}{{ foo.parent.loop.index }}{% endfor %}{% endfor %}', ['i' => false, 'j' => false]],
