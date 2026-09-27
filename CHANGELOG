@@ -9,6 +9,7 @@
  * Fix the spread operator compiling to invalid PHP outside sequences, mappings, and call arguments
  * Fix the `deprecated` tag generating invalid PHP for an integer message
  * Add a third argument to `FilesystemLoader::addPath()` and `FilesystemLoader::prependPath()` to skip checking that the directory exists
+ * Speed up traversing nodes with node visitors
 
 # 3.30.0 (2026-09-25)
 
