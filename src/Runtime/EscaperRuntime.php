@@ -93,7 +93,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      */
     public function escape($string, string $strategy = 'html', ?string $charset = null, bool $autoescape = false)
     {
-        if ($autoescape && $string instanceof Markup) {
+        if ($autoescape && $string instanceof Markup && (null === $string->getSafe() || \in_array($strategy, $string->getSafe(), true))) {
             return $string;
         }
 
