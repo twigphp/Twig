@@ -21,6 +21,7 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Binary\ConcatBinary;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\EmptyExpression;
+use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Parser;
 use Twig\Token;
@@ -163,6 +164,8 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
             // Check for empty slots (comma with no expression)
             if ($stream->test(Token::PUNCTUATION_TYPE, ',')) {
                 $node->addElement(new EmptyExpression($stream->getCurrent()->getLine()));
+            } elseif ($token = $stream->nextIf(Token::OPERATOR_TYPE, '...')) {
+                $node->addElement(new SpreadUnary($parser->parseExpression(), $token->getLine()));
             } else {
                 $node->addElement($parser->parseExpression());
             }
@@ -190,8 +193,8 @@ final class LiteralExpressionParser extends AbstractExpressionParser implements 
             }
             $first = false;
 
-            if ($stream->test(Token::OPERATOR_TYPE, '...')) {
-                $node->addElement($parser->parseExpression());
+            if ($token = $stream->nextIf(Token::OPERATOR_TYPE, '...')) {
+                $node->addElement(new SpreadUnary($parser->parseExpression(), $token->getLine()));
 
                 continue;
             }

@@ -5,6 +5,7 @@
  * Fix the non-selected branch of a `guard` tag registering its parent, blocks, and macros
  * Speed up reading object attributes backed by getters or class constants
  * Fix the sandbox not reporting the line of a rejected `guard` tag
+ * Fix the spread operator compiling to invalid PHP outside sequences, mappings, and call arguments
 
 # 3.30.0 (2026-09-25)
 
