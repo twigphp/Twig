@@ -894,6 +894,35 @@ class SandboxTest extends TestCase
         $this->assertSame('<b>safe</b>', $twig->load('index')->render(['markup' => new Markup('<b>safe</b>', 'UTF-8')]));
     }
 
+    public function testSandboxAllowsTheLoopVariable(): void
+    {
+        $template = '{% for i in [1, 2, 3] %}{{ loop.index }}{{ loop.index0 }}{{ loop.revindex }}{{ loop.revindex0 }}{{ loop.first ? "F" }}{{ loop.last ? "L" }}{{ loop.length }}{{ loop.depth }}{{ loop.depth0 }}{{ loop.changed(i) ? "C" }}{{ loop.previous }}{{ loop.next }}{{ loop.cycle("a", "b") }}{{ loop.parent.name }}|{% endfor %}';
+        $expected = '1032F310C2a2|2121310C13b2|3210L310C2a2|';
+
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['for']);
+        $this->assertSame($expected, $twig->load('index')->render(['name' => 2]));
+
+        $twig = new Environment(new ArrayLoader(['index' => $template]), ['cache' => false, 'autoescape' => false]);
+        $twig->addExtension(new SandboxExtension(new DenyEverythingSecurityPolicy(), true));
+        $this->assertSame($expected, $twig->load('index')->render(['name' => 2]));
+    }
+
+    #[DataProvider('getLoopVariableMagicMethods')]
+    public function testSandboxDoesNotAllowMagicMethodsOfTheLoopVariable(string $template, string $method): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['for', 'do']);
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage(\sprintf('Calling "%s" method on a "Twig\Runtime\LoopContext" object is not allowed', $method));
+        $twig->load('index')->render([]);
+    }
+
+    public static function getLoopVariableMagicMethods(): iterable
+    {
+        yield ['{% for i in [1] %}{% do loop.__construct() %}{% endfor %}', '__construct'];
+        yield ['{% for i in [[1]] %}{% do loop.__invoke(i) %}{% endfor %}', '__invoke'];
+    }
+
     public function testSandboxAppliesThePolicyToTemplateMethods(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => 'foo']);
@@ -1347,7 +1376,7 @@ EOF
         // the optimization by passing values whose `__toString` is NOT in
         // the policy: with the wrap, the render throws; without it, it
         // succeeds.
-        $twig = $this->getEnvironment(true, [], ['index' => $template]);
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['for']);
         $twig->addFunction(new TwigFunction('safe_fn', $func));
         $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
         $policy->setAllowedFunctions(['safe_fn']);
@@ -1395,7 +1424,7 @@ EOF
         // Conversely, an unsafe parameter type (`mixed`, untyped, `string`,
         // `iterable`, `Stringable`, ...) must keep wrapping arguments so the
         // sandbox can still block disallowed `__toString` calls.
-        $twig = $this->getEnvironment(true, [], ['index' => $template]);
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['for']);
         $twig->addFunction(new TwigFunction('unsafe_fn', $func));
         $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
         $policy->setAllowedFunctions(['unsafe_fn']);
