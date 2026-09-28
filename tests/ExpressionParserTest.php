@@ -126,6 +126,41 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider getMisplacedSpreadTests
+     */
+    #[DataProvider('getMisplacedSpreadTests')]
+    public function testMisplacedSpreadIsASyntaxError(string $template): void
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
+        $parser = new Parser($env);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('The spread operator can only be used on sequence elements, mapping elements, and call arguments in "index" at line 1.');
+        $parser->parse($env->tokenize(new Source($template, 'index')));
+    }
+
+    public static function getMisplacedSpreadTests()
+    {
+        return [
+            ['{{ ...foo }}'],
+            ['{{ (...foo) }}'],
+            ['{{ -...foo }}'],
+            ['{{ 1 + ...foo }}'],
+            ['{% set bar = ...foo %}'],
+            ['{% do ...foo %}'],
+            ['{% with ...foo %}{% endwith %}'],
+            ['{{ (bar => ...foo)(1) }}'],
+            ['{{ [(...foo)] }}'],
+            ['{{ [1, -...foo] }}'],
+            ['{{ {a: ...foo} }}'],
+            ['{{ {(...foo): 1} }}'],
+            ['{{ bar(-...foo) }}'],
+            ['{{ bar(a: ...foo) }}'],
+            ['{{ bar(a = ...foo) }}'],
+        ];
+    }
+
     public static function getTestsForSequence()
     {
         return [
