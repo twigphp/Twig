@@ -28,6 +28,7 @@ use Twig\ExpressionParser\Infix\SquareBracketExpressionParser;
 use Twig\ExpressionParser\InfixAssociativity;
 use Twig\ExpressionParser\Prefix\GroupingExpressionParser;
 use Twig\ExpressionParser\Prefix\LiteralExpressionParser;
+use Twig\ExpressionParser\Prefix\SpreadExpressionParser;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
 use Twig\Markup;
 use Twig\Node\Expression\AbstractExpression;
@@ -84,7 +85,6 @@ use Twig\Node\Expression\Test\TrueTest;
 use Twig\Node\Expression\Unary\NegUnary;
 use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Node\Expression\Unary\PosUnary;
-use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\NodeVisitor\CorrectnessNodeVisitor;
@@ -342,7 +342,7 @@ final class CoreExtension extends AbstractExtension
         return [
             // unary operators
             new UnaryOperatorExpressionParser(NotUnary::class, 'not', 70),
-            new UnaryOperatorExpressionParser(SpreadUnary::class, '...', 512, description: 'Spread operator', operandPrecedence: 0),
+            new SpreadExpressionParser(),
             new UnaryOperatorExpressionParser(NegUnary::class, '-', 500),
             new UnaryOperatorExpressionParser(PosUnary::class, '+', 500),
 
