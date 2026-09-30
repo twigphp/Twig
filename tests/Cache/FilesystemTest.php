@@ -74,6 +74,21 @@ class FilesystemTest extends TestCase
         $this->assertFalse(class_exists($this->className, false));
     }
 
+    public function testLoadSkipsTheFileCheckWhenOpcacheHasTheFile(): void
+    {
+        $this->assertSame('loaded', $this->loadInOpcacheProcess(0, true));
+    }
+
+    public function testLoadChecksTheFileWhenBytecodeInvalidationIsForced(): void
+    {
+        $this->assertSame('', $this->loadInOpcacheProcess(FilesystemCache::FORCE_BYTECODE_INVALIDATION, true));
+    }
+
+    public function testLoadDoesNotWarnWhenTheOpcacheApiIsRestricted(): void
+    {
+        $this->assertSame('loaded', $this->loadInOpcacheProcess(0, false, '/nonexistent'));
+    }
+
     public function testWrite(): void
     {
         $key = $this->directory.'/cache/cachefile.php';
@@ -201,5 +216,45 @@ class FilesystemTest extends TestCase
         return strtr('<?php class {{class_name}} {}', [
             '{{class_name}}' => $this->className,
         ]);
+    }
+
+    private function loadInOpcacheProcess(int $options, bool $removeCachedFile, string $restrictApi = ''): string
+    {
+        if (!\function_exists('opcache_compile_file')) {
+            $this->markTestSkipped('OPcache is not loaded.');
+        }
+
+        $code = <<<'PHP'
+            require $argv[1];
+            $cache = new Twig\Cache\FilesystemCache($argv[2], (int) $argv[3]);
+            $key = $cache->generateKey('index', 'Foo');
+            $cache->write($key, '<?php echo "loaded";');
+            if ($argv[4]) {
+                opcache_compile_file($key);
+                unlink($key);
+            }
+            $cache->load($key);
+            PHP;
+
+        $process = proc_open([
+            \PHP_BINARY,
+            '-d', 'opcache.enable=1',
+            '-d', 'opcache.enable_cli=1',
+            '-d', 'opcache.file_update_protection=0',
+            '-d', 'opcache.validate_timestamps=0',
+            '-d', 'opcache.restrict_api='.$restrictApi,
+            '-d', 'display_errors=1',
+            '-d', 'error_reporting=-1',
+            '-r', $code,
+            \dirname(__DIR__, 2).'/vendor/autoload.php',
+            $this->directory,
+            (string) $options,
+            $removeCachedFile ? '1' : '0',
+        ], [1 => ['pipe', 'w'], 2 => ['redirect', 1]], $pipes);
+
+        $output = stream_get_contents($pipes[1]);
+        proc_close($process);
+
+        return $output;
     }
 }
