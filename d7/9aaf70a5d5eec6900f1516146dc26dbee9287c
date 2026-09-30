@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by wachterjohannes at 2026-09-27T17:48:25Z
+
+Nice addition. Two things beyond @smnandre's comments:
+
+The paragraph "the documentation is wrong and gets fixed... Twig is fixed instead" can excuse any bugfix as a "doc fix". Needs a tighter scope or one example.
+
+Node classes are covered, tree shape is not. True but abstract. One small example would fix that.
