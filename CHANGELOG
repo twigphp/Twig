@@ -6,6 +6,7 @@
  * Stop detecting `echo` and `print` in compiled nodes; `yield` is the only supported mode and 3.x deprecates the alternative
  * Remove the now inert `#[YieldReady]` and `#[FirstClassTwigCallableReady]` attributes from the built-in nodes; the attribute classes are kept so code supporting both 3.x and 4.x passes static analysis
  * Add an optional `string $template = ''` argument to `IncludeNode::addGetTemplate()`; subclasses overriding this method must declare a compatible parameter
+ * Add a `bool $check = true` argument to `FilesystemLoader::addPath()` and `FilesystemLoader::prependPath()`; subclasses overriding these methods must declare a compatible parameter
  * Remove the obsolete `Twig\Test\NodeTestCase::getTests()` method; override `provideTests()` instead
  * Make `Twig\Markup` final
  * Remove `getDeprecatingPackage()`, `getDeprecatedVersion()`, and `getAlternative()` from `Twig\TwigCallableInterface` and `Twig\AbstractTwigCallable`; use `Twig\AbstractTwigCallable::triggerDeprecation()` instead
