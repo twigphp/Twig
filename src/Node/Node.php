@@ -292,6 +292,16 @@ class Node implements \Countable, \IteratorAggregate
         return new \ArrayIterator($this->nodes);
     }
 
+    /**
+     * @internal
+     *
+     * @return array<string|int, Node>
+     */
+    public function getNodes(): array
+    {
+        return $this->nodes;
+    }
+
     public function getTemplateName(): ?string
     {
         return $this->sourceContext ? $this->sourceContext->getName() : null;
