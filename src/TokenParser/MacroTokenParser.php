@@ -71,6 +71,11 @@ final class MacroTokenParser extends AbstractTokenParser
         return 'macro';
     }
 
+    public function isAlwaysAllowedInSandbox(): bool
+    {
+        return true;
+    }
+
     /**
      * @return array{ArrayExpression, string|null}
      */
