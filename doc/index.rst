@@ -12,6 +12,7 @@ Twig
     advanced
     sandbox
     internals
+    backward_compatibility
     deprecated
     recipes
     coding_standards
