@@ -1,4 +1,4 @@
-# 3.30.1 (2026-XX-XX)
+# 3.31.0 (2026-XX-XX)
 
  * Fix the `loop` variable being undefined when used in the sequence of a nested `for` tag
  * Reject a deprecated `Template` instance created by another environment in `Environment::resolveTemplate()`
@@ -8,6 +8,7 @@
  * Fix the sandbox not reporting the line of a rejected `guard` tag
  * Fix the spread operator compiling to invalid PHP outside sequences, mappings, and call arguments
  * Fix the `deprecated` tag generating invalid PHP for an integer message
+ * Add a third argument to `FilesystemLoader::addPath()` and `FilesystemLoader::prependPath()` to skip checking that the directory exists
 
 # 3.30.0 (2026-09-25)
 
