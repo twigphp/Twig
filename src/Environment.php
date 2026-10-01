@@ -932,8 +932,23 @@ class Environment
         return array_merge($this->extensionSet->getGlobals(), $this->globals);
     }
 
+    /**
+     * Resets request-scoped state for long-running workers (e.g. FrankenPHP).
+     *
+     * Clears cached TemplateWrapper instances and globals. Symfony TwigBundle
+     * currently tags kernel.reset on resetGlobals(); callers that invoke reset()
+     * get both clears. resetGlobals() also drops loadedWrappers so the existing
+     * tag already prevents wrapper leaks between requests.
+     */
+    public function reset(): void
+    {
+        $this->loadedWrappers = [];
+        $this->resetGlobals();
+    }
+
     public function resetGlobals(): void
     {
+        $this->loadedWrappers = [];
         $this->resolvedGlobals = null;
         $this->extensionSet->resetGlobals();
     }
