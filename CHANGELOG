@@ -1,5 +1,6 @@
 # 3.31.0 (2026-XX-XX)
 
+ * Add the `sort_localized` filter to `twig/intl-extra` to sort values in the alphabetical order of a locale
  * Fix the `loop` variable being undefined when used in the sequence of a nested `for` tag
  * Reject a deprecated `Template` instance created by another environment in `Environment::resolveTemplate()`
  * Fix a compilation error inside an `autoescape` tag leaking its escaping strategy into the next compiled template
