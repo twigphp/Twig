@@ -16,6 +16,7 @@
  * Speed up applying `html_cva()` recipes that resolve to classes already seen
  * Fix a class marked safe for `html_attr` not being considered safe in `html` and `html_attr_relaxed` contexts
  * Add a way to mark a `Twig\Markup` instance as safe for some escaping strategies only
+ * Speed up the `html_attr_relaxed` escaping strategy for strings that need no escaping
 
 # 3.30.0 (2026-09-25)
 
