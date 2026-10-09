@@ -161,6 +161,24 @@ EOHTML,
         }
     }
 
+    public function testTwigExceptionGuessWithFilesystemLoaderOutsideDebugMode(): void
+    {
+        $loader = new FilesystemLoader(__DIR__.'/Fixtures/errors');
+        $twig = new Environment($loader, ['strict_variables' => true, 'debug' => false, 'cache' => false]);
+
+        $template = $twig->load('index.html');
+        try {
+            $template->render(['foo' => new ErrorTest_Foo()]);
+
+            $this->fail();
+        } catch (RuntimeError $e) {
+            $this->assertEquals('An exception has been thrown during the rendering of a template ("Runtime error...") in "index.html" at line 3.', $e->getMessage());
+            $this->assertEquals(3, $e->getLine());
+            $this->assertEquals(strtr(__DIR__.'/Fixtures/errors/index.html', '/', \DIRECTORY_SEPARATOR), $e->getFile());
+            $this->assertEquals(strtr(__DIR__.'/Fixtures/errors/index.html', '/', \DIRECTORY_SEPARATOR), $e->getSourceContext()->getPath());
+        }
+    }
+
     /**
      * @dataProvider getErroredTemplates
      */
