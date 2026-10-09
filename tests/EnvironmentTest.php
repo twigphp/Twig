@@ -709,6 +709,168 @@ EOF
         $twig->disableStrictVariables();
         $this->assertSame($cls, $twig->getTemplateClass('index'));
     }
+
+    public function testCompiledTemplatesDoNotDependOnTheLocationOfTheirSource(): void
+    {
+        $dir = sys_get_temp_dir().'/twig-relocation-test';
+        if (is_dir($dir)) {
+            FilesystemHelper::removeDir($dir);
+        }
+        foreach (['a', 'b'] as $project) {
+            mkdir($dir.'/'.$project.'/templates', 0777, true);
+            file_put_contents($dir.'/'.$project.'/templates/relocated.twig', '{% embed "relocated_layout.twig" %}{% block content %}{{ foo }}{% endblock %}{% endembed %}');
+            file_put_contents($dir.'/'.$project.'/templates/relocated_layout.twig', '{% block content %}{% endblock %}');
+        }
+
+        try {
+            $a = new Environment(new FilesystemLoader('templates', $dir.'/a'), ['strict_variables' => true]);
+            $b = new Environment(new FilesystemLoader('templates', $dir.'/b'), ['strict_variables' => true]);
+
+            $this->assertSame($a->getTemplateClass('relocated.twig'), $b->getTemplateClass('relocated.twig'));
+            $this->assertSame($a->compileSource($a->getLoader()->getSourceContext('relocated.twig')), $b->compileSource($b->getLoader()->getSourceContext('relocated.twig')));
+
+            foreach (['a' => $a, 'b' => $b] as $project => $twig) {
+                $path = realpath($dir.'/'.$project.'/templates/relocated.twig');
+                $this->assertSame($path, $twig->load('relocated.twig')->getSourceContext()->getPath());
+
+                try {
+                    $twig->render('relocated.twig');
+                    $this->fail();
+                } catch (RuntimeError $e) {
+                    $this->assertSame('Variable "foo" does not exist in "relocated.twig" at line 1.', $e->getMessage());
+                    $this->assertSame($path, $e->getFile());
+                    $this->assertSame(1, $e->getLine());
+                }
+            }
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
+    }
+
+    public function testCompiledTemplatesOnlyAskTheLoaderForTheirPathWhenNeeded(): void
+    {
+        $dir = sys_get_temp_dir().'/twig-lazy-path-test';
+        if (is_dir($dir)) {
+            FilesystemHelper::removeDir($dir);
+        }
+        mkdir($dir);
+        file_put_contents($dir.'/lazy_path.twig', '{{ foo }}');
+
+        try {
+            $loader = new class(new FilesystemLoader($dir)) implements LoaderInterface {
+                public int $reads = 0;
+
+                public function __construct(
+                    private LoaderInterface $loader,
+                ) {
+                }
+
+                public function getSourceContext(string $name): Source
+                {
+                    ++$this->reads;
+
+                    return $this->loader->getSourceContext($name);
+                }
+
+                public function getCacheKey(string $name): string
+                {
+                    return $this->loader->getCacheKey($name);
+                }
+
+                public function isFresh(string $name, int $time): bool
+                {
+                    return $this->loader->isFresh($name, $time);
+                }
+
+                public function exists(string $name): bool
+                {
+                    return $this->loader->exists($name);
+                }
+            };
+            $twig = new Environment($loader, ['strict_variables' => true]);
+
+            $this->assertSame('bar', $twig->render('lazy_path.twig', ['foo' => 'bar']));
+            $loader->reads = 0;
+
+            $twig = new Environment($loader, ['strict_variables' => true]);
+            $template = $twig->load('lazy_path.twig');
+            $this->assertSame('bar', $template->render(['foo' => 'bar']));
+            $this->assertSame(0, $loader->reads);
+
+            for ($i = 0; $i < 2; ++$i) {
+                try {
+                    $template->render([]);
+                    $this->fail();
+                } catch (RuntimeError $e) {
+                    $this->assertSame(realpath($dir.'/lazy_path.twig'), $e->getFile());
+                }
+            }
+            $this->assertSame(realpath($dir.'/lazy_path.twig'), $template->getSourceContext()->getPath());
+            $this->assertSame(1, $loader->reads);
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
+    }
+
+    public function testDebugTemplatesInstantiatedWithoutTheirConstructorKnowTheirPath(): void
+    {
+        $twig = new Environment(new FilesystemLoader(__DIR__.'/Fixtures/errors'), ['debug' => true]);
+        $twig->load('base.html');
+
+        $template = (new \ReflectionClass($twig->getTemplateClass('base.html')))->newInstanceWithoutConstructor();
+
+        $this->assertSame('base.html', $template->getSourceContext()->getName());
+        $this->assertSame(realpath(__DIR__.'/Fixtures/errors/base.html'), $template->getSourceContext()->getPath());
+    }
+
+    public function testCompiledTemplatesResolveTheirPathWithTheLoaderTheyWereLoadedWith(): void
+    {
+        $dir = sys_get_temp_dir().'/twig-loader-swap-test';
+        if (is_dir($dir)) {
+            FilesystemHelper::removeDir($dir);
+        }
+        mkdir($dir);
+        file_put_contents($dir.'/loader_swap.twig', '{{ foo }}');
+
+        try {
+            $twig = new Environment(new FilesystemLoader($dir), ['strict_variables' => true]);
+            $template = $twig->load('loader_swap.twig');
+            $twig->setLoader(new ArrayLoader());
+
+            try {
+                $template->render([]);
+                $this->fail();
+            } catch (RuntimeError $e) {
+                $this->assertSame(realpath($dir.'/loader_swap.twig'), $e->getFile());
+            }
+        } finally {
+            FilesystemHelper::removeDir($dir);
+        }
+    }
+
+    public function testStringTemplatesHaveNoPath(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
+        $template = $twig->createTemplate('{{ foo }}');
+
+        try {
+            $template->render([]);
+            $this->fail();
+        } catch (RuntimeError $e) {
+            $this->assertSame('', $e->getSourceContext()->getPath());
+        }
+    }
+
+    public function testTemplatesInstantiatedWithoutTheirConstructorDoNotFailOnTheirPath(): void
+    {
+        $twig = new Environment(new FilesystemLoader(__DIR__.'/Fixtures/errors'));
+        $twig->load('base.html');
+
+        $template = (new \ReflectionClass($twig->getTemplateClass('base.html')))->newInstanceWithoutConstructor();
+
+        $this->assertSame('base.html', $template->getSourceContext()->getName());
+        $this->assertSame('', $template->getSourceContext()->getPath());
+    }
 }
 
 class EnvironmentTest_Extension_WithGlobals extends AbstractExtension

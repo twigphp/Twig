@@ -35,4 +35,19 @@ class SourceTest extends TestCase
         // an unknown offset yields null
         $this->assertNull($source->getColumn(-1));
     }
+
+    public function testGetPathCallsAClosureOnce(): void
+    {
+        $calls = 0;
+        $source = new Source('', 'index', static function () use (&$calls) {
+            ++$calls;
+
+            return '/path/to/index';
+        });
+
+        $this->assertSame(0, $calls);
+        $this->assertSame('/path/to/index', $source->getPath());
+        $this->assertSame('/path/to/index', $source->getPath());
+        $this->assertSame(1, $calls);
+    }
 }
