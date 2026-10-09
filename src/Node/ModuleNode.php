@@ -520,7 +520,16 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
             ->raw(', ')
             ->string($this->getSourceContext()->getName())
             ->raw(', ')
-            ->string($this->getSourceContext()->getPath())
+        ;
+
+        // outside debug mode, the loader resolves the path when needed so that the compiled code does not depend on where the project is
+        if ($compiler->getEnvironment()->isDebug() || '' === $this->getSourceContext()->getPath()) {
+            $compiler->string($this->getSourceContext()->getPath());
+        } else {
+            $compiler->raw('$this->getSourcePath(...)');
+        }
+
+        $compiler
             ->raw(");\n")
             ->outdent()
             ->write("}\n")

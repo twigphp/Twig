@@ -19,14 +19,14 @@ namespace Twig;
 final class Source
 {
     /**
-     * @param string $code The template source code
-     * @param string $name The template logical name
-     * @param string $path The filesystem path of the template if any
+     * @param string                      $code The template source code
+     * @param string                      $name The template logical name
+     * @param string|(\Closure(): string) $path The filesystem path of the template if any, or a closure that returns it when first needed
      */
     public function __construct(
         private string $code,
         private string $name,
-        private string $path = '',
+        private string|\Closure $path = '',
     ) {
     }
 
@@ -42,6 +42,10 @@ final class Source
 
     public function getPath(): string
     {
+        if ($this->path instanceof \Closure) {
+            $this->path = ($this->path)();
+        }
+
         return $this->path;
     }
 
