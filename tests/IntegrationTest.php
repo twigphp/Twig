@@ -20,9 +20,13 @@ namespace Twig\Tests;
  * file that was distributed with this source code.
  */
 
+use Twig\Attribute\AsTwigFilter;
+use Twig\Attribute\AsTwigFunction;
+use Twig\Attribute\AsTwigTest;
 use Twig\DeprecatedCallableInfo;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\AttributeExtension;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
@@ -30,6 +34,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Runtime\EscaperRuntime;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\Sandbox\SecurityPolicy;
 use Twig\Test\IntegrationTestCase;
 use Twig\Token;
@@ -56,6 +61,17 @@ class IntegrationTest extends IntegrationTestCase
             new SandboxExtension($policy, false),
             new StringLoaderExtension(),
             new TwigTestExtension(),
+            new TwigTestExtensionWithAttributes('*'),
+            new AttributeExtension(TwigTestLazyExtensionWithAttributes::class),
+        ];
+    }
+
+    protected function getRuntimeLoaders()
+    {
+        return [
+            new FactoryRuntimeLoader([
+                TwigTestLazyExtensionWithAttributes::class => static fn () => new TwigTestLazyExtensionWithAttributes('+'),
+            ]),
         ];
     }
 
@@ -468,5 +484,72 @@ class SimpleIteratorForTesting implements \Iterator
     {
         // for testing, make sure string length returned is not the same as the `iterator_count`
         return str_repeat('X', iterator_count($this) + 10);
+    }
+}
+
+class TwigTestExtensionWithAttributes extends AbstractExtension
+{
+    public function __construct(
+        private string $wrapper,
+    ) {
+    }
+
+    public function getFunctions(): array
+    {
+        return (new AttributeExtension(self::class))->getFunctions();
+    }
+
+    public function getFilters(): array
+    {
+        return (new AttributeExtension(self::class))->getFilters();
+    }
+
+    public function getTests(): array
+    {
+        return (new AttributeExtension(self::class))->getTests();
+    }
+
+    #[AsTwigFunction('attribute_function')]
+    public function attributeFunction(string $value): string
+    {
+        return $this->wrapper.$value.$this->wrapper;
+    }
+
+    #[AsTwigFilter('attribute_filter')]
+    public function attributeFilter(string $value): string
+    {
+        return $this->wrapper.$value.$this->wrapper;
+    }
+
+    #[AsTwigTest('attribute_test')]
+    public function attributeTest(string $value): bool
+    {
+        return $this->wrapper === $value;
+    }
+}
+
+class TwigTestLazyExtensionWithAttributes extends AbstractExtension
+{
+    public function __construct(
+        private string $wrapper,
+    ) {
+    }
+
+    #[AsTwigFunction('lazy_attribute_function')]
+    public function attributeFunction(string $value): string
+    {
+        return $this->wrapper.$value.$this->wrapper;
+    }
+
+    #[AsTwigFilter('lazy_attribute_filter')]
+    public function attributeFilter(string $value): string
+    {
+        return $this->wrapper.$value.$this->wrapper;
+    }
+
+    #[AsTwigTest('lazy_attribute_test')]
+    public function attributeTest(string $value): bool
+    {
+        return $this->wrapper === $value;
     }
 }

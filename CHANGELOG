@@ -16,6 +16,8 @@
  * Speed up applying `html_cva()` recipes that resolve to classes already seen
  * Fix a class marked safe for `html_attr` not being considered safe in `html` and `html_attr_relaxed` contexts
  * Add a way to mark a `Twig\Markup` instance as safe for some escaping strategies only
+ * Make `Environment::getExtension()` return the runtime of an extension class registered with `AttributeExtension`
+ * Make `Environment::getRuntime()` fall back to the registered extension of the same class
 
 # 3.30.0 (2026-09-25)
 

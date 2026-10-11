@@ -20,6 +20,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\ExpressionParser\ExpressionParsers;
+use Twig\Extension\AttributeExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\ExtensionInterface;
@@ -666,7 +667,13 @@ class Environment
      */
     public function getExtension(string $class): ExtensionInterface
     {
-        return $this->extensionSet->getExtension($class);
+        $extension = $this->extensionSet->getExtension($class);
+
+        if ($extension instanceof AttributeExtension && is_a($extension->getClass(), ExtensionInterface::class, true)) {
+            return $this->getRuntime($extension->getClass());
+        }
+
+        return $extension;
     }
 
     /**
@@ -694,6 +701,10 @@ class Environment
 
         if (null !== $runtime = $this->defaultRuntimeLoader->load($class)) {
             return $this->runtimes[$class] = $runtime;
+        }
+
+        if ($this->extensionSet->hasExtension($class) && ($extension = $this->extensionSet->getExtension($class)) instanceof $class) {
+            return $this->runtimes[$class] = $extension;
         }
 
         throw new RuntimeError(\sprintf('Unable to load the "%s" runtime.', $class));
