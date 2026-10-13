@@ -12,6 +12,7 @@
 namespace Twig\Node\Expression;
 
 use Twig\Compiler;
+use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Node;
 
 /**
@@ -22,7 +23,7 @@ use Twig\Node\Node;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class BlockDataExpression extends AbstractExpression
+class BlockDataExpression extends AbstractExpression implements CoercesChildrenToStringInterface
 {
     public function __construct(Node $name, ?Node $template, int $lineno)
     {
@@ -59,5 +60,10 @@ class BlockDataExpression extends AbstractExpression
         }
 
         $compiler->raw(')');
+    }
+
+    public function getStringCoercedChildNames(): array
+    {
+        return $this->hasNode('template') ? ['name', 'template'] : ['name'];
     }
 }
