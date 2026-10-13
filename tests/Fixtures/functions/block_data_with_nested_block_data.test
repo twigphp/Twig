@@ -1,0 +1,19 @@
+--TEST--
+"block_data" function does not return the data exported inside nested "block_data" calls
+--TEMPLATE--
+{{ block_data('export_then_block_data')|json_encode|raw }}
+{{ block_data('block_data_then_export')|json_encode|raw }}
+{{ block_data('block_data_only')|json_encode|raw }}
+{{ block_data('forwarding')|json_encode|raw }}
+{%- block export_then_block_data %}{% do block_export({from: 'outer'}) %}{% set inner = block_data('inner') %}{% endblock -%}
+{%- block block_data_then_export %}{% set inner = block_data('inner') %}{% do block_export({from: 'outer', inner: inner}) %}{% endblock -%}
+{%- block block_data_only %}{% set inner = block_data('inner') %}{% endblock -%}
+{%- block forwarding %}{% do block_export({from: 'outer'}) %}{% do block_export(block_data('inner')) %}{% endblock -%}
+{%- block inner %}{% do block_export({from: 'inner'}) %}{% endblock -%}
+--DATA--
+return []
+--EXPECT--
+{"from":"outer"}
+{"from":"outer","inner":{"from":"inner"}}
+[]
+{"from":"inner"}

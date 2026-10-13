@@ -21,7 +21,7 @@ The ``block_export`` function exports data from the block being rendered, so tha
     {% set attributes = block_data('attributes') %}
 
 The function outputs nothing and does not change how the block is rendered.
-The data is ignored when the block is not rendered by ``block_data``.
+The data is ignored when ``block_export`` is called outside of a ``block_data`` call.
 
 Arguments
 ---------
