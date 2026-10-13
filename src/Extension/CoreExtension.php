@@ -138,7 +138,10 @@ final class CoreExtension extends AbstractExtension
     private $dateFormats = ['F j, Y H:i', '%d days'];
     private $numberFormat = [0, '.', ','];
     private $timezone;
-    private mixed $exportedBlockData = null;
+    /**
+     * @var list<mixed>
+     */
+    private array $exportedBlockData = [];
 
     /**
      * Sets the default format to be used by the date filter.
@@ -213,20 +216,30 @@ final class CoreExtension extends AbstractExtension
         return $this->numberFormat;
     }
 
+    /**
+     * @internal
+     */
     public function exportBlockData(mixed $data): void
     {
-        $this->exportedBlockData = $data;
+        if ($this->exportedBlockData) {
+            $this->exportedBlockData[\count($this->exportedBlockData) - 1] = $data;
+        }
     }
 
     /**
      * @internal
      */
-    public function getExportedBlockData(): mixed
+    public function startBlockDataExport(): void
     {
-        $data = $this->exportedBlockData;
-        $this->exportedBlockData = null;
+        $this->exportedBlockData[] = null;
+    }
 
-        return $data;
+    /**
+     * @internal
+     */
+    public function endBlockDataExport(): mixed
+    {
+        return array_pop($this->exportedBlockData);
     }
 
     public function getTokenParsers(): array
