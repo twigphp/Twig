@@ -21,6 +21,7 @@ The output of the block is discarded.
 If the block does not call ``block_export``, the function returns an empty array.
 If the block calls ``block_export`` several times, the last call wins.
 This includes the blocks and templates that the block renders, for example with the :doc:`block<block>` function or the :doc:`include<include>` function.
+The data exported inside a nested ``block_data`` call is returned by that call only, not by the outer one.
 
 Like :doc:`block<block>`, the function uses the block as overridden by the current template, and it can look for the block in another template:
 
