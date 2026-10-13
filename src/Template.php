@@ -268,9 +268,15 @@ abstract class Template
      */
     public function renderBlockData(string $name, array $context, array $blocks = [], bool $useBlocks = true): mixed
     {
-        $this->renderBlock($name, $context, $blocks, $useBlocks);
+        $core = $this->env->getExtension(CoreExtension::class);
+        $core->startBlockDataExport();
+        try {
+            $this->renderBlock($name, $context, $blocks, $useBlocks);
+        } finally {
+            $data = $core->endBlockDataExport();
+        }
 
-        return $this->env->getExtension(CoreExtension::class)->getExportedBlockData() ?? [];
+        return $data ?? [];
     }
 
     /**
