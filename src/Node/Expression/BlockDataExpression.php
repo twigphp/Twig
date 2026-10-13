@@ -48,7 +48,7 @@ class BlockDataExpression extends AbstractExpression implements CoercesChildrenT
         }
 
         $compiler
-            ->raw('->unwrap()->renderBlockData(')
+            ->raw('->renderBlockData(')
             ->subcompile($this->getNode('name'))
             ->raw(', $context')
         ;
