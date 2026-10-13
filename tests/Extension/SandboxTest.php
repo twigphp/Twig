@@ -1014,6 +1014,30 @@ class SandboxTest extends TestCase
         }
     }
 
+    public function testSandboxBlocksToStringOnBlockDataFunctionTemplateName(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ block_data("content", obj) }}'], [], [], [], [], ['block_data']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on a block_data() template argument');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    public function testSandboxBlocksToStringOnBlockDataFunctionBlockName(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ block_data(obj) }}'], [], [], [], [], ['block_data']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on a block_data() block name');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
     public function testSandboxBlocksToStringOnEmbedTemplateName(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% embed obj %}{% endembed %}'], ['embed', 'extends']);
