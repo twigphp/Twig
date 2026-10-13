@@ -1205,7 +1205,7 @@ final class CoreExtension extends AbstractExtension
         });
         try {
             if (false === $result = preg_match($regexp, $str ?? '')) {
-                throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" failed: "%s".', $regexp, preg_last_error_msg()));
+                throw new RuntimeError(\sprintf('Regexp "%s" passed to "matches" failed: %s.', $regexp, preg_last_error_msg()));
             }
 
             return $result;
@@ -2212,7 +2212,7 @@ final class CoreExtension extends AbstractExtension
         }
 
         if ($isSandboxed) {
-            throw new RuntimeError(\sprintf('The callable passed to the "%s" "%s" must be a Closure in sandbox mode.', $thing, $type));
+            throw new RuntimeError(\sprintf('The callable passed to the "%s" %s must be a Closure in sandbox mode.', $thing, $type));
         }
 
         trigger_deprecation('twig/twig', '3.15', 'Passing a callable that is not a PHP \Closure as an argument to the "%s" %s is deprecated.', $thing, $type);
