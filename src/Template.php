@@ -261,17 +261,16 @@ abstract class Template
     /**
      * Renders a block and returns the data exported via block_export() instead of the rendered string.
      *
-     * @param string $name      The block name to render
-     * @param array  $context   The context
-     * @param array  $blocks    The current set of blocks
-     * @param bool   $useBlocks Whether to use the current set of blocks
+     * @param string $name    The block name to render
+     * @param array  $context The context
+     * @param array  $blocks  The current set of blocks
      */
-    public function renderBlockData(string $name, array $context, array $blocks = [], bool $useBlocks = true): mixed
+    public function renderBlockData(string $name, array $context, array $blocks = []): mixed
     {
         $core = $this->env->getExtension(CoreExtension::class);
         $core->startBlockDataExport();
         try {
-            $this->renderBlock($name, $context, $blocks, $useBlocks);
+            $this->renderBlock($name, $context, $blocks);
         } finally {
             $data = $core->endBlockDataExport();
         }
