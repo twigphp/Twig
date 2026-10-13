@@ -20,8 +20,6 @@ use Twig\Node\Node;
  *
  * Returns the structured data exported by a block via block_export(),
  * instead of the rendered string returned by block().
- *
- * @author Fabien Potencier <fabien@symfony.com>
  */
 class BlockDataExpression extends AbstractExpression implements CoercesChildrenToStringInterface
 {
