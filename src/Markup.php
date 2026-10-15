@@ -30,11 +30,16 @@ class Markup implements \Countable, \JsonSerializable, \Stringable
 {
     private $content;
     private ?string $charset;
+    private array $options;
 
-    public function __construct($content, $charset)
+    public function __construct($content, $charset, array $options = [])
     {
         $this->content = (string) $content;
         $this->charset = $charset;
+
+        $this->options = array_merge([
+            'is_safe' => null,
+        ], $options);
     }
 
     public function __toString(): string
@@ -45,6 +50,11 @@ class Markup implements \Countable, \JsonSerializable, \Stringable
     public function getCharset(): string
     {
         return $this->charset;
+    }
+
+    public function getSafe(): array|null
+    {
+        return $this->options['is_safe'] ?? null;
     }
 
     /**
