@@ -1866,8 +1866,10 @@ final class CoreExtension extends AbstractExtension
 
             static $propertyCheckers = [];
 
-            if (isset($object->$item)
-                || (($propertyChecker = $propertyCheckers[$object::class][$item] ??= self::getPropertyChecker($object::class, $item)) && $propertyChecker($object, $item))
+            $propertyChecker = $propertyCheckers[$object::class][$item] ??= self::getPropertyChecker($object::class, $item);
+
+            if (false !== $propertyChecker
+                && (isset($object->$item) || ($propertyChecker instanceof \Closure && $propertyChecker($object, $item)))
             ) {
                 if ($isDefinedTest) {
                     return true;
@@ -2268,7 +2270,11 @@ final class CoreExtension extends AbstractExtension
         return new GetAttrExpression($args[0], $args[1], $args[2] ?? null, Template::ANY_CALL, $line);
     }
 
-    private static function getPropertyChecker(string $class, string $property): \Closure|false
+    /**
+     * @return \Closure|bool A closure checking that the property is initialized, true to only rely on isset(),
+     *                       or false when the property cannot be read from outside the object
+     */
+    private static function getPropertyChecker(string $class, string $property): \Closure|bool
     {
         static $classReflectors = [];
 
@@ -2283,7 +2289,8 @@ final class CoreExtension extends AbstractExtension
         $property = $class->getProperty($property);
 
         if (!$property->isPublic() || $property->isStatic()) {
-            return false;
+            // isset() on an inaccessible property can only be true through __isset()
+            return $class->hasMethod('__isset');
         }
 
         return static fn ($object) => $property->isInitialized($object);

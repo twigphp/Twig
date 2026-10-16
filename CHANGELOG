@@ -1,5 +1,6 @@
 # 3.31.0 (2026-XX-XX)
 
+ * Fix reading an attribute through its getter initializing a lazy object when the property is not public
  * Fix compiled float literals depending on the `serialize_precision` ini setting
  * Fix the `loop` variable being undefined when used in the sequence of a nested `for` tag
  * Reject a deprecated `Template` instance created by another environment in `Environment::resolveTemplate()`

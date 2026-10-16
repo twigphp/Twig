@@ -813,6 +813,66 @@ class TemplateTest extends TestCase
             $this->assertFalse(CoreExtension::getAttribute($twig, $source, $object, 'secret', [], Template::ANY_CALL, true));
         }
     }
+
+    public function testGetAttributeOnLazyGhostWithPrivatePropertyCallsTheGetterWithoutInitializingIt(): void
+    {
+        if (\PHP_VERSION_ID < 80400) {
+            $this->markTestSkipped('Lazy objects require PHP 8.4.');
+        }
+
+        $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
+        $source = new Source('', 'index.twig');
+
+        // like a partial Doctrine entity: only some properties are loaded
+        $reflector = new \ReflectionClass(TemplatePartiallyLoadedObject::class);
+        $object = $reflector->newLazyGhost(static function () {
+            throw new \LogicException('The lazy object should not be initialized.');
+        });
+        $reflector->getProperty('title')->setRawValueWithoutLazyInitialization($object, 'Title');
+
+        $this->assertSame('Title', CoreExtension::getAttribute($twig, $source, $object, 'title'));
+        $this->assertTrue(CoreExtension::getAttribute($twig, $source, $object, 'title', [], Template::ANY_CALL, true));
+        $this->assertTrue($reflector->isUninitializedLazyObject($object));
+    }
+
+    public function testGetAttributeOnPrivatePropertyStillUsesMagicIsset(): void
+    {
+        $twig = new Environment(new ArrayLoader(), ['strict_variables' => true]);
+        $source = new Source('', 'index.twig');
+
+        $this->assertSame('magic', CoreExtension::getAttribute($twig, $source, new TemplateMagicPrivatePropertyObject(), 'title'));
+    }
+}
+
+class TemplatePartiallyLoadedObject
+{
+    private $title;
+    private $description;
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+}
+
+class TemplateMagicPrivatePropertyObject
+{
+    private $title = 'private';
+
+    public function __isset($name): bool
+    {
+        return 'title' === $name;
+    }
+
+    public function __get($name)
+    {
+        return 'title' === $name ? 'magic' : null;
+    }
 }
 
 class TemplateAttributeResolution
