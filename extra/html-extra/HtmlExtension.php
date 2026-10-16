@@ -34,9 +34,9 @@ final class HtmlExtension extends AbstractExtension
 {
     private $mimeTypes;
     /**
-     * @var list<mixed>
+     * The data exported by the block being rendered by block_data(), or null outside of a block_data() call.
      */
-    private array $exportedBlockData = [];
+    private mixed $exportedBlockData = null;
 
     public function __construct(?MimeTypes $mimeTypes = null)
     {
@@ -81,14 +81,15 @@ final class HtmlExtension extends AbstractExtension
      */
     public function renderBlockData(Template $template, string $name, array $context, array $blocks = []): mixed
     {
-        $this->exportedBlockData[] = null;
+        $previous = $this->exportedBlockData;
+        $this->exportedBlockData = [];
         try {
             $template->renderBlock($name, $context, $blocks);
-        } finally {
-            $data = array_pop($this->exportedBlockData);
-        }
 
-        return $data ?? [];
+            return $this->exportedBlockData;
+        } finally {
+            $this->exportedBlockData = $previous;
+        }
     }
 
     /**
@@ -96,8 +97,8 @@ final class HtmlExtension extends AbstractExtension
      */
     public function exportBlockData(mixed $data): void
     {
-        if ($this->exportedBlockData) {
-            $this->exportedBlockData[\count($this->exportedBlockData) - 1] = $data;
+        if (null !== $this->exportedBlockData) {
+            $this->exportedBlockData = $data ?? [];
         }
     }
 
