@@ -9,10 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Twig\Node\Expression;
+namespace Twig\Extra\Html\Node;
 
 use Twig\Compiler;
+use Twig\Extra\Html\HtmlExtension;
 use Twig\Node\CoercesChildrenToStringInterface;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
 
 /**
@@ -35,6 +37,8 @@ class BlockDataExpression extends AbstractExpression implements CoercesChildrenT
 
     public function compile(Compiler $compiler): void
     {
+        $compiler->raw(\sprintf('$this->extensions[\'%s\']->renderBlockData(', HtmlExtension::class));
+
         if (!$this->hasNode('template')) {
             $compiler->raw('$this');
         } else {
@@ -48,7 +52,7 @@ class BlockDataExpression extends AbstractExpression implements CoercesChildrenT
         }
 
         $compiler
-            ->raw('->renderBlockData(')
+            ->raw(', ')
             ->subcompile($this->getNode('name'))
             ->raw(', $context')
         ;

@@ -29,6 +29,28 @@ Like :doc:`block<block>`, the function uses the block as overridden by the curre
 
     {{ block_data('attributes', 'common_blocks.html.twig') }}
 
+.. note::
+
+    The ``block_data`` function is part of the ``HtmlExtension`` which is not
+    installed by default. Install it first:
+
+    .. code-block:: bash
+
+        $ composer require twig/html-extra
+
+    Then, on Symfony projects, install the ``twig/extra-bundle``:
+
+    .. code-block:: bash
+
+        $ composer require twig/extra-bundle
+
+    Otherwise, add the extension explicitly on the Twig environment::
+
+        use Twig\Extra\Html\HtmlExtension;
+
+        $twig = new \Twig\Environment(...);
+        $twig->addExtension(new HtmlExtension());
+
 Arguments
 ---------
 

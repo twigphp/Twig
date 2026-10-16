@@ -1,7 +1,7 @@
 # 3.31.0 (2026-XX-XX)
 
  * Fix compiled float literals depending on the `serialize_precision` ini setting
- * Add the `block_data` and `block_export` functions
+ * Add the `block_data` and `block_export` functions (in the HTML extra package)
  * Fix the `loop` variable being undefined when used in the sequence of a nested `for` tag
  * Reject a deprecated `Template` instance created by another environment in `Environment::resolveTemplate()`
  * Fix a compilation error inside an `autoescape` tag leaking its escaping strategy into the next compiled template

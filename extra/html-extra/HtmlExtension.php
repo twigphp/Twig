@@ -19,14 +19,24 @@ use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 use Twig\Extra\Html\HtmlAttr\InlineStyle;
 use Twig\Extra\Html\HtmlAttr\MergeableInterface;
 use Twig\Extra\Html\HtmlAttr\SeparatedTokenList;
+use Twig\Extra\Html\Node\BlockDataExpression;
 use Twig\Markup;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Node;
+use Twig\Parser;
 use Twig\Runtime\EscaperRuntime;
+use Twig\Template;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Twig\Util\CallableArgumentsExtractor;
 
 final class HtmlExtension extends AbstractExtension
 {
     private $mimeTypes;
+    /**
+     * @var list<mixed>
+     */
+    private array $exportedBlockData = [];
 
     public function __construct(?MimeTypes $mimeTypes = null)
     {
@@ -48,7 +58,47 @@ final class HtmlExtension extends AbstractExtension
             new TwigFunction('html_classes', [self::class, 'htmlClasses']),
             new TwigFunction('html_cva', [self::class, 'htmlCva']),
             new TwigFunction('html_attr', [self::class, 'htmlAttr'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('block_data', null, ['parser_callable' => [self::class, 'parseBlockDataFunction']]),
+            new TwigFunction('block_export', [$this, 'exportBlockData']),
         ];
+    }
+
+    /**
+     * @internal
+     */
+    public static function parseBlockDataFunction(Parser $parser, Node $fakeNode, $args, int $line): AbstractExpression
+    {
+        $fakeFunction = new TwigFunction('block_data', static fn ($name, $template = null) => null);
+        $args = (new CallableArgumentsExtractor($fakeNode, $fakeFunction))->extractArguments($args);
+
+        return new BlockDataExpression($args[0], $args[1] ?? null, $line);
+    }
+
+    /**
+     * Renders a block and returns the data exported via block_export() instead of the rendered string.
+     *
+     * @internal
+     */
+    public function renderBlockData(Template $template, string $name, array $context, array $blocks = []): mixed
+    {
+        $this->exportedBlockData[] = null;
+        try {
+            $template->renderBlock($name, $context, $blocks);
+        } finally {
+            $data = array_pop($this->exportedBlockData);
+        }
+
+        return $data ?? [];
+    }
+
+    /**
+     * @internal
+     */
+    public function exportBlockData(mixed $data): void
+    {
+        if ($this->exportedBlockData) {
+            $this->exportedBlockData[\count($this->exportedBlockData) - 1] = $data;
+        }
     }
 
     /**
