@@ -99,9 +99,13 @@ final class TemplateWrapper
     /**
      * Returns the escaping strategy the template body was compiled with.
      *
-     * This describes the template's own source, not its output: `autoescape`,
-     * `escape`, and anything rendered by a parent, embedded, or included
-     * template can use another strategy.
+     * A body entirely wrapped in an `autoescape` tag is compiled with the strategy
+     * of that tag; otherwise, it uses the default strategy of the environment for
+     * this template. Individual parts of the body can still use another strategy,
+     * through a nested `autoescape` tag or an explicit `escape` filter.
+     *
+     * This describes the template's own source, not its output: anything rendered
+     * by a parent, embedded, or included template can use another strategy.
      *
      * @return string|false The strategy name or false when the template is not autoescaped
      */

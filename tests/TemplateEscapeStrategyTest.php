@@ -45,27 +45,6 @@ class TemplateEscapeStrategyTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideAutoescapeTags
-     */
-    #[DataProvider('provideAutoescapeTags')]
-    public function testAnAutoescapeTagDoesNotChangeTheStrategyOfTheTemplate(string $name, string $tag): void
-    {
-        $twig = new Environment(new ArrayLoader([
-            $name => "{% autoescape $tag %}{{ value }}{% endautoescape %}",
-        ]), ['autoescape' => 'name', 'cache' => false]);
-
-        $this->assertSame('html', $twig->load($name)->getDefaultEscapeStrategy());
-    }
-
-    public static function provideAutoescapeTags()
-    {
-        return [
-            ['another_strategy.html.twig', "'js'"],
-            ['no_escaping.html.twig', 'false'],
-        ];
-    }
-
     public function testTheStrategyDescribesTheBodyAndNotWhatTheTemplateRenders(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -77,6 +56,40 @@ class TemplateEscapeStrategyTest extends TestCase
 
         $this->assertSame('html', $template->getDefaultEscapeStrategy());
         $this->assertSame('<b>', $template->render(['value' => '<b>']));
+    }
+
+    public function testAnAutoescapeTagWrappingTheWholeBodyDefinesTheStrategyOfTheTemplate(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index.html.twig' => "{% autoescape 'js' %}{{ value }}{% endautoescape %}",
+            'around_a_tag.html.twig' => "{% autoescape 'js' %}{% if value %}{{ value }}{% endif %}{% endautoescape %}",
+            'surrounded_by_text.html.twig' => "<script>\n{% autoescape 'js' %}var x = {{ value }};{% endautoescape %}\n</script>",
+            'nested.html.twig' => "{% autoescape 'js' %}{% autoescape 'css' %}{{ value }}{% endautoescape %}{% endautoescape %}",
+            'disabled.html.twig' => '{% autoescape false %}{{ value }}{% endautoescape %}',
+            'legacy_true.html.twig' => '{% autoescape true %}{{ value }}{% endautoescape %}',
+        ]), ['autoescape' => 'name', 'cache' => false]);
+
+        $this->assertSame('js', $twig->load('index.html.twig')->getDefaultEscapeStrategy());
+        $this->assertSame('js', $twig->load('around_a_tag.html.twig')->getDefaultEscapeStrategy());
+        $this->assertSame('js', $twig->load('surrounded_by_text.html.twig')->getDefaultEscapeStrategy());
+        $this->assertSame('css', $twig->load('nested.html.twig')->getDefaultEscapeStrategy());
+        $this->assertFalse($twig->load('disabled.html.twig')->getDefaultEscapeStrategy());
+        $this->assertFalse($twig->load('legacy_true.html.twig')->getDefaultEscapeStrategy());
+    }
+
+    public function testAnAutoescapeTagCoveringPartOfTheBodyDoesNotChangeTheStrategyOfTheTemplate(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'sibling_print.html.twig' => "{{ value }}{% autoescape 'js' %}{{ value }}{% endautoescape %}",
+            'sibling_tag.html.twig' => "{% if value %}{{ value }}{% endif %}{% autoescape 'js' %}{{ value }}{% endautoescape %}",
+            'two_tags.html.twig' => "{% autoescape 'js' %}{{ value }}{% endautoescape %}{% autoescape 'css' %}{{ value }}{% endautoescape %}",
+            'inside_a_tag.html.twig' => "{% if value %}{% autoescape 'js' %}{{ value }}{% endautoescape %}{% endif %}",
+        ]), ['autoescape' => 'name', 'cache' => false]);
+
+        $this->assertSame('html', $twig->load('sibling_print.html.twig')->getDefaultEscapeStrategy());
+        $this->assertSame('html', $twig->load('sibling_tag.html.twig')->getDefaultEscapeStrategy());
+        $this->assertSame('html', $twig->load('two_tags.html.twig')->getDefaultEscapeStrategy());
+        $this->assertSame('html', $twig->load('inside_a_tag.html.twig')->getDefaultEscapeStrategy());
     }
 
     public function testEmbeddedTemplatesExposeTheStrategyOfTheirTemplate(): void

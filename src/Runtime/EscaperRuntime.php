@@ -14,6 +14,7 @@ namespace Twig\Runtime;
 use Twig\Error\RuntimeError;
 use Twig\Extension\RuntimeExtensionInterface;
 use Twig\Markup;
+use Twig\Template;
 
 final class EscaperRuntime implements RuntimeExtensionInterface
 {
@@ -29,6 +30,8 @@ final class EscaperRuntime implements RuntimeExtensionInterface
         'html_attr_relaxed' => ['html'],
     ];
 
+    private const BUILT_IN_STRATEGIES = ['html', 'js', 'css', 'html_attr', 'html_attr_relaxed', 'url'];
+
     /** @var array<string, callable(string, string): string> */
     private $escapers = [];
 
@@ -37,6 +40,12 @@ final class EscaperRuntime implements RuntimeExtensionInterface
 
     /** @internal */
     public $safeLookup = [];
+
+    /** @var array<string, true> */
+    private array $reportedStrategyMismatches = [];
+
+    /** @var array<class-string<Template>, string|false> */
+    private array $templateFiles = [];
 
     public function __construct(
         private $charset = 'UTF-8',
@@ -118,7 +127,21 @@ final class EscaperRuntime implements RuntimeExtensionInterface
     public function escape($string, string $strategy = 'html', ?string $charset = null, bool $autoescape = false)
     {
         if ($autoescape && $string instanceof Markup) {
-            return $string->isSafeFor($strategy) ? $string : $this->escape((string) $string, $strategy, $charset);
+            if ($string->isSafeFor($strategy)) {
+                return $string;
+            }
+
+            if (null !== $producedStrategy = $string->getProducedStrategy()) {
+                // 4.0 cleanup: drop this block, such content is then escaped like any other value;
+                // the legacy "{% autoescape true %}" names no escaper, so there is nothing to warn about
+                if (isset($this->escapers[$strategy]) || \in_array($strategy, self::BUILT_IN_STRATEGIES, true)) {
+                    $this->deprecateStrategyMismatch($producedStrategy, $strategy);
+                }
+
+                return $string;
+            }
+
+            return $this->escape((string) $string, $strategy, $charset);
         }
 
         if (!\is_string($string)) {
@@ -140,7 +163,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
                 }
 
                 $string = (string) $string;
-            } elseif (\in_array($strategy, ['html', 'js', 'css', 'html_attr', 'html_attr_relaxed', 'url'], true)) {
+            } elseif (\in_array($strategy, self::BUILT_IN_STRATEGIES, true)) {
                 // we return the input as is (which can be of any type)
                 return $string;
             }
@@ -349,6 +372,59 @@ final class EscaperRuntime implements RuntimeExtensionInterface
 
                 throw new RuntimeError(\sprintf('Invalid escaping strategy "%s" (valid ones: "%s").', $strategy, $validStrategies));
         }
+    }
+
+    /**
+     * 4.0 cleanup: drop this method.
+     */
+    private function deprecateStrategyMismatch(string $produced, string $strategy): void
+    {
+        // the compiled template that called escape() is two frames up
+        $traces = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
+        $call = $traces[1] ?? [];
+        $template = $traces[2]['object'] ?? null;
+
+        // templates compiled without a cache share the same eval()'d file, so the class tells them apart
+        $source = $template instanceof Template ? $template::class : ($call['file'] ?? '');
+
+        $callSite = $produced."\0".$strategy."\0".$source."\0".($call['line'] ?? '');
+        if (isset($this->reportedStrategyMismatches[$callSite])) {
+            return;
+        }
+        $this->reportedStrategyMismatches[$callSite] = true;
+
+        if (!$location = $this->guessTemplateLocation($template, $call)) {
+            trigger_deprecation('twig/twig', '3.31', 'Printing content produced with the "%s" escaping strategy in a "%s" context is deprecated; it will be escaped in 4.0.', $produced, $strategy);
+
+            return;
+        }
+
+        trigger_deprecation('twig/twig', '3.31', 'Printing content produced with the "%s" escaping strategy in a "%s" context is deprecated in "%s" at line %d; it will be escaped in 4.0.', $produced, $strategy, $location[0], $location[1]);
+    }
+
+    /**
+     * @param array{file?: string, line?: int} $call
+     *
+     * @return array{string, int}|null The template name and line the call was compiled from
+     */
+    private function guessTemplateLocation(mixed $template, array $call): ?array
+    {
+        if (!$template instanceof Template || !isset($call['file'], $call['line'])) {
+            return null;
+        }
+
+        $this->templateFiles[$template::class] ??= (new \ReflectionObject($template))->getFileName();
+        if ($this->templateFiles[$template::class] !== $call['file']) {
+            return null;
+        }
+
+        foreach ($template->getDebugInfo() as $codeLine => $templateLine) {
+            if ($codeLine <= $call['line']) {
+                return [$template->getTemplateName(), $templateLine];
+            }
+        }
+
+        return null;
     }
 
     private function convertEncoding(string $string, string $to, string $from)

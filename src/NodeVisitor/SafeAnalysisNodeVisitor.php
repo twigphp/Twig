@@ -50,8 +50,16 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
      */
     public function getSafe(Node $node)
     {
-        $safe = $this->data[$node] ?? [];
+        return self::addImpliedStrategies($this->data[$node] ?? []);
+    }
 
+    /**
+     * @param string[] $safe
+     *
+     * @return string[]
+     */
+    public static function addImpliedStrategies(array $safe): array
+    {
         if (\in_array('html_attr', $safe, true)) {
             $safe[] = 'html';
             $safe[] = 'html_attr_relaxed';
@@ -132,8 +140,11 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
                 }
                 $this->setSafe($node, $safe);
             }
-        } elseif ($node instanceof MethodCallExpression || $node instanceof MacroReferenceExpression) {
-            // all macro calls are safe
+        } elseif ($node instanceof MacroReferenceExpression) {
+            // a macro renders its body with the escaping strategy of the template defining it,
+            // so its result carries that strategy and is checked when printed
+        } elseif ($node instanceof MethodCallExpression) {
+            // legacy macro calls are safe
             $this->setSafe($node, ['all']);
         } elseif ($node instanceof GetAttrExpression && $node->getNode('node') instanceof ContextVariable) {
             $name = $node->getNode('node')->getAttribute('name');

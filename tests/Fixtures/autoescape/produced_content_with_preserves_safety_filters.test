@@ -1,0 +1,25 @@
+--TEST--
+Filters preserving the safety keep content produced by a template or a macro safe
+--TEMPLATE--
+{%- macro tag(v) %}<b>{{ v }}</b>{% endmacro %}
+{{- include('fragment.twig')|preserves_safety }}
+{{ include_only('fragment.twig')|preserves_safety }}
+{{ _self.tag('a')|preserves_safety }}
+{{ _self.tag('b')|preserves_safety|preserves_safety }}
+{{ _self.tag('c')|preserves_safety|nl2br }}
+{{ true ? _self.tag('d')|preserves_safety : '' }}
+{{ var|preserves_safety }}
+--TEMPLATE(fragment.twig)--
+{{- '<i>frag</i>' }}
+--DATA--
+return ['var' => '<script>']
+--CONFIG--
+return ['autoescape' => 'html']
+--EXPECT--
+<I>FRAG</I>
+<I>FRAG</I>
+<B>A</B>
+<B>B</B>
+<B>C</B>
+<B>D</B>
+&lt;SCRIPT&gt;

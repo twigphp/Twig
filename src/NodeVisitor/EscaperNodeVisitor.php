@@ -16,17 +16,24 @@ use Twig\Extension\EscaperExtension;
 use Twig\Node\AutoEscapeNode;
 use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
+use Twig\Node\CaptureNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\EscapeFilter;
 use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
+use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
 use Twig\Node\ImportNode;
+use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
+use Twig\Node\SetNode;
+use Twig\Node\TextNode;
 use Twig\NodeTraverser;
+use Twig\TwigFilter;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -55,7 +62,8 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             if ($env->hasExtension(EscaperExtension::class) && $defaultStrategy = $env->getExtension(EscaperExtension::class)->getDefaultStrategy($node->getTemplateName())) {
                 $this->defaultStrategy = $defaultStrategy;
             }
-            $node->setAttribute('strategy', \is_string($this->defaultStrategy) ? $this->defaultStrategy : false);
+            $strategy = self::getBodyStrategy($node->getNode('body'), $this->defaultStrategy);
+            $node->setAttribute('strategy', \is_string($strategy) ? $strategy : false);
             $this->safeVars = [];
             $this->blocks = [];
             $this->statusStack = [];
@@ -66,6 +74,10 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             $this->statusStack[] = $this->blocks[$node->getAttribute('name')] ?? $this->needEscaping();
         } elseif ($node instanceof ImportNode) {
             $this->safeVars[] = $node->getNode('var')->getNode('var')->getAttribute('name');
+        } elseif ($node instanceof CaptureNode || $node instanceof MacroNode || ($node instanceof SetNode && $node->getAttribute('safe'))) {
+            // captured content is only proven safe for the strategy it was captured under;
+            // the legacy "{% autoescape true %}" strategy names no escaper, so it proves nothing
+            $node->setAttribute('strategy', \is_string($strategy = $this->needEscaping()) ? $strategy : false);
         }
 
         return $node;
@@ -105,6 +117,59 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     }
 
     /**
+     * Returns the escaping strategy the whole body is produced with.
+     *
+     * A body entirely wrapped in an `autoescape` tag is produced with the strategy of
+     * that tag, not with the default strategy of the environment.
+     *
+     * @param string|bool $defaultStrategy
+     *
+     * @return string|bool
+     */
+    private static function getBodyStrategy(Node $body, $defaultStrategy)
+    {
+        while (true) {
+            if ($body instanceof AutoEscapeNode) {
+                $defaultStrategy = $body->getAttribute('value');
+                $body = $body->getNode('body');
+
+                continue;
+            }
+
+            if (!$body = self::getOnlyStatement($body)) {
+                return $defaultStrategy;
+            }
+        }
+    }
+
+    /**
+     * Returns the only statement of a group of statements, or null when there is not exactly one.
+     */
+    private static function getOnlyStatement(Node $node): ?Node
+    {
+        $only = null;
+        foreach ($node as $name => $child) {
+            if (!\is_int($name)) {
+                // a node with named children, not a group of statements
+                return null;
+            }
+
+            // literal text is never escaped, so it belongs to no strategy in particular
+            if ($child instanceof TextNode) {
+                continue;
+            }
+
+            if ($only) {
+                return null;
+            }
+
+            $only = $child;
+        }
+
+        return $only;
+    }
+
+    /**
      * @param AbstractExpression&OperatorEscapeInterface $expression
      */
     private function escapeConditional($expression, Environment $env, string $type): void
@@ -122,32 +187,69 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
 
     private function escapeExpression(AbstractExpression $expression, Environment $env, string $type): AbstractExpression
     {
-        return $this->isSafeFor($type, $expression, $env) ? $expression : $this->getEscaperFilter($env, $type, $expression);
+        if ($this->isSafeFor($type, $expression, $env) || $this->escapeProducedContent($expression, $env, $type)) {
+            return $expression;
+        }
+
+        return $this->getEscaperFilter($env, $type, $expression);
+    }
+
+    /**
+     * Escapes content produced by a template or a macro before the filters preserving its safety.
+     *
+     * Only the produced Markup instance knows the strategy it is safe for, and these
+     * filters return a plain string.
+     */
+    private function escapeProducedContent(AbstractExpression $expression, Environment $env, string $type): bool
+    {
+        if (!$expression instanceof FilterExpression || !$this->preservesSafetyFor($type, $expression, $env)) {
+            return false;
+        }
+
+        /** @var AbstractExpression $node */
+        $node = $expression->getNode('node');
+        if (!$node instanceof MacroReferenceExpression && !($node instanceof FunctionExpression && \in_array($node->getAttribute('name'), ['include', 'include_only'], true))) {
+            return $this->escapeProducedContent($node, $env, $type);
+        }
+
+        $expression->setNode('node', $this->getEscaperFilter($env, $type, $node));
+
+        return true;
+    }
+
+    private function preservesSafetyFor(string $type, FilterExpression $expression, Environment $env): bool
+    {
+        $filter = $this->getFilter($expression, $env);
+        if ($filter->getSafe($expression->getNode('arguments'))) {
+            return false;
+        }
+
+        $preserved = SafeAnalysisNodeVisitor::addImpliedStrategies($filter->getPreservesSafety());
+
+        return \in_array($type, $preserved, true) || \in_array('all', $preserved, true);
     }
 
     private function preEscapeFilterNode(FilterExpression $filter, Environment $env): FilterExpression
     {
-        if ($filter->hasAttribute('twig_callable')) {
-            $type = $filter->getAttribute('twig_callable')->getPreEscape();
-        } else {
-            // legacy
-            $name = $filter->getNode('filter', false)->getAttribute('value');
-            $type = $env->getFilter($name)->getPreEscape();
-        }
-
-        if (null === $type) {
+        if (null === $type = $this->getFilter($filter, $env)->getPreEscape()) {
             return $filter;
         }
 
         /** @var AbstractExpression $node */
         $node = $filter->getNode('node');
-        if ($this->isSafeFor($type, $node, $env)) {
-            return $filter;
-        }
-
-        $filter->setNode('node', $this->getEscaperFilter($env, $type, $node));
+        $filter->setNode('node', $this->escapeExpression($node, $env, $type));
 
         return $filter;
+    }
+
+    private function getFilter(FilterExpression $filter, Environment $env): TwigFilter
+    {
+        if ($filter->hasAttribute('twig_callable')) {
+            return $filter->getAttribute('twig_callable');
+        }
+
+        // legacy
+        return $env->getFilter($filter->getNode('filter', false)->getAttribute('value'));
     }
 
     private function isSafeFor(string $type, AbstractExpression $expression, Environment $env): bool

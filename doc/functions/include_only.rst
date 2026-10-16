@@ -23,17 +23,25 @@ not part of the context: they remain available in the included template.
 Returned Value
 --------------
 
-The returned content is a ``\Twig\Markup`` instance, so it is considered safe
-and is not escaped again when you store it in a variable and print it later:
+.. versionadded:: 3.31
+
+    Tying the returned content to the escaping strategy of the included
+    template was introduced in Twig 3.31.
+
+The returned content is a ``\Twig\Markup`` instance considered safe for the
+default escaping strategy the included template was compiled with, so it is not
+escaped again when you store it in a variable and print it in a context using
+that strategy:
 
 .. code-block:: twig
 
     {% set body = include_only('body.html.twig') %}
     {{ body }} {# rendered as-is, not re-escaped #}
 
-Beware that, like any safe value, it is not re-escaped for the context it ends
-up in, so only embed it in the same context it was rendered for (typically
-HTML).
+Printing it in a context using another strategy is deprecated as of Twig 3.31
+and escapes it as of Twig 4.0, as content escaped for HTML is not escaped for a
+JavaScript or CSS context. See the :doc:`deprecation notes</deprecated>` for how
+to migrate.
 
 Passing Variables
 -----------------

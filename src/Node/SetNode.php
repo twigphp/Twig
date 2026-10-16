@@ -48,7 +48,7 @@ class SetNode extends Node implements NodeCaptureInterface
             }
         }
 
-        parent::__construct(['names' => $names, 'values' => $values], ['capture' => $capture, 'safe' => $safe], $lineno);
+        parent::__construct(['names' => $names, 'values' => $values], ['capture' => $capture, 'safe' => $safe, 'strategy' => false], $lineno);
     }
 
     public function compile(Compiler $compiler): void
@@ -85,21 +85,38 @@ class SetNode extends Node implements NodeCaptureInterface
                 $compiler->raw(']');
             } else {
                 if ($this->getAttribute('safe')) {
+                    $strategy = $this->getAttribute('strategy');
                     if ($this->getNode('values') instanceof ConstantExpression) {
                         if ('' === $this->getNode('values')->getAttribute('value')) {
                             $compiler->raw('""');
-                        } else {
+                        } elseif (false === $strategy) {
                             $compiler
                                 ->raw('new Markup(')
                                 ->subcompile($this->getNode('values'))
                                 ->raw(', $this->env->getCharset())')
                             ;
+                        } else {
+                            $compiler
+                                ->raw('Markup::createForStrategy(')
+                                ->subcompile($this->getNode('values'))
+                                ->raw(', $this->env->getCharset(), ')
+                                ->repr($strategy)
+                                ->raw(')')
+                            ;
                         }
-                    } else {
+                    } elseif (false === $strategy) {
                         $compiler
                             ->raw("('' === \$tmp = ")
                             ->subcompile($this->getNode('values'))
                             ->raw(") ? '' : new Markup(\$tmp, \$this->env->getCharset())")
+                        ;
+                    } else {
+                        $compiler
+                            ->raw("('' === \$tmp = ")
+                            ->subcompile($this->getNode('values'))
+                            ->raw(") ? '' : Markup::createForStrategy(\$tmp, \$this->env->getCharset(), ")
+                            ->repr($strategy)
+                            ->raw(')')
                         ;
                     }
                 } else {

@@ -1,0 +1,14 @@
+--TEST--
+Content produced by a template whose body is wrapped in an "autoescape" tag is detected in a context using another escaping strategy
+--DEPRECATION--
+Since twig/twig 3.31: Printing content produced with the "js" escaping strategy in a "html" context is deprecated in "index.twig" at line 2; it will be escaped in 4.0.
+--TEMPLATE--
+<script>{{ include('fragment.twig') }}</script>
+--TEMPLATE(fragment.twig)--
+{%- autoescape 'js' %}var x = {{ value }};{% endautoescape %}
+--DATA--
+return ['value' => "a'b"]
+--CONFIG--
+return ['autoescape' => 'html']
+--EXPECT--
+<script>var x = a\u0027b;</script>

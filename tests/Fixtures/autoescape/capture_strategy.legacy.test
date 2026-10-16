@@ -1,0 +1,21 @@
+--TEST--
+Content captured under an escaping strategy and printed under another one
+--DEPRECATION--
+Since twig/twig 3.31: Printing content produced with the "html" escaping strategy in a "js" context is deprecated in "index.twig" at line 6; it will be escaped in 4.0.
+Since twig/twig 3.31: Printing content produced with the "html" escaping strategy in a "js" context is deprecated in "index.twig" at line 7; it will be escaped in 4.0.
+--TEMPLATE--
+{% autoescape 'html' %}
+{%- set captured %}<b>{{ value }}</b>{% endset %}
+{%- set literal %}<i>literal</i>{% endset %}
+{%- endautoescape %}
+{{- captured }}
+{{ literal }}
+{% autoescape 'html' %}{{ captured }}{% endautoescape %}
+--DATA--
+return ['value' => '<script>']
+--CONFIG--
+return ['autoescape' => 'js']
+--EXPECT--
+<b>&lt;script&gt;</b>
+<i>literal</i>
+<b>&lt;script&gt;</b>

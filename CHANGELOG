@@ -16,6 +16,9 @@
  * Speed up applying `html_cva()` recipes that resolve to classes already seen
  * Fix a class marked safe for `html_attr` not being considered safe in `html` and `html_attr_relaxed` contexts
  * Add a way to mark a `Twig\Markup` instance as safe for some escaping strategies only
+ * Deprecate printing content produced under an escaping strategy in a context using another one
+ * Add `Markup::createForStrategy()` for extensions returning the output of a rendered template
+ * Make `getDefaultEscapeStrategy()` return the strategy of an `autoescape` tag wrapping the whole template body
 
 # 3.30.0 (2026-09-25)
 
