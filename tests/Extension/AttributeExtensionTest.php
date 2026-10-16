@@ -179,4 +179,45 @@ class AttributeExtensionTest extends TestCase
         $this->expectExceptionMessage('The "Twig\Extension\AttributeExtension" extension is not enabled.');
         $extensionSet->getExtension(AttributeExtension::class);
     }
+
+    public function testCannotBeUsedWithoutAClass(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('"Twig\Extension\AttributeExtension" cannot read attributes from itself.');
+
+        new AttributeExtension();
+    }
+
+    public function testCannotReadAttributesFromItself(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('"Twig\Extension\AttributeExtension" cannot read attributes from itself.');
+
+        new AttributeExtension(AttributeExtension::class);
+    }
+
+    public function testAnExtendedExtensionCannotBeGivenAnotherClass(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('cannot be given a class to read attributes from.');
+
+        new class('Foo') extends AttributeExtension {
+            public function __construct(string $class)
+            {
+                parent::__construct($class);
+            }
+        };
+    }
+
+    public function testAnExtendedExtensionCanBeGivenItsOwnClass(): void
+    {
+        $extension = new class extends AttributeExtension {
+            public function __construct()
+            {
+                parent::__construct(self::class);
+            }
+        };
+
+        $this->assertSame($extension::class, $extension->getClass());
+    }
 }

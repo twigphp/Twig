@@ -487,26 +487,11 @@ class SimpleIteratorForTesting implements \Iterator
     }
 }
 
-class TwigTestExtensionWithAttributes extends AbstractExtension
+class TwigTestExtensionWithAttributes extends AttributeExtension
 {
     public function __construct(
         private string $wrapper,
     ) {
-    }
-
-    public function getFunctions(): array
-    {
-        return (new AttributeExtension(self::class))->getFunctions();
-    }
-
-    public function getFilters(): array
-    {
-        return (new AttributeExtension(self::class))->getFilters();
-    }
-
-    public function getTests(): array
-    {
-        return (new AttributeExtension(self::class))->getTests();
     }
 
     #[AsTwigFunction('attribute_function')]
