@@ -111,6 +111,8 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
 
         $this->compileConstructor($compiler);
 
+        $this->compileGetBlocks($compiler);
+
         $this->compileGetParent($compiler);
 
         $this->compileDisplay($compiler);
@@ -310,41 +312,9 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
                 ;
             }
 
-            $compiler
-                ->write("\$this->blocks = array_merge(\n")
-                ->indent()
-                ->write("\$this->traits,\n")
-                ->write("[\n")
-            ;
+            $compiler->write("\$this->blocks = \$this->traits;\n");
         } else {
-            $compiler
-                ->write("\$this->blocks = [\n")
-            ;
-        }
-
-        // blocks
-        $compiler
-            ->indent()
-        ;
-
-        foreach ($this->getNode('blocks') as $name => $node) {
-            $compiler
-                ->write(\sprintf("'%s' => [\$this, 'block_%s'],\n", $name, $name))
-            ;
-        }
-
-        if ($countTraits) {
-            $compiler
-                ->outdent()
-                ->write("]\n")
-                ->outdent()
-                ->write(");\n")
-            ;
-        } else {
-            $compiler
-                ->outdent()
-                ->write("];\n")
-            ;
+            $compiler->write("\$this->blocks = [\n", "];\n");
         }
 
         $compiler
@@ -384,7 +354,7 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
             } else {
                 $compiler->raw('$this->getParent($context)');
             }
-            $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));\n");
+            $compiler->raw("->unwrap()->yield(\$context, array_merge(\$this->getBlocks(), \$blocks));\n");
         }
 
         $compiler->subcompile($this->getNode('display_end'));
@@ -524,6 +494,31 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
             ->raw(");\n")
             ->outdent()
             ->write("}\n")
+        ;
+    }
+
+    private function compileGetBlocks(Compiler $compiler): void
+    {
+        if (!\count($this->getNode('blocks'))) {
+            return;
+        }
+
+        $compiler
+            ->write("public function getBlocks(): array\n", "{\n")
+            ->indent()
+            ->write(\count($this->getNode('traits')) ? "return array_merge(\$this->traits, [\n" : "return [\n")
+            ->indent()
+        ;
+
+        foreach ($this->getNode('blocks') as $name => $node) {
+            $compiler->write(\sprintf("'%s' => [\$this, 'block_%s'],\n", $name, $name));
+        }
+
+        $compiler
+            ->outdent()
+            ->write(\count($this->getNode('traits')) ? "]);\n" : "];\n")
+            ->outdent()
+            ->write("}\n\n")
         ;
     }
 }

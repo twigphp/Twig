@@ -36,6 +36,50 @@ use Twig\TemplateWrapper;
 
 class TemplateTest extends TestCase
 {
+    /**
+     * @dataProvider provideBlocksDoNotKeepTemplateAlive
+     */
+    #[DataProvider('provideBlocksDoNotKeepTemplateAlive')]
+    public function testBlocksDoNotKeepTemplateAlive(array $templates, string $expected): void
+    {
+        $twig = new Environment(new ArrayLoader($templates));
+        $class = $twig->load('index')->unwrap($twig)::class;
+        $template = new $class($twig);
+        $reference = \WeakReference::create($template);
+        $gcEnabled = gc_enabled();
+        gc_disable();
+
+        try {
+            $this->assertSame($expected, $template->render([]));
+            $this->assertSame($template, $template->getBlocks()['body'][0]);
+
+            unset($template);
+
+            $this->assertNull($reference->get());
+        } finally {
+            if ($gcEnabled) {
+                gc_enable();
+            }
+        }
+    }
+
+    public static function provideBlocksDoNotKeepTemplateAlive(): iterable
+    {
+        yield 'own block' => [[
+            'index' => '{% block body %}Hello{% endblock %}',
+        ], 'Hello'];
+
+        yield 'inherited block' => [[
+            'index' => '{% extends "base" %}{% block body %}{{ parent() }} child{% endblock %}',
+            'base' => '{% block body %}Hello{% endblock %}',
+        ], 'Hello child'];
+
+        yield 'trait block' => [[
+            'index' => '{% use "trait" with content as body %}{% block body %}{{ parent() }} child{% endblock %}',
+            'trait' => '{% block content %}Hello{% endblock %}',
+        ], 'Hello child'];
+    }
+
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks(): void
     {
         $twig = new Environment(new ArrayLoader());

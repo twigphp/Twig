@@ -275,7 +275,7 @@ abstract class Template
             return $blocks[$name][0] instanceof self;
         }
 
-        if (isset($this->blocks[$name])) {
+        if (isset($this->getBlocks()[$name])) {
             return true;
         }
 
@@ -299,7 +299,7 @@ abstract class Template
      */
     public function getBlockNames(array $context, array $blocks = []): array
     {
-        $names = array_merge(array_keys($blocks), array_keys($this->blocks));
+        $names = array_merge(array_keys($blocks), array_keys($this->getBlocks()));
 
         if ($parent = $this->getParent($context)) {
             $names = array_merge($names, $parent->getBlockNames($context));
@@ -454,7 +454,7 @@ abstract class Template
     public function yield(array $context, array $blocks = []): iterable
     {
         $context += $this->env->getGlobals();
-        $blocks = array_merge($this->blocks, $blocks);
+        $blocks = array_merge($this->getBlocks(), $blocks);
 
         try {
             $this->ensureSecurityChecked();
@@ -472,11 +472,10 @@ abstract class Template
         if ($useBlocks && isset($blocks[$name])) {
             $template = $blocks[$name][0];
             $block = $blocks[$name][1];
-        } elseif (isset($this->blocks[$name])) {
-            $template = $this->blocks[$name][0];
-            $block = $this->blocks[$name][1];
+        } elseif (isset(($ownBlocks = $this->getBlocks())[$name])) {
+            [$template, $block] = $ownBlocks[$name];
             // expose this template's own blocks so nested block() calls resolve against them when the block is rendered directly (e.g. block(name, template))
-            $blocks = array_merge($this->blocks, $blocks);
+            $blocks = array_merge($ownBlocks, $blocks);
         } else {
             $template = null;
             $block = null;
@@ -495,7 +494,7 @@ abstract class Template
                 $template->handleException($e);
             }
         } elseif ($parent = $this->getParent($context)) {
-            yield from $parent->unwrap()->yieldBlock($name, $context, array_merge($this->blocks, $blocks), false, $templateContext ?? $this);
+            yield from $parent->unwrap()->yieldBlock($name, $context, array_merge($this->getBlocks(), $blocks), false, $templateContext ?? $this);
         } elseif (isset($blocks[$name])) {
             throw new RuntimeError(\sprintf('Block "%s" should not call parent() in "%s" as the block does not exist in the parent template "%s".', $name, $blocks[$name][0]->getTemplateName(), $this->getTemplateName()), -1, $blocks[$name][0]->getSourceContext());
         } else {

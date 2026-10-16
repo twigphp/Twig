@@ -242,7 +242,7 @@ class __TwigTemplate_%x extends Template
         \$macros["macro"] = \$this->macros["macro"] = \$this->load("foo.twig", 2)->unwrap()->getMacroNamespace();
         // line 1
         \$this->parent = \$this->load("layout.twig", 1);
-        yield from \$this->parent->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
+        yield from \$this->parent->unwrap()->yield(\$context, array_merge(\$this->getBlocks(), \$blocks));
     }
 
     /**
@@ -337,7 +337,7 @@ class __TwigTemplate_%x extends Template
         // line 4
         \$context["foo"] = "foo";
         // line 2
-        yield from \$this->getParent(\$context)->unwrap()->yield(\$context, array_merge(\$this->blocks, \$blocks));
+        yield from \$this->getParent(\$context)->unwrap()->yield(\$context, array_merge(\$this->getBlocks(), \$blocks));
     }
 
     /**
