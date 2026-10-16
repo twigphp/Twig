@@ -18,6 +18,7 @@
  * Add a way to mark a `Twig\Markup` instance as safe for some escaping strategies only
  * Make `Environment::getExtension()` return the runtime of an extension class registered with `AttributeExtension`
  * Make `Environment::getRuntime()` fall back to the registered extension of the same class
+ * Allow extending `AttributeExtension` to declare an extension's filters, functions, and tests with attributes
 
 # 3.30.0 (2026-09-25)
 
