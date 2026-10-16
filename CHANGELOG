@@ -14,6 +14,7 @@
  * Speed up traversing nodes with node visitors
  * Speed up loading compiled templates that OPcache already holds
  * Speed up applying `html_cva()` recipes that resolve to classes already seen
+ * Fix a class marked safe for `html_attr` not being considered safe in `html` and `html_attr_relaxed` contexts
 
 # 3.30.0 (2026-09-25)
 

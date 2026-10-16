@@ -426,6 +426,41 @@ class EscaperRuntimeTest extends TestCase
             ['<br />', '<br />', ['\Twig\Tests\Runtime\Extension_SafeHtmlInterface' => ['all']]],
         ];
     }
+
+    /**
+     * @dataProvider provideImpliedStrategies
+     */
+    #[DataProvider('provideImpliedStrategies')]
+    public function testSafeClassesAreSafeForImpliedStrategies(bool $escaped, string $declaredStrategy, string $strategy): void
+    {
+        $escaper = new EscaperRuntime();
+        $escaper->addSafeClass(Extension_TestClass::class, [$declaredStrategy]);
+
+        $output = $escaper->escape(new Extension_TestClass(), $strategy, null, true);
+
+        $this->assertSame($escaped, '<br />' !== $output);
+    }
+
+    public static function provideImpliedStrategies()
+    {
+        return [
+            [false, 'html_attr', 'html'],
+            [false, 'html_attr', 'html_attr_relaxed'],
+            [false, 'html_attr_relaxed', 'html'],
+            [true, 'html', 'html_attr'],
+            [true, 'html', 'html_attr_relaxed'],
+            [true, 'html_attr_relaxed', 'html_attr'],
+            [true, 'html_attr', 'js'],
+        ];
+    }
+
+    public function testInheritedSafeClassesAreSafeForImpliedStrategies(): void
+    {
+        $escaper = new EscaperRuntime();
+        $escaper->addSafeClass(Extension_SafeHtmlInterface::class, ['html_attr']);
+
+        $this->assertSame('<br />', $escaper->escape(new Extension_TestClass(), 'html', null, true));
+    }
 }
 
 function escaper($string, $charset)
