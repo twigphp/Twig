@@ -18,6 +18,13 @@ namespace Twig\Extra\Html;
  */
 final class Cva
 {
+    private const MAX_CACHED_CLASS_LISTS = 1000;
+
+    /**
+     * @var array<string, string>
+     */
+    private static array $classListCache = [];
+
     /**
      * @var list<string|null>
      */
@@ -108,9 +115,18 @@ final class Cva
         $classes = [...$classes, ...array_values($additionalClasses)];
 
         $classes = implode(' ', array_filter($classes, 'is_string'));
-        $classes = preg_split('#\s+#', $classes, -1, \PREG_SPLIT_NO_EMPTY) ?: [];
 
-        return implode(' ', array_unique($classes));
+        if (isset(self::$classListCache[$classes])) {
+            return self::$classListCache[$classes];
+        }
+
+        if (\count(self::$classListCache) >= self::MAX_CACHED_CLASS_LISTS) {
+            self::$classListCache = [];
+        }
+
+        $uniqueClasses = array_unique(preg_split('#\s+#', $classes, -1, \PREG_SPLIT_NO_EMPTY) ?: []);
+
+        return self::$classListCache[$classes] = implode(' ', $uniqueClasses);
     }
 
     private function resolveCompoundVariant(array $compound, array $recipes): array

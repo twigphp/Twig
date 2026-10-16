@@ -49,6 +49,22 @@ class CvaTest extends TestCase
         $this->assertEquals('font-semibold border rounded text-primary text-sm text-red-500', $recipe->apply(['colors' => 'primary', 'sizes' => 'sm']));
     }
 
+    public function testApplySameRecipesAgain(): void
+    {
+        $createRecipe = static fn () => new Cva("font-semibold  border\nrounded border", [
+            'colors' => [
+                'primary' => 'text-primary',
+                'secondary' => 'text-secondary',
+            ],
+        ]);
+        $recipe = $createRecipe();
+
+        $this->assertSame('font-semibold border rounded text-primary', $recipe->apply(['colors' => 'primary']));
+        $this->assertSame('font-semibold border rounded text-secondary', $recipe->apply(['colors' => 'secondary']));
+        $this->assertSame('font-semibold border rounded text-primary', $recipe->apply(['colors' => 'primary']));
+        $this->assertSame('font-semibold border rounded text-primary', $createRecipe()->apply(['colors' => 'primary']));
+    }
+
     public function testApplyWithNullString(): void
     {
         $recipe = new Cva('font-semibold border rounded', [
