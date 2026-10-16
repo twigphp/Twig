@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2026-10-12T16:41:30Z
+
+Thanks, integration test added in `extensions/attributes.test`. It renders functions, filters and tests declared with attributes, from an extension added as usual and from one added through `AttributeExtension`. Without the `getRuntime()` fallback, the first case fails with "Unable to load the runtime".
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2026-10-13T06:36:46Z
+
+> Note that this is specifically prohibited by Symfony autoconfiguration
+
+Thanks, I relaxed this in https://github.com/symfony/symfony/pull/66828
