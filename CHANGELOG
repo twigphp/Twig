@@ -1,5 +1,6 @@
 # 3.31.0 (2026-XX-XX)
 
+ * Add the `sort_localized` filter to `twig/intl-extra` to sort values in the alphabetical order of a locale
  * Fix reading an attribute through its getter initializing a lazy object when the property is not public
  * Fix compiled float literals depending on the `serialize_precision` ini setting
  * Fix the `loop` variable being undefined when used in the sequence of a nested `for` tag

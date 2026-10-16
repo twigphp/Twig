@@ -15,6 +15,11 @@ The ``sort`` filter sorts sequences and mappings:
     association. It supports Traversable objects by transforming
     those to arrays.
 
+.. tip::
+
+    Strings are compared byte per byte; to sort them in the alphabetical order
+    of a language, use the :doc:`sort_localized<sort_localized>` filter.
+
 You can pass an arrow function to configure the sorting:
 
 .. code-block:: html+twig
