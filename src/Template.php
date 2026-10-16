@@ -275,7 +275,7 @@ abstract class Template
             return $blocks[$name][0] instanceof self;
         }
 
-        if (isset($this->getBlocks()[$name])) {
+        if (isset($this->blocks[$name])) {
             return true;
         }
 
@@ -299,7 +299,7 @@ abstract class Template
      */
     public function getBlockNames(array $context, array $blocks = []): array
     {
-        $names = array_merge(array_keys($blocks), array_keys($this->getBlocks()));
+        $names = array_merge(array_keys($blocks), array_keys($this->blocks));
 
         if ($parent = $this->getParent($context)) {
             $names = array_merge($names, $parent->getBlockNames($context));

@@ -311,10 +311,26 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
                     ->write("\$this->traits = \$_trait_0_blocks;\n\n")
                 ;
             }
+        }
 
+        if (\count($this->getNode('blocks'))) {
+            $compiler
+                ->write($countTraits ? "\$this->blocks = array_merge(\$this->traits, [\n" : "\$this->blocks = [\n")
+                ->indent()
+            ;
+
+            foreach ($this->getNode('blocks') as $name => $node) {
+                $compiler->write(\sprintf("'%s' => true,\n", $name));
+            }
+
+            $compiler
+                ->outdent()
+                ->write($countTraits ? "]);\n" : "];\n")
+            ;
+        } elseif ($countTraits) {
             $compiler->write("\$this->blocks = \$this->traits;\n");
         } else {
-            $compiler->write("\$this->blocks = [\n", "];\n");
+            $compiler->write("\$this->blocks = [];\n");
         }
 
         $compiler

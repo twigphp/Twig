@@ -150,8 +150,7 @@ class __TwigTemplate_%x extends Template
 
         \$this->parent = false;
 
-        \$this->blocks = [
-        ];
+        \$this->blocks = [];
     }
 
     protected function doDisplay(array \$context, array \$blocks = []): iterable
@@ -175,7 +174,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  44 => 1,);
+        return array (  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -225,8 +224,7 @@ class __TwigTemplate_%x extends Template
 
         \$this->source = \$this->getSourceContext();
 
-        \$this->blocks = [
-        ];
+        \$this->blocks = [];
     }
 
     protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper
@@ -266,7 +264,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  50 => 1,  48 => 2,  41 => 1,);
+        return array (  49 => 1,  47 => 2,  40 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -321,8 +319,7 @@ class __TwigTemplate_%x extends Template
 
         \$this->source = \$this->getSourceContext();
 
-        \$this->blocks = [
-        ];
+        \$this->blocks = [];
     }
 
     protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper
@@ -361,7 +358,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  50 => 2,  48 => 4,  41 => 2,);
+        return array (  49 => 2,  47 => 4,  40 => 2,);
     }
 
     public function getSourceContext(): Source

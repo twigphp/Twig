@@ -80,6 +80,24 @@ class TemplateTest extends TestCase
         ], 'Hello child'];
     }
 
+    public function testBlockIntrospectionDoesNotBuildCallbacks(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'index' => '{% extends "base" %}{% use "trait" with original as alias %}{% block body %}{% endblock %}',
+            'base' => '{% block inherited %}{% endblock %}',
+            'trait' => '{% block original %}{% endblock %}{% block body %}{% endblock %}',
+        ]));
+        $class = $twig->load('index')->unwrap($twig)::class;
+        $template = $this->getMockBuilder($class)->setConstructorArgs([$twig])->onlyMethods(['getBlocks'])->getMock();
+        $template->expects($this->never())->method('getBlocks');
+
+        $this->assertTrue($template->hasBlock('body', []));
+        $this->assertTrue($template->hasBlock('alias', []));
+        $this->assertTrue($template->hasBlock('inherited', []));
+        $this->assertFalse($template->hasBlock('original', []));
+        $this->assertSame(['body', 'alias', 'inherited'], $template->getBlockNames([]));
+    }
+
     public function testDisplayBlocksAcceptTemplateOnlyAsBlocks(): void
     {
         $twig = new Environment(new ArrayLoader());
