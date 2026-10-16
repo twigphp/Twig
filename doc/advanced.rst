@@ -938,6 +938,46 @@ add the ``Twig\Environment`` type to the first argument of the method::
         }
     }
 
+.. versionadded:: 3.31
+
+    Registering an extension class with ``AttributeExtension`` was added in Twig 3.31.
+
+An extension class can also declare its callables with these attributes. You can
+then register it as usual, or lazily with ``AttributeExtension`` and a runtime
+loader, so that its dependencies are only created when a template calls it::
+
+    use Twig\Attribute\AsTwigFunction;
+    use Twig\Extension\AbstractExtension;
+    use Twig\Extension\AttributeExtension;
+
+    class ProjectExtension extends AbstractExtension
+    {
+        public function __construct(private LipsumProvider $lipsumProvider) {}
+
+        public function getFunctions(): array
+        {
+            return (new AttributeExtension(self::class))->getFunctions();
+        }
+
+        #[AsTwigFunction('lipsum')]
+        public function lipsum(int $count): string
+        {
+            return $this->lipsumProvider->lipsum($count);
+        }
+    }
+
+    // as usual
+    $twig->addExtension(new ProjectExtension($lipsumProvider));
+
+    // or lazily
+    $twig->addExtension(new AttributeExtension(ProjectExtension::class));
+    $twig->addRuntimeLoader(new \Twig\RuntimeLoader\FactoryRuntimeLoader([
+        ProjectExtension::class => fn () => new ProjectExtension($lipsumProvider),
+    ]));
+
+In both cases, ``$twig->getExtension(ProjectExtension::class)`` returns the
+``ProjectExtension`` instance.
+
 ``#[AsTwigFilter]`` and ``#[AsTwigFunction]`` support variadic arguments
 automatically when applied to variadic methods::
 

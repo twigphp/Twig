@@ -1,0 +1,18 @@
+--TEST--
+use functions, filters, and tests declared with attributes on an extension, registered directly or with AttributeExtension
+--TEMPLATE--
+{{ attribute_function('foo') }}
+{{ 'foo'|attribute_filter }}
+{{ '*' is attribute_test ? 'yes' : 'no' }}
+{{ lazy_attribute_function('foo') }}
+{{ 'foo'|lazy_attribute_filter }}
+{{ '+' is lazy_attribute_test ? 'yes' : 'no' }}
+--DATA--
+return []
+--EXPECT--
+*foo*
+*foo*
+yes
++foo+
++foo+
+yes
