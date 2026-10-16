@@ -148,7 +148,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
     {
         $method = strtolower($method);
 
-        if ($obj instanceof Template || ($obj instanceof Markup && 'withcontent' !== $method)) {
+        if ($obj instanceof Template || ($obj instanceof Markup && '__construct' !== $method && 'withcontent' !== $method)) {
             return;
         }
 

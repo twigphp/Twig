@@ -30,6 +30,7 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\SandboxExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Loader\ArrayLoader;
+use Twig\Markup;
 use Twig\Node\Expression\CallExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
@@ -810,6 +811,38 @@ class SandboxTest extends TestCase
             $this->assertEquals(MagicCallObject::class, $e->getClassName());
             $this->assertEquals('hello', $e->getMethodName());
         }
+    }
+
+    /**
+     * @dataProvider getMarkupConstructorTemplates
+     */
+    #[DataProvider('getMarkupConstructorTemplates')]
+    public function testSandboxDoesNotAllowCallingTheMarkupConstructor(string $template): void
+    {
+        $markup = new Markup('<b>safe</b>', 'UTF-8');
+        $twig = $this->getEnvironment(true, [], ['index' => $template], ['set']);
+        try {
+            $twig->load('index')->render(['m' => $markup]);
+            $this->fail('Sandbox throws a SecurityError exception if the Markup constructor is called');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame(Markup::class, $e->getClassName());
+            $this->assertSame('__construct', $e->getMethodName());
+        }
+
+        $this->assertSame('<b>safe</b>', (string) $markup);
+    }
+
+    public static function getMarkupConstructorTemplates(): iterable
+    {
+        yield 'context value' => ['{{ m.__construct("<script>", "UTF-8") }}'];
+        yield 'mixed case' => ['{{ m.__CONSTRUCT("<script>", "UTF-8") }}'];
+        yield 'captured value' => ['{% set c %}safe{% endset %}{{ c.__construct("<script>", "UTF-8") }}'];
+    }
+
+    public function testSandboxAllowsCallingMarkupMethods(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ m.count }}-{{ m.getCharset() }}']);
+        $this->assertSame('3-UTF-8', $twig->load('index')->render(['m' => new Markup('<b>', 'UTF-8')]));
     }
 
     public function testSandboxAllowingCallLiteralDoesNotAllowMagicCallMethod(): void
