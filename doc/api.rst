@@ -558,6 +558,30 @@ The escaping rules are implemented as follows:
   and ``html``, and a class marked safe for ``html_attr_relaxed`` is also safe
   for ``html``, as the stricter escaping covers the looser contexts.
 
+* A single value can be marked as safe for some strategies when it is created,
+  without registering its class:
+
+  .. versionadded:: 3.31
+
+      The third argument of the ``Twig\Markup`` constructor was added in Twig
+      3.31.
+
+  .. code-block:: php
+
+        // safe for the HTML strategy only, escaped everywhere else
+        $value = new \Twig\Markup($html, 'UTF-8', ['html']);
+
+        // safe for the HTML and JS strategies
+        $value = new \Twig\Markup($html, 'UTF-8', ['html', 'js']);
+
+        // safe for all strategies, the default
+        $value = new \Twig\Markup($html, 'UTF-8');
+
+  Mark values for the strategies they were really produced for: a value built
+  for an HTML page is not safe to inject into a JavaScript or CSS context. The
+  strategies of the instance always win over the ones registered for its class,
+  and an explicit ``|escape('html')`` in a template escapes the value anyway.
+
 * Escaping is applied before printing, after any other filter is applied:
 
   .. code-block:: twig

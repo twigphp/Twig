@@ -21,8 +21,10 @@ final class EscaperRuntime implements RuntimeExtensionInterface
      * Strategies a value is also safe for when it is safe for the declared one.
      *
      * Mirrors the compile-time rules of Twig\NodeVisitor\SafeAnalysisNodeVisitor.
+     *
+     * @internal
      */
-    private const IMPLIED_STRATEGIES = [
+    public const IMPLIED_STRATEGIES = [
         'html_attr' => ['html_attr_relaxed', 'html'],
         'html_attr_relaxed' => ['html'],
     ];
@@ -116,7 +118,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
     public function escape($string, string $strategy = 'html', ?string $charset = null, bool $autoescape = false)
     {
         if ($autoescape && $string instanceof Markup) {
-            return $string;
+            return $string->isSafeFor($strategy) ? $string : $this->escape((string) $string, $strategy, $charset);
         }
 
         if (!\is_string($string)) {
