@@ -15,7 +15,8 @@ This package is a Twig extension that provides the following:
  * [`format_datetime`][10] filter: formats a date time;
  * [`format_date`][11] filter: formats a date;
  * [`format_time`][12] filter: formats a time;
- * [`format_list`][13] filter: formats a list of strings as a single, locale-aware string.
+ * [`format_list`][13] filter: formats a list of strings as a single, locale-aware string;
+ * [`collate`][14] function: compares two strings in the alphabetical order of a locale.
 
 [1]: https://twig.symfony.com/country_name
 [2]: https://twig.symfony.com/currency_name
@@ -30,3 +31,4 @@ This package is a Twig extension that provides the following:
 [11]: https://twig.symfony.com/format_date
 [12]: https://twig.symfony.com/format_time
 [13]: https://twig.symfony.com/format_list
+[14]: https://twig.symfony.com/collate
