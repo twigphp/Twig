@@ -951,6 +951,10 @@ final class CoreExtension extends AbstractExtension
             return $keys;
         }
 
+        if ($array instanceof \stdClass) {
+            $array = (array) $array;
+        }
+
         if (!\is_array($array)) {
             return [];
         }
@@ -1394,6 +1398,10 @@ final class CoreExtension extends AbstractExtension
     {
         if (is_iterable($seq)) {
             return $seq;
+        }
+
+        if ($seq instanceof \stdClass) {
+            return (array) $seq;
         }
 
         return [];

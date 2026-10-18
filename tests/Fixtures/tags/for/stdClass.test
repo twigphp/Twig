@@ -1,0 +1,35 @@
+--TEST--
+"for" tag iterates over stdClass objects
+--TEMPLATE--
+{% for item in stdClass.obj %}
+  * {{ item }}
+  * {{ loop.index }}/{{ loop.index0 }}
+  * {{ loop.first }}
+
+{% endfor %}
+
+{% for key, value in stdClass.obj %}
+  * {{ key }}/{{ value }}
+{% endfor %}
+
+{% for key in stdClass.obj|keys %}
+  * {{ key }}
+{% endfor %}
+--DATA--
+return ['stdClass' => (object) ['obj' => (object) ['key1' => 'one', 'key2' => 'two']]]
+--EXPECT--
+  * one
+  * 1/0
+  * 1
+
+  * two
+  * 2/1
+  * 
+
+
+  * key1/one
+  * key2/two
+
+  * key1
+  * key2
+
