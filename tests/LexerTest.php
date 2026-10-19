@@ -26,8 +26,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
+use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
 use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\Expression\Unary\NotUnary;
 use Twig\Source;
 use Twig\Token;
 
@@ -470,6 +472,26 @@ class LexerTest extends TestCase
 
         // add a dummy assertion here to satisfy PHPUnit, the only thing we want to test is that the code above
         // can be executed without throwing any exceptions
+    }
+
+    public function testOverlappingOperatorTokensAndAliases(): void
+    {
+        $env = new Environment(new ArrayLoader());
+        $env->getExpressionParsers()->add([
+            new UnaryOperatorExpressionParser(NotUnary::class, 'custom', 50, aliases: ['shared']),
+            new UnaryOperatorExpressionParser(NotUnary::class, 'custom not', 50, aliases: ['shared']),
+        ]);
+
+        $stream = (new Lexer($env))->tokenize(new Source('{{ custom not 1 }}{{ custom 1 }}{{ shared 1 }}{{ not false }}{{ 1 not in [2] }}', 'index'));
+        $operators = [];
+        while (!$stream->isEOF()) {
+            $token = $stream->next();
+            if ($token->test(Token::OPERATOR_TYPE)) {
+                $operators[] = $token->getValue();
+            }
+        }
+
+        $this->assertSame(['custom not', 'custom', 'shared', 'not', 'not in', '[', ']'], $operators);
     }
 
     public function testLiteralIsNotAnOperator(): void
