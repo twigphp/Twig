@@ -33,6 +33,12 @@ You can pass an arrow function to configure the sorting:
 
 Note the usage of the `spaceship`_ operator to simplify the comparison.
 
+.. tip::
+
+    The ``<=>`` operator compares strings byte per byte; to sort them in the
+    alphabetical order of a language, use the :doc:`collate<../functions/collate>`
+    function: ``sort((a, b) => collate(a.name, b.name))``.
+
 Arguments
 ---------
 

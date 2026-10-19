@@ -283,4 +283,58 @@ class IntlExtensionTest extends TestCase
 
         (new IntlExtension())->formatList($strings, locale: 'en');
     }
+
+    public function testCollateDependsOnTheLocale(): void
+    {
+        $ext = new IntlExtension();
+
+        // Czech sorts "ch" after "h"
+        $this->assertSame(1, $ext->collate('chata', 'hrad', 'cs'));
+        $this->assertSame(-1, $ext->collate('chata', 'hrad', 'en'));
+
+        // German sorts "Ö" with "O", Swedish after "Z"
+        $this->assertSame(-1, $ext->collate('Öl', 'Zoo', 'de'));
+        $this->assertSame(1, $ext->collate('Öl', 'Zoo', 'sv'));
+    }
+
+    public function testCollateUsesTheDefaultLocale(): void
+    {
+        $default = \Locale::getDefault();
+        \Locale::setDefault('cs');
+
+        try {
+            $this->assertSame(1, (new IntlExtension())->collate('chata', 'hrad'));
+        } finally {
+            \Locale::setDefault($default);
+        }
+    }
+
+    public function testCollateComparesNullAsAnEmptyString(): void
+    {
+        $ext = new IntlExtension();
+
+        $this->assertSame(-1, $ext->collate(null, 'a', 'en'));
+        $this->assertSame(0, $ext->collate(null, '', 'en'));
+    }
+
+    public function testCollateThrowsOnInvalidUtf8(): void
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Unable to compare the given strings: ');
+
+        (new IntlExtension())->collate('a', "\xff", 'fr');
+    }
+
+    public function testCollatorCacheIsBounded(): void
+    {
+        $ext = new IntlExtension();
+
+        for ($i = 0; $i < 250; ++$i) {
+            $ext->collate('a', 'b', 'en_US@x='.$i);
+        }
+
+        $cache = (new \ReflectionProperty(IntlExtension::class, 'collators'))->getValue($ext);
+        $this->assertLessThanOrEqual(100, \count($cache));
+        $this->assertGreaterThan(1, \count($cache));
+    }
 }

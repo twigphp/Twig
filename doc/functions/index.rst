@@ -31,4 +31,5 @@ Functions
     locale_names
     script_names
     timezone_names
+    collate
     template_from_string

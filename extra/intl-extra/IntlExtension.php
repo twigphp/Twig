@@ -184,6 +184,10 @@ final class IntlExtension extends AbstractExtension
     private $dateFormatters = [];
     private $numberFormatters = [];
     private $listFormatters = [];
+    /**
+     * @var array<string, \Collator>
+     */
+    private array $collators = [];
     private $dateFormatterPrototype;
     private $numberFormatterPrototype;
     /**
@@ -230,6 +234,9 @@ final class IntlExtension extends AbstractExtension
             new TwigFunction('locale_names', [$this, 'getLocaleNames']),
             new TwigFunction('currency_names', [$this, 'getCurrencyNames']),
             new TwigFunction('timezone_names', [$this, 'getTimezoneNames']),
+
+            // localized comparison
+            new TwigFunction('collate', [$this, 'collate']),
         ];
     }
 
@@ -458,6 +465,17 @@ final class IntlExtension extends AbstractExtension
         $formatter = $this->createListFormatter($locale, $type, $width);
         if (false === $ret = $formatter->format($strings)) {
             throw new RuntimeError(\sprintf('Unable to format the given list: %s', $formatter->getErrorMessage()));
+        }
+
+        return $ret;
+    }
+
+    public function collate(?string $a, ?string $b, ?string $locale = null): int
+    {
+        $collator = $this->createCollator($locale);
+
+        if (false === $ret = $collator->compare($a ?? '', $b ?? '')) {
+            throw new RuntimeError(\sprintf('Unable to compare the given strings: %s', $collator->getErrorMessage()));
         }
 
         return $ret;
@@ -692,5 +710,22 @@ final class IntlExtension extends AbstractExtension
         }
 
         return $this->listFormatters[$hash];
+    }
+
+    private function createCollator(?string $locale): \Collator
+    {
+        if (null === $locale) {
+            $locale = \Locale::getDefault();
+        }
+
+        if (!isset($this->collators[$locale])) {
+            if (\count($this->collators) >= self::MAX_CACHED_FORMATTERS) {
+                array_shift($this->collators);
+            }
+
+            $this->collators[$locale] = new \Collator($locale);
+        }
+
+        return $this->collators[$locale];
     }
 }
