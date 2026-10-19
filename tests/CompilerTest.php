@@ -45,6 +45,17 @@ class CompilerTest extends TestCase
         $this->assertSame("it's \"a\" test", $decoded);
     }
 
+    public function testReprIntegersRoundTripWithoutLosingPrecision(): void
+    {
+        $compiler = new Compiler(new Environment(new ArrayLoader()));
+
+        foreach ([0, 1, -1, \PHP_INT_MIN, \PHP_INT_MIN + 1, \PHP_INT_MAX] as $value) {
+            $source = $compiler->reset()->repr($value)->getSource();
+
+            $this->assertSame($value, eval('return '.$source.';'));
+        }
+    }
+
     public function testReprNumericValueWithLocale(): void
     {
         $compiler = new Compiler(new Environment(new ArrayLoader()));
@@ -59,10 +70,15 @@ class CompilerTest extends TestCase
             $this->markTestSkipped('Could not set any of required locales: '.implode(', ', $required_locales));
         }
 
-        $this->assertEquals('1.2', $compiler->repr(1.2)->getSource());
-        $this->assertStringContainsString('fr', strtolower(setlocale(\LC_NUMERIC, '0')));
+        try {
+            $this->assertEquals('1.2', $compiler->repr(1.2)->getSource());
+            $this->assertStringContainsString('fr', strtolower(setlocale(\LC_NUMERIC, '0')));
 
-        setlocale(\LC_NUMERIC, $locale);
+            $this->assertSame('123', $compiler->reset()->repr(123)->getSource());
+            $this->assertStringContainsString('fr', strtolower(setlocale(\LC_NUMERIC, '0')));
+        } finally {
+            setlocale(\LC_NUMERIC, $locale);
+        }
     }
 
     public function testReprFloatDoesNotDependOnSerializePrecision(): void
@@ -72,6 +88,9 @@ class CompilerTest extends TestCase
 
         try {
             $this->assertSame('0.1', $compiler->repr(0.1)->getSource());
+            $this->assertSame('17', \ini_get('serialize_precision'));
+
+            $this->assertSame('123', $compiler->reset()->repr(123)->getSource());
             $this->assertSame('17', \ini_get('serialize_precision'));
         } finally {
             ini_set('serialize_precision', $precision);

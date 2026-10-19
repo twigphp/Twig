@@ -1,5 +1,6 @@
 # 3.31.0 (2026-XX-XX)
 
+ * Speed up compiling integer literals by skipping numeric locale changes
  * Add the `collate` function to `twig/intl-extra` to compare strings in the alphabetical order of a locale
  * Fix reading an attribute through its getter initializing a lazy object when the property is not public
  * Fix compiled float literals depending on the `serialize_precision` ini setting
