@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-10-19T14:27:38Z
+
+ Thanks for this alternative, I think it's a better approach than my `sort_localized` filter.
+
+The extra verbosity is fine to me, as `collate()` can be combined with other comparisons, for instance to sort by last name, then by first name:
+
+  ```twig
+  users|sort((a, b) => collate(a.lastname, b.lastname) ?: collate(a.firstname, b.firstname))
+  ```
+I've suggested an example for the docs.
