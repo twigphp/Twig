@@ -56,11 +56,6 @@ class ForTest extends NodeTestCase
         $node->setAttribute('with_loop', false);
         $this->assertFalse($node->hasNode('ifexpr'));
         $this->assertEquals($else, $node->getNode('else'));
-        $this->assertFalse($else->getAttribute('with_condition'));
-
-        $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 1), 1), 5);
-        new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
-        $this->assertTrue($else->getAttribute('with_condition'));
     }
 
     public static function provideTests(): iterable
@@ -81,17 +76,50 @@ class ForTest extends NodeTestCase
 
         $tests[] = [$node, <<<EOF
 // line 1
-\$_v0 = new \Twig\Runtime\LoopIterator({$itemsGetter});
-yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
-    \$macros = \$this->macros;
-    \$parent = \$context;
-    foreach (\$iterator as \$context["key"] => \$context["item"]) {
-        yield (string) {$fooGetter};
-    }
+\$_v0 = {$itemsGetter};
+\$_v1 = \$context;
+foreach (\\is_array(\$_v0) || \$_v0 instanceof \\Traversable ? \$_v0 : [] as \$context["key"] => \$context["item"]) {
+    yield (string) {$fooGetter};
+}
+if (\$context !== \$_v1) {
     unset(\$context['key'], \$context['item']);
-    \$context = array_intersect_key(\$context, \$parent) + \$parent;
-    return; yield;
-})(\$_v0, \$context, \$blocks, \$_v1, 0);
+    \$context = array_intersect_key(\$context, \$_v1) + \$_v1;
+}
+unset(\$_v0, \$_v1);
+EOF
+        ];
+
+        $keyTarget = new AssignContextVariable('k', 1);
+        $valueTarget = new AssignContextVariable('v', 1);
+        $seq = new ContextVariable('values', 1);
+        $ifexpr = new ConstantExpression(true, 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
+        $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 6), 6), 5);
+        $node = new ForNode($keyTarget, $valueTarget, $seq, $ifexpr, $body, $else, 1);
+        $node->setAttribute('with_loop', false);
+
+        $tests[] = [$node, <<<EOF
+// line 1
+\$_v0 = {$valuesGetter};
+\$_v1 = \$context;
+\$_v2 = false;
+foreach (\\is_array(\$_v0) || \$_v0 instanceof \\Traversable ? \$_v0 : [] as \$context["k"] => \$context["v"]) {
+    if (!(true)) {
+        continue;
+    }
+    \$_v2 = true;
+    yield (string) {$fooGetter};
+}
+// line 5
+if (!\$_v2) {
+    // line 6
+    yield (string) {$fooGetter};
+}
+if (\$context !== \$_v1) {
+    unset(\$context['k'], \$context['v']);
+    \$context = array_intersect_key(\$context, \$_v1) + \$_v1;
+}
+unset(\$_v0, \$_v1, \$_v2);
 EOF
         ];
 
