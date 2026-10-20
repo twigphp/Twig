@@ -20,6 +20,24 @@ namespace Twig\Runtime;
  */
 final class LoopContext
 {
+    /**
+     * The getters of the attributes that take no arguments.
+     */
+    public const GETTERS = [
+        'depth' => 'getDepth',
+        'depth0' => 'getDepth0',
+        'first' => 'isFirst',
+        'index' => 'getIndex',
+        'index0' => 'getIndex0',
+        'last' => 'isLast',
+        'length' => 'getLength',
+        'next' => 'getNext',
+        'parent' => 'getParent',
+        'previous' => 'getPrevious',
+        'revindex' => 'getRevindex',
+        'revindex0' => 'getRevindex0',
+    ];
+
     private mixed $lastChanged;
 
     public function __construct(

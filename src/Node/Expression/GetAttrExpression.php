@@ -16,6 +16,7 @@ use Twig\Compiler;
 use Twig\Extension\SandboxExtension;
 use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Runtime\LoopContext;
 use Twig\Template;
 
 class GetAttrExpression extends AbstractExpression implements SupportDefinedTestInterface, CoercesChildrenToStringInterface
@@ -43,6 +44,24 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
         $env = $compiler->getEnvironment();
         $arrayAccessSandbox = false;
         $nullSafe = $this->getAttribute('null_safe');
+
+        if (null !== $method = $this->getLoopContextMethod()) {
+            // the loop variable is a LoopContext unless the template assigns it, so its getters can be called directly
+            if ($this->getAttribute('ignore_strict_check')) {
+                $this->getNode('node')->setAttribute('ignore_strict_check', true);
+            }
+
+            $var = '$'.$compiler->getVarName();
+            $compiler
+                ->raw('(('.$var.' = ')
+                ->subcompile($this->getNode('node'))
+                ->raw(') instanceof \Twig\Runtime\LoopContext ? '.$var.'->'.$method.'() : ')
+            ;
+            $this->compileGetAttributeCall($compiler, $var);
+            $compiler->raw(')');
+
+            return;
+        }
 
         // optimize array calls
         if (
@@ -114,43 +133,7 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
             $isShortCircuited = true;
         }
 
-        $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ');
-
-        if ($nullSafe) {
-            $compiler->raw($this->getVarName($compiler));
-        } else {
-            $compiler->subcompile($this->getNode('node'));
-        }
-
-        $compiler
-            ->raw(', ')
-            ->subcompile($this->getNode('attribute'))
-        ;
-
-        if ($this->hasNode('arguments')) {
-            $compiler->raw(', arguments: ')->subcompile($this->getNode('arguments'));
-        }
-
-        if (Template::ANY_CALL !== $type = $this->getAttribute('type')) {
-            $compiler->raw(', type: ')->repr($type);
-        }
-
-        if ($this->definedTest) {
-            $compiler->raw(', isDefinedTest: true');
-        }
-
-        if ($this->getAttribute('ignore_strict_check')) {
-            $compiler->raw(', ignoreStrictCheck: true');
-        }
-
-        if ($env->hasExtension(SandboxExtension::class)) {
-            $compiler->raw(', sandboxed: true');
-        }
-
-        $compiler
-            ->raw(', lineno: ')->repr($this->getNode('node')->getTemplateLine())
-            ->raw(')')
-        ;
+        $this->compileGetAttributeCall($compiler, $nullSafe ? $this->getVarName($compiler) : null);
 
         if ($arrayAccessSandbox) {
             $compiler->raw(')');
@@ -199,6 +182,68 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
             ->subcompile($attribute)
             ->raw(') instanceof \Stringable && (is_array('.$var.') || '.$var.' instanceof \ArrayObject || '.$var.' instanceof \ArrayIterator) ? (string) '.$key.' : '.$key.')')
         ;
+    }
+
+    private function compileGetAttributeCall(Compiler $compiler, ?string $object): void
+    {
+        $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ');
+
+        if (null !== $object) {
+            $compiler->raw($object);
+        } else {
+            $compiler->subcompile($this->getNode('node'));
+        }
+
+        $compiler
+            ->raw(', ')
+            ->subcompile($this->getNode('attribute'))
+        ;
+
+        if ($this->hasNode('arguments')) {
+            $compiler->raw(', arguments: ')->subcompile($this->getNode('arguments'));
+        }
+
+        if (Template::ANY_CALL !== $type = $this->getAttribute('type')) {
+            $compiler->raw(', type: ')->repr($type);
+        }
+
+        if ($this->definedTest) {
+            $compiler->raw(', isDefinedTest: true');
+        }
+
+        if ($this->getAttribute('ignore_strict_check')) {
+            $compiler->raw(', ignoreStrictCheck: true');
+        }
+
+        if ($compiler->getEnvironment()->hasExtension(SandboxExtension::class)) {
+            $compiler->raw(', sandboxed: true');
+        }
+
+        $compiler
+            ->raw(', lineno: ')->repr($this->getNode('node')->getTemplateLine())
+            ->raw(')')
+        ;
+    }
+
+    /**
+     * Returns the LoopContext getter to call for the "loop.<attribute>" expressions that take no arguments.
+     */
+    private function getLoopContextMethod(): ?string
+    {
+        if (
+            $this->definedTest
+            || $this->getAttribute('null_safe')
+            || Template::ANY_CALL !== $this->getAttribute('type')
+            || !($node = $this->getNode('node')) instanceof ContextVariable
+            || 'loop' !== $node->getAttribute('name')
+            || !($attribute = $this->getNode('attribute')) instanceof ConstantExpression
+            || !\is_string($name = $attribute->getAttribute('value'))
+            || ($this->hasNode('arguments') && \count($this->getNode('arguments')))
+        ) {
+            return null;
+        }
+
+        return LoopContext::GETTERS[$name] ?? null;
     }
 
     private function changeIgnoreStrictCheck(self $node): void
