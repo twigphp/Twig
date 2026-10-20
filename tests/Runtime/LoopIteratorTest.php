@@ -13,62 +13,97 @@ namespace Twig\Tests\Runtime;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Twig\Error\RuntimeError;
 use Twig\Runtime\LoopIterator;
 
 class LoopIteratorTest extends TestCase
 {
-    #[DataProvider('provideIterablesForNext')]
-    public function testNextWhenValid(iterable $iterable): void
+    #[DataProvider('provideIterables')]
+    public function testIterate(iterable $iterable): void
     {
         $iterator = new LoopIterator($iterable);
-        $iterator->next();
 
-        $this->assertTrue($iterator->valid());
-        $this->assertSame(1, $iterator->key());
-        $this->assertSame('bar', $iterator->current());
+        $this->assertSame([0 => 'foo', 1 => 'bar', 2 => 'baz'], iterator_to_array($iterator));
+        $this->assertSame(3, $iterator->getIndex0());
+        $this->assertSame([0 => 'foo', 1 => 'bar', 2 => 'baz'], iterator_to_array($iterator));
     }
 
-    #[DataProvider('provideIterablesForNext')]
-    public function testNextWhenNotValid(iterable $iterable): void
+    #[DataProvider('provideIterables')]
+    public function testPreviousAndNext(iterable $iterable): void
     {
         $iterator = new LoopIterator($iterable);
-        $iterator->next();
-        $iterator->next();
 
-        $this->assertFalse($iterator->valid());
-        $this->assertNull($iterator->key());
-        $this->assertNull($iterator->current());
+        $seen = [];
+        foreach ($iterator as $key => $value) {
+            $seen[] = [$iterator->getIndex0(), $key, $value, $iterator->getPrevious(), $iterator->hasNext(), $iterator->getNext()];
+        }
+
+        $this->assertSame([
+            [0, 0, 'foo', null, true, 'bar'],
+            [1, 1, 'bar', 'foo', true, 'baz'],
+            [2, 2, 'baz', 'bar', false, null],
+        ], $seen);
+        $this->assertFalse($iterator->hasNext());
+        $this->assertNull($iterator->getNext());
     }
 
-    public static function provideIterablesForNext()
-    {
-        yield [['foo', 'bar']];
-        yield [new \ArrayIterator(['foo', 'bar'])];
-        yield [new TypedArrayIterator(['foo', 'bar'])];
-    }
-
-    #[DataProvider('provideIterablesForRewind')]
-    public function testRewind(iterable $iterable): void
+    #[DataProvider('provideIterables')]
+    public function testLookingAheadDoesNotSkipItems(iterable $iterable): void
     {
         $iterator = new LoopIterator($iterable);
-        $iterator->next();
 
-        $this->assertTrue($iterator->valid());
-        $this->assertSame(1, $iterator->key());
-        $this->assertSame('bar', $iterator->current());
+        $seen = [];
+        foreach ($iterator as $key => $value) {
+            $iterator->getNext();
+            $iterator->getNext();
+            $seen[$key] = $value;
+        }
 
-        $iterator->rewind();
-
-        $this->assertTrue($iterator->valid());
-        $this->assertSame(0, $iterator->key());
-        $this->assertSame('foo', $iterator->current());
+        $this->assertSame([0 => 'foo', 1 => 'bar', 2 => 'baz'], $seen);
     }
 
-    public static function provideIterablesForRewind()
+    public static function provideIterables(): iterable
     {
-        yield [['foo', 'bar']];
-        yield [new \ArrayIterator(['foo', 'bar'])];
-        yield [new TypedArrayIterator(['foo', 'bar'])];
+        yield [['foo', 'bar', 'baz']];
+        yield [new \ArrayIterator(['foo', 'bar', 'baz'])];
+        yield [new \ArrayObject(['foo', 'bar', 'baz'])];
+        yield [new TypedArrayIterator(['foo', 'bar', 'baz'])];
+    }
+
+    public function testIterateNonIterable(): void
+    {
+        $iterator = new LoopIterator(null);
+
+        $this->assertSame([], iterator_to_array($iterator));
+        $this->assertSame(0, $iterator->getIndex0());
+        $this->assertSame(0, $iterator->getLength());
+        $this->assertFalse($iterator->hasNext());
+    }
+
+    public function testGetLength(): void
+    {
+        $this->assertSame(2, (new LoopIterator(['foo', 'bar']))->getLength());
+        $this->assertSame(2, (new LoopIterator(new \ArrayIterator(['foo', 'bar'])))->getLength());
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The "loop.revindex" variable is not defined as the loop iterates on a non-countable iterator.');
+
+        (new LoopIterator(new TypedArrayIterator(['foo', 'bar'])))->getLength('revindex');
+    }
+
+    public function testIterateGenerator(): void
+    {
+        $iterator = new LoopIterator((static function () {
+            yield 'a' => 'foo';
+            yield 'b' => 'bar';
+        })());
+
+        $seen = [];
+        foreach ($iterator as $key => $value) {
+            $seen[$key] = [$value, $iterator->getNext()];
+        }
+
+        $this->assertSame(['a' => ['foo', 'bar'], 'b' => ['bar', null]], $seen);
     }
 }
 
