@@ -1,0 +1,30 @@
+--TEST--
+"for" tag iterates over nothing when the sequence is not iterable
+--TEMPLATE--
+[{% for item in items %}{{ item }}{% endfor %}]
+[{% for item in items %}{{ item }}{% else %}none{% endfor %}]
+[{% for item in items %}{{ loop.index }}{% else %}none{% endfor %}]
+--DATA--
+return ['items' => null]
+--EXPECT--
+[]
+[none]
+[none]
+--DATA--
+return ['items' => 'abc']
+--EXPECT--
+[]
+[none]
+[none]
+--DATA--
+return ['items' => 42]
+--EXPECT--
+[]
+[none]
+[none]
+--DATA--
+return ['items' => (object) ['a' => 1, 'b' => 2]]
+--EXPECT--
+[]
+[none]
+[none]

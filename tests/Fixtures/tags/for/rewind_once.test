@@ -1,0 +1,16 @@
+--TEST--
+"for" tag rewinds the iterator only once
+--TEMPLATE--
+{% for item in items %}{{ item }}{% endfor %}
+--DATA--
+return ['items' => new class() implements \Iterator {
+    private int $position = 0;
+    private bool $rewound = false;
+    public function current(): mixed { return ['a', 'b'][$this->position]; }
+    public function key(): mixed { return $this->position; }
+    public function next(): void { ++$this->position; }
+    public function rewind(): void { if ($this->rewound) { throw new \LogicException('Already rewound.'); } $this->rewound = true; }
+    public function valid(): bool { return $this->position < 2; }
+}]
+--EXPECT--
+ab

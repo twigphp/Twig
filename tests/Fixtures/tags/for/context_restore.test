@@ -1,0 +1,27 @@
+--TEST--
+"for" tag restores the context after the loop, whether it iterated or not
+--TEMPLATE--
+{% set outer = 'outer' %}
+{% set item = 'item' %}
+{% for item in items %}{% set outer = item %}{% set inner = item %}{% endfor %}
+{{ outer }} {{ item }} {{ inner ?? 'no inner' }} {{ _key ?? 'no key' }}
+{% for item in items %}{% set outer = item ~ loop.index %}{% set inner = item %}{% endfor %}
+{{ outer }} {{ item }} {{ inner ?? 'no inner' }} {{ loop ?? 'no loop' }}
+{% for item in items %}{% else %}{% set outer = 'else' %}{% set inner = 'else' %}{% set item = 'else' %}{% endfor %}
+{{ outer }} {{ item }} {{ inner ?? 'no inner' }}
+{% for item in (seq = items) %}{% endfor %}
+{{ seq|length }}
+--DATA--
+return ['items' => ['a', 'b']]
+--EXPECT--
+b item no inner no key
+b2 item no inner no loop
+b2 item no inner
+2
+--DATA--
+return ['items' => []]
+--EXPECT--
+outer item no inner no key
+outer item no inner no loop
+else item no inner
+0
