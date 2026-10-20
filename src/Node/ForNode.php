@@ -34,41 +34,52 @@ class ForNode extends Node
             $nodes['else'] = $else;
         }
 
-        parent::__construct($nodes, ['with_loop' => true], $lineno);
+        parent::__construct($nodes, ['with_loop' => true, 'recursive' => true], $lineno);
     }
 
     public function compile(Compiler $compiler): void
     {
-        if ($this->getAttribute('with_loop')) {
+        if ($this->getAttribute('with_loop') && $this->getAttribute('recursive')) {
             $this->compileWithLoop($compiler);
         } else {
-            $this->compileInline($compiler);
+            $this->compileInline($compiler, $this->getAttribute('with_loop'));
         }
     }
 
     /**
-     * Without the loop variable, nothing can recurse into the body, which therefore needs no closure.
+     * When the loop() function cannot recurse into the body, the body needs no closure.
      */
-    private function compileInline(Compiler $compiler): void
+    private function compileInline(Compiler $compiler, bool $withLoop): void
     {
         $seqVar = $compiler->getVarName();
         $parentVar = $compiler->getVarName();
         $iteratedVar = $this->hasNode('else') ? $compiler->getVarName() : null;
 
-        $compiler
-            ->addDebugInfo($this)
-            ->write("\$$seqVar = ")
-            ->subcompile($this->getNode('seq'))
-            ->raw(";\n")
-            ->write("\$$parentVar = \$context;\n")
-        ;
+        $compiler->addDebugInfo($this);
+
+        if ($withLoop) {
+            $compiler
+                ->write("\$$seqVar = new \\Twig\\Runtime\\LoopIterator(")
+                ->subcompile($this->getNode('seq'))
+                ->raw(");\n")
+                ->write("\$$parentVar = \$context;\n")
+                ->write("\$context['loop'] = new \\Twig\\Runtime\\LoopContext(\$$seqVar, \$$parentVar, \$blocks, null, 0);\n")
+            ;
+        } else {
+            $compiler
+                ->write("\$$seqVar = ")
+                ->subcompile($this->getNode('seq'))
+                ->raw(";\n")
+                ->write("\$$parentVar = \$context;\n")
+            ;
+        }
 
         if (null !== $iteratedVar) {
             $compiler->write("\$$iteratedVar = false;\n");
         }
 
         $compiler
-            ->write("foreach (\\is_array(\$$seqVar) || \$$seqVar instanceof \\Traversable ? \$$seqVar : [] as ")
+            ->write($withLoop ? "foreach (\$$seqVar as " : "foreach (\\is_array(\$$seqVar) || \$$seqVar instanceof \\Traversable ? \$$seqVar : [] as ")
             ->subcompile($this->getNode('key_target'))
             ->raw(' => ')
             ->subcompile($this->getNode('value_target'))
@@ -78,16 +89,24 @@ class ForNode extends Node
 
         $this->compileBody($compiler, $iteratedVar);
 
-        // the context is left untouched when the sequence is empty and the else clause sets nothing
-        $compiler
-            ->write("if (\$context !== \$$parentVar) {\n")
-            ->indent()
-            ->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']);'."\n")
-            ->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n")
-            ->outdent()
-            ->write("}\n")
-            ->write("unset(\$$seqVar, \$$parentVar".(null !== $iteratedVar ? ", \$$iteratedVar" : '').");\n")
-        ;
+        $unset = 'unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']'.($withLoop ? ', $context[\'loop\']' : '').');'."\n";
+        $restore = "\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n";
+
+        if ($withLoop) {
+            $compiler->write($unset)->write($restore);
+        } else {
+            // the context is left untouched when the sequence is empty and the else clause sets nothing
+            $compiler
+                ->write("if (\$context !== \$$parentVar) {\n")
+                ->indent()
+                ->write($unset)
+                ->write($restore)
+                ->outdent()
+                ->write("}\n")
+            ;
+        }
+
+        $compiler->write("unset(\$$seqVar, \$$parentVar".(null !== $iteratedVar ? ", \$$iteratedVar" : '').");\n");
     }
 
     private function compileWithLoop(Compiler $compiler): void

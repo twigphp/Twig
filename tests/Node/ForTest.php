@@ -176,6 +176,36 @@ EOF
         $keyTarget = new AssignContextVariable('k', 1);
         $valueTarget = new AssignContextVariable('v', 1);
         $seq = new ContextVariable('values', 1);
+        $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
+        $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 6), 6), 5);
+        $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
+        $node->setAttribute('with_loop', true);
+        $node->setAttribute('recursive', false);
+
+        $tests[] = [$node, <<<EOF
+// line 1
+\$_v0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
+\$_v1 = \$context;
+\$context['loop'] = new \Twig\Runtime\LoopContext(\$_v0, \$_v1, \$blocks, null, 0);
+\$_v2 = false;
+foreach (\$_v0 as \$context["k"] => \$context["v"]) {
+    \$_v2 = true;
+    yield (string) {$fooGetter};
+}
+// line 5
+if (!\$_v2) {
+    // line 6
+    yield (string) {$fooGetter};
+}
+unset(\$context['k'], \$context['v'], \$context['loop']);
+\$context = array_intersect_key(\$context, \$_v1) + \$_v1;
+unset(\$_v0, \$_v1, \$_v2);
+EOF
+        ];
+
+        $keyTarget = new AssignContextVariable('k', 1);
+        $valueTarget = new AssignContextVariable('v', 1);
+        $seq = new ContextVariable('values', 1);
         $ifexpr = new ConstantExpression(true, 1);
         $body = new Nodes([new PrintNode(new ContextVariable('foo', 1), 1)], 1);
         $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 6), 6), 5);
