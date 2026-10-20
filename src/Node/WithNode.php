@@ -61,7 +61,11 @@ class WithNode extends Node
                 $compiler->write("\$context = [];\n");
             }
 
-            $compiler->write(\sprintf("\$context = \$%s + \$context + \$this->env->getGlobals();\n", $varsName));
+            // two statements: adding the globals in place copies the context once instead of twice
+            $compiler
+                ->write(\sprintf("\$context = \$%s + \$context;\n", $varsName))
+                ->write("\$context += \$this->env->getGlobals();\n")
+            ;
         }
 
         $compiler
