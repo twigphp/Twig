@@ -44,7 +44,7 @@ final class LoopContext
         private LoopIterator $loop,
         private mixed $parent,
         private array $blocks,
-        private \Closure $recurseFunc,
+        private ?\Closure $recurseFunc,
         private int $depth,
     ) {
     }
@@ -119,6 +119,10 @@ final class LoopContext
 
     public function __invoke($iterator): iterable
     {
+        if (null === $this->recurseFunc) {
+            throw new \LogicException('This loop cannot be recursed into.');
+        }
+
         if ($this->depth > 50) {
             throw new \RuntimeException('Nesting level too deep.');
         }
