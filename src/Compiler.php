@@ -162,10 +162,6 @@ class Compiler
     public function repr($value)
     {
         if (\is_int($value) || \is_float($value)) {
-            if (false !== $locale = setlocale(\LC_NUMERIC, '0')) {
-                setlocale(\LC_NUMERIC, 'C');
-            }
-
             // var_export() follows serialize_precision, -1 gives the shortest representation that reads back as the same float
             $precision = \is_float($value) ? ini_set('serialize_precision', '-1') : false;
 
@@ -173,10 +169,6 @@ class Compiler
 
             if (false !== $precision) {
                 ini_set('serialize_precision', $precision);
-            }
-
-            if (false !== $locale) {
-                setlocale(\LC_NUMERIC, $locale);
             }
         } elseif (null === $value) {
             $this->raw('null');
