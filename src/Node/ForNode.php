@@ -31,7 +31,6 @@ class ForNode extends Node
         }
         $nodes['body'] = $body;
         if (null !== $else) {
-            $else->setAttribute('with_condition', null !== $ifexpr);
             $nodes['else'] = $else;
         }
 
@@ -39,6 +38,59 @@ class ForNode extends Node
     }
 
     public function compile(Compiler $compiler): void
+    {
+        if ($this->getAttribute('with_loop')) {
+            $this->compileWithLoop($compiler);
+        } else {
+            $this->compileInline($compiler);
+        }
+    }
+
+    /**
+     * Without the loop variable, nothing can recurse into the body, which therefore needs no closure.
+     */
+    private function compileInline(Compiler $compiler): void
+    {
+        $seqVar = $compiler->getVarName();
+        $parentVar = $compiler->getVarName();
+        $iteratedVar = $this->hasNode('else') ? $compiler->getVarName() : null;
+
+        $compiler
+            ->addDebugInfo($this)
+            ->write("\$$seqVar = ")
+            ->subcompile($this->getNode('seq'))
+            ->raw(";\n")
+            ->write("\$$parentVar = \$context;\n")
+        ;
+
+        if (null !== $iteratedVar) {
+            $compiler->write("\$$iteratedVar = false;\n");
+        }
+
+        $compiler
+            ->write("foreach (\\is_array(\$$seqVar) || \$$seqVar instanceof \\Traversable ? \$$seqVar : [] as ")
+            ->subcompile($this->getNode('key_target'))
+            ->raw(' => ')
+            ->subcompile($this->getNode('value_target'))
+            ->raw(") {\n")
+            ->indent()
+        ;
+
+        $this->compileBody($compiler, $iteratedVar);
+
+        // the context is left untouched when the sequence is empty and the else clause sets nothing
+        $compiler
+            ->write("if (\$context !== \$$parentVar) {\n")
+            ->indent()
+            ->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']);'."\n")
+            ->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n")
+            ->outdent()
+            ->write("}\n")
+            ->write("unset(\$$seqVar, \$$parentVar".(null !== $iteratedVar ? ", \$$iteratedVar" : '').");\n")
+        ;
+    }
+
+    private function compileWithLoop(Compiler $compiler): void
     {
         $iteratorVar = $compiler->getVarName();
         $functionVar = $compiler->getVarName();
@@ -52,14 +104,10 @@ class ForNode extends Node
             ->indent()
             ->write("\$macros = \$this->macros;\n")
             ->write("\$parent = \$context;\n")
+            ->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);\n")
         ;
 
-        if ($this->getAttribute('with_loop')) {
-            $compiler->write("\$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);\n");
-        }
-
-        $trackIterations = $this->hasNode('ifexpr') && $this->hasNode('else');
-        if ($trackIterations) {
+        if ($this->hasNode('else')) {
             $compiler->write("\$iterated = false;\n");
         }
 
@@ -72,6 +120,23 @@ class ForNode extends Node
             ->indent()
         ;
 
+        $this->compileBody($compiler, $this->hasNode('else') ? 'iterated' : null);
+
+        // remove some "private" loop variables (needed for nested loops)
+        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'loop\']);'."\n");
+
+        // keep the values set in the inner context for variables defined in the outer context
+        $compiler->write("\$context = array_intersect_key(\$context, \$parent) + \$parent;\n");
+
+        $compiler
+            ->write("return; yield;\n")
+            ->outdent()
+            ->write("})(\$$iteratorVar, \$context, \$blocks, \$$functionVar, 0);\n")
+        ;
+    }
+
+    private function compileBody(Compiler $compiler, ?string $iteratedVar): void
+    {
         if ($this->hasNode('ifexpr')) {
             $compiler
                 ->write('if (!(')
@@ -84,8 +149,8 @@ class ForNode extends Node
             ;
         }
 
-        if ($trackIterations) {
-            $compiler->write("\$iterated = true;\n");
+        if (null !== $iteratedVar) {
+            $compiler->write("\$$iteratedVar = true;\n");
         }
 
         $compiler
@@ -94,24 +159,9 @@ class ForNode extends Node
             ->write("}\n")
         ;
 
-        if ($this->hasNode('else')) {
+        if (null !== $iteratedVar) {
+            $this->getNode('else')->setAttribute('iterated_var', $iteratedVar);
             $compiler->subcompile($this->getNode('else'));
         }
-
-        // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']');
-        if ($this->getAttribute('with_loop')) {
-            $compiler->raw(', $context[\'loop\']');
-        }
-        $compiler->raw(");\n");
-
-        // keep the values set in the inner context for variables defined in the outer context
-        $compiler->write("\$context = array_intersect_key(\$context, \$parent) + \$parent;\n");
-
-        $compiler
-            ->write("return; yield;\n")
-            ->outdent()
-            ->write("})(\$$iteratorVar, \$context, \$blocks, \$$functionVar, 0);\n")
-        ;
     }
 }
