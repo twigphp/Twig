@@ -1,0 +1,10 @@
+--TEST--
+"for" tag can be recursed into from an included template
+--TEMPLATE--
+{% for item in items %}{{ loop.depth }}{{ item.title }}{% if item.children is defined %}[{% include 'children.twig' %}]{% endif %}{% endfor %}
+--TEMPLATE(children.twig)--
+{{- loop(item.children) -}}
+--DATA--
+return ['items' => [['title' => 'a', 'children' => [['title' => 'b'], ['title' => 'c']]], ['title' => 'd']]]
+--EXPECT--
+1a[2b2c]1d
