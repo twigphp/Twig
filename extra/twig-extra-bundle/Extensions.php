@@ -60,7 +60,7 @@ final class Extensions
                 'format_duration_number', 'format_date', 'format_datetime', 'format_time', 'format_list',
             ],
             'functions' => ['country_timezones', 'language_names', 'script_names', 'country_names',
-                'locale_names', 'currency_names', 'timezone_names',
+                'locale_names', 'currency_names', 'timezone_names', 'collate',
             ],
             'tags' => [],
         ],

@@ -64,4 +64,17 @@ class CompilerTest extends TestCase
 
         setlocale(\LC_NUMERIC, $locale);
     }
+
+    public function testReprFloatDoesNotDependOnSerializePrecision(): void
+    {
+        $compiler = new Compiler(new Environment(new ArrayLoader()));
+        $precision = ini_set('serialize_precision', '17');
+
+        try {
+            $this->assertSame('0.1', $compiler->repr(0.1)->getSource());
+            $this->assertSame('17', \ini_get('serialize_precision'));
+        } finally {
+            ini_set('serialize_precision', $precision);
+        }
+    }
 }

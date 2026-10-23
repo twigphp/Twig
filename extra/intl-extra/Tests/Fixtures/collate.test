@@ -1,0 +1,26 @@
+--TEST--
+"collate" function
+--TEMPLATE--
+{{ ['Yoga', 'équitation', 'Boxe', 'athlétisme', 'Échecs', 'judo']|sort((a, b) => collate(a, b, 'fr'))|join(', ') }}
+{{ {i: 'ideal', ch: 'chata', h: 'hrad'}|sort((a, b) => collate(a, b, 'cs'))|keys|join(', ') }}
+{{ words|sort((a, b) => collate(a.label, b.label, 'sv'))|column('label')|join(', ') }}
+{{ words|sort((a, b) => collate(a.label, b.label, 'de'))|column('label')|join(', ') }}
+{{ words|sort((a, b) => collate(b.label, a.label, 'de'))|column('label')|join(', ') }}
+{{ users|sort((a, b) => collate(a.lastname, b.lastname, 'fr') ?: collate(a.firstname, b.firstname, 'fr'))|map(u => u.lastname ~ ' ' ~ u.firstname)|join(', ') }}
+--DATA--
+return [
+    'words' => [['label' => 'Zoo'], ['label' => 'Öl'], ['label' => 'Ost']],
+    'users' => [
+        ['lastname' => 'Martin', 'firstname' => 'Zoé'],
+        ['lastname' => 'Durand', 'firstname' => 'Anne'],
+        ['lastname' => 'Martin', 'firstname' => 'Éric'],
+        ['lastname' => 'Dupont', 'firstname' => 'Léa'],
+    ],
+]
+--EXPECT--
+athlétisme, Boxe, Échecs, équitation, judo, Yoga
+h, ch, i
+Ost, Zoo, Öl
+Öl, Ost, Zoo
+Zoo, Ost, Öl
+Dupont Léa, Durand Anne, Martin Éric, Martin Zoé

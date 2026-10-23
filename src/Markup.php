@@ -11,6 +11,8 @@
 
 namespace Twig;
 
+use Twig\Runtime\EscaperRuntime;
+
 /**
  * Marks a content as safe.
  *
@@ -27,8 +29,14 @@ final class Markup implements \Countable, \JsonSerializable, \Stringable
     private string $content;
     private ?string $charset;
 
-    public function __construct($content, $charset)
-    {
+    /**
+     * @param string[] $safeStrategies The escaping strategies the content is safe for, `['all']` for all of them
+     */
+    public function __construct(
+        $content,
+        $charset,
+        private array $safeStrategies = ['all'],
+    ) {
         $this->content = (string) $content;
         $this->charset = $charset;
     }
@@ -41,6 +49,28 @@ final class Markup implements \Countable, \JsonSerializable, \Stringable
     public function getCharset(): string
     {
         return $this->charset;
+    }
+
+    /**
+     * @internal
+     */
+    public function withContent(string $content): self
+    {
+        $markup = clone $this;
+        $markup->content = $content;
+
+        return $markup;
+    }
+
+    public function isSafeFor(string $strategy): bool
+    {
+        foreach ($this->safeStrategies as $declared) {
+            if ('all' === $declared || $strategy === $declared || \in_array($strategy, EscaperRuntime::IMPLIED_STRATEGIES[$declared] ?? [], true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function count(): int

@@ -1,0 +1,22 @@
+--TEST--
+A "Markup" instance is only safe for the strategies it was created for
+--TEMPLATE--
+{{ html }}
+{{ html|trim }}
+{{ safe_everywhere }}
+--DATA--
+return ['html' => new \Twig\Markup(' <br /> ', 'UTF-8', ['html']), 'safe_everywhere' => new \Twig\Markup('<br />', 'UTF-8')]
+--CONFIG--
+return ['autoescape' => 'html']
+--EXPECT--
+ <br /> 
+<br />
+<br />
+--DATA--
+return ['html' => new \Twig\Markup(' <br /> ', 'UTF-8', ['html']), 'safe_everywhere' => new \Twig\Markup('<br />', 'UTF-8')]
+--CONFIG--
+return ['autoescape' => 'js']
+--EXPECT--
+\u0020\u003Cbr\u0020\/\u003E\u0020
+\u003Cbr\u0020\/\u003E
+<br />

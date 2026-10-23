@@ -21,6 +21,7 @@ namespace Twig\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
+use Twig\Attribute\AsTwigFunction;
 use Twig\Cache\CacheInterface;
 use Twig\Cache\FilesystemCache;
 use Twig\Environment;
@@ -30,6 +31,7 @@ use Twig\ExpressionParser\InfixExpressionParserInterface;
 use Twig\ExpressionParser\Prefix\UnaryOperatorExpressionParser;
 use Twig\ExpressionParser\PrefixExpressionParserInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\AttributeExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\GlobalsInterface;
 use Twig\Loader\ArrayLoader;
@@ -402,6 +404,38 @@ class EnvironmentTest extends TestCase
         $this->assertEquals('foo', $twig->render('func_string'));
         $this->assertEquals('bar', $twig->render('func_string_default'));
         $this->assertEquals('foo', $twig->render('func_string_named_args'));
+    }
+
+    public function testGetExtensionReturnsTheRuntimeOfAnExtensionRegisteredWithAttributes(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '{{ attribute_function("foo") }}']));
+        $twig->addExtension(new AttributeExtension(EnvironmentTest_ExtensionWithAttributes::class));
+        $twig->addRuntimeLoader(new FactoryRuntimeLoader([
+            EnvironmentTest_ExtensionWithAttributes::class => static fn () => new EnvironmentTest_ExtensionWithAttributes('bar'),
+        ]));
+
+        $extension = $twig->getExtension(EnvironmentTest_ExtensionWithAttributes::class);
+
+        $this->assertInstanceOf(EnvironmentTest_ExtensionWithAttributes::class, $extension);
+        $this->assertSame($twig->getRuntime(EnvironmentTest_ExtensionWithAttributes::class), $extension);
+        $this->assertSame('foobar', $twig->render('index'));
+    }
+
+    public function testGetExtensionReturnsTheAttributeExtensionOfAClassThatIsNotAnExtension(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $twig->addExtension($extension = new AttributeExtension(EnvironmentTest_Runtime::class));
+
+        $this->assertSame($extension, $twig->getExtension(EnvironmentTest_Runtime::class));
+    }
+
+    public function testGetRuntimeFallsBackToTheRegisteredExtension(): void
+    {
+        $twig = new Environment(new ArrayLoader(['index' => '{{ attribute_function("foo") }}']));
+        $twig->addExtension($extension = new EnvironmentTest_ExtensionWithAttributes('bar'));
+
+        $this->assertSame($extension, $twig->getRuntime(EnvironmentTest_ExtensionWithAttributes::class));
+        $this->assertSame('foobar', $twig->render('index'));
     }
 
     public function testFailLoadTemplate(): void
@@ -790,5 +824,24 @@ class EnvironmentTest_Node extends Node
             ->addDebugInfo($this)
             ->write('yield "bar";')
         ;
+    }
+}
+
+class EnvironmentTest_ExtensionWithAttributes extends AbstractExtension
+{
+    public function __construct(
+        private string $suffix,
+    ) {
+    }
+
+    public function getFunctions(): array
+    {
+        return (new AttributeExtension(self::class))->getFunctions();
+    }
+
+    #[AsTwigFunction('attribute_function')]
+    public function attributeFunction(string $value): string
+    {
+        return $value.$this->suffix;
     }
 }
