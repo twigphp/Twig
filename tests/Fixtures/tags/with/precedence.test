@@ -1,0 +1,15 @@
+--TEST--
+"with" tag gives precedence to its variables, then to the context, then to the globals
+--TEMPLATE--
+[{% with {global: 'with'} %}{{ global }}{% endwith %}]
+{% set global = 'context' %}
+[{% with {foo: 'with'} %}{{ global }}{% endwith %}]
+[{% with {foo: 'with'} only %}{{ global }}{% endwith %}]
+[{{ global }}]
+--DATA--
+return []
+--EXPECT--
+[with]
+[context]
+[global]
+[context]
