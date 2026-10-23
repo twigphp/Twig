@@ -17,6 +17,7 @@ use Twig\DeprecatedCallableInfo;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AttributeExtension;
 use Twig\ExtensionSet;
+use Twig\Tests\Extension\Fixtures\AttributeExtensionWithGlobals;
 use Twig\Tests\Extension\Fixtures\ExtensionWithAttributes;
 use Twig\Tests\Extension\Fixtures\FilterWithoutValue;
 use Twig\Tests\Extension\Fixtures\TestWithoutValue;
@@ -178,5 +179,65 @@ class AttributeExtensionTest extends TestCase
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('The "Twig\Extension\AttributeExtension" extension is not enabled.');
         $extensionSet->getExtension(AttributeExtension::class);
+    }
+
+    public function testCannotBeUsedWithoutAClass(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('"Twig\Extension\AttributeExtension" requires the name of a class with attributes.');
+
+        new AttributeExtension();
+    }
+
+    public function testCannotReadAttributesFromItself(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('"Twig\Extension\AttributeExtension" requires the name of a class with attributes.');
+
+        new AttributeExtension(AttributeExtension::class);
+    }
+
+    public function testAnExtendedExtensionCannotDeclareGlobals(): void
+    {
+        $extensionSet = new ExtensionSet();
+        $extensionSet->addExtension(new AttributeExtensionWithGlobals());
+
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('"Twig\Tests\Extension\Fixtures\AttributeExtensionWithGlobals" implements GlobalsInterface. Declaring globals with attributes is not supported.');
+
+        $extensionSet->getGlobals();
+    }
+
+    public function testTheClassReadByAnAttributeExtensionCannotDeclareGlobals(): void
+    {
+        $extensionSet = new ExtensionSet();
+        $extensionSet->addExtension(new AttributeExtension(AttributeExtensionWithGlobals::class));
+
+        $this->assertSame([], $extensionSet->getGlobals());
+    }
+
+    public function testAnExtendedExtensionCannotBeGivenAnotherClass(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Do not call the parent constructor when extending "Twig\Extension\AttributeExtension", the attributes are read from the extension class itself.');
+
+        new class('Foo') extends AttributeExtension {
+            public function __construct(string $class)
+            {
+                parent::__construct($class);
+            }
+        };
+    }
+
+    public function testAnExtendedExtensionCanBeGivenItsOwnClass(): void
+    {
+        $extension = new class extends AttributeExtension {
+            public function __construct()
+            {
+                parent::__construct(self::class);
+            }
+        };
+
+        $this->assertSame($extension::class, $extension->getClass());
     }
 }
