@@ -1,0 +1,29 @@
+--TEST--
+"block_data" function returns the data exported last while rendering the block, including by the blocks it renders
+--TEMPLATE--
+{{ block_data('export_then_block')|json_encode|raw }}
+{{ block_data('block_then_export')|json_encode|raw }}
+{{ block_data('export_then_nested')|json_encode|raw }}
+{{ block_data('nested_then_export')|json_encode|raw }}
+{{ block_data('nested_a')|json_encode|raw }}
+{{ block_data('delegating')|json_encode|raw }}
+{{ block_data('including')|json_encode|raw }}
+{%- block export_then_block %}{% do block_export({from: 'outer'}) %}{{ block('inner') }}{% endblock -%}
+{%- block block_then_export %}{{ block('inner') }}{% do block_export({from: 'outer'}) %}{% endblock -%}
+{%- block export_then_nested %}{% do block_export({from: 'outer'}) %}{% block nested_a %}{% do block_export({from: 'nested'}) %}{% endblock %}{% endblock -%}
+{%- block nested_then_export %}{% block nested_b %}{% do block_export({from: 'nested'}) %}{% endblock %}{% do block_export({from: 'outer'}) %}{% endblock -%}
+{%- block delegating %}{{ block('inner') }}{% endblock -%}
+{%- block including %}{% do block_export({from: 'outer'}) %}{{ include('included.twig') }}{% endblock -%}
+{%- block inner %}{% do block_export({from: 'inner'}) %}{% endblock -%}
+--TEMPLATE(included.twig)--
+{% do block_export({from: 'included'}) %}
+--DATA--
+return []
+--EXPECT--
+{"from":"inner"}
+{"from":"outer"}
+{"from":"nested"}
+{"from":"outer"}
+{"from":"nested"}
+{"from":"inner"}
+{"from":"included"}

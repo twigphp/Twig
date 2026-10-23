@@ -3,6 +3,7 @@
  * Add the `collate` function to `twig/intl-extra` to compare strings in the alphabetical order of a locale
  * Fix reading an attribute through its getter initializing a lazy object when the property is not public
  * Fix compiled float literals depending on the `serialize_precision` ini setting
+ * Add the `block_data` and `block_export` functions (in the HTML extra package)
  * Fix the `loop` variable being undefined when used in the sequence of a nested `for` tag
  * Reject a deprecated `Template` instance created by another environment in `Environment::resolveTemplate()`
  * Fix a compilation error inside an `autoescape` tag leaking its escaping strategy into the next compiled template
