@@ -20,9 +20,6 @@
         "symfony/mime": "^5.4|^6.4|^7.0|^8.0",
         "twig/twig": "^3.13|^4.0"
     },
-    "require-dev": {
-        "symfony/phpunit-bridge": "^6.4|^7.0"
-    },
     "autoload": {
         "files": [ "Resources/functions.php" ],
         "psr-4" : { "Twig\\Extra\\Html\\" : "" },

@@ -109,9 +109,6 @@ jobs:
 
         runs-on: 'ubuntu-latest'
 
-        env:
-            SYMFONY_PHPUNIT_VERSION: ${{ matrix.php-version == '8.1' && '9.6' || '11.3' }}
-
         strategy:
             matrix:
                 php-version:
@@ -140,6 +137,7 @@ jobs:
                   coverage: "none"
                   php-version: ${{ matrix.php-version }}
                   ini-values: memory_limit=-1
+                  tools: phpunit:${{ matrix.php-version == '8.1' && '10.5' || '11.3' }}
 
             - name: "Add PHPUnit matcher"
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -158,14 +156,6 @@ jobs:
               working-directory: extra/${{ matrix.extension }}
               run: composer install
 
-            - name: "Install PHPUnit"
-              working-directory: extra/${{ matrix.extension }}
-              run: vendor/bin/simple-phpunit install
-
-            - name: "PHPUnit version"
-              working-directory: extra/${{ matrix.extension }}
-              run: vendor/bin/simple-phpunit --version
-
             - name: "Switch use_yield to true"
               if: "matrix.php-version == '8.2'"
               run: |
@@ -179,7 +169,7 @@ jobs:
                   # "€ 1000000.00" instead of "€1,000,000.00". phpunit.xml.dist's <env> entry is
                   # too late because ICU caches the default locale at the first call.
                   LANG: 'en_US.UTF-8'
-              run: vendor/bin/simple-phpunit
+              run: phpunit
 
     phpstan:
         name: "PHPStan"

@@ -11,15 +11,14 @@
 
 namespace Twig\Extra\Markdown\Tests;
 
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 
 use function Twig\Extra\Markdown\html_to_markdown;
 
 use Twig\Extra\Markdown\MarkdownExtension;
 
-/**
- * @group legacy
- */
+#[IgnoreDeprecations]
 class LegacyFunctionsTest extends TestCase
 {
     public function testHtmlToMarkdown(): void
