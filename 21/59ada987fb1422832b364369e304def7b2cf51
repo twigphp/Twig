@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by goba at 2026-10-25T05:07:23Z
+
+Done, thanks!
+
+That said I believe for PHP 8.5 the run uses PHPUnit 11.3, and html-extra's phpunit.xml.dist doesn't register the bridge. Locally doing the same the test only reports the deprecation and still passes without the fix.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2026-10-25T06:44:12Z
+
+> Done, thanks!
+>
+> That said I believe for PHP 8.5 the run uses PHPUnit 11.3, and html-extra's phpunit.xml.dist doesn't register the bridge. Locally doing the same the test only reports the deprecation and still passes without the fix.
+
+I've done #5015 and #5016 to address this.
