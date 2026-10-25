@@ -1,0 +1,11 @@
+--TEST--
+"for" tag reads the loop attributes from whatever the loop variable holds
+--TEMPLATE--
+{{ loop.index }}
+{% for item in ['a'] %}{{ loop.index }}{% set loop = {index: 'assigned'} %}{{ loop.index }}{% endfor %}
+{{ loop.index }}
+--DATA--
+return ['loop' => ['index' => 'data']]
+--EXPECT--
+data
+1assigneddata

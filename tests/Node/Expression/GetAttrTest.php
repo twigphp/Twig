@@ -82,6 +82,12 @@ class GetAttrTest extends NodeTestCase
         $node = new GetAttrExpression($expr, $attr, $args, Template::METHOD_CALL, 1);
         $tests[] = [$node, \sprintf('%s%s, "bar", arguments: [%s, "bar"], type: "method", lineno: 1)', self::createAttributeGetter(), self::createVariableGetter('foo', 1), self::createVariableGetter('foo'))];
 
+        $node = new GetAttrExpression(new ContextVariable('loop', 1), new ConstantExpression('index', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1);
+        $tests[] = [$node, '(($_v%s = // line 1'."\n".'($context["loop"] ?? null)) instanceof \Twig\Runtime\LoopContext ? $_v%s->getIndex() : '.self::createAttributeGetter().'$_v%s, "index", arguments: [], lineno: 1))', null, true];
+
+        $node = new GetAttrExpression(new ContextVariable('loop', 1), new ConstantExpression('index', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1, true);
+        $tests[] = [$node, '((null === ($_v%s = // line 1'."\n".'($context["loop"] ?? null))) ? null : '.self::createAttributeGetter().'$_v%s, "index", arguments: [], lineno: 1))', null, true];
+
         return $tests;
     }
 }
