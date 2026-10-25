@@ -1,0 +1,30 @@
+--TEST--
+"for" tag renders the else clause of empty iterators, with or without the loop variable
+--TEMPLATE--
+[{% for item in empty_generator %}{{ item }}{% else %}none{% endfor %}]
+[{% for item in another_empty_generator %}{{ loop.index }}{% else %}none{% endfor %}]
+[{% for item in empty_aggregate %}{{ item }}{% else %}none{% endfor %}]
+[{% for item in empty_aggregate %}{{ loop.index }}{% else %}none{% endfor %}]
+[{% for item in generator %}{{ item }}{% else %}none{% endfor %}]
+[{% for item in aggregate %}{{ item }}{% else %}none{% endfor %}]
+[{% for item in aggregate %}{{ loop.index }}{{ item }}{% else %}none{% endfor %}]
+--DATA--
+return [
+    'empty_generator' => (function (): \Generator { yield from []; })(),
+    'another_empty_generator' => (function (): \Generator { yield from []; })(),
+    'generator' => (function (): \Generator { yield 'a'; yield 'b'; })(),
+    'empty_aggregate' => new class() implements \IteratorAggregate {
+        public function getIterator(): \Generator { yield from []; }
+    },
+    'aggregate' => new class() implements \IteratorAggregate {
+        public function getIterator(): \Generator { yield 'a'; yield 'b'; }
+    },
+]
+--EXPECT--
+[none]
+[none]
+[none]
+[none]
+[ab]
+[ab]
+[1a2b]

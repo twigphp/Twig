@@ -1,0 +1,15 @@
+--TEST--
+"for" tag keeps the changes made by the loop to the variables defined before it
+--TEMPLATE--
+{% set a, b, c, d, e = 'a', 'b', 'c', 'd', 'e' %}
+{% for i in [1] %}{% do (a = i) %}{% endfor %}
+{% for i in [2] %}{% do [b, z] = [i, i] %}{% endfor %}
+{% for i in [3] %}{% for j in [i] %}{% set c = j %}{% endfor %}{% endfor %}
+{% for i in [] %}{% else %}{% set d = 4 %}{% endfor %}
+{% for i in [5, 6] if (e = i) > 5 %}{% endfor %}
+{% for i in [7] %}[{{ [i]|map(x => x)|join }}]{% endfor %}
+{{ a }}{{ b }}{{ c }}{{ d }}{{ e }} {{ z ?? 'no z' }} {{ x ?? 'no x' }} {{ j ?? 'no j' }}
+--DATA--
+return []
+--EXPECT--
+[7]12346 no z no x no j

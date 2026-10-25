@@ -100,6 +100,50 @@ class OptimizerTest extends TestCase
         }
     }
 
+    #[DataProvider('provideForLoopRecursionTests')]
+    public function testForLoopRecursionOptimizer(string $template, array $expected): void
+    {
+        $env = new Environment(new ArrayLoader(), ['cache' => false]);
+
+        $stream = $env->parse($env->tokenize(new Source($template, 'index')));
+
+        $loops = [];
+        $this->collectForLoops($stream, $loops);
+
+        foreach ($expected as $target => $recursive) {
+            $this->assertSame($recursive, $loops[$target]->getAttribute('recursive'), \sprintf('loop over %s', $target));
+        }
+    }
+
+    public static function provideForLoopRecursionTests(): iterable
+    {
+        yield ['{% for i in foo %}{{ loop.index }}{% endfor %}', ['i' => false]];
+        yield ['{% for i in foo %}{{ loop.cycle("odd", "even") }}{{ loop.changed(i) }}{{ loop.last ? loop.length }}{% endfor %}', ['i' => false]];
+        yield ['{% for i in foo %}{{ loop(i) }}{% endfor %}', ['i' => true]];
+        yield ['{% for i in foo %}{{ loop.__invoke(i) }}{% endfor %}', ['i' => true]];
+        yield ['{% for i in foo %}{% set l = loop %}{% endfor %}', ['i' => true]];
+        yield ['{% for i in foo %}{{ loop.cycle(loop) }}{% endfor %}', ['i' => true]];
+        yield ['{% for i in foo %}{{ loop.index }}{% include "foo" %}{% endfor %}', ['i' => true]];
+        yield ['{% for i in foo %}{{ loop.index }}{% include "foo" only %}{% endfor %}', ['i' => false]];
+        yield ['{% for i in foo %}{{ loop.index }}{{ include("foo") }}{% endfor %}', ['i' => true]];
+        yield ['{% for i in foo %}{{ loop.index }}{{ _context|length }}{% endfor %}', ['i' => true]];
+        yield ['{% for i in foo %}{{ block("bar") }}{% endfor %}', ['i' => true]];
+        yield ['{% for i in foo %}{{ loop.index }}{% for j in foo %}{{ loop.index }}{% endfor %}{% endfor %}', ['i' => false, 'j' => false]];
+        yield ['{% for i in foo %}{{ loop.index }}{% for j in foo %}{{ loop.parent.loop.index }}{% endfor %}{% endfor %}', ['i' => true, 'j' => true]];
+        yield ['{% for i in foo %}{% for j in foo %}{{ loop(j) }}{% endfor %}{{ loop.index }}{% endfor %}', ['i' => false, 'j' => true]];
+    }
+
+    private function collectForLoops(Node $node, array &$loops): void
+    {
+        foreach ($node as $n) {
+            if ($n instanceof ForNode) {
+                $loops[$n->getNode('value_target')->getAttribute('name')] = $n;
+            }
+
+            $this->collectForLoops($n, $loops);
+        }
+    }
+
     public static function getTestsForForLoopOptimizer()
     {
         return [
