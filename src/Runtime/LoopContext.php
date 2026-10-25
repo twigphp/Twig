@@ -68,7 +68,7 @@ final class LoopContext
 
     public function isLast(): bool
     {
-        return !$this->loop->getNext()['valid'];
+        return !$this->loop->hasNext();
     }
 
     public function hasChanged(mixed $value): bool
@@ -84,16 +84,12 @@ final class LoopContext
 
     public function getPrevious(): mixed
     {
-        $previous = $this->loop->getPrevious();
-
-        return $previous['valid'] ? $previous['value'] : null;
+        return $this->loop->getPrevious();
     }
 
     public function getNext(): mixed
     {
-        $next = $this->loop->getNext();
-
-        return $next['valid'] ? $next['value'] : null;
+        return $this->loop->getNext();
     }
 
     public function cycle($value, ...$values): mixed
