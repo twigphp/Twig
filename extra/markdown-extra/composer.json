@@ -20,7 +20,6 @@
         "twig/twig": "^3.13|^4.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^6.4|^7.0",
         "erusev/parsedown": "dev-master as 1.x-dev",
         "league/commonmark": "^2.7",
         "league/html-to-markdown": "^4.8|^5.0",

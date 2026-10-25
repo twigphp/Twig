@@ -11,14 +11,13 @@
 
 namespace Twig\Extra\Inky\Tests;
 
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
 use Twig\Extra\Inky\InkyExtension;
 
 use function Twig\Extra\Inky\twig_inky;
 
-/**
- * @group legacy
- */
+#[IgnoreDeprecations]
 class LegacyFunctionsTest extends TestCase
 {
     public function testInlineCss(): void

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" colors="true" bootstrap="phpunit-bootstrap.php" failOnRisky="true" failOnWarning="true">
-  <coverage>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" backupGlobals="false" colors="true" bootstrap="phpunit-bootstrap.php" failOnDeprecation="true" failOnNotice="true" failOnRisky="true" failOnWarning="true">
+  <source ignoreSuppressionOfDeprecations="true">
     <include>
       <directory>./</directory>
     </include>
@@ -8,11 +8,10 @@
       <directory>./Tests</directory>
       <directory>./vendor</directory>
     </exclude>
-  </coverage>
+  </source>
   <php>
     <ini name="error_reporting" value="-1"/>
     <server name="KERNEL_CLASS" value="Twig\Extra\TwigExtraBundle\Tests\Fixture\Kernel"/>
-    <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=0"/>
   </php>
   <testsuites>
     <testsuite name="Twig Extra bundle Test Suite">
