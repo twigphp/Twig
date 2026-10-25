@@ -48,8 +48,6 @@ jobs:
 
         runs-on: 'ubuntu-latest'
 
-        continue-on-error: true
-
         strategy:
             matrix:
                 php-version:

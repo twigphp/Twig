@@ -95,7 +95,7 @@ final class Cva
             if (\is_bool($recipeValue)) {
                 $recipeValue = $recipeValue ? 'true' : 'false';
             }
-            $recipeClasses = $this->variants[$recipeName][$recipeValue] ?? [];
+            $recipeClasses = $this->variants[$recipeName][$recipeValue ?? ''] ?? [];
             $classes = [...$classes, ...(array) $recipeClasses];
         }
 
