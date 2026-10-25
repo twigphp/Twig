@@ -1,0 +1,10 @@
+--TEST--
+"for" tag keeps the macros imported in the body of a recursive loop available after the loop
+--TEMPLATE--
+{% macro hello(name) %}Hello {{ name }}{% endmacro %}
+{% for name in ['Fabien'] %}{% import _self as recursive %}{{ recursive.hello(name) }}, {% if false %}{{ loop([]) }}{% endif %}{% endfor %}
+{{ recursive.hello('Twig') }}
+--DATA--
+return []
+--EXPECT--
+Hello Fabien, Hello Twig
