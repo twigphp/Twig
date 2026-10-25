@@ -18,7 +18,7 @@ namespace Twig\Extra\Markdown;
  */
 function html_to_markdown(string $body, array $options = []): string
 {
-    trigger_deprecation('twig/intl-extra', '3.9.0', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
+    trigger_deprecation('twig/markdown-extra', '3.9.0', 'Using the internal "%s" function is deprecated.', __FUNCTION__);
 
     return MarkdownExtension::htmlToMarkdown($body, $options);
 }
