@@ -1,5 +1,6 @@
 # 3.31.0 (2026-XX-XX)
 
+ * Speed up the `with` tag by adding the globals to the new context in place
  * Fix a PHP 8.5 deprecation in `html_cva()` when a recipe value is `null`
  * Add the `collate` function to `twig/intl-extra` to compare strings in the alphabetical order of a locale
  * Fix reading an attribute through its getter initializing a lazy object when the property is not public
