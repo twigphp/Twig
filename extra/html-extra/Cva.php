@@ -79,7 +79,7 @@ final class Cva
          * Example:
          *     'colors' => 'primary',
          *
-         * @var array<string, string>
+         * @var array<string, string|bool>
          */
         private array $defaultVariants = [],
     ) {
@@ -92,10 +92,7 @@ final class Cva
 
         // Resolve recipes against variants
         foreach ($recipes as $recipeName => $recipeValue) {
-            if (\is_bool($recipeValue)) {
-                $recipeValue = $recipeValue ? 'true' : 'false';
-            }
-            $recipeClasses = $this->variants[$recipeName][$recipeValue ?? ''] ?? [];
+            $recipeClasses = $this->variants[$recipeName][self::toVariantName($recipeValue)] ?? [];
             $classes = [...$classes, ...(array) $recipeClasses];
         }
 
@@ -108,7 +105,7 @@ final class Cva
         // Apply default variants if specific recipes aren't provided
         foreach ($this->defaultVariants as $defaultVariantName => $defaultVariantValue) {
             if (!isset($recipes[$defaultVariantName])) {
-                $variantClasses = $this->variants[$defaultVariantName][$defaultVariantValue] ?? [];
+                $variantClasses = $this->variants[$defaultVariantName][self::toVariantName($defaultVariantValue)] ?? [];
                 $classes = [...$classes, ...(array) $variantClasses];
             }
         }
@@ -127,6 +124,15 @@ final class Cva
         $uniqueClasses = array_unique(preg_split('#\s+#', $classes, -1, \PREG_SPLIT_NO_EMPTY) ?: []);
 
         return self::$classListCache[$classes] = implode(' ', $uniqueClasses);
+    }
+
+    private static function toVariantName(mixed $value): mixed
+    {
+        if (\is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        return $value ?? '';
     }
 
     private function resolveCompoundVariant(array $compound, array $recipes): array

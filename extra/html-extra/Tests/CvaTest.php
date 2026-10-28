@@ -523,6 +523,40 @@ class CvaTest extends TestCase
             'button btn-blue opacity-100',
         ];
 
+        yield 'default variables with false' => [
+            [
+                'base' => 'button',
+                'variants' => [
+                    'disabled' => [
+                        'true' => 'disabled',
+                        'false' => 'opacity-100',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'disabled' => false,
+                ],
+            ],
+            [],
+            'button opacity-100',
+        ];
+
+        yield 'default variables with true' => [
+            [
+                'base' => 'button',
+                'variants' => [
+                    'disabled' => [
+                        'true' => 'disabled',
+                        'false' => 'opacity-100',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'disabled' => true,
+                ],
+            ],
+            [],
+            'button disabled',
+        ];
+
         yield 'boolean string variants true / true' => [
             [
                 'variants' => [

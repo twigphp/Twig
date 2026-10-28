@@ -117,12 +117,13 @@ when multiple other variant conditions are met:
     {# class="alert bg-green text-sm" #}
 
     {{ include('alert.html.twig', {color: 'red', size: 'md'}) }}
-    {# class="alert bg-green text-md font-bold" #}
+    {# class="alert bg-red text-md font-bold" #}
 
 Default Variants
 ----------------
 
-If no variants match, you can define a default set of classes to apply:
+Default variants select the variant to use when no value, or ``null``, is
+passed for it:
 
 .. code-block:: html+twig
 
@@ -158,6 +159,46 @@ If no variants match, you can define a default set of classes to apply:
 
     {{ include('alert.html.twig', {color: 'red', size: 'lg'}) }}
     {# class="alert bg-red text-lg rounded-md" #}
+
+Boolean Variants
+----------------
+
+Name variants ``true`` and ``false`` to select them with boolean values:
+
+.. code-block:: html+twig
+
+    {# templates/button.html.twig #}
+    {% set button = html_cva(
+        base: 'btn',
+        variants: {
+            disabled: {
+                true: 'opacity-50 cursor-not-allowed',
+                false: 'cursor-pointer',
+            }
+        },
+        default_variant: {
+            disabled: false,
+        }
+    ) %}
+
+    <button class="{{ button.apply({disabled}) }}">
+        ...
+    </button>
+
+    {# index.html.twig #}
+
+    {{ include('button.html.twig', {disabled: true}) }}
+    {# class="btn opacity-50 cursor-not-allowed" #}
+
+    {{ include('button.html.twig', {disabled: null}) }}
+    {# class="btn cursor-pointer" #}
+
+In compound variants, list boolean values instead of their names, for
+instance ``disabled: [true]``.
+
+.. note::
+
+    Before Twig 3.31, boolean values in ``default_variant`` were ignored.
 
 .. note::
 
