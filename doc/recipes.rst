@@ -386,6 +386,41 @@ This can be achieved with the following code::
         return $node;
     }
 
+Mapping a Backtrace to Template Lines
+-------------------------------------
+
+Twig compiles each template to a PHP class. A backtrace collected while a
+template is rendered, for instance to know where a database query comes from,
+points to the compiled file where the line has no meaning for the developer.
+
+Use ``\Twig\Util\TemplateBacktraceMapper`` to replace these frames with the
+template source file and line::
+
+    use Twig\Util\TemplateBacktraceMapper;
+
+    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    $trace = (new TemplateBacktraceMapper())->map($trace);
+
+Before and after::
+
+    Twig\CoreExtension::getAttribute  var/cache/twig/ab/abcdef.php:42
+    Twig\CoreExtension::getAttribute  templates/post/show.html.twig:12
+
+.. note::
+
+    Frames that do not point to a compiled template are left untouched.
+
+    In the frames of the methods of a compiled template, the compiled class
+    name is replaced with the template name, the type with ``%``, and the
+    ``block_*`` methods with ``block <name>``, for instance
+    ``post/show.html.twig%block main``.
+
+    Twig reads the template from the ``object`` key of the frames when the
+    backtrace is collected with ``DEBUG_BACKTRACE_PROVIDE_OBJECT``. Otherwise,
+    it creates the template from the class name. In both cases, the ``object``
+    key is removed from the returned frames, so the result is small and can be
+    serialized.
+
 Using a Database to store Templates
 -----------------------------------
 
