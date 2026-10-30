@@ -35,7 +35,7 @@ class TemplateBacktraceMapperTest extends TestCase
 
         $this->assertSame([
             ['class' => 'Foo', 'function' => 'count', 'file' => __DIR__.'/Fixtures/backtrace_mapper.html.twig', 'line' => $debugInfo[$compiledLine]],
-            ['class' => $template::class, 'function' => 'doDisplay', 'file' => '/vendor/twig/twig/src/Template.php', 'line' => 388],
+            ['class' => 'backtrace_mapper.html.twig', 'function' => 'doDisplay', 'file' => '/vendor/twig/twig/src/Template.php', 'line' => 388, 'type' => '%'],
             ['file' => '/app/src/Controller.php', 'line' => 20, 'function' => 'index'],
         ], $mapped);
     }
@@ -98,5 +98,24 @@ class TemplateBacktraceMapperTest extends TestCase
         $twig->addFunction(new \Twig\TwigFunction('trace', static fn () => (new TemplateBacktraceMapper())->map(debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT))));
 
         $this->assertSame("a\n1", $twig->render('t.twig'));
+    }
+
+    public function testRenamesTheFramesOfATemplate(): void
+    {
+        $twig = new Environment(new FilesystemLoader(__DIR__.'/Fixtures'), ['debug' => true]);
+        $template = $twig->load('backtrace_mapper.html.twig')->unwrap($twig);
+        $class = $template::class;
+
+        $mapped = (new TemplateBacktraceMapper())->map([
+            ['class' => $class, 'function' => 'block_main', 'type' => '->'],
+            ['class' => $class, 'function' => "{closure:{$class}::loadDeclaredMacros():49}", 'type' => '->'],
+            ['class' => 'Twig\\Template', 'function' => 'yield', 'type' => '->', 'object' => $template],
+        ]);
+
+        $this->assertSame([
+            ['class' => 'backtrace_mapper.html.twig', 'function' => 'block main', 'type' => '%'],
+            ['class' => 'backtrace_mapper.html.twig', 'function' => '{closure:backtrace_mapper.html.twig::loadDeclaredMacros():49}', 'type' => '%'],
+            ['class' => 'Twig\\Template', 'function' => 'yield', 'type' => '->'],
+        ], $mapped);
     }
 }

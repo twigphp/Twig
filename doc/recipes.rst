@@ -410,6 +410,11 @@ Before and after::
 
     Frames that do not point to a compiled template are left untouched.
 
+    In the frames of the methods of a compiled template, the compiled class
+    name is replaced with the template name, the type with ``%``, and the
+    ``block_*`` methods with ``block <name>``, for instance
+    ``post/show.html.twig%block main``.
+
     Twig reads the template from the ``object`` key of the frames when the
     backtrace is collected with ``DEBUG_BACKTRACE_PROVIDE_OBJECT``. Otherwise,
     it creates the template from the class name. In both cases, the ``object``
