@@ -17,9 +17,9 @@ use Twig\Template;
  * Replaces the frames of a backtrace that point to a compiled template
  * with the template source file and line.
  *
- * In the frames of the methods of a compiled template, the compiled class name
- * is replaced with the template name, the type with "%", and the block methods
- * with "block <name>". For instance "post/show.html.twig%block main".
+ * The frames of the methods of a compiled template also get a "template" key
+ * with the template name, and a "block" key with the block name for the block
+ * methods. The other keys of the frames are left untouched.
  */
 final class TemplateBacktraceMapper
 {
@@ -31,7 +31,7 @@ final class TemplateBacktraceMapper
     /**
      * @param list<array{class?: string, function?: string, file?: string, line?: int, object?: object}> $trace
      *
-     * @return list<array{class?: string, function?: string, type?: string, file?: string, line?: int}>
+     * @return list<array{class?: string, function?: string, file?: string, line?: int, object?: object, template?: string, block?: string}>
      */
     public function map(array $trace): array
     {
@@ -39,9 +39,7 @@ final class TemplateBacktraceMapper
             $caller = $trace[$index + 1] ?? [];
             $class = $caller['class'] ?? null;
 
-            unset($trace[$index]['object']);
-
-            $this->renameTemplateFrame($trace[$index], $frame);
+            $this->addTemplateInfo($trace[$index], $frame);
 
             if (!isset($frame['file'], $frame['line'], $class)) {
                 continue;
@@ -74,7 +72,7 @@ final class TemplateBacktraceMapper
      * @param array<string, mixed> $mapped
      * @param array<string, mixed> $frame
      */
-    private function renameTemplateFrame(array &$mapped, array $frame): void
+    private function addTemplateInfo(array &$mapped, array $frame): void
     {
         $class = $frame['class'] ?? null;
         if (null === $class) {
@@ -86,14 +84,12 @@ final class TemplateBacktraceMapper
             return;
         }
 
-        $name = $template->getTemplateName();
-        $function = $frame['function'] ?? '';
+        $mapped['template'] = $template->getTemplateName();
 
-        $mapped['class'] = $name;
-        $mapped['type'] = '%';
-        $mapped['function'] = str_starts_with($function, 'block_')
-            ? 'block '.substr($function, \strlen('block_'))
-            : str_replace($class, $name, $function);
+        $function = $frame['function'] ?? '';
+        if (str_starts_with($function, 'block_')) {
+            $mapped['block'] = substr($function, \strlen('block_'));
+        }
     }
 
     /**
