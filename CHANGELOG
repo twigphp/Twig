@@ -1,5 +1,6 @@
 # 3.31.0 (2026-XX-XX)
 
+ * Add `Twig\Util\TemplateBacktraceMapper` to map the frames of a backtrace that point to a compiled template back to the template source and line
  * Fix `html_cva()` ignoring a boolean default variant
  * Fix a PHP 8.5 deprecation in `html_cva()` when a recipe value is `null`
  * Add the `collate` function to `twig/intl-extra` to compare strings in the alphabetical order of a locale
