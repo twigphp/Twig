@@ -36,6 +36,12 @@ class FilesystemTest extends TestCase
         $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
     }
 
+    public function testGetSourceContextNormalizesName(): void
+    {
+        $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
+        $this->assertSame('errors/index.html', $loader->getSourceContext('errors\index.html')->getName());
+    }
+
     /**
      * @dataProvider getSecurityTests
      */
