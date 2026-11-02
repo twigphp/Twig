@@ -17,7 +17,6 @@ use Twig\DeprecatedCallableInfo;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AttributeExtension;
 use Twig\ExtensionSet;
-use Twig\Tests\Extension\Fixtures\AttributeExtensionWithGlobals;
 use Twig\Tests\Extension\Fixtures\ExtensionWithAttributes;
 use Twig\Tests\Extension\Fixtures\FilterWithoutValue;
 use Twig\Tests\Extension\Fixtures\TestWithoutValue;
@@ -195,25 +194,6 @@ class AttributeExtensionTest extends TestCase
         $this->expectExceptionMessage('"Twig\Extension\AttributeExtension" requires the name of a class with attributes.');
 
         new AttributeExtension(AttributeExtension::class);
-    }
-
-    public function testAnExtendedExtensionCannotDeclareGlobals(): void
-    {
-        $extensionSet = new ExtensionSet();
-        $extensionSet->addExtension(new AttributeExtensionWithGlobals());
-
-        $this->expectException(\BadMethodCallException::class);
-        $this->expectExceptionMessage('"Twig\Tests\Extension\Fixtures\AttributeExtensionWithGlobals" implements GlobalsInterface. Declaring globals with attributes is not supported.');
-
-        $extensionSet->getGlobals();
-    }
-
-    public function testTheClassReadByAnAttributeExtensionCannotDeclareGlobals(): void
-    {
-        $extensionSet = new ExtensionSet();
-        $extensionSet->addExtension(new AttributeExtension(AttributeExtensionWithGlobals::class));
-
-        $this->assertSame([], $extensionSet->getGlobals());
     }
 
     public function testAnExtendedExtensionCannotBeGivenAnotherClass(): void

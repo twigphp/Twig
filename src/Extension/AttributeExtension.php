@@ -34,7 +34,6 @@ class AttributeExtension extends AbstractExtension
      * Use a runtime class using PHP attributes to define filters, functions, and tests.
      *
      * Subclasses do not need to call this constructor: they read the attributes from their own class.
-     * Calling it with their own class is allowed, but has no effect.
      *
      * @param class-string|null $class The class to read the attributes from, or null when the extension is extended
      */
@@ -77,11 +76,6 @@ class AttributeExtension extends AbstractExtension
         return [];
     }
 
-    final public function getGlobals(): array
-    {
-        throw new \BadMethodCallException(\sprintf('"%s" implements GlobalsInterface. Declaring globals with attributes is not supported.', static::class));
-    }
-
     final public function getFilters(): array
     {
         if (!isset($this->filters)) {
@@ -115,6 +109,12 @@ class AttributeExtension extends AbstractExtension
             filemtime(__FILE__),
             is_file($filename = (new \ReflectionClass($this->getClass()))->getFileName()) ? filemtime($filename) : 0,
         );
+    }
+
+    /** @internal Implementing {@see GlobalsInterface} is not supported */
+    final protected function getGlobals(): array
+    {
+        return [];
     }
 
     private function initFromAttributes(): void
