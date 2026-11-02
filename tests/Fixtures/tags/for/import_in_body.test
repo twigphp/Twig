@@ -1,0 +1,13 @@
+--TEST--
+"for" tag keeps the macros imported in its body available after the loop
+--TEMPLATE--
+{% macro hello(name) %}Hello {{ name }}{% endmacro %}
+{% for name in ['Fabien'] %}{% import _self as macros %}{{ macros.hello(name) }}, {% endfor %}
+{{ macros.hello('Twig') }}
+{% for name in ['Nicolas'] %}{% import _self as indexed %}{{ indexed.hello(name ~ loop.index) }}, {% endfor %}
+{{ indexed.hello('Twig') }}
+--DATA--
+return []
+--EXPECT--
+Hello Fabien, Hello Twig
+Hello Nicolas1, Hello Twig
