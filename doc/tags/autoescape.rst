@@ -38,6 +38,12 @@ the :doc:`raw<../filters/raw>` filter:
 Functions returning template data (like :doc:`macros<macro>` and
 :doc:`parent<../functions/parent>`) always return safe markup.
 
+.. caution::
+
+    A value marked as safe is output as-is, even inside a quoted HTML
+    attribute value, where an HTML fragment can close the attribute. Read
+    :ref:`how to escape it there <escape_safe_values_in_attributes>`.
+
 .. note::
 
     Twig is smart enough to not escape an already escaped value by the

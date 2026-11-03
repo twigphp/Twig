@@ -582,6 +582,11 @@ The escaping rules are implemented as follows:
   strategies of the instance always win over the ones registered for its class,
   and an explicit ``|escape('html')`` in a template escapes the value anyway.
 
+  Safe for ``html`` means safe as HTML content: automatic escaping outputs such
+  a value as-is even inside a quoted HTML attribute value, where it can close
+  the attribute (read :ref:`how to escape it there
+  <escape_safe_values_in_attributes>`).
+
 * Escaping is applied before printing, after any other filter is applied:
 
   .. code-block:: twig
