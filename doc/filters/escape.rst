@@ -125,6 +125,8 @@ to learn more about this topic.
         {# this is equivalent, but less performant #}
         <p data-content={{ content|e('html_attr') }}>
 
+.. _escape_safe_values_in_attributes:
+
 .. caution::
 
     A value already marked as safe for the ``html`` strategy, like a
