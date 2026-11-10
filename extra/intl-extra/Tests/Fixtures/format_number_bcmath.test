@@ -1,0 +1,12 @@
+--TEST--
+"format_number" filter
+--CONDITION--
+PHP_VERSION_ID >= 80400 && extension_loaded('bcmath')
+--TEMPLATE--
+{{ number|format_number }}
+--DATA--
+return [
+    'number' => new BcMath\Number('42.5'),
+];
+--EXPECT--
+42.5
