@@ -11,6 +11,7 @@
 
 namespace Twig\Extension;
 
+use BcMath\Number;
 use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -696,6 +697,10 @@ final class CoreExtension extends AbstractExtension
 
         if (null === $thousandSep) {
             $thousandSep = $defaults[2];
+        }
+
+        if ($number instanceof Number) {
+            $number = (string) $number;
         }
 
         return number_format((float) $number, $decimal, $decimalPoint, $thousandSep);

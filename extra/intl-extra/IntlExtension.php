@@ -11,6 +11,7 @@
 
 namespace Twig\Extra\Intl;
 
+use BcMath\Number;
 use Symfony\Component\Intl\Countries;
 use Symfony\Component\Intl\Currencies;
 use Symfony\Component\Intl\Exception\MissingResourceException;
@@ -385,6 +386,10 @@ final class IntlExtension extends AbstractExtension
     {
         $formatter = $this->createNumberFormatter($locale, 'currency', $attrs);
 
+        if ($amount instanceof Number) {
+            $amount = (string) $amount;
+        }
+
         if (false === $ret = $formatter->formatCurrency($amount, $currency)) {
             throw new RuntimeError('Unable to format the given number as a currency.');
         }
@@ -399,6 +404,10 @@ final class IntlExtension extends AbstractExtension
         }
 
         $formatter = $this->createNumberFormatter($locale, $style, $attrs);
+
+        if ($number instanceof Number) {
+            $number = (string) $number;
+        }
 
         if (false === $ret = $formatter->format($number, self::NUMBER_TYPES[$type])) {
             throw new RuntimeError('Unable to format the given number.');
