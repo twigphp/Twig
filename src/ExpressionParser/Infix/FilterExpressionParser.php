@@ -12,6 +12,7 @@
 namespace Twig\ExpressionParser\Infix;
 
 use Twig\Attribute\FirstClassTwigCallableReady;
+use Twig\Error\SyntaxError;
 use Twig\ExpressionParser\AbstractExpressionParser;
 use Twig\ExpressionParser\ExpressionParserDescriptionInterface;
 use Twig\ExpressionParser\InfixAssociativity;
@@ -20,6 +21,9 @@ use Twig\ExpressionParser\PrecedenceChange;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\NullSafeFilterExpression;
+use Twig\Node\Expression\Variable\NullSafeFilterOperandVariable;
+use Twig\Node\Node;
 use Twig\Parser;
 use Twig\Token;
 
@@ -34,6 +38,7 @@ final class FilterExpressionParser extends AbstractExpressionParser implements I
 
     public function parse(Parser $parser, AbstractExpression $expr, Token $token): AbstractExpression
     {
+        $nullSafe = '?|' === $token->getValue();
         $stream = $parser->getStream();
         $token = $stream->expect(Token::NAME_TYPE);
         $line = $token->getLine();
@@ -55,12 +60,44 @@ final class FilterExpressionParser extends AbstractExpressionParser implements I
             trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFilter" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
         }
 
-        return new $class($expr, $ready ? $filter : new ConstantExpression($filter->getName(), $line), $arguments, $line);
+        if (!$nullSafe) {
+            return new $class($expr, $ready ? $filter : new ConstantExpression($filter->getName(), $line), $arguments, $line);
+        }
+
+        $operand = new NullSafeFilterOperandVariable($line);
+        $filterNode = new $class($operand, $ready ? $filter : new ConstantExpression($filter->getName(), $line), $arguments, $line);
+        $node = new NullSafeFilterExpression($expr, $filterNode, $operand, $line);
+
+        if (!$this->usesOperand($node, $filterNode)) {
+            throw new SyntaxError(\sprintf('The "%s" filter cannot be used with the null-safe filter operator "?|" as its "%s" node does not use the filter input.', $filter->getName(), $class), $line, $stream->getSourceContext());
+        }
+
+        return $node;
+    }
+
+    private function usesOperand(NullSafeFilterExpression $expr, Node $node): bool
+    {
+        if ($node instanceof NullSafeFilterOperandVariable && $expr->isOperandVariable($node)) {
+            return true;
+        }
+
+        foreach ($node as $child) {
+            if ($this->usesOperand($expr, $child)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getName(): string
     {
         return '|';
+    }
+
+    public function getAliases(): array
+    {
+        return ['?|'];
     }
 
     public function getDescription(): string

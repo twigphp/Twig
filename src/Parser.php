@@ -44,6 +44,8 @@ class Parser
 {
     private $stack = [];
     private ?\WeakMap $expressionRefs = null;
+    /** @var \WeakMap<AbstractExpression, string>|null */
+    private ?\WeakMap $expressionOperators = null;
     private $stream;
     private $parent;
     private $visitors;
@@ -108,6 +110,7 @@ class Parser
         $this->importedSymbols = [[]];
         $this->embeddedTemplates = [];
         $this->expressionRefs = new \WeakMap();
+        $this->expressionOperators = new \WeakMap();
 
         try {
             $body = $this->subparse($test, $dropNeedle);
@@ -123,6 +126,7 @@ class Parser
             throw $e;
         } finally {
             $this->expressionRefs = null;
+            $this->expressionOperators = null;
         }
 
         if ($this->parent) {
@@ -422,7 +426,7 @@ class Parser
         if ($token->test(Token::OPERATOR_TYPE) && $ep = $this->parsers->getByName(PrefixExpressionParserInterface::class, $token->getValue())) {
             $this->getStream()->next();
             $expr = $ep->parse($this, $token);
-            $this->checkPrecedenceDeprecations($ep, $expr);
+            $this->checkPrecedenceDeprecations($ep, $expr, $token->getValue());
         } else {
             $expr = $this->parsers->getByClass(LiteralExpressionParser::class)->parse($this, $token);
         }
@@ -431,7 +435,7 @@ class Parser
         while ($token->test(Token::OPERATOR_TYPE) && ($ep = $this->parsers->getByName(InfixExpressionParserInterface::class, $token->getValue())) && $ep->getPrecedence() >= $precedence) {
             $this->getStream()->next();
             $expr = $ep->parse($this, $expr, $token);
-            $this->checkPrecedenceDeprecations($ep, $expr);
+            $this->checkPrecedenceDeprecations($ep, $expr, $token->getValue());
             $token = $this->getCurrentToken();
         }
 
@@ -613,9 +617,10 @@ class Parser
         return $body;
     }
 
-    private function checkPrecedenceDeprecations(ExpressionParserInterface $expressionParser, AbstractExpression $expr): void
+    private function checkPrecedenceDeprecations(ExpressionParserInterface $expressionParser, AbstractExpression $expr, string $operator): void
     {
         $this->expressionRefs[$expr] = $expressionParser;
+        $this->expressionOperators[$expr] = $operator;
         $precedenceChanges = $this->parsers->getPrecedenceChanges();
 
         // Check that the all nodes that are between the 2 precedences have explicit parentheses
@@ -636,7 +641,7 @@ class Parser
                 }
                 if (isset($this->expressionRefs[$node]) && $ep === $this->expressionRefs[$node]) {
                     $change = $expressionParser->getPrecedenceChange();
-                    trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('As the "%s" %s operator will change its precedence in the next major version, add explicit parentheses to avoid behavior change in "%s" at line %d.', $expressionParser->getName(), ExpressionParserType::getType($expressionParser)->value, $this->getStream()->getSourceContext()->getName(), $node->getTemplateLine()));
+                    trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('As the "%s" %s operator will change its precedence in the next major version, add explicit parentheses to avoid behavior change in "%s" at line %d.', $operator, ExpressionParserType::getType($expressionParser)->value, $this->getStream()->getSourceContext()->getName(), $node->getTemplateLine()));
                 }
             }
         }
@@ -646,7 +651,7 @@ class Parser
                 /** @var AbstractExpression $node */
                 if (isset($this->expressionRefs[$node]) && $ep === $this->expressionRefs[$node] && !$node->hasExplicitParentheses()) {
                     $change = $ep->getPrecedenceChange();
-                    trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('As the "%s" %s operator will change its precedence in the next major version, add explicit parentheses to avoid behavior change in "%s" at line %d.', $ep->getName(), ExpressionParserType::getType($ep)->value, $this->getStream()->getSourceContext()->getName(), $node->getTemplateLine()));
+                    trigger_deprecation($change->getPackage(), $change->getVersion(), \sprintf('As the "%s" %s operator will change its precedence in the next major version, add explicit parentheses to avoid behavior change in "%s" at line %d.', $this->expressionOperators[$node] ?? $ep->getName(), ExpressionParserType::getType($ep)->value, $this->getStream()->getSourceContext()->getName(), $node->getTemplateLine()));
                 }
             }
         }
