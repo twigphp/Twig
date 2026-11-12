@@ -748,6 +748,17 @@ class SandboxTest extends TestCase
         }
     }
 
+    public function testSandboxUnallowedNullSafeFilter(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ name ?| upper }}']);
+        try {
+            $twig->load('index')->render(['name' => null]);
+            $this->fail('Sandbox throws a SecurityError exception if an unallowed filter is used with the null-safe filter operator');
+        } catch (SecurityNotAllowedFilterError $e) {
+            $this->assertEquals('upper', $e->getFilterName(), 'Exception should be raised on the "upper" filter');
+        }
+    }
+
     public function testSandboxUnallowedFilter(): void
     {
         $twig = $this->getEnvironment(true, [], self::$templates);
@@ -855,6 +866,9 @@ class SandboxTest extends TestCase
             'object_chain' => ['{{ obj.anotherFooObject }}'],
             'filter' => ['{{ obj|upper }}'],
             'filter_from_array' => ['{{ arr.obj|upper }}'],
+            'null_safe_filter' => ['{{ obj ?| upper }}'],
+            'null_safe_filter_from_array' => ['{{ arr.obj ?| upper }}'],
+            'null_safe_filter_argument' => ['{{ "__toString"|replace({"__toString": obj ?| upper}) }}'],
             'function' => ['{{ random(obj) }}'],
             'function_from_array' => ['{{ random(arr.obj) }}'],
             'function_and_filter' => ['{{ random(obj|upper) }}'],

@@ -20,6 +20,8 @@ use Twig\ExpressionParser\PrecedenceChange;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\NullSafeFilterExpression;
+use Twig\Node\Expression\Variable\NullSafeFilterOperandVariable;
 use Twig\Parser;
 use Twig\Token;
 
@@ -34,6 +36,7 @@ final class FilterExpressionParser extends AbstractExpressionParser implements I
 
     public function parse(Parser $parser, AbstractExpression $expr, Token $token): AbstractExpression
     {
+        $nullSafe = '?|' === $token->getValue();
         $stream = $parser->getStream();
         $token = $stream->expect(Token::NAME_TYPE);
         $line = $token->getLine();
@@ -55,12 +58,23 @@ final class FilterExpressionParser extends AbstractExpressionParser implements I
             trigger_deprecation('twig/twig', '3.12', 'Twig node "%s" is not marked as ready for passing a "TwigFilter" in the constructor instead of its name; please update your code and then add #[FirstClassTwigCallableReady] attribute to the constructor.', $class);
         }
 
-        return new $class($expr, $ready ? $filter : new ConstantExpression($filter->getName(), $line), $arguments, $line);
+        if (!$nullSafe) {
+            return new $class($expr, $ready ? $filter : new ConstantExpression($filter->getName(), $line), $arguments, $line);
+        }
+
+        $filterNode = new $class(new NullSafeFilterOperandVariable($line), $ready ? $filter : new ConstantExpression($filter->getName(), $line), $arguments, $line);
+
+        return new NullSafeFilterExpression($expr, $filterNode, $line);
     }
 
     public function getName(): string
     {
         return '|';
+    }
+
+    public function getAliases(): array
+    {
+        return ['?|'];
     }
 
     public function getDescription(): string

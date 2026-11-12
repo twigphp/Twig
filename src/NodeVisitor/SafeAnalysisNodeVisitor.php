@@ -93,6 +93,8 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
             } elseif (2 === \count($operands)) {
                 $safe = $this->intersectSafe($this->getSafe($node->getNode($operands[0])), $this->getSafe($node->getNode($operands[1])));
                 $this->setSafe($node, $safe);
+            } elseif (1 === \count($operands)) {
+                $this->setSafe($node, $this->getSafe($node->getNode($operands[0])));
             }
         } elseif ($node instanceof FilterExpression) {
             // filter expression is safe when the filter is safe

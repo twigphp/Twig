@@ -1,0 +1,32 @@
+--TEST--
+Twig supports the null-safe filter operator
+--TEMPLATE--
+{% autoescape 'html' %}
+1: [{{ foo ?| raw }}]
+2: [{{ foo ?| upper }}]
+3: [{{ foo ?| nl2br }}]
+4: [{{ foo ?| escape }}]
+5: [{{ foo ?| raw|upper }}]
+6: [{{ none ?| raw }}]
+7: [{{ none ?| nl2br }}]
+8: [{{ none ?| raw ?: '<i>none</i>' }}]
+9: [{{ true ? foo ?| raw : '<i>no</i>' }}]
+{% endautoescape %}
+--DATA--
+return ['foo' => "<b>foo\nbar</b>", 'none' => null]
+--EXPECT--
+1: [<b>foo
+bar</b>]
+2: [&lt;B&gt;FOO
+BAR&lt;/B&gt;]
+3: [&lt;b&gt;foo<br />
+bar&lt;/b&gt;]
+4: [&lt;b&gt;foo
+bar&lt;/b&gt;]
+5: [&lt;B&gt;FOO
+BAR&lt;/B&gt;]
+6: []
+7: []
+8: [<i>none</i>]
+9: [<b>foo
+bar</b>]

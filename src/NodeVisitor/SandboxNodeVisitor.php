@@ -25,6 +25,7 @@ use Twig\Node\Expression\OperatorEscapeInterface;
 use Twig\Node\Expression\TestExpression;
 use Twig\Node\Expression\Unary\SpreadUnary;
 use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Expression\Variable\NullSafeFilterOperandVariable;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -194,7 +195,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         if ($expr instanceof ContextVariable && '_self' === $expr->getAttribute('name')) {
             return;
         }
-        if (($expr instanceof ContextVariable || $expr instanceof GetAttrExpression) && !$expr->isGenerator()) {
+        if (($expr instanceof ContextVariable || $expr instanceof GetAttrExpression || $expr instanceof NullSafeFilterOperandVariable) && !$expr->isGenerator()) {
             $node->setNode($name, new CheckToStringNode($expr));
         } elseif ($expr instanceof SpreadUnary) {
             $expr->setNode('node', new CheckToStringNode($expr->getNode('node'), true));

@@ -180,6 +180,22 @@ example joins the elements of a list by commas:
 
     {{ list|join(', ') }}
 
+The null-safe filter operator (``?|``) works like the pipe but does not call
+the filter when the value is ``null``; the expression then evaluates to
+``null``:
+
+.. code-block:: twig
+
+    {{ post.published_at ?| date('m/d/Y') }}
+    {# returns null if post.published_at is null, otherwise the formatted date #}
+
+    {{ post.published_at ?| date('m/d/Y')|default('Not published') }}
+    {# only the filter after ?| is skipped, the next ones are still applied #}
+
+.. versionadded:: 3.31
+
+    The null-safe filter operator was added in Twig 3.31.
+
 To apply a filter on a section of code, wrap it with the
 :doc:`apply<tags/apply>` tag:
 
