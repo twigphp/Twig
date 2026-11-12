@@ -13,67 +13,53 @@ namespace Twig\Node\Expression;
 
 use Twig\Compiler;
 use Twig\Node\Expression\Variable\NullSafeFilterOperandVariable;
-use Twig\Node\Node;
 
 /**
  * Represents a null-safe filter call (a ?| filter).
  *
  * The operand is evaluated once; when it is null, the filter is not called
- * and the expression evaluates to null.
+ * and the expression evaluates to null. Otherwise, the filter is called with
+ * the operand variable as its input.
  */
 final class NullSafeFilterExpression extends AbstractExpression implements OperatorEscapeInterface
 {
     /**
-     * @param AbstractExpression $filter A filter expression whose input is a NullSafeFilterOperandVariable
+     * @param AbstractExpression $filter A filter expression that uses $operand as its input
      */
-    public function __construct(AbstractExpression $node, AbstractExpression $filter, int $lineno)
+    public function __construct(AbstractExpression $node, AbstractExpression $filter, NullSafeFilterOperandVariable $operand, int $lineno)
     {
-        parent::__construct(['node' => $node, 'filter' => $filter], [], $lineno);
+        parent::__construct(['node' => $node, 'filter' => $filter], ['operand' => $operand->getAttribute('operand')], $lineno);
+    }
+
+    public function isOperandVariable(NullSafeFilterOperandVariable $node): bool
+    {
+        return $node->getAttribute('operand') === $this->getAttribute('operand');
     }
 
     public function compile(Compiler $compiler): void
     {
         $name = $compiler->getVarName();
 
-        // the operand variable is looked up at compile time as node visitors
-        // may have wrapped it and the whole expression may have been cloned
-        if (null === $operand = $this->findOperandVariable($this->getNode('filter'))) {
-            throw new \LogicException(\sprintf('The "filter" node of a "%s" node must contain a "%s" node.', self::class, NullSafeFilterOperandVariable::class));
-        }
-        $operand->setAttribute('name', $name);
-
         $compiler
             ->raw('((null === ($'.$name.' = ')
             ->subcompile($this->getNode('node'))
             ->raw(')) ? null : (')
-            ->subcompile($this->getNode('filter'))
-            ->raw('))')
         ;
+
+        $operand = $this->getAttribute('operand');
+        $previous = $operand->name ?? null;
+        $operand->name = $name;
+        try {
+            $compiler->subcompile($this->getNode('filter'));
+        } finally {
+            $operand->name = $previous;
+        }
+
+        $compiler->raw('))');
     }
 
     public function getOperandNamesToEscape(): array
     {
-        // null does not need to be escaped
         return ['filter'];
-    }
-
-    private function findOperandVariable(Node $node): ?NullSafeFilterOperandVariable
-    {
-        if ($node instanceof NullSafeFilterOperandVariable) {
-            return $node;
-        }
-
-        foreach ($node as $child) {
-            // a nested null-safe filter has its own operand variable
-            if ($child instanceof self) {
-                continue;
-            }
-
-            if (null !== $operand = $this->findOperandVariable($child)) {
-                return $operand;
-            }
-        }
-
-        return null;
     }
 }

@@ -19,6 +19,7 @@ use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\MethodCallExpression;
+use Twig\Node\Expression\NullSafeFilterExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
@@ -64,7 +65,7 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         return $safe;
     }
 
-    private function setSafe(Node $node, array $safe): void
+    public function setSafe(Node $node, array $safe): void
     {
         $this->data[$node] = $safe;
     }
@@ -85,6 +86,8 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         } elseif ($node instanceof ParentExpression) {
             // parent block is safe by definition
             $this->setSafe($node, ['all']);
+        } elseif ($node instanceof NullSafeFilterExpression) {
+            $this->setSafe($node, $this->getSafe($node->getNode('filter')));
         } elseif ($node instanceof OperatorEscapeInterface) {
             // intersect safeness of operands
             $operands = $node->getOperandNamesToEscape();
@@ -93,8 +96,6 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
             } elseif (2 === \count($operands)) {
                 $safe = $this->intersectSafe($this->getSafe($node->getNode($operands[0])), $this->getSafe($node->getNode($operands[1])));
                 $this->setSafe($node, $safe);
-            } elseif (1 === \count($operands)) {
-                $this->setSafe($node, $this->getSafe($node->getNode($operands[0])));
             }
         } elseif ($node instanceof FilterExpression) {
             // filter expression is safe when the filter is safe

@@ -2,15 +2,21 @@
 Twig supports the null-safe filter operator
 --TEMPLATE--
 {% autoescape 'html' %}
-1: [{{ foo ?| raw }}]
-2: [{{ foo ?| upper }}]
-3: [{{ foo ?| nl2br }}]
-4: [{{ foo ?| escape }}]
-5: [{{ foo ?| raw|upper }}]
-6: [{{ none ?| raw }}]
-7: [{{ none ?| nl2br }}]
-8: [{{ none ?| raw ?: '<i>none</i>' }}]
-9: [{{ true ? foo ?| raw : '<i>no</i>' }}]
+1: [{{ foo?|raw }}]
+2: [{{ foo?|upper }}]
+3: [{{ foo?|nl2br }}]
+4: [{{ foo?|escape }}]
+5: [{{ foo?|raw|upper }}]
+6: [{{ none?|raw }}]
+7: [{{ none?|nl2br }}]
+8: [{{ none?|raw ?: '<i>none</i>' }}]
+9: [{{ true ? foo?|raw : '<i>no</i>' }}]
+10: [{{ foo|e?|nl2br }}] [{{ foo|e|nl2br }}]
+11: [{{ foo|raw?|nl2br }}] [{{ foo|raw|nl2br }}]
+12: [{{ foo?|preserves_safety }}] [{{ foo|preserves_safety }}]
+13: [{{ foo|e?|preserves_safety }}] [{{ foo|e|preserves_safety }}]
+14: [{{ foo|raw?|preserves_safety }}] [{{ foo|raw|preserves_safety }}]
+15: [{{ (foo|raw?|preserves_safety)?:'' }}]
 {% endautoescape %}
 --DATA--
 return ['foo' => "<b>foo\nbar</b>", 'none' => null]
@@ -30,3 +36,20 @@ BAR&lt;/B&gt;]
 8: [<i>none</i>]
 9: [<b>foo
 bar</b>]
+10: [&lt;b&gt;foo<br />
+bar&lt;/b&gt;] [&lt;b&gt;foo<br />
+bar&lt;/b&gt;]
+11: [<b>foo<br />
+bar</b>] [<b>foo<br />
+bar</b>]
+12: [&lt;B&gt;FOO
+BAR&lt;/B&gt;] [&lt;B&gt;FOO
+BAR&lt;/B&gt;]
+13: [&LT;B&GT;FOO
+BAR&LT;/B&GT;] [&LT;B&GT;FOO
+BAR&LT;/B&GT;]
+14: [<B>FOO
+BAR</B>] [<B>FOO
+BAR</B>]
+15: [<B>FOO
+BAR</B>]

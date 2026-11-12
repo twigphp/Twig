@@ -159,6 +159,8 @@ a variable:
 
 See the :doc:`set<tags/set>` tag documentation for more details.
 
+.. _twig-filters:
+
 Filters
 -------
 
@@ -186,10 +188,10 @@ the filter when the value is ``null``; the expression then evaluates to
 
 .. code-block:: twig
 
-    {{ post.published_at ?| date('m/d/Y') }}
+    {{ post.published_at?|date('m/d/Y') }}
     {# returns null if post.published_at is null, otherwise the formatted date #}
 
-    {{ post.published_at ?| date('m/d/Y')|default('Not published') }}
+    {{ post.published_at?|date('m/d/Y')|default('Not published') }}
     {# only the filter after ?| is skipped, the next ones are still applied #}
 
 .. versionadded:: 3.31
@@ -927,6 +929,9 @@ Other Operators
 The following operators don't fit into any of the other categories:
 
 * ``|``: Applies a filter.
+
+* ``?|``: Applies a filter unless the value is ``null`` (see :ref:`filters
+  <twig-filters>`).
 
 * ``..``: Creates a sequence based on the operand before and after the operator
   (this is syntactic sugar for the :doc:`range<functions/range>` function):

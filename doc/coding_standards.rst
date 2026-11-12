@@ -64,12 +64,14 @@ standards:
     {{ "Twig" }}
 
 * Do not put any spaces before and after the following operators: ``|``,
-  ``.``, ``..``, ``[]``:
+  ``?|``, ``.``, ``?.``, ``..``, ``[]``:
 
   .. code-block:: twig
 
     {{ name|upper|lower }}
+    {{ name?|upper }}
     {{ user.name }}
+    {{ user?.name }}
     {{ user[name] }}
     {% for i in 1..12 %}{% endfor %}
 
