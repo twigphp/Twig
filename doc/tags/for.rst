@@ -188,3 +188,8 @@ To iterate over the characters of a string, use the
             <li>{{ char }}</li>
         {%- endfor %}
     </ul>
+
+.. tip::
+
+    Loop keys and values can be described with :doc:`documentation comments
+    <../documentation_comments>`.
