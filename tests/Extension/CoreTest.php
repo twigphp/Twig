@@ -197,6 +197,8 @@ class CoreTest extends TestCase
         return [
             ['a', 'abc'],
             [1, [1, 2, 3]],
+            [false, []],
+            [0, [0, 1]],
             ['', null],
             ['', ''],
             ['a', new CoreTestIterator($i, array_keys($i), true, 3)],
@@ -219,6 +221,8 @@ class CoreTest extends TestCase
         return [
             ['c', 'abc'],
             [3, [1, 2, 3]],
+            [false, []],
+            [0, [1, 0]],
             ['', null],
             ['', ''],
             ['c', new CoreTestIterator($i, array_keys($i), true)],
