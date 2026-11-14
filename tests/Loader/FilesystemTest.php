@@ -51,6 +51,8 @@ class FilesystemTest extends TestCase
     public static function getNamesToNormalize(): iterable
     {
         yield ['errors/index.html', 'errors\index.html'];
+        yield ['errors/index.html', 'errors\\\\index.html'];
+        yield ['errors/index.html', '.\\errors\\index.html'];
         yield ['errors/index.html', 'errors//index.html'];
         yield ['errors/index.html', '/errors/index.html'];
         yield ['errors/index.html', './errors/index.html'];
