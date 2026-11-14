@@ -21,7 +21,6 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\EscapeFilter;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
-use Twig\Node\ImportNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
@@ -40,7 +39,6 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     private $safeAnalysis;
     private $traverser;
     private $defaultStrategy = false;
-    private $safeVars = [];
     private bool $usesEscaper = false;
 
     public function __construct()
@@ -56,7 +54,6 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
                 $this->defaultStrategy = $defaultStrategy;
             }
             $node->setAttribute('strategy', \is_string($this->defaultStrategy) ? $this->defaultStrategy : false);
-            $this->safeVars = [];
             $this->blocks = [];
             $this->statusStack = [];
             $this->usesEscaper = false;
@@ -64,8 +61,6 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             $this->statusStack[] = $node->getAttribute('value');
         } elseif ($node instanceof BlockNode) {
             $this->statusStack[] = $this->blocks[$node->getAttribute('name')] ?? $this->needEscaping();
-        } elseif ($node instanceof ImportNode) {
-            $this->safeVars[] = $node->getNode('var')->getNode('var')->getAttribute('name');
         }
 
         return $node;
@@ -76,7 +71,6 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ModuleNode) {
             $node->setAttribute('escaper', $this->usesEscaper);
             $this->defaultStrategy = false;
-            $this->safeVars = [];
             $this->blocks = [];
         } elseif ($node instanceof FilterExpression) {
             if ($node instanceof EscapeFilter) {
@@ -158,8 +152,6 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             if (null === $this->traverser) {
                 $this->traverser = new NodeTraverser($env, [$this->safeAnalysis]);
             }
-
-            $this->safeAnalysis->setSafeVars($this->safeVars);
 
             $this->traverser->traverse($expression);
             $safe = $this->safeAnalysis->getSafe($expression);
