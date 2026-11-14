@@ -88,30 +88,29 @@ final class Cva
 
     public function apply(array $recipes, ?string ...$additionalClasses): string
     {
-        $classes = $this->base;
+        $classLists = [$this->base];
 
         // Resolve recipes against variants
         foreach ($recipes as $recipeName => $recipeValue) {
             $recipeClasses = $this->variants[$recipeName][self::toVariantName($recipeValue)] ?? [];
-            $classes = [...$classes, ...(array) $recipeClasses];
+            $classLists[] = (array) $recipeClasses;
         }
 
         // Resolve compound variants
         foreach ($this->compoundVariants as $compound) {
-            $compoundClasses = $this->resolveCompoundVariant($compound, $recipes) ?? [];
-            $classes = [...$classes, ...$compoundClasses];
+            $classLists[] = $this->resolveCompoundVariant($compound, $recipes) ?? [];
         }
 
         // Apply default variants if specific recipes aren't provided
         foreach ($this->defaultVariants as $defaultVariantName => $defaultVariantValue) {
             if (!isset($recipes[$defaultVariantName])) {
                 $variantClasses = $this->variants[$defaultVariantName][self::toVariantName($defaultVariantValue)] ?? [];
-                $classes = [...$classes, ...(array) $variantClasses];
+                $classLists[] = (array) $variantClasses;
             }
         }
-        $classes = [...$classes, ...array_values($additionalClasses)];
+        $classLists[] = array_values($additionalClasses);
 
-        $classes = implode(' ', array_filter($classes, 'is_string'));
+        $classes = implode(' ', array_filter(array_merge(...$classLists), 'is_string'));
 
         if (isset(self::$classListCache[$classes])) {
             return self::$classListCache[$classes];
