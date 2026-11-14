@@ -26,6 +26,8 @@ use Twig\TwigFunction;
 
 final class HtmlExtension extends AbstractExtension
 {
+    private static array $escapedNames = [];
+
     private $mimeTypes;
 
     public function __construct(?MimeTypes $mimeTypes = null)
@@ -198,13 +200,23 @@ final class HtmlExtension extends AbstractExtension
 
         $result = '';
         $runtime = $env->getRuntime(EscaperRuntime::class);
+        $charset = $env->getCharset();
 
         foreach ($attr as $name => $value) {
-            if (null === $value = self::htmlAttrValue($name, $value)) {
+            // a string value is already its own rendering, htmlAttrValue() would return it unchanged
+            if (!\is_string($value) && null === $value = self::htmlAttrValue($name, $value)) {
                 continue;
             }
 
-            $result .= $runtime->escape($name, 'html_attr_relaxed').'="'.$runtime->escape($value).'" ';
+            if (null === $escapedName = self::$escapedNames[$charset][$name] ?? null) {
+                if (\count(self::$escapedNames[$charset] ?? []) >= 1000) {
+                    self::$escapedNames[$charset] = [];
+                }
+
+                $escapedName = self::$escapedNames[$charset][$name] = $runtime->escape($name, 'html_attr_relaxed');
+            }
+
+            $result .= $escapedName.'="'.$runtime->escape($value).'" ';
         }
 
         return trim($result);

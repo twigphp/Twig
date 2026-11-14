@@ -45,6 +45,19 @@ class HtmlAttrTest extends TestCase
             ],
         ];
 
+        yield 'string values render as themselves whatever the attribute name prefix' => [
+            'title="a string" style="color: red;" aria-hidden="true" data-json="{&quot;a&quot;:1}" data-empty=""',
+            [
+                [
+                    'title' => 'a string',
+                    'style' => 'color: red;',
+                    'aria-hidden' => 'true',
+                    'data-json' => '{"a":1}',
+                    'data-empty' => '',
+                ],
+            ],
+        ];
+
         // Boolean attribute handling
         yield 'boolean true renders as empty string, except for aria-* and data-* it uses "true"' => [
             'required="" aria-disabled="true" data-yes="true"',
