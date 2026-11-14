@@ -39,13 +39,16 @@ class FunctionExpression extends CallExpression implements SupportDefinedTestInt
             $this->setAttribute('twig_callable', $function);
         }
 
-        $this->deprecateAttribute('needs_charset', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('needs_environment', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('needs_context', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('arguments', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('callable', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('is_variadic', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('dynamic_name', new NameDeprecation('twig/twig', '3.12'));
+        static $deprecation;
+        $deprecation ??= new NameDeprecation('twig/twig', '3.12');
+
+        $this->deprecateAttribute('needs_charset', $deprecation);
+        $this->deprecateAttribute('needs_environment', $deprecation);
+        $this->deprecateAttribute('needs_context', $deprecation);
+        $this->deprecateAttribute('arguments', $deprecation);
+        $this->deprecateAttribute('callable', $deprecation);
+        $this->deprecateAttribute('is_variadic', $deprecation);
+        $this->deprecateAttribute('dynamic_name', $deprecation);
     }
 
     public function enableDefinedTest(): void

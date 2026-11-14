@@ -48,10 +48,13 @@ class TestExpression extends CallExpression implements ReturnBoolInterface, Coer
             $this->setAttribute('twig_callable', $test);
         }
 
-        $this->deprecateAttribute('arguments', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('callable', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('is_variadic', new NameDeprecation('twig/twig', '3.12'));
-        $this->deprecateAttribute('dynamic_name', new NameDeprecation('twig/twig', '3.12'));
+        static $deprecation;
+        $deprecation ??= new NameDeprecation('twig/twig', '3.12');
+
+        $this->deprecateAttribute('arguments', $deprecation);
+        $this->deprecateAttribute('callable', $deprecation);
+        $this->deprecateAttribute('is_variadic', $deprecation);
+        $this->deprecateAttribute('dynamic_name', $deprecation);
     }
 
     public function compile(Compiler $compiler): void
