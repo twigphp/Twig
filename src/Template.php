@@ -454,7 +454,7 @@ abstract class Template
     public function yield(array $context, array $blocks = []): iterable
     {
         $context += $this->env->getGlobals();
-        $blocks = array_merge($this->blocks, $blocks);
+        $blocks = $blocks ? ($this->blocks ? array_merge($this->blocks, $blocks) : $blocks) : $this->blocks;
 
         try {
             $this->ensureSecurityChecked();
@@ -476,7 +476,7 @@ abstract class Template
             $template = $this->blocks[$name][0];
             $block = $this->blocks[$name][1];
             // expose this template's own blocks so nested block() calls resolve against them when the block is rendered directly (e.g. block(name, template))
-            $blocks = array_merge($this->blocks, $blocks);
+            $blocks = $blocks ? array_merge($this->blocks, $blocks) : $this->blocks;
         } else {
             $template = null;
             $block = null;
