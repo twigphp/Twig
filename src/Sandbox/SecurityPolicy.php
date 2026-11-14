@@ -28,6 +28,10 @@ final class SecurityPolicy implements SecurityPolicyInterface
     private $allowedFunctions;
     private array $allowedTests;
     private bool $strict = false;
+    /** @var array<class-string, array<string|int, true>> */
+    private array $allowedMethodCache = [];
+    /** @var array<class-string, array<string|int, true>> */
+    private array $allowedPropertyCache = [];
 
     public function __construct(array $allowedTags = [], array $allowedFilters = [], array $allowedMethods = [], array $allowedProperties = [], array $allowedFunctions = [], array $allowedTests = [])
     {
@@ -52,6 +56,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
     public function setAllowedMethods(array $methods): void
     {
         $this->allowedMethods = [];
+        $this->allowedMethodCache = [];
         foreach ($methods as $class => $m) {
             $this->allowedMethods[$class] = array_map('strtolower', \is_array($m) ? $m : [$m]);
         }
@@ -60,6 +65,7 @@ final class SecurityPolicy implements SecurityPolicyInterface
     public function setAllowedProperties(array $properties): void
     {
         $this->allowedProperties = $properties;
+        $this->allowedPropertyCache = [];
     }
 
     public function setAllowedFunctions(array $functions): void
@@ -146,39 +152,49 @@ final class SecurityPolicy implements SecurityPolicyInterface
 
     public function checkMethodAllowed($obj, $method): void
     {
-        $method = strtolower($method);
-
-        if ($obj instanceof Template || ($obj instanceof Markup && '__construct' !== $method && 'withcontent' !== $method)) {
+        $objClass = $obj::class;
+        if (isset($this->allowedMethodCache[$objClass][$method])) {
             return;
         }
 
-        $allowed = false;
+        $lcMethod = strtolower($method);
+
+        if ($obj instanceof Template || ($obj instanceof Markup && '__construct' !== $lcMethod && 'withcontent' !== $lcMethod)) {
+            $this->allowedMethodCache[$objClass][$method] = true;
+
+            return;
+        }
+
         foreach ($this->allowedMethods as $class => $methods) {
-            if ($obj instanceof $class && \in_array($method, $methods, true)) {
-                $allowed = true;
-                break;
+            if ($obj instanceof $class && \in_array($lcMethod, $methods, true)) {
+                $this->allowedMethodCache[$objClass][$method] = true;
+
+                return;
             }
         }
 
-        if (!$allowed) {
-            $class = $obj::class;
-            throw new SecurityNotAllowedMethodError(\sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, $class), $class, $method);
-        }
+        throw new SecurityNotAllowedMethodError(\sprintf('Calling "%s" method on a "%s" object is not allowed.', $lcMethod, $objClass), $objClass, $lcMethod);
     }
 
     public function checkPropertyAllowed($obj, $property): void
     {
-        $allowed = false;
+        // an ArrayAccess key can be anything, and only a string or an integer can be a cache key
+        $cacheable = \is_string($property) || \is_int($property);
+        $objClass = $obj::class;
+        if ($cacheable && isset($this->allowedPropertyCache[$objClass][$property])) {
+            return;
+        }
+
         foreach ($this->allowedProperties as $class => $properties) {
             if ($obj instanceof $class && \in_array($property, \is_array($properties) ? $properties : [$properties], true)) {
-                $allowed = true;
-                break;
+                if ($cacheable) {
+                    $this->allowedPropertyCache[$objClass][$property] = true;
+                }
+
+                return;
             }
         }
 
-        if (!$allowed) {
-            $class = $obj::class;
-            throw new SecurityNotAllowedPropertyError(\sprintf('Calling "%s" property on a "%s" object is not allowed.', $property, $class), $class, $property);
-        }
+        throw new SecurityNotAllowedPropertyError(\sprintf('Calling "%s" property on a "%s" object is not allowed.', $property, $objClass), $objClass, $property);
     }
 }
