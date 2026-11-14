@@ -69,6 +69,18 @@ class ChainTest extends TestCase
         $this->assertEquals('bar:foo', $loader->getCacheKey('bar'));
     }
 
+    public function testGetCacheKeyFollowsLoadersAddedAfterItWasComputed(): void
+    {
+        $loader = new ChainLoader([new ArrayLoader(['foo' => 'bar'])]);
+
+        $this->assertEquals('foo:bar', $loader->getCacheKey('foo'));
+
+        $loader->addLoader(new ArrayLoader(['bar' => 'foo']));
+
+        $this->assertEquals('foo:bar', $loader->getCacheKey('foo'));
+        $this->assertEquals('bar:foo', $loader->getCacheKey('bar'));
+    }
+
     public function testGetCacheKeyWhenTemplateDoesNotExist(): void
     {
         $loader = new ChainLoader([]);

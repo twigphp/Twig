@@ -31,6 +31,11 @@ class FilesystemLoader implements LoaderInterface
     protected $cache = [];
     protected $errorCache = [];
 
+    /**
+     * @var array<string, string>
+     */
+    private $cacheKeyCache = [];
+
     private $rootPath;
 
     /**
@@ -94,7 +99,7 @@ class FilesystemLoader implements LoaderInterface
     public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE/* , bool $check = true */): void
     {
         // invalidate the cache
-        $this->cache = $this->errorCache = [];
+        $this->cache = $this->errorCache = $this->cacheKeyCache = [];
 
         if (\func_num_args() < 3 || func_get_arg(2)) {
             $checkPath = $this->isAbsolutePath($path) ? $path : $this->rootPath.$path;
@@ -114,7 +119,7 @@ class FilesystemLoader implements LoaderInterface
     public function prependPath(string $path, string $namespace = self::MAIN_NAMESPACE/* , bool $check = true */): void
     {
         // invalidate the cache
-        $this->cache = $this->errorCache = [];
+        $this->cache = $this->errorCache = $this->cacheKeyCache = [];
 
         if (\func_num_args() < 3 || func_get_arg(2)) {
             $checkPath = $this->isAbsolutePath($path) ? $path : $this->rootPath.$path;
@@ -143,15 +148,19 @@ class FilesystemLoader implements LoaderInterface
 
     public function getCacheKey(string $name): string
     {
+        if (isset($this->cacheKeyCache[$name])) {
+            return $this->cacheKeyCache[$name];
+        }
+
         if (null === $path = $this->findTemplate($name)) {
             return '';
         }
         $len = \strlen($this->rootPath);
         if (0 === strncmp($this->rootPath, $path, $len)) {
-            return substr($path, $len);
+            return $this->cacheKeyCache[$name] = substr($path, $len);
         }
 
-        return $path;
+        return $this->cacheKeyCache[$name] = $path;
     }
 
     /**
