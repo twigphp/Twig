@@ -190,6 +190,8 @@ final class IntlExtension extends AbstractExtension
     private array $collators = [];
     private $dateFormatterPrototype;
     private $numberFormatterPrototype;
+    /** @var array{array<string, int|float>, array<string, string>, array<string, string>, string}|null */
+    private ?array $numberFormatterPrototypeState = null;
     /**
      * @var array<string, string>
      */
@@ -612,39 +614,32 @@ final class IntlExtension extends AbstractExtension
 
         // textAttrs and symbols can only be set on the prototype as there is probably no
         // use case for setting it on each call.
-        $textAttrs = [];
-        $symbols = [];
-        if ($this->numberFormatterPrototype) {
-            foreach (self::NUMBER_ATTRIBUTES as $name => $const) {
-                if (!isset($attrs[$name])) {
-                    $value = $this->numberFormatterPrototype->getAttribute($const);
-                    if ('rounding_mode' === $name) {
-                        $value = array_flip(self::NUMBER_ROUNDING_ATTRIBUTES)[$value];
-                    } elseif ('padding_position' === $name) {
-                        $value = array_flip(self::NUMBER_PADDING_ATTRIBUTES)[$value];
-                    }
-                    $attrs[$name] = $value;
-                }
-            }
+        [$prototypeAttrs, $textAttrs, $symbols, $prototypeHash] = $this->numberFormatterPrototypeState ??= $this->readNumberFormatterPrototype();
 
-            foreach (self::NUMBER_TEXT_ATTRIBUTES as $name => $const) {
-                $textAttrs[$name] = $this->numberFormatterPrototype->getTextAttribute($const);
+        foreach ($prototypeAttrs as $name => $value) {
+            if (isset($attrs[$name])) {
+                continue;
             }
-
-            foreach (self::NUMBER_SYMBOLS as $name => $const) {
-                $symbols[$name] = $this->numberFormatterPrototype->getSymbol($const);
+            if ('rounding_mode' === $name) {
+                $value = array_flip(self::NUMBER_ROUNDING_ATTRIBUTES)[$value];
+            } elseif ('padding_position' === $name) {
+                $value = array_flip(self::NUMBER_PADDING_ATTRIBUTES)[$value];
             }
+            $attrs[$name] = $value;
         }
 
         ksort($attrs);
-        $hash = $locale.'|'.$style.'|'.json_encode($attrs).'|'.json_encode($textAttrs).'|'.json_encode($symbols);
+        $hash = $locale.'|'.$style.'|'.json_encode($attrs).'|'.$prototypeHash;
 
-        if (!isset($this->numberFormatters[$hash])) {
+        $isNew = !isset($this->numberFormatters[$hash]);
+        if ($isNew) {
             if (\count($this->numberFormatters) >= self::MAX_CACHED_FORMATTERS) {
                 array_shift($this->numberFormatters);
             }
             $this->numberFormatters[$hash] = new \NumberFormatter($locale, self::NUMBER_STYLES[$style]);
         }
+
+        $formatter = $this->numberFormatters[$hash];
 
         foreach ($attrs as $name => $value) {
             if (!isset(self::NUMBER_ATTRIBUTES[$name])) {
@@ -665,18 +660,49 @@ final class IntlExtension extends AbstractExtension
                 $value = self::NUMBER_PADDING_ATTRIBUTES[$value];
             }
 
-            $this->numberFormatters[$hash]->setAttribute(self::NUMBER_ATTRIBUTES[$name], $value);
+            // the attributes are part of the cache key, so a reused formatter already has them
+            if ($isNew) {
+                $formatter->setAttribute(self::NUMBER_ATTRIBUTES[$name], $value);
+            }
         }
 
-        foreach ($textAttrs as $name => $value) {
-            $this->numberFormatters[$hash]->setTextAttribute(self::NUMBER_TEXT_ATTRIBUTES[$name], $value);
+        if ($isNew) {
+            foreach ($textAttrs as $name => $value) {
+                $formatter->setTextAttribute(self::NUMBER_TEXT_ATTRIBUTES[$name], $value);
+            }
+
+            foreach ($symbols as $name => $value) {
+                $formatter->setSymbol(self::NUMBER_SYMBOLS[$name], $value);
+            }
         }
 
-        foreach ($symbols as $name => $value) {
-            $this->numberFormatters[$hash]->setSymbol(self::NUMBER_SYMBOLS[$name], $value);
+        return $formatter;
+    }
+
+    /**
+     * @return array{array<string, int|float>, array<string, string>, array<string, string>, string}
+     */
+    private function readNumberFormatterPrototype(): array
+    {
+        $attrs = [];
+        $textAttrs = [];
+        $symbols = [];
+
+        if ($this->numberFormatterPrototype) {
+            foreach (self::NUMBER_ATTRIBUTES as $name => $const) {
+                $attrs[$name] = $this->numberFormatterPrototype->getAttribute($const);
+            }
+
+            foreach (self::NUMBER_TEXT_ATTRIBUTES as $name => $const) {
+                $textAttrs[$name] = $this->numberFormatterPrototype->getTextAttribute($const);
+            }
+
+            foreach (self::NUMBER_SYMBOLS as $name => $const) {
+                $symbols[$name] = $this->numberFormatterPrototype->getSymbol($const);
+            }
         }
 
-        return $this->numberFormatters[$hash];
+        return [$attrs, $textAttrs, $symbols, json_encode($textAttrs).'|'.json_encode($symbols)];
     }
 
     private function createListFormatter(?string $locale, string $type, string $width): \IntlListFormatter
