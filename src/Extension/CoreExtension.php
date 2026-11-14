@@ -793,6 +793,14 @@ final class CoreExtension extends AbstractExtension
      */
     public static function first(string $charset, $item)
     {
+        if ([] === $item) {
+            return false;
+        }
+
+        if (\is_array($item)) {
+            return \PHP_VERSION_ID >= 80500 ? array_first($item) : $item[array_key_first($item)];
+        }
+
         $elements = self::slice($charset, $item, 0, 1, false);
 
         return \is_string($elements) ? $elements : current($elements);
@@ -809,6 +817,14 @@ final class CoreExtension extends AbstractExtension
      */
     public static function last(string $charset, $item)
     {
+        if ([] === $item) {
+            return false;
+        }
+
+        if (\is_array($item)) {
+            return \PHP_VERSION_ID >= 80500 ? array_last($item) : $item[array_key_last($item)];
+        }
+
         $elements = self::slice($charset, $item, -1, 1, false);
 
         return \is_string($elements) ? $elements : current($elements);
@@ -836,11 +852,9 @@ final class CoreExtension extends AbstractExtension
      */
     public static function join($value, $glue = '', $and = null): string
     {
-        if (!is_iterable($value)) {
-            $value = (array) $value;
+        if (!\is_array($value)) {
+            $value = is_iterable($value) ? self::toArray($value, false) : (array) $value;
         }
-
-        $value = self::toArray($value, false);
 
         if (0 === \count($value)) {
             return '';
@@ -851,10 +865,10 @@ final class CoreExtension extends AbstractExtension
         }
 
         if (1 === \count($value)) {
-            return $value[0];
+            return $value[array_key_first($value)];
         }
 
-        return implode($glue, \array_slice($value, 0, -1)).$and.$value[\count($value) - 1];
+        return implode($glue, \array_slice($value, 0, -1)).$and.$value[array_key_last($value)];
     }
 
     /**
@@ -1102,8 +1116,9 @@ final class CoreExtension extends AbstractExtension
             return \in_array($value, $compare, true);
         }
 
+        // two strings always end up on the "<=>" fallback of compare(), where "0 === <=>" is "=="
         foreach ($compare as $item) {
-            if (0 === self::compare($value, $item)) {
+            if (\is_string($value) && \is_string($item) ? $value == $item : 0 === self::compare($value, $item)) {
                 return true;
             }
         }
