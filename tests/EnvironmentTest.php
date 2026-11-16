@@ -458,6 +458,18 @@ class EnvironmentTest extends TestCase
         $this->assertSame('foobar', $twig->render('index'));
     }
 
+    public function testGetExtensionReturnsTheExtensionRegisteredWithItsOwnClass(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $twig->addExtension($extension = new EnvironmentTest_ExtensionWithAttributes('bar'));
+        $twig->addRuntimeLoader(new FactoryRuntimeLoader([
+            EnvironmentTest_ExtensionWithAttributes::class => static fn () => new EnvironmentTest_ExtensionWithAttributes('runtime'),
+        ]));
+
+        $this->assertSame($extension, $twig->getExtension(EnvironmentTest_ExtensionWithAttributes::class));
+        $this->assertNotSame($extension, $twig->getRuntime(EnvironmentTest_ExtensionWithAttributes::class));
+    }
+
     public function testFailLoadTemplate(): void
     {
         $template = 'testFailLoadTemplate.twig';
@@ -872,16 +884,11 @@ class EnvironmentTest_LegacyEchoingNode extends Node
     }
 }
 
-class EnvironmentTest_ExtensionWithAttributes extends AbstractExtension
+class EnvironmentTest_ExtensionWithAttributes extends AttributeExtension
 {
     public function __construct(
         private string $suffix,
     ) {
-    }
-
-    public function getFunctions(): array
-    {
-        return (new AttributeExtension(self::class))->getFunctions();
     }
 
     #[AsTwigFunction('attribute_function')]

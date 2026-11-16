@@ -942,22 +942,15 @@ add the ``Twig\Environment`` type to the first argument of the method::
 
     Registering an extension class with ``AttributeExtension`` was added in Twig 3.31.
 
-An extension class can also declare its callables with these attributes. You can
-then register it as usual, or lazily with ``AttributeExtension`` and a runtime
-loader, so that its dependencies are only created when a template calls it::
+An extension class can also declare its callables with these attributes by
+extending ``AttributeExtension``::
 
     use Twig\Attribute\AsTwigFunction;
-    use Twig\Extension\AbstractExtension;
     use Twig\Extension\AttributeExtension;
 
-    class ProjectExtension extends AbstractExtension
+    class ProjectExtension extends AttributeExtension
     {
         public function __construct(private LipsumProvider $lipsumProvider) {}
-
-        public function getFunctions(): array
-        {
-            return (new AttributeExtension(self::class))->getFunctions();
-        }
 
         #[AsTwigFunction('lipsum')]
         public function lipsum(int $count): string
