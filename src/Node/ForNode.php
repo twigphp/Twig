@@ -90,25 +90,7 @@ class ForNode extends Node
 
         $this->compileBody($compiler, $iteratedVar);
 
-        $unset = 'unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']'.($withLoop ? ', $context[\'loop\']' : '').');'."\n";
-        $restore = "\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n";
-
-        if (!$this->setsVariables()) {
-            // only the loop variables changed the context
-            $compiler->write("\$context = \$$parentVar;\n");
-        } elseif ($withLoop) {
-            $compiler->write($unset)->write($restore);
-        } else {
-            // the context is left untouched when the sequence is empty and the else clause sets nothing
-            $compiler
-                ->write("if (\$context !== \$$parentVar) {\n")
-                ->indent()
-                ->write($unset)
-                ->write($restore)
-                ->outdent()
-                ->write("}\n")
-            ;
-        }
+        $this->compileContextRestore($compiler, $parentVar, $withLoop);
 
         $compiler->write("unset(\$$seqVar, \$$parentVar".(null !== $iteratedVar ? ", \$$iteratedVar" : '').");\n");
     }
@@ -144,16 +126,7 @@ class ForNode extends Node
 
         $this->compileBody($compiler, $this->hasNode('else') ? 'iterated' : null);
 
-        if (!$this->setsVariables()) {
-            // only the loop variables changed the context
-            $compiler->write("\$context = \$parent;\n");
-        } else {
-            // remove some "private" loop variables (needed for nested loops)
-            $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'loop\']);'."\n");
-
-            // keep the values set in the inner context for variables defined in the outer context
-            $compiler->write("\$context = array_intersect_key(\$context, \$parent) + \$parent;\n");
-        }
+        $this->compileContextRestore($compiler, 'parent', true);
 
         $compiler
             ->write("return; yield;\n")
@@ -162,30 +135,28 @@ class ForNode extends Node
         ;
     }
 
-    /**
-     * Returns whether the loop can set variables other than the ones it defines.
-     *
-     * The sequence is left out as it is evaluated before the context is saved.
-     */
-    private function setsVariables(): bool
+    private function compileContextRestore(Compiler $compiler, string $parentVar, bool $withLoop): void
     {
-        foreach (['ifexpr', 'body', 'else'] as $name) {
-            if ($this->hasNode($name) && self::setsContextVariables($this->getNode($name))) {
-                return true;
-            }
+        if (!self::setsVariables($this)) {
+            $compiler->write("\$context = \$$parentVar;\n");
+
+            return;
         }
 
-        return false;
+        // keep the values set in the loop for the variables defined before it
+        $compiler
+            ->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']'.($withLoop ? ', $context[\'loop\']' : '').');'."\n")
+            ->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n")
+        ;
     }
 
-    private static function setsContextVariables(Node $node): bool
+    /**
+     * Returns whether the node can set variables other than the ones defined by loops.
+     */
+    private static function setsVariables(Node $node): bool
     {
         if ($node instanceof AssignContextVariable) {
             return true;
-        }
-
-        if ($node instanceof self) {
-            return self::setsContextVariables($node->getNode('seq')) || $node->setsVariables();
         }
 
         // an arrow function sets its arguments in its own copy of the context
@@ -198,8 +169,12 @@ class ForNode extends Node
             return true;
         }
 
-        foreach ($node as $child) {
-            if (self::setsContextVariables($child)) {
+        foreach ($node as $name => $child) {
+            if ($node instanceof self && \in_array($name, ['key_target', 'value_target'], true)) {
+                continue;
+            }
+
+            if (self::setsVariables($child)) {
                 return true;
             }
         }

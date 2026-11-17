@@ -284,10 +284,8 @@ EOF, $env];
 foreach (\\is_array(\$_v0) || \$_v0 instanceof \\Traversable ? \$_v0 : [] as \$context["_key"] => \$context["item"]) {
     \$context["foo"] = \$context["item"];
 }
-if (\$context !== \$_v1) {
-    unset(\$context['_key'], \$context['item']);
-    \$context = array_intersect_key(\$context, \$_v1) + \$_v1;
-}
+unset(\$context['_key'], \$context['item']);
+\$context = array_intersect_key(\$context, \$_v1) + \$_v1;
 unset(\$_v0, \$_v1);
 EOF, $env];
 
