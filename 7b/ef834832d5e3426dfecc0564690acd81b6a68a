@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by GromNaN at 2026-10-30T14:34:47Z
+
+Nice improvement, the two statements avoid one full copy of the context.
+
+An optional idea, not blocking: part of the work could be decided at compile time.
+
+1. With `only`, the context is known to be empty, so the generated code could be reduced to a single statement and skip the `$context = [];` assignment:
+
+   ```php
+   $context = $vars + $this->env->getGlobals();
+   ```
+
+   The precedence stays the same (with variables, then globals).
+
+2. When the variables node is an empty `ArrayExpression` (`{% with {} %}`), `WithNode::compile()` could skip the `is_iterable()` check, `toArray()` and the context merge entirely, and only add the globals when `only` is set.
+
+The second case is rare in real templates, and a variable that is empty at runtime cannot be detected by the compiler, so I would not expect a measurable gain there. The first case is cheap to implement and makes the generated code shorter.
