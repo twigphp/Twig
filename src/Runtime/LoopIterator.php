@@ -23,18 +23,21 @@ use Twig\Error\RuntimeError;
  * @template TKey
  * @template TValue
  *
- * @implements \Iterator<TKey, TValue>
+ * @implements \IteratorAggregate<TKey, TValue>
  */
-final class LoopIterator implements \Iterator
+final class LoopIterator implements \IteratorAggregate
 {
-    private \Iterator $seq;
-    private int $index0;
+    /** @var array<TKey, TValue> */
+    private array $array = [];
+    /** @var \Iterator<TKey, TValue>|null */
+    private ?\Iterator $iterator = null;
+    private int $index0 = 0;
     private int $length;
-    /** @var array{valid: bool, key: mixed, value: mixed} */
-    private array $previous;
-    /** @var array{valid: bool, key: mixed, value: mixed} */
-    private array $current;
-    /** @var array{valid: bool, key: mixed, value: mixed}|null */
+    private bool $hasPrevious = false;
+    private mixed $previous = null;
+    /** @var list<TKey>|null */
+    private ?array $keys = null;
+    /** @var array{valid: bool, value: mixed}|null */
     private ?array $next = null;
 
     /**
@@ -43,65 +46,51 @@ final class LoopIterator implements \Iterator
     public function __construct($seq)
     {
         if (\is_array($seq)) {
-            $this->seq = new \ArrayIterator($seq);
+            $this->array = $seq;
         } elseif ($seq instanceof \IteratorAggregate) {
             do {
-                /** @var \Iterator<TKey, TValue> $seq */
                 $seq = $seq->getIterator();
             } while ($seq instanceof \IteratorAggregate);
-            $this->seq = $seq;
+            $this->iterator = $seq;
         } elseif (is_iterable($seq)) {
             /** @var \Iterator<TKey, TValue> $seq */
-            $this->seq = $seq;
-        } else {
-            $this->seq = new \EmptyIterator();
+            $this->iterator = $seq;
         }
-        $this->rewind();
     }
 
-    public function current(): mixed
+    /**
+     * @return \Generator<TKey, TValue>
+     */
+    public function getIterator(): \Generator
     {
-        return $this->current['value'];
-    }
-
-    public function key(): mixed
-    {
-        return $this->current['key'];
-    }
-
-    public function next(): void
-    {
-        $this->previous = $this->current;
-        if ($this->next) {
-            $this->next = null;
-        } else {
-            $this->seq->next();
-        }
-        if ($this->seq->valid()) {
-            $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
-        } else {
-            $this->current = ['valid' => false, 'key' => null, 'value' => null];
-        }
-        ++$this->index0;
-    }
-
-    public function rewind(): void
-    {
-        $this->seq->rewind();
-        $this->previous = ['valid' => false, 'key' => null, 'value' => null];
-        if ($this->seq->valid()) {
-            $this->current = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
-        } else {
-            // EmptyIterator
-            $this->current = ['valid' => false, 'key' => null, 'value' => null];
-        }
-        $this->next = null;
         $this->index0 = 0;
-    }
+        $this->hasPrevious = false;
+        $this->previous = null;
+        $this->next = null;
 
-    public function valid(): bool
-    {
-        return $this->current['valid'];
+        if (null === $iterator = $this->iterator) {
+            // arrays are iterated natively as their items can be looked ahead by position
+            foreach ($this->array as $key => $value) {
+                yield $key => $value;
+
+                $this->hasPrevious = true;
+                $this->previous = $value;
+                ++$this->index0;
+            }
+
+            return;
+        }
+
+        for ($iterator->rewind(); $iterator->valid(); ++$this->index0) {
+            $key = $iterator->key();
+            $value = $iterator->current();
+
+            yield $key => $value;
+
+            $this->hasPrevious = true;
+            $this->previous = $value;
+            $this->moveForward($iterator);
+        }
     }
 
     public function getIndex0(): int
@@ -115,34 +104,63 @@ final class LoopIterator implements \Iterator
             return $this->length;
         }
 
-        if (!$this->seq instanceof \Countable) {
+        if (null === $this->iterator) {
+            return $this->length = \count($this->array);
+        }
+
+        if (!$this->iterator instanceof \Countable) {
             throw new RuntimeError(\sprintf('The "loop.%s" variable is not defined as the loop iterates on a non-countable iterator.', $var));
         }
 
-        return $this->length = \count($this->seq);
+        return $this->length = \count($this->iterator);
+    }
+
+    public function getPrevious(): mixed
+    {
+        return $this->hasPrevious ? $this->previous : null;
+    }
+
+    public function hasNext(): bool
+    {
+        if (null === $this->iterator) {
+            return $this->index0 + 1 < \count($this->array);
+        }
+
+        return $this->lookAhead()['valid'];
+    }
+
+    public function getNext(): mixed
+    {
+        return $this->lookAhead()['value'];
     }
 
     /**
-     * @return array{valid: bool, key: mixed, value: mixed}
+     * @param \Iterator<TKey, TValue> $iterator
      */
-    public function getPrevious(): array
+    private function moveForward(\Iterator $iterator): void
     {
-        return $this->previous;
+        // the iterator already moved forward when looking ahead
+        if (null === $this->next) {
+            $iterator->next();
+        }
+
+        $this->next = null;
     }
 
     /**
-     * @return array{valid: bool, key: mixed, value: mixed}
+     * @return array{valid: bool, value: mixed}
      */
-    public function getNext(): array
+    private function lookAhead(): array
     {
-        if (!$this->next) {
-            $this->seq->next();
-            if ($this->seq->valid()) {
-                $this->next = ['valid' => $this->seq->valid(), 'key' => $this->seq->key(), 'value' => $this->seq->current()];
-            } else {
-                // EmptyIterator
-                $this->next = ['valid' => false, 'key' => null, 'value' => null];
-            }
+        if (null === $this->iterator) {
+            $this->keys ??= array_keys($this->array);
+
+            return isset($this->keys[$i = $this->index0 + 1]) ? ['valid' => true, 'value' => $this->array[$this->keys[$i]]] : ['valid' => false, 'value' => null];
+        }
+
+        if (null === $this->next) {
+            $this->iterator->next();
+            $this->next = $this->iterator->valid() ? ['valid' => true, 'value' => $this->iterator->current()] : ['valid' => false, 'value' => null];
         }
 
         return $this->next;
