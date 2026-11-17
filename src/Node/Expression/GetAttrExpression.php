@@ -16,6 +16,7 @@ use Twig\Compiler;
 use Twig\Extension\SandboxExtension;
 use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\Variable\ContextVariable;
+use Twig\Node\Node;
 use Twig\Runtime\LoopContext;
 use Twig\Template;
 
@@ -226,16 +227,38 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
     }
 
     /**
-     * Returns the LoopContext getter to call for the "loop.<attribute>" expressions that take no arguments.
+     * Returns the LoopContext getter to call for the "loop.<attribute>" and "loop.parent.loop.<attribute>" expressions that take no arguments.
      */
     private function getLoopContextMethod(): ?string
     {
+        if ($this->definedTest || !self::isLoopVariable($this->getNode('node')) || null === $name = $this->getPlainAttributeName()) {
+            return null;
+        }
+
+        return LoopContext::GETTERS[$name] ?? null;
+    }
+
+    private static function isLoopVariable(Node $node): bool
+    {
+        if ($node instanceof ContextVariable) {
+            return 'loop' === $node->getAttribute('name');
+        }
+
+        return $node instanceof self
+            && 'loop' === $node->getPlainAttributeName()
+            && ($parent = $node->getNode('node')) instanceof self
+            && 'parent' === $parent->getPlainAttributeName()
+            && self::isLoopVariable($parent->getNode('node'));
+    }
+
+    /**
+     * Returns the attribute name of a ".<name>" access that is neither null-safe nor takes arguments.
+     */
+    private function getPlainAttributeName(): ?string
+    {
         if (
-            $this->definedTest
-            || $this->getAttribute('null_safe')
+            $this->getAttribute('null_safe')
             || Template::ANY_CALL !== $this->getAttribute('type')
-            || !($node = $this->getNode('node')) instanceof ContextVariable
-            || 'loop' !== $node->getAttribute('name')
             || !($attribute = $this->getNode('attribute')) instanceof ConstantExpression
             || !\is_string($name = $attribute->getAttribute('value'))
             || ($this->hasNode('arguments') && \count($this->getNode('arguments')))
@@ -243,7 +266,7 @@ class GetAttrExpression extends AbstractExpression implements SupportDefinedTest
             return null;
         }
 
-        return LoopContext::GETTERS[$name] ?? null;
+        return $name;
     }
 
     private function changeIgnoreStrictCheck(self $node): void
