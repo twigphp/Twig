@@ -14,6 +14,7 @@ namespace Twig\NodeVisitor;
 use Twig\Environment;
 use Twig\Node\BlockReferenceNode;
 use Twig\Node\Expression\BlockReferenceExpression;
+use Twig\Node\Expression\CallExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
@@ -24,6 +25,7 @@ use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
+use Twig\Runtime\LoopContext;
 
 /**
  * Tries to optimize the AST.
@@ -55,6 +57,12 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
      * @var list<array{Node, ForNode, string, string}>
      */
     private array $suspendedLoops = [];
+    /**
+     * The loop variables only read for an attribute that cannot recurse into the loop.
+     *
+     * @var \WeakMap<ContextVariable, true>
+     */
+    private \WeakMap $loopAttributeReads;
 
     /**
      * @param int $optimizers The optimizer mode
@@ -65,6 +73,8 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         if ($optimizers > self::OPTIMIZE_FOR) {
             throw new \InvalidArgumentException(\sprintf('Optimizer mode "%s" is not valid.', $optimizers));
         }
+
+        $this->loopAttributeReads = new \WeakMap();
     }
 
     public function enterNode(Node $node, Environment $env): Node
@@ -126,6 +136,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ForNode) {
             // disable the loop variable by default
             $node->setAttribute('with_loop', false);
+            $node->setAttribute('with_recursion', false);
             array_unshift($this->loops, $node);
             array_unshift($this->loopsTargets, $node->getNode('value_target')->getAttribute('name'));
             array_unshift($this->loopsTargets, $node->getNode('key_target')->getAttribute('name'));
@@ -149,6 +160,13 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ContextVariable && 'loop' === $node->getAttribute('name')) {
             $node->setAttribute('always_defined', true);
             $this->addLoopToCurrent();
+
+            // anything else than reading an attribute could end up calling loop()
+            if (isset($this->loopAttributeReads[$node])) {
+                unset($this->loopAttributeReads[$node]);
+            } else {
+                $this->loops[0]->setAttribute('with_recursion', true);
+            }
         }
 
         // optimize access to loop targets
@@ -159,6 +177,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         // block reference
         elseif ($node instanceof BlockReferenceNode || $node instanceof BlockReferenceExpression) {
             $this->addLoopToCurrent();
+            $this->addRecursionToAll();
         }
 
         // include without the only attribute
@@ -189,6 +208,24 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         ) {
             $this->addLoopToAll();
         }
+
+        // reading an attribute of the loop variable cannot call loop()
+        if ($node instanceof GetAttrExpression
+            && $node->getNode('node') instanceof ContextVariable
+            && 'loop' === $node->getNode('node')->getAttribute('name')
+            && $node->getNode('attribute') instanceof ConstantExpression
+            && self::isRecursionFreeLoopAttribute($node->getNode('attribute')->getAttribute('value'))
+        ) {
+            $this->loopAttributeReads[$node->getNode('node')] = true;
+        }
+
+        // code that receives the whole context could call loop()
+        if ($node instanceof ParentExpression
+            || ($node instanceof ContextVariable && '_context' === $node->getAttribute('name'))
+            || ($node instanceof CallExpression && $node->hasAttribute('twig_callable') && $node->getAttribute('twig_callable')->needsContext())
+        ) {
+            $this->addRecursionToAll();
+        }
     }
 
     /**
@@ -218,6 +255,23 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     {
         foreach ($this->loops as $loop) {
             $loop->setAttribute('with_loop', true);
+            $loop->setAttribute('with_recursion', true);
+        }
+    }
+
+    private static function isRecursionFreeLoopAttribute(mixed $name): bool
+    {
+        if (!\is_string($name) || 'parent' === $name) {
+            return false;
+        }
+
+        return isset(LoopContext::GETTERS[$name]) || 'changed' === $name || 'cycle' === $name;
+    }
+
+    private function addRecursionToAll(): void
+    {
+        foreach ($this->loops as $loop) {
+            $loop->setAttribute('with_recursion', true);
         }
     }
 
