@@ -14,6 +14,7 @@ namespace Twig\Node;
 
 use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ArrowFunctionExpression;
 use Twig\Node\Expression\Variable\AssignContextVariable;
 
 /**
@@ -89,22 +90,7 @@ class ForNode extends Node
 
         $this->compileBody($compiler, $iteratedVar);
 
-        $unset = 'unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']'.($withLoop ? ', $context[\'loop\']' : '').');'."\n";
-        $restore = "\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n";
-
-        if ($withLoop) {
-            $compiler->write($unset)->write($restore);
-        } else {
-            // the context is left untouched when the sequence is empty and the else clause sets nothing
-            $compiler
-                ->write("if (\$context !== \$$parentVar) {\n")
-                ->indent()
-                ->write($unset)
-                ->write($restore)
-                ->outdent()
-                ->write("}\n")
-            ;
-        }
+        $this->compileContextRestore($compiler, $parentVar, $withLoop);
 
         $compiler->write("unset(\$$seqVar, \$$parentVar".(null !== $iteratedVar ? ", \$$iteratedVar" : '').");\n");
     }
@@ -140,17 +126,60 @@ class ForNode extends Node
 
         $this->compileBody($compiler, $this->hasNode('else') ? 'iterated' : null);
 
-        // remove some "private" loop variables (needed for nested loops)
-        $compiler->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\'], $context[\'loop\']);'."\n");
-
-        // keep the values set in the inner context for variables defined in the outer context
-        $compiler->write("\$context = array_intersect_key(\$context, \$parent) + \$parent;\n");
+        $this->compileContextRestore($compiler, 'parent', true);
 
         $compiler
             ->write("return; yield;\n")
             ->outdent()
             ->write("})(\$$iteratorVar, \$context, \$blocks, \$$functionVar, 0);\n")
         ;
+    }
+
+    private function compileContextRestore(Compiler $compiler, string $parentVar, bool $withLoop): void
+    {
+        if (!self::setsVariables($this)) {
+            $compiler->write("\$context = \$$parentVar;\n");
+
+            return;
+        }
+
+        // keep the values set in the loop for the variables defined before it
+        $compiler
+            ->write('unset($context[\''.$this->getNode('key_target')->getAttribute('name').'\'], $context[\''.$this->getNode('value_target')->getAttribute('name').'\']'.($withLoop ? ', $context[\'loop\']' : '').');'."\n")
+            ->write("\$context = array_intersect_key(\$context, \$$parentVar) + \$$parentVar;\n")
+        ;
+    }
+
+    /**
+     * Returns whether the node can set variables other than the ones defined by loops.
+     */
+    private static function setsVariables(Node $node): bool
+    {
+        if ($node instanceof AssignContextVariable) {
+            return true;
+        }
+
+        // an arrow function sets its arguments in its own copy of the context
+        if ($node instanceof ArrowFunctionExpression) {
+            return false;
+        }
+
+        // the compiled code of a tag that Twig does not know could change the context
+        if (!$node instanceof AbstractExpression && (!str_starts_with($node::class, 'Twig\\') || str_contains($node::class, '@anonymous'))) {
+            return true;
+        }
+
+        foreach ($node as $name => $child) {
+            if ($node instanceof self && \in_array($name, ['key_target', 'value_target'], true)) {
+                continue;
+            }
+
+            if (self::setsVariables($child)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function compileBody(Compiler $compiler, ?string $iteratedVar): void
