@@ -178,7 +178,7 @@ EOF
         $else = new ForElseNode(new PrintNode(new ContextVariable('foo', 6), 6), 5);
         $node = new ForNode($keyTarget, $valueTarget, $seq, null, $body, $else, 1);
         $node->setAttribute('with_loop', true);
-        $node->setAttribute('recursive', false);
+        $node->setAttribute('with_recursion', false);
 
         $tests[] = [$node, <<<EOF
 // line 1

@@ -34,12 +34,12 @@ class ForNode extends Node
             $nodes['else'] = $else;
         }
 
-        parent::__construct($nodes, ['with_loop' => true, 'recursive' => true], $lineno);
+        parent::__construct($nodes, ['with_loop' => true, 'with_recursion' => true], $lineno);
     }
 
     public function compile(Compiler $compiler): void
     {
-        if ($this->getAttribute('with_loop') && $this->getAttribute('recursive')) {
+        if ($this->getAttribute('with_loop') && $this->getAttribute('with_recursion')) {
             $this->compileWithLoop($compiler);
         } else {
             $this->compileInline($compiler, $this->getAttribute('with_loop'));

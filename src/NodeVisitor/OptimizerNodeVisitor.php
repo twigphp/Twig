@@ -136,7 +136,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
         if ($node instanceof ForNode) {
             // disable the loop variable by default
             $node->setAttribute('with_loop', false);
-            $node->setAttribute('recursive', false);
+            $node->setAttribute('with_recursion', false);
             array_unshift($this->loops, $node);
             array_unshift($this->loopsTargets, $node->getNode('value_target')->getAttribute('name'));
             array_unshift($this->loopsTargets, $node->getNode('key_target')->getAttribute('name'));
@@ -165,7 +165,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             if (isset($this->loopAttributeReads[$node])) {
                 unset($this->loopAttributeReads[$node]);
             } else {
-                $this->loops[0]->setAttribute('recursive', true);
+                $this->loops[0]->setAttribute('with_recursion', true);
             }
         }
 
@@ -255,7 +255,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     {
         foreach ($this->loops as $loop) {
             $loop->setAttribute('with_loop', true);
-            $loop->setAttribute('recursive', true);
+            $loop->setAttribute('with_recursion', true);
         }
     }
 
@@ -271,7 +271,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     private function addRecursionToAll(): void
     {
         foreach ($this->loops as $loop) {
-            $loop->setAttribute('recursive', true);
+            $loop->setAttribute('with_recursion', true);
         }
     }
 

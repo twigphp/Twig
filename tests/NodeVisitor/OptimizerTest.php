@@ -110,8 +110,8 @@ class OptimizerTest extends TestCase
         $loops = [];
         $this->collectForLoops($stream, $loops);
 
-        foreach ($expected as $target => $recursive) {
-            $this->assertSame($recursive, $loops[$target]->getAttribute('recursive'), \sprintf('loop over %s', $target));
+        foreach ($expected as $target => $withRecursion) {
+            $this->assertSame($withRecursion, $loops[$target]->getAttribute('with_recursion'), \sprintf('loop over %s', $target));
         }
     }
 
