@@ -20,7 +20,9 @@ use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\EscapeFilter;
 use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\NullSafeFilterExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
+use Twig\Node\Expression\Variable\NullSafeFilterOperandVariable;
 use Twig\Node\ImportNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
@@ -42,6 +44,8 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
     private $defaultStrategy = false;
     private $safeVars = [];
     private bool $usesEscaper = false;
+    /** @var list<NullSafeFilterExpression> */
+    private array $nullSafeFilters = [];
 
     public function __construct()
     {
@@ -60,6 +64,17 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             $this->blocks = [];
             $this->statusStack = [];
             $this->usesEscaper = false;
+            $this->nullSafeFilters = [];
+        } elseif ($node instanceof NullSafeFilterExpression) {
+            $this->nullSafeFilters[] = $node;
+        } elseif ($node instanceof NullSafeFilterOperandVariable) {
+            // the operand has already been visited at this point
+            for ($i = \count($this->nullSafeFilters) - 1; $i >= 0; --$i) {
+                if ($this->nullSafeFilters[$i]->isOperandVariable($node)) {
+                    $this->safeAnalysis->setSafe($node, $this->getSafe($this->nullSafeFilters[$i]->getNode('node'), $env));
+                    break;
+                }
+            }
         } elseif ($node instanceof AutoEscapeNode) {
             $this->statusStack[] = $node->getAttribute('value');
         } elseif ($node instanceof BlockNode) {
@@ -78,6 +93,8 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             $this->defaultStrategy = false;
             $this->safeVars = [];
             $this->blocks = [];
+        } elseif ($node instanceof NullSafeFilterExpression) {
+            array_pop($this->nullSafeFilters);
         } elseif ($node instanceof FilterExpression) {
             if ($node instanceof EscapeFilter) {
                 $this->useTemplateEscaper($node);
@@ -152,6 +169,13 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
 
     private function isSafeFor(string $type, AbstractExpression $expression, Environment $env): bool
     {
+        $safe = $this->getSafe($expression, $env);
+
+        return \in_array($type, $safe, true) || \in_array('all', $safe, true);
+    }
+
+    private function getSafe(AbstractExpression $expression, Environment $env): array
+    {
         $safe = $this->safeAnalysis->getSafe($expression);
 
         if (!$safe) {
@@ -165,7 +189,7 @@ final class EscaperNodeVisitor implements NodeVisitorInterface
             $safe = $this->safeAnalysis->getSafe($expression);
         }
 
-        return \in_array($type, $safe, true) || \in_array('all', $safe, true);
+        return $safe;
     }
 
     /**

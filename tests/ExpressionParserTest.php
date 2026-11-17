@@ -527,6 +527,105 @@ class ExpressionParserTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider getTestsForNullSafeFilterOperator
+     */
+    #[DataProvider('getTestsForNullSafeFilterOperator')]
+    public function testNullSafeFilterOperator(string $template, array $data, string $expected): void
+    {
+        $env = new Environment(new ArrayLoader(['template' => $template]), ['strict_variables' => true]);
+
+        $this->assertSame($expected, $env->render('template', $data));
+    }
+
+    public static function getTestsForNullSafeFilterOperator(): iterable
+    {
+        yield ['{{ foo?|upper }}', ['foo' => 'bar'], 'BAR'];
+        yield ['{{ foo?|upper }}', ['foo' => null], ''];
+        yield ['{{ foo?|upper }}', ['foo' => 'bar'], 'BAR'];
+        yield ['{{ foo?|upper is null ? "null" : "not null" }}', ['foo' => null], 'null'];
+        yield ['{{ foo?|date("Y") }}', ['foo' => new \DateTimeImmutable('2020-01-01')], '2020'];
+        yield ['{{ foo?|date("Y") }}', ['foo' => null], ''];
+
+        // only null skips the filter
+        yield ['{{ foo?|length }}', ['foo' => ''], '0'];
+        yield ['{{ foo?|json_encode }}', ['foo' => false], 'false'];
+        yield ['{{ foo?|abs }}', ['foo' => 0], '0'];
+
+        // chaining: only the filter after ?| is skipped
+        yield ['{{ foo?|date("Y")|default("none") }}', ['foo' => null], 'none'];
+        yield ['{{ foo?|date("Y")|default("none") }}', ['foo' => new \DateTimeImmutable('2020-01-01')], '2020'];
+        yield ['{{ foo?|upper?|lower }}', ['foo' => 'BaR'], 'bar'];
+        yield ['{{ foo?|upper?|lower }}', ['foo' => null], ''];
+        yield ['{{ foo|first?|upper }}', ['foo' => [null]], ''];
+        yield ['{{ foo|first?|upper }}', ['foo' => ['bar']], 'BAR'];
+
+        // combined with other operators
+        yield ['{{ foo?.bar?|upper }}', ['foo' => null], ''];
+        yield ['{{ foo?.bar?|upper }}', ['foo' => (object) ['bar' => 'baz']], 'BAZ'];
+        yield ['{{ (foo?|upper) ?: "none" }}', ['foo' => null], 'none'];
+        yield ['{{ (foo?|upper) ?: "none" }}', ['foo' => 'bar'], 'BAR'];
+        yield ['{{ bar|default(foo?|upper) }}', ['foo' => 'baz'], 'BAZ'];
+        yield ['{{ (foo?|upper) ~ "!" }}', ['foo' => null], '!'];
+
+        // nested null-safe filters
+        yield ['{{ foo?|join(bar?|first) }}', ['foo' => ['a', 'b'], 'bar' => ['-']], 'a-b'];
+        yield ['{{ foo?|join(bar?|first|default(",")) }}', ['foo' => ['a', 'b'], 'bar' => null], 'a,b'];
+        yield ['{{ foo?|join(bar?|first) }}', ['foo' => null, 'bar' => ['-']], ''];
+        yield ['{{ foo?|map(v => v?|upper)|join(",") }}', ['foo' => ['a', null, 'b']], 'A,,B'];
+
+        // apply tag is unaffected
+        yield ['{% apply upper %}foo{% endapply %}', [], 'FOO'];
+    }
+
+    public function testNullSafeFilterOperatorEvaluatesOperandOnce(): void
+    {
+        $env = new Environment(new ArrayLoader(['template' => '{{ foo.next()?|upper }}']));
+        $counter = new class {
+            public int $count = 0;
+
+            public function next(): string
+            {
+                ++$this->count;
+
+                return 'bar';
+            }
+        };
+
+        $this->assertSame('BAR', $env->render('template', ['foo' => $counter]));
+        $this->assertSame(1, $counter->count);
+    }
+
+    public function testNullSafeFilterOperatorWithFilterNodeCloningItsInput(): void
+    {
+        $env = new Environment(new ArrayLoader(['template' => '{{ foo?|dup }}|{{ (foo?|dup) ?: "none" }}']));
+        $env->addFilter(new TwigFilter('dup', null, ['node_class' => DuplicateFilterExpression::class]));
+
+        $this->assertSame('abab|abab', $env->render('template', ['foo' => 'ab']));
+        $this->assertSame('|none', $env->render('template', ['foo' => null]));
+    }
+
+    public function testNullSafeFilterOperatorWithFilterNodeNotUsingItsInput(): void
+    {
+        $env = new Environment(new ArrayLoader(['template' => "\n{{ foo?|ignore }}"]));
+        $env->addFilter(new TwigFilter('ignore', null, ['node_class' => InputIgnoringFilterExpression::class]));
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage(\sprintf('The "ignore" filter cannot be used with the null-safe filter operator "?|" as its "%s" node does not use the filter input in "template" at line 2.', InputIgnoringFilterExpression::class));
+
+        $env->render('template', ['foo' => 'ab']);
+    }
+
+    public function testNullSafeFilterOperatorWithUndefinedVariable(): void
+    {
+        $env = new Environment(new ArrayLoader(['template' => '{{ foo?|upper }}']), ['strict_variables' => true]);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Variable "foo" does not exist');
+
+        $env->render('template');
+    }
+
     public function testMacroDefinitionDoesNotSupportNonNameVariableName(): void
     {
         $env = new Environment(new ArrayLoader(), ['cache' => false, 'autoescape' => false]);
@@ -1024,5 +1123,41 @@ class ReadyTestExpression extends TestExpression
     public function __construct(Node $node, TwigTest|string $test, ?Node $arguments, int $lineno)
     {
         parent::__construct($node, $test, $arguments, $lineno);
+    }
+}
+
+class DuplicateFilterExpression extends FilterExpression
+{
+    #[FirstClassTwigCallableReady]
+    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
+    {
+        parent::__construct($node, $filter, $arguments, $lineno);
+
+        $this->setNode('copy', clone $node);
+    }
+
+    public function compile(Compiler $compiler): void
+    {
+        $compiler
+            ->raw('(')
+            ->subcompile($this->getNode('node'))
+            ->raw(' . ')
+            ->subcompile($this->getNode('copy'))
+            ->raw(')')
+        ;
+    }
+}
+
+class InputIgnoringFilterExpression extends FilterExpression
+{
+    #[FirstClassTwigCallableReady]
+    public function __construct(Node $node, TwigFilter|ConstantExpression $filter, Node $arguments, int $lineno)
+    {
+        parent::__construct(new ConstantExpression('ignored', $lineno), $filter, $arguments, $lineno);
+    }
+
+    public function compile(Compiler $compiler): void
+    {
+        $compiler->subcompile($this->getNode('node'));
     }
 }
