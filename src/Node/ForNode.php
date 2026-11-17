@@ -159,8 +159,14 @@ class ForNode extends Node
         ;
 
         if (null !== $iteratedVar) {
-            $this->getNode('else')->setAttribute('iterated_var', $iteratedVar);
-            $compiler->subcompile($this->getNode('else'));
+            $compiler
+                ->addDebugInfo($this->getNode('else'))
+                ->write("if (!\$$iteratedVar) {\n")
+                ->indent()
+                ->subcompile($this->getNode('else'))
+                ->outdent()
+                ->write("}\n")
+            ;
         }
     }
 }
