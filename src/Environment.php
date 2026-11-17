@@ -615,7 +615,7 @@ class Environment
     {
         $extension = $this->extensionSet->getExtension($class);
 
-        if ($extension instanceof AttributeExtension && is_a($extension->getClass(), ExtensionInterface::class, true)) {
+        if (AttributeExtension::class === $extension::class && is_a($extension->getClass(), ExtensionInterface::class, true)) {
             return $this->getRuntime($extension->getClass());
         }
 

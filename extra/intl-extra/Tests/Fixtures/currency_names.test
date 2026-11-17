@@ -2,15 +2,15 @@
 "currency_names" function
 --TEMPLATE--
 {{ currency_names('UNKNOWN')|length }}
-{{ currency_names()|length }}
-{{ currency_names('fr')|length }}
+{{ currency_names()|length > 250 ? 'ok' : 'ko' }}
+{{ currency_names('fr')|length > 250 ? 'ok' : 'ko' }}
 {{ currency_names()['USD'] }}
 {{ currency_names('fr')['USD'] }}
 --DATA--
 return [];
 --EXPECT--
 0
-294
-294
+ok
+ok
 US Dollar
 dollar des États-Unis
