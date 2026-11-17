@@ -134,8 +134,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$_v0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
-    \$macros = \$this->macros;
+yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) use (&\$macros) {
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
     foreach (\$iterator as \$context["k"] => \$context["v"]) {
@@ -159,8 +158,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$_v0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
-    \$macros = \$this->macros;
+yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) use (&\$macros) {
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
     foreach (\$iterator as \$context["k"] => \$context["v"]) {
@@ -185,8 +183,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$_v0 = new \Twig\Runtime\LoopIterator({$valuesGetter});
-yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
-    \$macros = \$this->macros;
+yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) use (&\$macros) {
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
     \$iterated = false;
@@ -216,8 +213,7 @@ EOF
         $tests[] = [$node, <<<EOF
 // line 1
 \$_v0 = new \Twig\Runtime\LoopIterator({$itemsGetter});
-yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) {
-    \$macros = \$this->macros;
+yield from (\$_v1 = function (\$iterator, &\$context, \$blocks, \$recurseFunc, \$depth) use (&\$macros) {
     \$parent = \$context;
     \$context['loop'] = new \Twig\Runtime\LoopContext(\$iterator, \$parent, \$blocks, \$recurseFunc, \$depth);
     foreach (\$iterator as \$context["_key"] => \$context["item"]) {

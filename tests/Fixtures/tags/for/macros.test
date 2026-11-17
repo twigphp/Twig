@@ -1,0 +1,22 @@
+--TEST--
+"for" tag sees the macros imported before the loop and keeps the ones imported in its body, with or without the loop variable
+--TEMPLATE--
+{% block content %}
+{% import _self as m %}
+{% for i in [1, 2] %}{{ m.hi(i) }}{% endfor %}
+{% for i in [1, 2] %}{{ loop.index }}{{ m.hi(i) }}{% endfor %}
+{% for item in tree %}{{ m.hi(item.name) }}{{ loop(item.children ?? []) }}{% endfor %}
+{% endblock %}
+{{ _self.in_macro() }}
+{% for i in [1] %}{% import _self as body %}{% endfor %}
+{{ body.hi('body') }}
+{% for i in [1] %}{{ loop.index }}{% import _self as body_with_loop %}{% endfor %}
+{{ body_with_loop.hi('body with loop') }}
+{% macro hi(name) %}[{{ name }}]{% endmacro %}
+{% macro in_macro() %}{% import _self as m %}{% for i in [1] %}{{ m.hi('macro') }}{% endfor %}{% for i in [1] %}{{ loop.index }}{{ m.hi('macro') }}{% endfor %}{% endmacro %}
+--DATA--
+return ['tree' => [['name' => 'a', 'children' => [['name' => 'b']]]]]
+--EXPECT--
+[1][2]1[1]2[2][a][b][macro]1[macro]
+[body]
+1[body with loop]
