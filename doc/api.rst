@@ -509,9 +509,7 @@ The escaping rules are implemented as follows:
 
 * Objects with a ``__toString`` method are converted to strings and
   escaped. You can mark some classes and/or interfaces as being safe for some
-  strategies via ``EscaperExtension::addSafeClass()``:
-
-  .. code-block:: twig
+  strategies via ``EscaperExtension::addSafeClass()``::
 
         // mark objects of class "HtmlGenerator" as safe for the HTML strategy
         $escaper->addSafeClass('HtmlGenerator', ['html']);
