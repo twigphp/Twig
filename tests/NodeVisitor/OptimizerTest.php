@@ -119,6 +119,8 @@ class OptimizerTest extends TestCase
     {
         yield ['{% for i in foo %}{{ loop.index }}{% endfor %}', ['i' => false]];
         yield ['{% for i in foo %}{{ loop.cycle("odd", "even") }}{{ loop.changed(i) }}{{ loop.last ? loop.length }}{% endfor %}', ['i' => false]];
+        yield ['{% for i in foo %}{{ loop.depth0 }}{{ loop.revindex0 }}{{ loop.previous }}{{ loop.next }}{% endfor %}', ['i' => false]];
+        yield ['{% for i in foo %}{{ loop.parent.foo }}{% endfor %}', ['i' => true]];
         yield ['{% for i in foo %}{{ loop(i) }}{% endfor %}', ['i' => true]];
         yield ['{% for i in foo %}{{ loop.__invoke(i) }}{% endfor %}', ['i' => true]];
         yield ['{% for i in foo %}{% set l = loop %}{% endfor %}', ['i' => true]];

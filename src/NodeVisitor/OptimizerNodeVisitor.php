@@ -25,6 +25,7 @@ use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
+use Twig\Runtime\LoopContext;
 
 /**
  * Tries to optimize the AST.
@@ -43,8 +44,6 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
     public const OPTIMIZE_ALL = -1;
     public const OPTIMIZE_NONE = 0;
     public const OPTIMIZE_FOR = 2;
-
-    private const LOOP_ATTRIBUTES = ['changed', 'cycle', 'depth', 'depth0', 'first', 'index', 'index0', 'last', 'length', 'next', 'previous', 'revindex', 'revindex0'];
 
     /**
      * @var ForNode[]
@@ -215,7 +214,7 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             && $node->getNode('node') instanceof ContextVariable
             && 'loop' === $node->getNode('node')->getAttribute('name')
             && $node->getNode('attribute') instanceof ConstantExpression
-            && \in_array($node->getNode('attribute')->getAttribute('value'), self::LOOP_ATTRIBUTES, true)
+            && self::isRecursionFreeLoopAttribute($node->getNode('attribute')->getAttribute('value'))
         ) {
             $this->loopAttributeReads[$node->getNode('node')] = true;
         }
@@ -258,6 +257,15 @@ final class OptimizerNodeVisitor implements NodeVisitorInterface
             $loop->setAttribute('with_loop', true);
             $loop->setAttribute('recursive', true);
         }
+    }
+
+    private static function isRecursionFreeLoopAttribute(mixed $name): bool
+    {
+        if (!\is_string($name) || 'parent' === $name) {
+            return false;
+        }
+
+        return isset(LoopContext::GETTERS[$name]) || 'changed' === $name || 'cycle' === $name;
     }
 
     private function addRecursionToAll(): void
