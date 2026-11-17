@@ -71,6 +71,7 @@ class Environment
     private $optionsHash;
     /** @var bool */
     private $useYield;
+    private int $optimizations;
     private $defaultRuntimeLoader;
     private array $hotCache = [];
     /**
@@ -129,6 +130,7 @@ class Environment
         ], $options);
 
         $this->useYield = (bool) $options['use_yield'];
+        $this->optimizations = (int) $options['optimizations'];
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
@@ -146,7 +148,7 @@ class Environment
         if (\PHP_VERSION_ID >= 80000) {
             $this->addExtension(new YieldNotReadyExtension($this->useYield));
         }
-        $this->addExtension(new OptimizerExtension($options['optimizations']));
+        $this->addExtension(new OptimizerExtension($this->optimizations));
     }
 
     public function __clone()
@@ -977,6 +979,7 @@ class Environment
             (int) $this->debug,
             (int) $this->strictVariables,
             $this->useYield ? '1' : '0',
+            $this->optimizations,
         ]);
     }
 }
