@@ -530,9 +530,7 @@ The escaping rules are implemented as follows:
   for ``html``, as the stricter escaping covers the looser contexts.
 
 * A single value can be marked as safe for some strategies when it is created,
-  without registering its class:
-
-  .. code-block:: php
+  without registering its class::
 
         // safe for the HTML strategy only, escaped everywhere else
         $value = new \Twig\Markup($html, 'UTF-8', ['html']);
