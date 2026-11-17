@@ -969,6 +969,16 @@ EOF
         $this->assertSame('base.html', $template->getSourceContext()->getName());
         $this->assertSame('', $template->getSourceContext()->getPath());
     }
+
+    public function testTemplateClassDependsOnOptimizations(): void
+    {
+        $loader = new ArrayLoader(['index' => '']);
+
+        $this->assertNotSame(
+            (new Environment($loader))->getTemplateClass('index'),
+            (new Environment($loader, ['optimizations' => 0]))->getTemplateClass('index'),
+        );
+    }
 }
 
 class EnvironmentTest_Extension_WithGlobals extends AbstractExtension
