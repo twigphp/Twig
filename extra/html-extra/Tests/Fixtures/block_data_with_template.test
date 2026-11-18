@@ -1,0 +1,31 @@
+--TEST--
+"block_data" function with a template argument
+--TEMPLATE--
+{{ block_data('attrs', 'included.twig')|json_encode|raw }}
+{{ block_data('attrs', included_loaded)|json_encode|raw }}
+{{ block_data(template='included.twig', name='attrs')|json_encode|raw }}
+{{ block_data('delegating', 'included.twig')|json_encode|raw }}
+{{ block_data('used', 'included.twig')|json_encode|raw }}
+{{ block_data('used_delegating', 'included.twig')|json_encode|raw }}
+{{ block_data('attrs')|json_encode|raw }}
+{%- block attrs %}{% do block_export({from: 'main'}) %}{% endblock -%}
+--TEMPLATE(included.twig)--
+{% use 'traits.twig' %}
+{% block attrs %}{% do block_export({from: 'included'}) %}{% endblock %}
+{% block delegating %}{{ block('attrs') }}{% endblock %}
+--TEMPLATE(traits.twig)--
+{% block attrs %}{% do block_export({from: 'traits'}) %}{% endblock %}
+{% block used %}{% do block_export({from: 'traits'}) %}{% endblock %}
+{% block used_delegating %}{{ block('attrs') }}{% endblock %}
+--DATA--
+return [
+    'included_loaded' => $twig->load('included.twig'),
+]
+--EXPECT--
+{"from":"included"}
+{"from":"included"}
+{"from":"included"}
+{"from":"included"}
+{"from":"traits"}
+{"from":"included"}
+{"from":"main"}

@@ -1,0 +1,24 @@
+--TEST--
+"block_data" function with a template argument resolves the blocks against the template and its parents
+--TEMPLATE--
+{{ block_data('block1', 'theme.twig')|json_encode|raw }}
+{{ block_data('block2', 'theme.twig')|json_encode|raw }}
+{{ block_data('block3', 'theme.twig')|json_encode|raw }}
+{{ block_data('block4', 'theme.twig')|json_encode|raw }}
+--TEMPLATE(theme.twig)--
+{% extends 'base.twig' %}
+{% block block2 %}{% do block_export({from: 'theme'}) %}{% endblock %}
+{% block block3 %}{% do block_export({from: 'theme'}) %}{{ parent() }}{% endblock %}
+{% block block4 %}{{ parent() }}{% do block_export({from: 'theme'}) %}{% endblock %}
+--TEMPLATE(base.twig)--
+{% block block1 %}{% do block_export({from: 'base'}) %}{{ block('block2') }}{% endblock %}
+{% block block2 %}{% do block_export({from: 'base'}) %}{% endblock %}
+{% block block3 %}{% do block_export({from: 'base'}) %}{% endblock %}
+{% block block4 %}{% do block_export({from: 'base'}) %}{% endblock %}
+--DATA--
+return []
+--EXPECT--
+{"from":"theme"}
+{"from":"theme"}
+{"from":"base"}
+{"from":"theme"}

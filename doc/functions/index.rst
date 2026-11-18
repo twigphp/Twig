@@ -6,6 +6,8 @@ Functions
 
     attribute
     block
+    block_data
+    block_export
     constant
     cycle
     date
