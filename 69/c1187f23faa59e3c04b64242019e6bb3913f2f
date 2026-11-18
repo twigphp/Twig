@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by stof at 2026-10-09T16:12:40Z
+
+The suggestion in https://github.com/twigphp/Twig/issues/3218#issuecomment-565372774 was to compile the path relative to `__DIR__` for the case where the compiled template is written in a filesystem cache, instead of this logic making the path lazy-loaded and needing a special case in debug mode.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2026-10-09T16:21:15Z
+
+`__DIR__` needs the compiler to know where the code ends up, and it doesn't: `compileSource()` doesn't know about the cache, `ChainCache` writes the same code to all its caches, at different paths, and `NullCache` evals it. That's the drawback you mentioned in #3218. Resolving through the loader works with any cache. The debug special case mirrors the code one: debug mode already embeds the code for the same reason, VarDumper instantiates templates without their constructor.
+
+---------------------------------------------------------------------------
+
+by stof at 2026-10-09T16:49:58Z
+
+but resolving through the loader implies that the loader gives the same result back at the time the error is triggered than at the time the template was loaded. This is not the case when using `Environment::createTemplate` for instance, as this works by temporarily swapping the loader: https://github.com/twigphp/Twig/blob/d79aaf70a5d5eec6900f1516146dc26dbee9287c/src/Environment.php#L459-L479
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2026-10-09T16:56:07Z
+
+`createTemplate()` itself is fine: its sources come from an `ArrayLoader` and have no path, so they're compiled as before and never ask the loader. But you're right that swapping the loader after loading a template would break it. PR updated: templates now keep the loader they were instantiated with (which also removes the reflection check).
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2026-11-17T17:17:44Z
+
+PR rebased and updated.
+
+A loader that fails when asked for the path can't replace the template error anymore. `Source` serializes as before. Its public constructor is unchanged. Compiled templates use an internal factory for the lazy path.
+
+The goal is reproducible builds. On 3.x, warming the cache of the same app in two directories gives the same file names, as `doc/api.rst` describes. But all the files differ, because they embed the absolute path of their source. With this PR, the files are identical.
+
+Filling the path when an error is built would need the loader at the same moment. It would also make `getSourceContext()->getPath()` empty in prod, which is a BC break.
+
+(the fabbot failure is a false positive)
