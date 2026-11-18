@@ -117,6 +117,18 @@ class FilesystemTest extends TestCase
         $this->assertEquals("named path (final)\n", $loader->getSourceContext('@named/index.html')->getCode());
     }
 
+    public function testGetCacheKeyFollowsPathsPrependedAfterItWasComputed(): void
+    {
+        $basePath = __DIR__.'/Fixtures';
+        $loader = new FilesystemLoader([$basePath.'/normal'], $basePath);
+
+        $this->assertSame('normal/index.html', str_replace('\\', '/', $loader->getCacheKey('index.html')));
+
+        $loader->prependPath($basePath.'/normal_final');
+
+        $this->assertSame('normal_final/index.html', str_replace('\\', '/', $loader->getCacheKey('index.html')));
+    }
+
     public static function getBasePaths()
     {
         return [
