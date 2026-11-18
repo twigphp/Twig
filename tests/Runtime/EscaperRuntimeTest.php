@@ -188,6 +188,12 @@ class EscaperRuntimeTest extends TestCase
         }
     }
 
+    public function testHtmlAttributeRelaxedEscapingStillEscapesSafeLookingBytesInOtherCharsets(): void
+    {
+        // In UTF-16BE, the bytes of "ab" are the single character U+6162, which must be escaped
+        $this->assertSame(mb_convert_encoding('&#x6162;', 'UTF-16BE', 'UTF-8'), (new EscaperRuntime('UTF-16BE'))->escape('ab', 'html_attr_relaxed'));
+    }
+
     public function testJavascriptEscapingConvertsSpecialChars(): void
     {
         foreach ($this->jsSpecialChars as $key => $value) {
