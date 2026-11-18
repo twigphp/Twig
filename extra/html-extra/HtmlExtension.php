@@ -103,23 +103,26 @@ final class HtmlExtension extends AbstractExtension
         $classes = [];
         foreach ($args as $i => $arg) {
             if (\is_string($arg) || $arg instanceof Markup) {
-                $classes[] = (string) $arg;
+                $class = (string) $arg;
+                if ('' !== $class) {
+                    $classes[$class] = $class;
+                }
             } elseif (\is_array($arg)) {
                 foreach ($arg as $class => $condition) {
                     if (!\is_string($class)) {
                         throw new RuntimeError(\sprintf('The "html_classes" function argument %d (key %d) should be a string, got "%s".', $i, $class, get_debug_type($class)));
                     }
-                    if (!$condition) {
+                    if (!$condition || '' === $class) {
                         continue;
                     }
-                    $classes[] = $class;
+                    $classes[$class] = $class;
                 }
             } else {
                 throw new RuntimeError(\sprintf('The "html_classes" function argument %d should be either a string or an array, got "%s".', $i, get_debug_type($arg)));
             }
         }
 
-        return implode(' ', array_unique(array_filter($classes, static function ($v) { return '' !== $v; })));
+        return implode(' ', $classes);
     }
 
     /**
