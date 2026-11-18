@@ -125,6 +125,30 @@ to learn more about this topic.
         {# this is equivalent, but less performant #}
         <p data-content={{ content|e('html_attr') }}>
 
+.. _escape_safe_values_in_attributes:
+
+.. caution::
+
+    A value already marked as safe for the ``html`` strategy, like a
+    ``Markup`` instance or the output of a filter declared with ``is_safe``,
+    is an HTML fragment: automatic escaping outputs it as-is, even inside a
+    quoted HTML attribute value, where it can close the attribute and add new
+    ones. If such a value may end up in an attribute value, escape it
+    explicitly with the ``escape`` filter:
+
+    .. code-block:: html+twig
+
+        {% set link %}<a title="{{ title }}">{{ name }}</a>{% endset %}
+
+        {# unsafe: the fragment is output as-is #}
+        <img alt="{{ link }}">
+
+        {# safe: the fragment is escaped #}
+        <img alt="{{ link|e('html') }}">
+
+    For the same reason, never use the ``raw`` filter on an HTML attribute
+    value.
+
 Custom Escapers
 ---------------
 
