@@ -244,6 +244,10 @@ class FilesystemLoader implements LoaderInterface
 
     private function normalizeName(string $name): string
     {
+        if (!str_contains($name, '\\') && !str_contains($name, '//')) {
+            return $name;
+        }
+
         return preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name));
     }
 
