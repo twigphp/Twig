@@ -174,6 +174,25 @@ class EscaperRuntimeTest extends TestCase
         }
     }
 
+    /**
+     * @dataProvider provideLongStrings
+     */
+    #[DataProvider('provideLongStrings')]
+    public function testHtmlEscapingLongStringsLikeHtmlspecialchars(string $string): void
+    {
+        $this->assertSame(htmlspecialchars($string, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8'), (new EscaperRuntime())->escape($string, 'html'));
+    }
+
+    public static function provideLongStrings(): iterable
+    {
+        $padding = str_repeat('padding ', 5);
+
+        yield 'nothing to escape' => [$padding];
+        yield 'special chars' => [$padding.'<a href="#">Tom & Jerry\'s</a>'];
+        yield 'multibyte chars' => [$padding.'éàü 😀'];
+        yield 'invalid UTF-8' => [$padding."\xC3\x28 \xFF \xED\xA0\x80 &"];
+    }
+
     public function testHtmlAttributeEscapingConvertsSpecialChars(): void
     {
         foreach ($this->htmlAttrSpecialChars as $key => $value) {
