@@ -14,6 +14,7 @@ namespace Twig\Node\Expression;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Extension\ExtensionInterface;
+use Twig\Extension\SandboxExtension;
 use Twig\Node\Node;
 use Twig\TwigCallableInterface;
 use Twig\TwigFilter;
@@ -104,7 +105,12 @@ abstract class CallExpression extends AbstractExpression
             if (!$first) {
                 $compiler->raw(', ');
             }
-            $compiler->raw('$this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->getChecker()->isSandboxed($this->source)');
+            // the registered extensions are part of the cache key of the compiled template
+            if ($compiler->getEnvironment()->hasExtension(SandboxExtension::class)) {
+                $compiler->raw('$this->env->getExtension(\Twig\Extension\SandboxExtension::class)->getChecker()->isSandboxed($this->source)');
+            } else {
+                $compiler->raw('false');
+            }
             $first = false;
         }
 

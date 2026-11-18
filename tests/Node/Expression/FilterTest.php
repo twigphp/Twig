@@ -23,11 +23,13 @@ namespace Twig\Tests\Node\Expression;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\SandboxExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Nodes;
+use Twig\Sandbox\SecurityPolicy;
 use Twig\Test\NodeTestCase;
 use Twig\TwigFilter;
 
@@ -87,13 +89,19 @@ class FilterTest extends NodeTestCase
         $node = self::createFilter($environment, new ConstantExpression('foo', 1), 'anonymous');
         $tests[] = [$node, '$this->env->getFilter(\'anonymous\')->getCallable()("foo")'];
 
-        // needs sandbox
+        // needs sandbox, without the sandbox extension registered
         $node = self::createFilter($environment, $string, 'bar_sandbox');
-        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_sandbox($this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->getChecker()->isSandboxed($this->source), "abc")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_sandbox(false, "abc")', $environment];
+
+        // needs sandbox, with the sandbox extension registered
+        $sandboxedEnvironment = self::createEnvironment();
+        $sandboxedEnvironment->addExtension(new SandboxExtension(new SecurityPolicy()));
+        $node = self::createFilter($sandboxedEnvironment, $string, 'bar_sandbox');
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_sandbox($this->env->getExtension(\Twig\Extension\SandboxExtension::class)->getChecker()->isSandboxed($this->source), "abc")', $sandboxedEnvironment];
 
         // needs charset, environment, context, and sandbox
         $node = self::createFilter($environment, $string, 'bar_all');
-        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_all($this->env->getCharset(), $this->env, $context, $this->env->hasExtension(\Twig\Extension\SandboxExtension::class) && $this->env->getExtension(\Twig\Extension\SandboxExtension::class)->getChecker()->isSandboxed($this->source), "abc")', $environment];
+        $tests[] = [$node, 'Twig\Tests\Node\Expression\twig_tests_filter_all($this->env->getCharset(), $this->env, $context, false, "abc")', $environment];
 
         // needs environment
         $node = self::createFilter($environment, $string, 'bar');
