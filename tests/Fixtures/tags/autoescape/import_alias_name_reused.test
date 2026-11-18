@@ -1,0 +1,27 @@
+--TEST--
+"autoescape" tag escapes a variable that has the name of a macro import alias of another scope
+--TEMPLATE--
+{{ include('block.html.twig') }}
+{{ include('macro.html.twig') }}
+{{ include('late.html.twig') }}
+--TEMPLATE(block.html.twig)--
+{% extends 'base.html.twig' %}
+{% block header %}{% import _self as item %}{{ item.hello() }}{% endblock %}
+{% block content %}{% for item in items %}{{ item.body }}{{ item['body'] }}{% endfor %}{% endblock %}
+{% macro hello() %}<b>hello</b>{% endmacro %}
+--TEMPLATE(macro.html.twig)--
+{%- macro hello() %}{% import _self as item %}{{ item.bold() }}{% endmacro %}
+{% macro bold() %}<b>hello</b>{% endmacro %}
+{% macro show(item) %}{{ item.body }}{% endmacro %}
+{{ _self.hello() }}|{{ _self.show(items[0]) -}}
+--TEMPLATE(late.html.twig)--
+{%- block content %}{% for item in items %}{{ item.body ?? '' }}{% endfor %}{% endblock %}
+{% import _self as item %}
+--TEMPLATE(base.html.twig)--
+{%- block header %}{% endblock %}|{% block content %}{% endblock %}
+--DATA--
+return ['items' => [['body' => '<br />']]]
+--EXPECT--
+<b>hello</b>|&lt;br /&gt;&lt;br /&gt;
+<b>hello</b>|&lt;br /&gt;
+&lt;br /&gt;
