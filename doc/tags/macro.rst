@@ -240,3 +240,8 @@ it; a deprecation notice is triggered whenever the macro is called:
         {% deprecated 'The "input" macro is deprecated, use "field" instead.' %}
         <input name="{{ name }}" value="{{ value|e }}"/>
     {% endmacro %}
+
+.. tip::
+
+    Macros and their arguments can be described with :doc:`documentation
+    comments <../documentation_comments>`.

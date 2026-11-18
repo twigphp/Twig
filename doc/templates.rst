@@ -367,6 +367,12 @@ code does not work as ``}}`` would be part of the comment:
 
     {{ "Hello World"|upper # this is an inline comment }}
 
+.. tip::
+
+    Comments starting with ``{##`` or ``##`` are :doc:`documentation comments
+    <documentation_comments>`. They describe the construct or variable that
+    follows them and can be read by tools such as IDEs and static analyzers.
+
 Including other Templates
 -------------------------
 
