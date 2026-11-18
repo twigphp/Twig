@@ -16,7 +16,14 @@ of users provided in a variable called ``users``:
 .. note::
 
     A sequence or a mapping can be either an array or an object implementing
-    the ``Traversable`` interface.
+    the ``Traversable`` interface. Any other object is treated as an empty
+    sequence, which can be surprising with ``json_decode()``: it returns
+    ``stdClass`` objects by default, so pass ``true`` as its second argument
+    to get arrays instead:
+
+    .. code-block:: php
+
+        $twig->render('index.html.twig', ['data' => json_decode($json, true)]);
 
 If you do need to iterate over a sequence of numbers, you can use the ``..``
 operator:
