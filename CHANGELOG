@@ -1,5 +1,6 @@
 # 3.31.0 (2026-XX-XX)
 
+ * Fix compiled templates depending on the directory of their source when debug is disabled
  * Speed up the `with` tag by adding the globals to the new context in place
  * Fix `html_cva()` ignoring a boolean default variant
  * Fix a PHP 8.5 deprecation in `html_cva()` when a recipe value is `null`
