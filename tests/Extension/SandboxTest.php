@@ -1879,6 +1879,39 @@ EOF
         }
     }
 
+    /**
+     * @dataProvider getSpreadsReachingUnsafeParams
+     */
+    #[DataProvider('getSpreadsReachingUnsafeParams')]
+    public function testSpreadReachingUnsafeParamStillWraps(string $template, callable $func): void
+    {
+        // A spread can fill any parameter from its position on, so a safe type on
+        // the first of them must not skip the __toString check of the others.
+        $twig = $this->getEnvironment(true, [], ['index' => $template]);
+        $twig->addFunction(new TwigFunction('mixed_fn', $func));
+        $policy = $twig->getExtension(SandboxExtension::class)->getSecurityPolicy();
+        $policy->setAllowedFunctions(['mixed_fn']);
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject(), 'args' => [1, new FooObject()]]);
+            $this->fail('Sandbox must check __toString on spread elements that can reach an unsafe parameter.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    public static function getSpreadsReachingUnsafeParams(): iterable
+    {
+        yield 'safe first param, string variadic' => ['{{ mixed_fn(...[1, obj]) }}', static fn (int $a, string ...$rest) => $rest[0]];
+        yield 'safe first param, untyped variadic' => ['{{ mixed_fn(...[1, obj]) }}', static fn (int $a, ...$rest) => (string) $rest[0]];
+        yield 'safe first param, optional untyped param' => ['{{ mixed_fn(...[1, obj]) }}', static fn (int $a, $b = null) => (string) $b];
+        yield 'spread of a variable' => ['{{ mixed_fn(...args) }}', static fn (int $a, string ...$rest) => $rest[0]];
+        yield 'spread of a mapping' => ['{{ mixed_fn(...{b: obj}) }}', static fn (int $a = 0, string $b = '') => $b];
+        yield 'after a positional argument' => ['{{ mixed_fn(1, ...[2, obj]) }}', static fn (int $a, int $b, string ...$rest) => $rest[0]];
+        yield 'safe variadic after an unsafe param' => ['{{ mixed_fn(...[obj, 1]) }}', static fn ($a, int ...$rest) => (string) $a];
+    }
+
     public function testNormalizedNamedArgumentDoesNotFallThroughToSafeVariadic(): void
     {
         // The compiler normalizes named arguments (`foo_bar` maps to
