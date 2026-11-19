@@ -1,5 +1,6 @@
 # 3.31.0 (2026-XX-XX)
 
+ * Fix sandbox `__toString()` policy bypasses through test inputs
  * Fix compiled templates depending on the directory of their source when debug is disabled
  * Speed up the `with` tag by adding the globals to the new context in place
  * Fix a variable not being escaped when it has the name of a macro import alias of another block or macro
