@@ -2036,6 +2036,35 @@ EOF
     }
 
     /**
+     * @dataProvider getStringCoercingTrueTestUsages
+     */
+    #[DataProvider('getStringCoercingTrueTestUsages')]
+    public function testSandboxBlocksToStringOnTrueTestResult(string $template, array $filters = []): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => $template], filters: $filters);
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
+        $twig->load('index')->render(['obj' => new FooObject()]);
+    }
+
+    public static function getStringCoercingTrueTestUsages(): iterable
+    {
+        yield 'direct output' => ['{{ obj is true }}'];
+        yield 'concatenation' => ['{{ (obj is true) ~ "" }}'];
+        yield 'filter input' => ['{{ (obj is true)|upper }}', ['upper']];
+    }
+
+    public function testSandboxAllowsTrueTestInBooleanContextWithoutToString(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is true ? "yes" : "no" }}']);
+        FooObject::reset();
+
+        $this->assertSame('yes', $twig->load('index')->render(['obj' => new FooObject()]));
+        $this->assertSame(0, FooObject::$called['__toString']);
+    }
+
+    /**
      * @dataProvider getNonStringCoercingBuiltInTests
      */
     #[DataProvider('getNonStringCoercingBuiltInTests')]
