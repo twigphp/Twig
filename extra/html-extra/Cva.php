@@ -19,6 +19,7 @@ namespace Twig\Extra\Html;
 final class Cva
 {
     private const MAX_CACHED_CLASS_LISTS = 1000;
+    private const MAX_CACHED_CLASS_LIST_LENGTH = 2048;
 
     /**
      * @var array<string, string>
@@ -117,13 +118,17 @@ final class Cva
             return self::$classListCache[$classes];
         }
 
+        $uniqueClasses = implode(' ', array_unique(preg_split('#\s+#', $classes, -1, \PREG_SPLIT_NO_EMPTY) ?: []));
+
+        if (\strlen($classes) > self::MAX_CACHED_CLASS_LIST_LENGTH) {
+            return $uniqueClasses;
+        }
+
         if (\count(self::$classListCache) >= self::MAX_CACHED_CLASS_LISTS) {
             self::$classListCache = [];
         }
 
-        $uniqueClasses = array_unique(preg_split('#\s+#', $classes, -1, \PREG_SPLIT_NO_EMPTY) ?: []);
-
-        return self::$classListCache[$classes] = implode(' ', $uniqueClasses);
+        return self::$classListCache[$classes] = $uniqueClasses;
     }
 
     private static function toVariantName(mixed $value): mixed
