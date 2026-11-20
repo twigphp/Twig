@@ -1,0 +1,17 @@
+--TEST--
+"extends" tag with a macro call in the parent expression
+--TEMPLATE--
+{% import "macros.twig" as macros %}
+{% extends macros.layout() %}
+
+{% block content %}
+FOO
+{% endblock %}
+--TEMPLATE(foo.twig)--
+{% block content %}{% endblock %}
+--TEMPLATE(macros.twig)--
+{% macro layout() %}foo.twig{% endmacro %}
+--DATA--
+return []
+--EXPECT--
+FOO
