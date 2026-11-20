@@ -266,6 +266,28 @@ class IntlExtensionTest extends TestCase
         $this->assertGreaterThan(1, \count($cache));
     }
 
+    public function testDateFormatterCacheSkipsLongPatterns(): void
+    {
+        $ext = new IntlExtension();
+        $env = new Environment(new ArrayLoader());
+        $date = new \DateTime('2020-02-20T13:37:00+00:00');
+        $text = str_repeat('a', 5000);
+
+        $this->assertSame($text, $ext->formatDateTime($env, $date, 'medium', 'medium', "'$text'", 'UTC', 'gregorian', 'en_US'));
+        $this->assertSame('2020-02-20', $ext->formatDateTime($env, $date, 'medium', 'medium', 'yyyy-MM-dd', 'UTC', 'gregorian', 'en_US'));
+        $this->assertCount(1, (new \ReflectionProperty(IntlExtension::class, 'dateFormatters'))->getValue($ext));
+    }
+
+    public function testNumberFormatterCacheSkipsLongSymbols(): void
+    {
+        $prototype = new \NumberFormatter('en_US', \NumberFormatter::DECIMAL);
+        $prototype->setSymbol(\NumberFormatter::MINUS_SIGN_SYMBOL, str_repeat('-', 5000));
+        $ext = new IntlExtension(null, $prototype);
+
+        $this->assertSame(str_repeat('-', 5000).'1', $ext->formatNumber(-1, [], 'decimal', 'default', 'en_US'));
+        $this->assertEmpty((new \ReflectionProperty(IntlExtension::class, 'numberFormatters'))->getValue($ext));
+    }
+
     public function testFormatListThrowsOnFailure(): void
     {
         if (!class_exists('IntlListFormatter')) {
