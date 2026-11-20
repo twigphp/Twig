@@ -9,6 +9,7 @@
  * Fix sandbox `__toString()` policy bypasses through test results
  * Fix sandbox `__toString()` policy bypasses through spread arguments
  * Fix the `html_to_markdown` filter keeping an unbounded number of converters in memory
+ * Fix the sandbox skipping the `__toString()` check on arguments of runtime methods that a subclass can override
 
 # 3.31.0 (2026-11-23)
 

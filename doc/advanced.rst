@@ -1097,6 +1097,16 @@ It is now possible to move the runtime logic to a new
     runtime class if its name is the same as the extension class but ends with
     ``Runtime`` instead of ``Extension``.
 
+.. tip::
+
+    Sandboxed templates run faster when your runtime classes or their methods
+    are ``final``. Twig can then skip the ``__toString()`` check on some
+    arguments, for example when the parameter type is ``int`` or an enum.
+
+    .. versionadded:: 3.31
+
+        The ``final`` requirement was added in Twig 3.31.
+
 Testing an Extension
 --------------------
 

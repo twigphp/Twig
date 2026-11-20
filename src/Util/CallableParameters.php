@@ -34,8 +34,9 @@ final class CallableParameters
      * The parameters Twig injects automatically
      * (`needs_charset/environment/context/is_sandboxed`) and the bound
      * `arguments` are stripped. For a filter, the first returned parameter is
-     * the filter's input value. Returns null when reflection fails or the node
-     * is not a callable expression.
+     * the filter's input value. Returns null when reflection fails, when the
+     * node is not a callable expression, or when the callable is a runtime
+     * method that a subclass can override.
      *
      * @return list<\ReflectionParameter>|null
      */
@@ -51,10 +52,19 @@ final class CallableParameters
         }
 
         try {
-            return (new ReflectionCallable($callable))->getTwigParameters();
+            $reflectionCallable = new ReflectionCallable($callable);
         } catch (\LogicException) {
             return null;
         }
+
+        // The runtime loader can return a subclass, which can widen the parameter types
+        $method = $reflectionCallable->getReflector();
+        $phpCallable = $reflectionCallable->getCallable();
+        if (\is_array($phpCallable) && \is_string($phpCallable[0]) && $method instanceof \ReflectionMethod && !$method->isStatic() && !$method->isFinal() && !(new \ReflectionClass($phpCallable[0]))->isFinal()) {
+            return null;
+        }
+
+        return $reflectionCallable->getTwigParameters();
     }
 
     /**

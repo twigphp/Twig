@@ -39,6 +39,7 @@ use Twig\Node\Node;
 use Twig\Node\Nodes;
 use Twig\Node\TextNode;
 use Twig\Parser;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityNotAllowedFilterError;
 use Twig\Sandbox\SecurityNotAllowedFunctionError;
@@ -1908,6 +1909,42 @@ EOF
         yield 'non-final class param' => [static fn (PlainBaseObject $x) => (string) $x, new StringablePlainObject(), StringablePlainObject::class];
     }
 
+    public function testRuntimeMethodParamTypesStillWrapWhenTheRuntimeCanOverrideTheMethod(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ runtime_fn(obj) }}']);
+        $twig->addRuntimeLoader(new FactoryRuntimeLoader([IntParamRuntime::class => static fn () => new MixedParamRuntime()]));
+        $twig->addFunction(new TwigFunction('runtime_fn', [IntParamRuntime::class, 'format']));
+        $twig->getExtension(SandboxExtension::class)->getSecurityPolicy()->setAllowedFunctions(['runtime_fn']);
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('Sandbox must check __toString on an argument of a runtime method that a subclass can override.');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertSame('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertSame('__tostring', $e->getMethodName());
+        }
+    }
+
+    /**
+     * @dataProvider getRuntimeMethodsWithSafeParamTypes
+     */
+    #[DataProvider('getRuntimeMethodsWithSafeParamTypes')]
+    public function testRuntimeMethodSafeParamTypesSkipToStringWrapOnlyWhenTheMethodCannotBeOverridden(array $callable, bool $wrapped): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% do runtime_fn(obj) %}']);
+        $twig->addFunction(new TwigFunction('runtime_fn', $callable));
+
+        $this->assertSame($wrapped, str_contains($twig->compileSource($twig->getLoader()->getSourceContext('index')), 'ensureToStringAllowed'));
+    }
+
+    public static function getRuntimeMethodsWithSafeParamTypes(): iterable
+    {
+        yield 'non-final class' => [[IntParamRuntime::class, 'format'], true];
+        yield 'final method' => [[FinalMethodIntParamRuntime::class, 'format'], false];
+        yield 'final class' => [[FinalIntParamRuntime::class, 'format'], false];
+        yield 'static method' => [[IntParamRuntime::class, 'staticFormat'], false];
+    }
+
     public function testTestArgumentsMapAfterTheTestedValueParameter(): void
     {
         // A test's tested value is its first PHP parameter, so its template
@@ -2939,6 +2976,43 @@ class CountableFooObject extends FooObject implements \Countable
 
 class PlainBaseObject
 {
+}
+
+class IntParamRuntime
+{
+    public function format(int $value): string
+    {
+        return (string) $value;
+    }
+
+    public static function staticFormat(int $value): string
+    {
+        return (string) $value;
+    }
+}
+
+class MixedParamRuntime extends IntParamRuntime
+{
+    public function format(mixed $value): string
+    {
+        return (string) $value;
+    }
+}
+
+class FinalMethodIntParamRuntime
+{
+    final public function format(int $value): string
+    {
+        return (string) $value;
+    }
+}
+
+final class FinalIntParamRuntime
+{
+    public function format(int $value): string
+    {
+        return (string) $value;
+    }
 }
 
 class StringablePlainObject extends PlainBaseObject implements \Stringable
