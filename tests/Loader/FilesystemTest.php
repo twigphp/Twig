@@ -36,10 +36,44 @@ class FilesystemTest extends TestCase
         $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
     }
 
-    public function testGetSourceContextNormalizesName(): void
+    /**
+     * @dataProvider getNamesToNormalize
+     */
+    #[DataProvider('getNamesToNormalize')]
+    public function testGetSourceContextNormalizesName(string $expected, string $name): void
     {
         $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
-        $this->assertSame('errors/index.html', $loader->getSourceContext('errors\index.html')->getName());
+        $loader->addPath(__DIR__.'/../Fixtures', 'foo');
+
+        $this->assertSame($expected, $loader->getSourceContext($name)->getName());
+    }
+
+    public static function getNamesToNormalize(): iterable
+    {
+        yield ['errors/index.html', 'errors\index.html'];
+        yield ['errors/index.html', 'errors//index.html'];
+        yield ['errors/index.html', '/errors/index.html'];
+        yield ['errors/index.html', './errors/index.html'];
+        yield ['errors/index.html', 'errors/./index.html'];
+        yield ['errors/index.html', 'filters/../errors/index.html'];
+        yield ['errors/index.html', 'filters/./..//errors/index.html'];
+        yield ['errors/index.html', '@__main__/errors/index.html'];
+        yield ['errors/index.html', '@__main__/./errors/index.html'];
+        yield ['@foo/errors/index.html', '@foo/errors/index.html'];
+        yield ['@foo/errors/index.html', '@foo//errors/index.html'];
+        yield ['@foo/errors/index.html', '@foo/./errors/index.html'];
+        yield ['@foo/errors/index.html', '@foo/filters/../errors/index.html'];
+    }
+
+    public function testNormalizingANameKeepsItsNamespace(): void
+    {
+        $loader = new FilesystemLoader([__DIR__.'/Fixtures/normal']);
+        $loader->addPath(__DIR__.'/Fixtures/named', 'named');
+
+        $this->assertTrue($loader->exists('@named/index.html'));
+        $this->assertFalse($loader->exists('/@named/index.html'));
+        $this->assertFalse($loader->exists('./@named/index.html'));
+        $this->assertFalse($loader->exists('@__main__/@named/index.html'));
     }
 
     /**

@@ -244,7 +244,34 @@ class FilesystemLoader implements LoaderInterface
 
     private function normalizeName(string $name): string
     {
-        return preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name));
+        $name = str_replace('\\', '/', $name);
+
+        if (!preg_match('#(?:^|/)[/.]|^@'.self::MAIN_NAMESPACE.'/#', $name)) {
+            return $name;
+        }
+
+        $prefix = '';
+        if ('@' === $name[0] && false !== $pos = strpos($name, '/')) {
+            $prefix = substr($name, 0, $pos + 1);
+            $name = substr($name, $pos + 1);
+        }
+
+        $parts = [];
+        foreach (explode('/', $name) as $part) {
+            if ('..' === $part && $parts && '..' !== end($parts)) {
+                array_pop($parts);
+            } elseif ('' !== $part && '.' !== $part) {
+                $parts[] = $part;
+            }
+        }
+        $name = implode('/', $parts);
+
+        if ('' === $prefix || '@'.self::MAIN_NAMESPACE.'/' === $prefix) {
+            // without the main namespace, a name starting with "@" would be read as a namespaced name
+            return str_starts_with($name, '@') ? '@'.self::MAIN_NAMESPACE.'/'.$name : $name;
+        }
+
+        return $prefix.$name;
     }
 
     private function parseName(string $name, string $default = self::MAIN_NAMESPACE): array
