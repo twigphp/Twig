@@ -19,9 +19,7 @@ of users provided in a variable called ``users``:
     the ``Traversable`` interface. Any other object is treated as an empty
     sequence, which can be surprising with ``json_decode()``: it returns
     ``stdClass`` objects by default, so pass ``true`` as its second argument
-    to get arrays instead:
-
-    .. code-block:: php
+    to get arrays instead::
 
         $twig->render('index.html.twig', ['data' => json_decode($json, true)]);
 
