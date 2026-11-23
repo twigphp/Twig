@@ -180,6 +180,7 @@ final class IntlExtension extends AbstractExtension
     ];
 
     private const MAX_CACHED_FORMATTERS = 100;
+    private const MAX_CACHED_FORMATTER_HASH_LENGTH = 4096;
 
     private $dateFormatters = [];
     private $numberFormatters = [];
@@ -539,6 +540,10 @@ final class IntlExtension extends AbstractExtension
         $timezoneName = $timezone ? $timezone->getName() : '(none)';
         $hash = $locale.'|'.$dateFormatValue.'|'.$timeFormatValue.'|'.$timezoneName.'|'.$calendar.'|'.$pattern;
 
+        if (\strlen($hash) > self::MAX_CACHED_FORMATTER_HASH_LENGTH) {
+            return new \IntlDateFormatter($locale, $dateFormatValue, $timeFormatValue, $timezone, $calendar, $pattern);
+        }
+
         if (!isset($this->dateFormatters[$hash])) {
             if (\count($this->dateFormatters) >= self::MAX_CACHED_FORMATTERS) {
                 array_shift($this->dateFormatters);
@@ -639,11 +644,13 @@ final class IntlExtension extends AbstractExtension
         ksort($attrs);
         $hash = $locale.'|'.$style.'|'.json_encode($attrs).'|'.json_encode($textAttrs).'|'.json_encode($symbols);
 
-        if (!isset($this->numberFormatters[$hash])) {
+        if (\strlen($hash) > self::MAX_CACHED_FORMATTER_HASH_LENGTH) {
+            $formatter = new \NumberFormatter($locale, self::NUMBER_STYLES[$style]);
+        } elseif (!$formatter = $this->numberFormatters[$hash] ?? null) {
             if (\count($this->numberFormatters) >= self::MAX_CACHED_FORMATTERS) {
                 array_shift($this->numberFormatters);
             }
-            $this->numberFormatters[$hash] = new \NumberFormatter($locale, self::NUMBER_STYLES[$style]);
+            $formatter = $this->numberFormatters[$hash] = new \NumberFormatter($locale, self::NUMBER_STYLES[$style]);
         }
 
         foreach ($attrs as $name => $value) {
@@ -665,18 +672,18 @@ final class IntlExtension extends AbstractExtension
                 $value = self::NUMBER_PADDING_ATTRIBUTES[$value];
             }
 
-            $this->numberFormatters[$hash]->setAttribute(self::NUMBER_ATTRIBUTES[$name], $value);
+            $formatter->setAttribute(self::NUMBER_ATTRIBUTES[$name], $value);
         }
 
         foreach ($textAttrs as $name => $value) {
-            $this->numberFormatters[$hash]->setTextAttribute(self::NUMBER_TEXT_ATTRIBUTES[$name], $value);
+            $formatter->setTextAttribute(self::NUMBER_TEXT_ATTRIBUTES[$name], $value);
         }
 
         foreach ($symbols as $name => $value) {
-            $this->numberFormatters[$hash]->setSymbol(self::NUMBER_SYMBOLS[$name], $value);
+            $formatter->setSymbol(self::NUMBER_SYMBOLS[$name], $value);
         }
 
-        return $this->numberFormatters[$hash];
+        return $formatter;
     }
 
     private function createListFormatter(?string $locale, string $type, string $width): \IntlListFormatter
