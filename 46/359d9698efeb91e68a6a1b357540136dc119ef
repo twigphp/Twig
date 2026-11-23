@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by ausi at 2026-11-02T15:08:42Z
+
+Should we this info to *doc/api.rst#escaper-extension* and *doc/tags/autoescape.rst* as well?
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-11-03T07:30:47Z
+
+Good idea, thanks! Done: `api.rst` and `autoescape.rst` now have a short note linking to the caution in `escape.rst`, so the explanation and the example stay in one place. 🙂
