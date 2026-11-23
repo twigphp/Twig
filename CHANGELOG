@@ -1,4 +1,4 @@
-# 3.31.0 (2026-XX-XX)
+# 3.31.0 (2026-11-23)
 
  * Fix `FilesystemLoader` template names depending on leading slashes, `.` and `..` segments, or the `@__main__` prefix used to load a template first
  * Fix `IntlExtension` caching formatters built from long patterns, attributes, or symbols
