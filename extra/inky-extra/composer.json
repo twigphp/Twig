@@ -20,6 +20,9 @@
         "lorenzo/pinky": "^1.0.5",
         "twig/twig": "^3.13|^4.0"
     },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^7.4|^8.0"
+    },
     "autoload": {
         "files": [ "Resources/functions.php" ],
         "psr-4" : { "Twig\\Extra\\Inky\\" : "" },

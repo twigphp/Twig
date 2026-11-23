@@ -13,6 +13,9 @@
     <ini name="error_reporting" value="-1"/>
     <server name="KERNEL_CLASS" value="Twig\Extra\TwigExtraBundle\Tests\Fixture\Kernel"/>
   </php>
+  <extensions>
+    <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension"/>
+  </extensions>
   <testsuites>
     <testsuite name="Twig Extra bundle Test Suite">
       <directory>./Tests/</directory>

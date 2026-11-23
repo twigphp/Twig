@@ -12,6 +12,9 @@
   <php>
     <ini name="error_reporting" value="-1"/>
   </php>
+  <extensions>
+    <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension"/>
+  </extensions>
   <testsuites>
     <testsuite name="Twig Markdown Extension Test Suite">
       <directory>./Tests/</directory>
