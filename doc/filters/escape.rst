@@ -129,12 +129,14 @@ to learn more about this topic.
 
 .. caution::
 
-    A value already marked as safe for the ``html`` strategy, like a
-    ``Markup`` instance or the output of a filter declared with ``is_safe``,
-    is an HTML fragment: automatic escaping outputs it as-is, even inside a
-    quoted HTML attribute value, where it can close the attribute and add new
-    ones. If such a value may end up in an attribute value, escape it
-    explicitly with the ``escape`` filter:
+    A value already marked as safe for the ``html`` strategy is an HTML
+    fragment: automatic escaping outputs it as-is, even inside a quoted HTML
+    attribute value, where it can close the attribute and add new ones. This
+    includes captures (``{% set %}...{% endset %}``), macro calls, the
+    ``include``, ``block``, and ``parent`` functions, filters and functions
+    declared with ``is_safe``, and ``Markup`` instances. If such a value may
+    end up in an attribute value, escape it explicitly with the ``escape``
+    filter:
 
     .. code-block:: html+twig
 
@@ -145,6 +147,21 @@ to learn more about this topic.
 
         {# safe: the fragment is escaped #}
         <img alt="{{ link|e('html') }}">
+
+    Escaping a fragment outputs its source as text, so a fragment that is
+    already escaped text gets double-escaped. To build a text value, use the
+    ``set`` tag with an expression instead of a capture; the resulting string
+    is then escaped automatically:
+
+    .. code-block:: html+twig
+
+        {# double-escaped: the capture is already escaped text #}
+        {% set label %}{{ name }} ({{ count }}){% endset %}
+        <img alt="{{ label|e('html') }}">
+
+        {# escaped once #}
+        {% set label = name ~ ' (' ~ count ~ ')' %}
+        <img alt="{{ label }}">
 
     For the same reason, never use the ``raw`` filter on an HTML attribute
     value.
