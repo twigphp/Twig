@@ -77,6 +77,46 @@ class FilesystemTest extends TestCase
     }
 
     /**
+     * @dataProvider getNamesInErrorMessages
+     */
+    #[DataProvider('getNamesInErrorMessages')]
+    public function testErrorMessagesUseTheNameAsPassed(string $expected, string $name): void
+    {
+        $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
+
+        try {
+            $loader->getSourceContext($name);
+            $this->fail();
+        } catch (LoaderError $e) {
+            $this->assertStringContainsString($expected, $e->getMessage());
+        }
+    }
+
+    public static function getNamesInErrorMessages(): iterable
+    {
+        yield ['Unable to find template "errors\\missing.html"', 'errors\\missing.html'];
+        yield ['Unable to find template "/errors/missing.html"', '/errors/missing.html'];
+        yield ['Unable to find template "./errors/missing.html"', './errors/missing.html'];
+        yield ['Unable to find template "@__main__/errors/missing.html"', '@__main__/errors/missing.html'];
+        yield ['outside configured directories (errors/../../../etc/passwd)', 'errors/../../../etc/passwd'];
+    }
+
+    public function testErrorMessagesDoNotDependOnTheSpellingThatFailedFirst(): void
+    {
+        $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
+        try {
+            $loader->getSourceContext('errors\\missing.html');
+            $this->fail();
+        } catch (LoaderError $e) {
+        }
+
+        $this->expectException(LoaderError::class);
+        $this->expectExceptionMessage('Unable to find template "errors/missing.html"');
+
+        $loader->getSourceContext('errors/missing.html');
+    }
+
+    /**
      * @dataProvider getSecurityTests
      */
     #[DataProvider('getSecurityTests')]
