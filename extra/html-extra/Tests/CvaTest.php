@@ -103,6 +103,18 @@ class CvaTest extends TestCase
         $this->assertEquals('font-semibold border rounded text-primary text-sm text-red-500 flex justify-center', $recipe->apply(['colors' => 'primary', 'sizes' => 'sm'], 'flex', null, 'justify-center'));
     }
 
+    public function testApplyDoesNotCacheLongClassLists(): void
+    {
+        $classListCache = new \ReflectionProperty(Cva::class, 'classListCache');
+        $classListCache->setValue(null, []);
+
+        $this->assertSame('text-primary', (new Cva(str_repeat('text-primary ', 500)))->apply([]));
+        $this->assertEmpty($classListCache->getValue());
+
+        $this->assertSame('font-semibold border', (new Cva('font-semibold border font-semibold'))->apply([]));
+        $this->assertSame(['font-semibold border font-semibold' => 'font-semibold border'], $classListCache->getValue());
+    }
+
     public static function recipeProvider(): iterable
     {
         yield 'base null' => [

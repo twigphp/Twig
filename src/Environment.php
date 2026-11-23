@@ -82,6 +82,7 @@ class Environment
      */
     private array $runtimes = [];
     private ?string $optionsHash = null;
+    private int $optimizations;
     private FactoryRuntimeLoader $defaultRuntimeLoader;
     private array $hotCache = [];
     /**
@@ -134,6 +135,7 @@ class Environment
             'optimizations' => -1,
         ], $options);
 
+        $this->optimizations = (int) $options['optimizations'];
         $this->debug = (bool) $options['debug'];
         $this->setCharset($options['charset'] ?? 'UTF-8');
         $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
@@ -146,7 +148,7 @@ class Environment
 
         $this->addExtension(new CoreExtension());
         $this->addExtension(new EscaperExtension($options['autoescape']));
-        $this->addExtension(new OptimizerExtension($options['optimizations']));
+        $this->addExtension(new OptimizerExtension($this->optimizations));
     }
 
     public function __clone()
@@ -892,6 +894,7 @@ class Environment
             self::VERSION,
             (int) $this->debug,
             (int) $this->strictVariables,
+            $this->optimizations,
         ]);
     }
 }

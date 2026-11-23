@@ -16,11 +16,9 @@ use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
-use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\MacroReferenceExpression;
 use Twig\Node\Expression\OperatorEscapeInterface;
 use Twig\Node\Expression\ParentExpression;
-use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 
 /**
@@ -32,16 +30,10 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
      * @var \WeakMap<Node, array>
      */
     private \WeakMap $data;
-    private array $safeVars = [];
 
     public function __construct()
     {
         $this->data = new \WeakMap();
-    }
-
-    public function setSafeVars(array $safeVars): void
-    {
-        $this->safeVars = $safeVars;
     }
 
     /**
@@ -111,11 +103,6 @@ final class SafeAnalysisNodeVisitor implements NodeVisitorInterface
         } elseif ($node instanceof MacroReferenceExpression) {
             // all macro calls are safe
             $this->setSafe($node, ['all']);
-        } elseif ($node instanceof GetAttrExpression && $node->getNode('node') instanceof ContextVariable) {
-            $name = $node->getNode('node')->getAttribute('name');
-            if (\in_array($name, $this->safeVars, true)) {
-                $this->setSafe($node, ['all']);
-            }
         }
 
         return $node;
