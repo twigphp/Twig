@@ -13,6 +13,9 @@
     <env name="LANG" value="en_US.UTF-8" force="true"/>
     <ini name="error_reporting" value="-1"/>
   </php>
+  <extensions>
+    <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension"/>
+  </extensions>
   <testsuites>
     <testsuite name="Twig Intl Extension Test Suite">
       <directory>./Tests/</directory>
