@@ -36,10 +36,84 @@ class FilesystemTest extends TestCase
         $this->assertEquals(realpath($path.'/errors/index.html'), realpath($loader->getSourceContext('errors/index.html')->getPath()));
     }
 
-    public function testGetSourceContextNormalizesName(): void
+    /**
+     * @dataProvider getNamesToNormalize
+     */
+    #[DataProvider('getNamesToNormalize')]
+    public function testGetSourceContextNormalizesName(string $expected, string $name): void
     {
         $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
-        $this->assertSame('errors/index.html', $loader->getSourceContext('errors\index.html')->getName());
+        $loader->addPath(__DIR__.'/../Fixtures', 'foo');
+
+        $this->assertSame($expected, $loader->getSourceContext($name)->getName());
+    }
+
+    public static function getNamesToNormalize(): iterable
+    {
+        yield ['errors/index.html', 'errors\index.html'];
+        yield ['errors/index.html', 'errors//index.html'];
+        yield ['errors/index.html', '/errors/index.html'];
+        yield ['errors/index.html', './errors/index.html'];
+        yield ['errors/index.html', 'errors/./index.html'];
+        yield ['errors/index.html', 'filters/../errors/index.html'];
+        yield ['errors/index.html', 'filters/./..//errors/index.html'];
+        yield ['errors/index.html', '@__main__/errors/index.html'];
+        yield ['errors/index.html', '@__main__/./errors/index.html'];
+        yield ['@foo/errors/index.html', '@foo/errors/index.html'];
+        yield ['@foo/errors/index.html', '@foo//errors/index.html'];
+        yield ['@foo/errors/index.html', '@foo/./errors/index.html'];
+        yield ['@foo/errors/index.html', '@foo/filters/../errors/index.html'];
+    }
+
+    public function testNormalizingANameKeepsItsNamespace(): void
+    {
+        $loader = new FilesystemLoader([__DIR__.'/Fixtures/normal']);
+        $loader->addPath(__DIR__.'/Fixtures/named', 'named');
+
+        $this->assertTrue($loader->exists('@named/index.html'));
+        $this->assertFalse($loader->exists('/@named/index.html'));
+        $this->assertFalse($loader->exists('./@named/index.html'));
+        $this->assertFalse($loader->exists('@__main__/@named/index.html'));
+    }
+
+    /**
+     * @dataProvider getNamesInErrorMessages
+     */
+    #[DataProvider('getNamesInErrorMessages')]
+    public function testErrorMessagesUseTheNameAsPassed(string $expected, string $name): void
+    {
+        $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
+
+        try {
+            $loader->getSourceContext($name);
+            $this->fail();
+        } catch (LoaderError $e) {
+            $this->assertStringContainsString($expected, $e->getMessage());
+        }
+    }
+
+    public static function getNamesInErrorMessages(): iterable
+    {
+        yield ['Unable to find template "errors\\missing.html"', 'errors\\missing.html'];
+        yield ['Unable to find template "/errors/missing.html"', '/errors/missing.html'];
+        yield ['Unable to find template "./errors/missing.html"', './errors/missing.html'];
+        yield ['Unable to find template "@__main__/errors/missing.html"', '@__main__/errors/missing.html'];
+        yield ['outside configured directories (errors/../../../etc/passwd)', 'errors/../../../etc/passwd'];
+    }
+
+    public function testErrorMessagesDoNotDependOnTheSpellingThatFailedFirst(): void
+    {
+        $loader = new FilesystemLoader([__DIR__.'/../Fixtures']);
+        try {
+            $loader->getSourceContext('errors\\missing.html');
+            $this->fail();
+        } catch (LoaderError $e) {
+        }
+
+        $this->expectException(LoaderError::class);
+        $this->expectExceptionMessage('Unable to find template "errors/missing.html"');
+
+        $loader->getSourceContext('errors/missing.html');
     }
 
     /**
