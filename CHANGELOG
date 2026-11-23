@@ -29,6 +29,7 @@
  * Make `Environment::getExtension()` return the runtime of an extension class registered with `AttributeExtension`
  * Make `Environment::getRuntime()` fall back to the registered extension of the same class
  * Allow extending `AttributeExtension` to declare an extension's filters, functions, and tests with attributes
+ * Speed up calling a macro declared by a parent template
 
 # 3.30.0 (2026-09-25)
 
