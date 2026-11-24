@@ -7,6 +7,7 @@
  * Fix the sandbox not checking filters, functions, tests, and `__toString()` calls in a dynamic `embed` parent expression
  * Fix sandbox `__toString()` policy bypasses through test inputs
  * Fix sandbox `__toString()` policy bypasses through test results
+ * Fix sandbox `__toString()` policy bypasses through spread arguments
 
 # 3.31.0 (2026-11-23)
 

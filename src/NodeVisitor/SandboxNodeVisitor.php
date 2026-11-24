@@ -168,7 +168,26 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
 
         $positionalIdx = 0;
-        foreach ($arguments as $key => $_) {
+        foreach ($arguments as $key => $argument) {
+            if (\is_int($key) && $argument instanceof SpreadUnary) {
+                // A spread can fill any parameter from its position on, so the
+                // check is skipped only when all of them have a safe type.
+                $remaining = \array_slice($positional, $positionalIdx);
+                $safe = [] !== $remaining;
+                foreach ($remaining as $param) {
+                    if (!CallableParameters::isStringCoercionSafe($param->getType(), $param->getDeclaringClass())) {
+                        $safe = false;
+                        break;
+                    }
+                }
+                if (!$safe) {
+                    $this->wrapNode($arguments, (string) $key);
+                }
+                $positionalIdx = \count($positional);
+
+                continue;
+            }
+
             if (\is_int($key)) {
                 $param = $positional[$positionalIdx] ?? $variadic;
                 if (null !== $param && !$param->isVariadic()) {
