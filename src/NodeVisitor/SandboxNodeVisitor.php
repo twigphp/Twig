@@ -209,7 +209,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             foreach ($expr->getOperandNamesToEscape() as $operandName) {
                 $this->wrapNode($expr, $operandName);
             }
-        } elseif ($expr instanceof FilterExpression || $expr instanceof FunctionExpression || $expr instanceof SetBinary || $expr instanceof SequenceDestructuringSetBinary || $expr instanceof ObjectDestructuringSetBinary) {
+        } elseif ($expr instanceof FilterExpression || $expr instanceof FunctionExpression || $expr instanceof TestExpression || $expr instanceof SetBinary || $expr instanceof SequenceDestructuringSetBinary || $expr instanceof ObjectDestructuringSetBinary) {
             $node->setNode($name, new CheckToStringNode($expr));
         }
     }
