@@ -733,17 +733,19 @@ final class CoreExtension extends AbstractExtension
      */
     public static function merge(...$arrays): array
     {
-        $result = [];
-
         foreach ($arrays as $argNumber => $array) {
+            if (\is_array($array)) {
+                continue;
+            }
+
             if (!is_iterable($array)) {
                 throw new RuntimeError(\sprintf('The "merge" filter expects a sequence or a mapping, got "%s" for argument %d.', get_debug_type($array), $argNumber + 1));
             }
 
-            $result = array_merge($result, self::toArray($array));
+            $arrays[$argNumber] = self::toArray($array);
         }
 
-        return $result;
+        return array_merge(...$arrays);
     }
 
     /**
