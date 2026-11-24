@@ -10,6 +10,13 @@ b
 {{ html_classes(class_b) }}
 {{ html_classes({ (class_a): true }) }}
 {{ html_classes({ (class_b): true }) }}
+*{{ html_classes('a', 'b', 'a', 'b') }}*
+*{{ html_classes('a', '', 'b') }}*
+*{{ html_classes('0', '0', '1', '01') }}*
+*{{ html_classes('a b', 'a', 'b') }}*
+*{{ html_classes(' a ', 'a') }}*
+*{{ html_classes() }}*
+*{{ html_classes({'a': true}, 'a', {'a': true}) }}*
 --DATA--
 return []
 --EXPECT--
@@ -18,3 +25,10 @@ a
 b
 a
 b
+*a b*
+*a b*
+*0 1 01*
+*a b a b*
+* a  a*
+**
+*a*
