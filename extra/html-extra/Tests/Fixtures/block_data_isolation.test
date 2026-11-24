@@ -1,0 +1,16 @@
+--TEST--
+"block_data" function only returns the data exported while rendering the requested block
+--TEMPLATE--
+{% block exporting %}{% do block_export({"id": "exporting"}) %}{% set inner = block_data('silent') %}{{ inner|json_encode|raw }}{% endblock %}
+{% block silent %}{% endblock %}
+{{ block_data('silent')|json_encode|raw }}
+{{ block_data('exporting')|json_encode|raw }}
+{{ block_data('nested')|json_encode|raw }}
+{% block nested %}{{ block('exporting') }}{% endblock %}
+--DATA--
+return []
+--EXPECT--
+[][]
+{"id":"exporting"}
+{"id":"exporting"}
+[]

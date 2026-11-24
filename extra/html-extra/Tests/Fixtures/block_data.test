@@ -1,0 +1,9 @@
+--TEST--
+"block_data" function
+--TEMPLATE--
+{% block foo %}{% do block_export({"id": "test", "name": "field"}) %}rendered{% endblock %}
+{{ block_data('foo').id }}-{{ block_data('foo').name }}
+--DATA--
+return []
+--EXPECT--
+renderedtest-field

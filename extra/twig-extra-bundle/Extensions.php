@@ -37,7 +37,7 @@ final class Extensions
             'class_name' => 'HtmlExtension',
             'package' => 'twig/html-extra',
             'filters' => ['data_uri', 'html_attr_merge', 'html_attr_type'],
-            'functions' => ['html_classes', 'html_cva', 'html_attr'],
+            'functions' => ['html_classes', 'html_cva', 'html_attr', 'block_data', 'block_export'],
             'tags' => [],
         ],
         'markdown' => [
