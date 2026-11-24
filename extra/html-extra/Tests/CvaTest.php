@@ -13,7 +13,12 @@ namespace Twig\Extra\Html\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
+use Twig\Extension\SandboxExtension;
 use Twig\Extra\Html\Cva;
+use Twig\Extra\Html\HtmlExtension;
+use Twig\Loader\ArrayLoader;
+use Twig\Sandbox\SecurityPolicy;
 
 class CvaTest extends TestCase
 {
@@ -78,6 +83,34 @@ class CvaTest extends TestCase
         $this->assertSame('font-semibold border rounded text-secondary', $recipe->apply(['colors' => 'secondary']));
         $this->assertSame('font-semibold border rounded text-primary', $recipe->apply(['colors' => 'primary']));
         $this->assertSame('font-semibold border rounded text-primary', $createRecipe()->apply(['colors' => 'primary']));
+    }
+
+    public function testObjectValuesDoNotExposeTheirProperties(): void
+    {
+        $object = new class {
+            public $public = 'PUBLIC';
+            protected $protected = 'PROTECTED';
+            private $private = 'PRIVATE';
+        };
+
+        $this->assertSame('base', (new Cva('base', ['c' => ['p' => $object]]))->apply(['c' => 'p']));
+        $this->assertSame('base x', (new Cva('base', ['c' => ['p' => 'x']], [['c' => ['p'], 'class' => $object]]))->apply(['c' => 'p']));
+        $this->assertSame('base', (new Cva('base', ['c' => ['p' => $object]], [], ['c' => 'p']))->apply([]));
+        $this->assertSame('base', (new Cva('base', [], [['c' => $object, 'class' => 'matched']]))->apply(['c' => 'PRIVATE']));
+    }
+
+    public function testArrayAccessVariantsDoNotExposeTheirOffsets(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'variant' => "{{ html_cva('base', {c: bag}).apply({c: 'secret'}) }}",
+            'default_variant' => "{{ html_cva('base', {c: bag}, [], {c: 'secret'}).apply({}) }}",
+        ]), ['autoescape' => false]);
+        $twig->addExtension(new HtmlExtension());
+        $twig->addExtension(new SandboxExtension(new SecurityPolicy([], [], [Cva::class => ['apply']], [], ['html_cva']), true));
+        $context = ['bag' => new \ArrayObject(['secret' => 'SECRET'])];
+
+        $this->assertSame('base', $twig->render('variant', $context));
+        $this->assertSame('base', $twig->render('default_variant', $context));
     }
 
     public function testApplyWithNullString(): void

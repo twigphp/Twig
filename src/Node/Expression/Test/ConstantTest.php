@@ -45,4 +45,9 @@ class ConstantTest extends TestExpression
             ->raw('))')
         ;
     }
+
+    public function getStringCoercedChildNames(): array
+    {
+        return ['arguments'];
+    }
 }

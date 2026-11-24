@@ -78,6 +78,7 @@ use Twig\Node\Expression\Test\ConstantTest;
 use Twig\Node\Expression\Test\DefinedTest;
 use Twig\Node\Expression\Test\DivisiblebyTest;
 use Twig\Node\Expression\Test\EvenTest;
+use Twig\Node\Expression\Test\NonStringCoercingInputTest;
 use Twig\Node\Expression\Test\NullTest;
 use Twig\Node\Expression\Test\OddTest;
 use Twig\Node\Expression\Test\SameasTest;
@@ -323,9 +324,9 @@ final class CoreExtension extends AbstractExtension
             new TwigTest('divisible by', null, ['node_class' => DivisiblebyTest::class, 'one_mandatory_argument' => true, 'always_allowed_in_sandbox' => true]),
             new TwigTest('constant', null, ['node_class' => ConstantTest::class]),
             new TwigTest('empty', self::testEmpty(...), ['always_allowed_in_sandbox' => true]),
-            new TwigTest('iterable', 'is_iterable', ['always_allowed_in_sandbox' => true]),
-            new TwigTest('sequence', self::testSequence(...), ['always_allowed_in_sandbox' => true]),
-            new TwigTest('mapping', self::testMapping(...), ['always_allowed_in_sandbox' => true]),
+            new TwigTest('iterable', 'is_iterable', ['node_class' => NonStringCoercingInputTest::class, 'always_allowed_in_sandbox' => true]),
+            new TwigTest('sequence', self::testSequence(...), ['node_class' => NonStringCoercingInputTest::class, 'always_allowed_in_sandbox' => true]),
+            new TwigTest('mapping', self::testMapping(...), ['node_class' => NonStringCoercingInputTest::class, 'always_allowed_in_sandbox' => true]),
             new TwigTest('true', null, ['node_class' => TrueTest::class, 'always_allowed_in_sandbox' => true]),
         ];
     }
@@ -829,7 +830,7 @@ final class CoreExtension extends AbstractExtension
     public static function join($value, $glue = '', $and = null): string
     {
         if (!is_iterable($value)) {
-            $value = (array) $value;
+            $value = null === $value ? [] : [$value];
         }
 
         $value = self::toArray($value, false);

@@ -203,6 +203,37 @@ class SandboxTest extends TestCase
         $denying->render('index', $context);
     }
 
+    public function testJoinDoesNotExposeTheInternalsOfNonIterableObjects(): void
+    {
+        $obj = new class {
+            private $secret = 'SECRET_PROPERTY';
+            private $nested;
+
+            public function __construct()
+            {
+                $this->nested = new SandboxTestObject();
+            }
+        };
+        $sandbox = new Sandbox(self::env(['index' => '{{ obj|join(",") }}']), self::strictPolicy(filters: ['join']));
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessageMatches('/could not be converted to string/');
+        $sandbox->render('index', ['obj' => $obj]);
+    }
+
+    public function testJoinOfAStringableObjectIsGovernedByThePolicy(): void
+    {
+        $templates = ['index' => '{{ obj|join(",") }}'];
+        $context = ['obj' => new SandboxTestObject()];
+
+        $allowing = new Sandbox(self::env($templates), self::strictPolicy(filters: ['join'], methods: [SandboxTestObject::class => ['__toString']]));
+        $this->assertSame('object', $allowing->render('index', $context));
+
+        $denying = new Sandbox(self::env($templates), self::strictPolicy(filters: ['join']));
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $denying->render('index', $context);
+    }
+
     public function testMarkupValuesCanBePrinted(): void
     {
         $sandbox = new Sandbox(self::env(['index' => '{{ m }}']), self::strictPolicy());

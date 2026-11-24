@@ -135,4 +135,14 @@ EOF, "<p>Paragraph 1</p>\n+<p>Paragraph 2\s*</p>"],
         $this->assertStringNotContainsString('<h1>', $output);
         $this->assertMatchesRegularExpression('{\\\\u003[Cc]h1\\\\u003[Ee]Hello\\\\u003[Cc]\\\\/h1\\\\u003[Ee]}', $output);
     }
+
+    public function testHtmlToMarkdownConverterCacheIsBounded(): void
+    {
+        for ($i = 0; $i < 250; ++$i) {
+            MarkdownExtension::htmlToMarkdown('<p>foo</p>', ['remove_nodes' => 'tag'.$i]);
+        }
+
+        $this->assertCount(100, (new \ReflectionProperty(MarkdownExtension::class, 'converters'))->getValue());
+        $this->assertSame('foo', MarkdownExtension::htmlToMarkdown('<p>foo</p>', ['remove_nodes' => 'tag249']));
+    }
 }

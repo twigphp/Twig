@@ -18,7 +18,10 @@ use Twig\Node\CheckToStringNode;
 use Twig\Node\CoercesChildrenToStringInterface;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\Binary\ObjectDestructuringSetBinary;
 use Twig\Node\Expression\Binary\RangeBinary;
+use Twig\Node\Expression\Binary\SequenceDestructuringSetBinary;
+use Twig\Node\Expression\Binary\SetBinary;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
@@ -106,8 +109,8 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
 
                     continue;
                 }
-                if (null !== $params && 'node' === $childName && $node instanceof FilterExpression) {
-                    // The filter's input value maps to the first PHP parameter.
+                if (null !== $params && 'node' === $childName && ($node instanceof FilterExpression || $node instanceof TestExpression)) {
+                    // The filter's or test's input value maps to the first PHP parameter.
                     if (isset($params[0]) && CallableParameters::isStringCoercionSafe($params[0]->getType(), $params[0]->getDeclaringClass())) {
                         continue;
                     }
@@ -164,7 +167,26 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
         }
 
         $positionalIdx = 0;
-        foreach ($arguments as $key => $_) {
+        foreach ($arguments as $key => $argument) {
+            if (\is_int($key) && $argument instanceof SpreadUnary) {
+                // A spread can fill any parameter from its position on, so the
+                // check is skipped only when all of them have a safe type.
+                $remaining = \array_slice($positional, $positionalIdx);
+                $safe = [] !== $remaining;
+                foreach ($remaining as $param) {
+                    if (!CallableParameters::isStringCoercionSafe($param->getType(), $param->getDeclaringClass())) {
+                        $safe = false;
+                        break;
+                    }
+                }
+                if (!$safe) {
+                    $this->wrapNode($arguments, (string) $key);
+                }
+                $positionalIdx = \count($positional);
+
+                continue;
+            }
+
             if (\is_int($key)) {
                 $param = $positional[$positionalIdx] ?? $variadic;
                 if (null !== $param && !$param->isVariadic()) {
@@ -207,7 +229,7 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
             foreach ($expr->getOperandNamesToEscape() as $operandName) {
                 $this->wrapNode($expr, $operandName);
             }
-        } elseif (($expr instanceof FilterExpression || $expr instanceof FunctionExpression) && !$expr->isGenerator()) {
+        } elseif (($expr instanceof FilterExpression || $expr instanceof FunctionExpression || $expr instanceof TestExpression || $expr instanceof SetBinary || $expr instanceof SequenceDestructuringSetBinary || $expr instanceof ObjectDestructuringSetBinary) && !$expr->isGenerator()) {
             $node->setNode($name, new CheckToStringNode($expr));
         }
     }

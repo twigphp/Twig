@@ -54,6 +54,14 @@ If your cache implementation supports tags, you can also tag your cache items:
         Some code
     {% endcache %}
 
+.. caution::
+
+    Never allow the ``cache`` tag in sandboxed templates written by untrusted
+    authors. The template chooses the cache key, and the cache pool is shared
+    with the rest of the application: an untrusted template could read any
+    cached fragment whose key it can guess, and replace fragments rendered by
+    trusted templates with its own content.
+
 The ``cache`` tag creates a new "scope" for variables, meaning that the changes
 are local to the template fragment:
 
