@@ -1065,6 +1065,40 @@ class SandboxTest extends TestCase
         }
     }
 
+    public function testSandboxBlocksToStringOnDynamicEmbedParent(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{% embed obj ~ ".twig" %}{% endembed %}', 'foo.twig' => 'LEAK'], ['embed', 'extends']);
+        try {
+            $twig->load('index')->render(self::$params);
+            $this->fail('Sandbox throws a SecurityError exception if __toString is called on a dynamic embed parent');
+        } catch (SecurityNotAllowedMethodError $e) {
+            $this->assertEquals('Twig\Tests\Extension\FooObject', $e->getClassName());
+            $this->assertEquals('__tostring', $e->getMethodName());
+        }
+    }
+
+    /**
+     * @dataProvider getSandboxDynamicEmbedParentCallablesTests
+     */
+    #[DataProvider('getSandboxDynamicEmbedParentCallablesTests')]
+    public function testSandboxChecksCallablesInDynamicEmbedParent(string $template, string $exception): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => $template, 'leak' => 'LEAK'], ['embed', 'extends'], [], [], [], [], null, true);
+        $twig->addFunction(new TwigFunction('leak', static fn () => 'leak'));
+        $twig->addTest(new TwigTest('leak', static fn () => true));
+
+        $this->expectException($exception);
+        $twig->load('index')->render([]);
+    }
+
+    public static function getSandboxDynamicEmbedParentCallablesTests(): iterable
+    {
+        yield 'filter' => ['{% embed "LEAK"|lower %}{% endembed %}', SecurityNotAllowedFilterError::class];
+        yield 'function' => ['{% embed leak() %}{% endembed %}', SecurityNotAllowedFunctionError::class];
+        yield 'nested function' => ['{% embed "" ~ leak() %}{% endembed %}', SecurityNotAllowedFunctionError::class];
+        yield 'test' => ['{% embed 1 is leak ? "leak" : "none" %}{% endembed %}', SecurityNotAllowedTestError::class];
+    }
+
     public function testSandboxBlocksToStringOnIsConstantTestArgument(): void
     {
         $twig = $this->getEnvironment(true, [], ['index' => '{% if "x" is constant(obj) %}LEAK{% endif %}'], ['if'], [], [], [], [], null, false, ['constant']);

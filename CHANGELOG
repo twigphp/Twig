@@ -4,6 +4,7 @@
  * Fix a security issue in the sandbox mode allowing assignment expressions to call `__toString()` on objects without checking the policy
  * Fix a security issue in the sandbox mode allowing `html_cva` to expose the properties of objects used as classes or variant values
  * Fix sandboxed templates being able to replace the content of a `Markup` object by calling its constructor
+ * Fix the sandbox not checking filters, functions, tests, and `__toString()` calls in a dynamic `embed` parent expression
 
 # 3.31.0 (2026-11-23)
 
