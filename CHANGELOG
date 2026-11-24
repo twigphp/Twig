@@ -1,4 +1,4 @@
-# 3.31.1 (2026-XX-XX)
+# 3.31.1 (2026-11-24)
 
  * Fix a security issue in the sandbox mode allowing the `join` filter to expose the properties of non-iterable objects
  * Fix a security issue in the sandbox mode allowing assignment expressions to call `__toString()` on objects without checking the policy
