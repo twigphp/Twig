@@ -1,4 +1,4 @@
-# 4.0.0 (2026-XX-XX)
+# 4.0.0 beta 1 (2026-11-24)
 
  * Speed up `for` loops that do not use the `loop` variable
  * Always allow the `loop` variable in sandboxed templates
