@@ -11,6 +11,7 @@
  * Fix the `html_to_markdown` filter keeping an unbounded number of converters in memory
  * Fix compiled template cache collisions for resolved autoescaping strategies and sandbox always-allowed registrations
  * Fix the `cache` tag calling `__toString()` on its key and tags without checking the sandbox policy
+ * Fix the PHP warning when an arrow function is used in the parent expression of an `extends` or `embed` tag
 
 # 3.31.0 (2026-11-23)
 

@@ -142,6 +142,14 @@ final class ModuleNode extends Node implements CoercesChildrenToStringInterface
         $compiler
             ->write("protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper\n", "{\n")
             ->indent()
+        ;
+
+        if (!$parent instanceof ConstantExpression) {
+            // a dynamic parent can call macros, directly or from an arrow function
+            $compiler->write("\$macros = \$this->macros;\n");
+        }
+
+        $compiler
             ->addDebugInfo($parent)
             ->write('return ')
         ;

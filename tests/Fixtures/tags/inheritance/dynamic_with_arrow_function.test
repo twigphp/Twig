@@ -1,0 +1,14 @@
+--TEST--
+"extends" tag with an arrow function in the parent expression
+--TEMPLATE--
+{% extends ["foo"]|map(name => name ~ ".twig")|first %}
+
+{% block content %}
+FOO
+{% endblock %}
+--TEMPLATE(foo.twig)--
+{% block content %}{% endblock %}
+--DATA--
+return []
+--EXPECT--
+FOO

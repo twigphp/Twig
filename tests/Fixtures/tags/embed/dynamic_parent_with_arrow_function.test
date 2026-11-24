@@ -1,0 +1,26 @@
+--TEST--
+"embed" tag with an arrow function in the parent expression
+--TEMPLATE--
+FOO
+{% embed ["foo"]|map(name => name ~ ".twig")|first %}
+    {% block c1 %}
+        block1extended
+    {% endblock %}
+{% endembed %}
+
+BAR
+--TEMPLATE(foo.twig)--
+A
+{% block c1 %}
+    block1
+{% endblock %}
+B
+--DATA--
+return []
+--EXPECT--
+FOO
+
+A
+        block1extended
+    B
+BAR

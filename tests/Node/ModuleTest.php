@@ -327,6 +327,7 @@ class __TwigTemplate_%x extends Template
 
     protected function doGetParent(array \$context): bool|string|Template|TemplateWrapper
     {
+        \$macros = \$this->macros;
         // line 2
         return \$this->load(((true) ? ("foo") : ("foo")), 2);
     }
@@ -361,7 +362,7 @@ class __TwigTemplate_%x extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  50 => 2,  48 => 4,  41 => 2,);
+        return array (  51 => 2,  49 => 4,  42 => 2,);
     }
 
     public function getSourceContext(): Source
