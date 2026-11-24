@@ -110,8 +110,8 @@ final class SandboxNodeVisitor implements NodeVisitorInterface
 
                     continue;
                 }
-                if (null !== $params && 'node' === $childName && $node instanceof FilterExpression) {
-                    // The filter's input value maps to the first PHP parameter.
+                if (null !== $params && 'node' === $childName && ($node instanceof FilterExpression || $node instanceof TestExpression)) {
+                    // The filter's or test's input value maps to the first PHP parameter.
                     if (isset($params[0]) && CallableParameters::isStringCoercionSafe($params[0]->getType(), $params[0]->getDeclaringClass())) {
                         continue;
                     }

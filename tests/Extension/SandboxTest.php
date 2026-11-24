@@ -24,6 +24,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Twig\Compiler;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -33,6 +34,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Markup;
 use Twig\Node\Expression\CallExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\TestExpression;
 use Twig\Node\Node;
 use Twig\Node\Nodes;
 use Twig\Node\TextNode;
@@ -2017,6 +2019,149 @@ EOF
         $this->assertSame('ok', $twig->load('index')->render(['n' => 42]));
     }
 
+    /**
+     * @dataProvider getStringCoercingTestCallables
+     */
+    #[DataProvider('getStringCoercingTestCallables')]
+    public function testSandboxBlocksToStringOnTestInput(callable $callable): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is unsafe_test ? "yes" : "no" }}'], tests: ['unsafe_test']);
+        $twig->addTest(new TwigTest('unsafe_test', $callable));
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
+        $twig->load('index')->render(['obj' => new FooObject()]);
+    }
+
+    public static function getStringCoercingTestCallables(): iterable
+    {
+        yield 'string parameter' => [static fn (string $value): bool => 'foo' === $value];
+        yield 'explicit cast' => [static fn ($value): bool => 'foo' === (string) $value];
+    }
+
+    public function testSafeTestInputTypeSkipsToStringWrap(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is safe_test ? "yes" : "no" }}'], tests: ['safe_test']);
+        $twig->addTest(new TwigTest('safe_test', static fn (int $value): bool => true));
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('A safe test input type should skip the __toString check and let PHP reject the incompatible value.');
+        } catch (RuntimeError $e) {
+            $this->assertInstanceOf(\TypeError::class, $e->getPrevious());
+        }
+    }
+
+    public function testDynamicTestInputMapsAfterBoundArguments(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is unsafe_test_name ? "yes" : "no" }}'], tests: ['unsafe_test_name']);
+        $twig->addTest(new TwigTest('unsafe_test_*', static fn (string $name, string $value): bool => 'foo' === $value));
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
+        $twig->load('index')->render(['obj' => new FooObject()]);
+    }
+
+    public function testSafeDynamicTestInputTypeSkipsToStringWrap(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is safe_test_name ? "yes" : "no" }}'], tests: ['safe_test_name']);
+        $twig->addTest(new TwigTest('safe_test_*', static fn (string $name, int $value): bool => true));
+
+        try {
+            $twig->load('index')->render(['obj' => new FooObject()]);
+            $this->fail('A safe dynamic test input type should skip the __toString check and let PHP reject the incompatible value.');
+        } catch (RuntimeError $e) {
+            $this->assertInstanceOf(\TypeError::class, $e->getPrevious());
+        }
+    }
+
+    public function testSandboxAllowsToStringOnTestInputWhenMethodIsAllowed(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is safe_test ? "yes" : "no" }}'], methods: [FooObject::class => ['__toString']], tests: ['safe_test']);
+        $twig->addTest(new TwigTest('safe_test', static fn (string $value): bool => 'foo' === $value));
+        FooObject::reset();
+
+        $this->assertSame('yes', $twig->load('index')->render(['obj' => new FooObject()]));
+        $this->assertSame(1, FooObject::$called['__toString']);
+    }
+
+    public function testSandboxBlocksToStringOnTestReturnUsedAsTestInput(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ (obj is returns_object) is unsafe_test ? "yes" : "no" }}'], tests: ['returns_object', 'unsafe_test']);
+        $twig->addTest(new TwigTest('returns_object', static fn ($value) => new FooObject()));
+        $twig->addTest(new TwigTest('unsafe_test', static fn (string $value): bool => 'foo' === $value));
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
+        $twig->load('index')->render(['obj' => new FooObject()]);
+    }
+
+    public function testSafeTestInputTypeDoesNotWrapNestedTestReturn(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ (1 is returns_object) is safe_test ? "yes" : "no" }}'], tests: ['returns_object', 'safe_test']);
+        $twig->addTest(new TwigTest('returns_object', static fn ($value) => new FooObject()));
+        $twig->addTest(new TwigTest('safe_test', static fn (int $value): bool => true));
+
+        try {
+            $twig->load('index')->render();
+            $this->fail('A safe test input type should skip the nested test return __toString check and let PHP reject the incompatible value.');
+        } catch (RuntimeError $e) {
+            $this->assertInstanceOf(\TypeError::class, $e->getPrevious());
+        }
+    }
+
+    /**
+     * @dataProvider getNonStringCoercingBuiltInTests
+     */
+    #[DataProvider('getNonStringCoercingBuiltInTests')]
+    public function testSandboxAllowsNonStringCoercingBuiltInTestInput(string $test, string $expected): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is '.$test.' ? "yes" : "no" }}']);
+        FooObject::reset();
+
+        $this->assertSame($expected, $twig->load('index')->render(['obj' => new FooObject()]));
+        $this->assertSame(0, FooObject::$called['__toString']);
+    }
+
+    public static function getNonStringCoercingBuiltInTests(): iterable
+    {
+        yield 'iterable' => ['iterable', 'no'];
+        yield 'sequence' => ['sequence', 'no'];
+        yield 'mapping' => ['mapping', 'yes'];
+    }
+
+    public function testSandboxAllowsNonStringCoercingCustomTestNodeInput(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is object_test ? "yes" : "no" }}'], tests: ['object_test']);
+        $twig->addTest(new TwigTest('object_test', null, ['node_class' => ObjectTestExpression::class]));
+        FooObject::reset();
+
+        $this->assertSame('yes', $twig->load('index')->render(['obj' => new FooObject()]));
+        $this->assertSame(0, FooObject::$called['__toString']);
+    }
+
+    /**
+     * @group legacy
+     */
+    #[Group('legacy')]
+    public function testSourcePolicySandboxBlocksToStringOnTestInput(): void
+    {
+        $this->expectDeprecation('Since twig/twig 3.27.0: The "Twig\Sandbox\SourcePolicyInterface" interface is deprecated with no replacement, do not pass an instance to "Twig\Extension\SandboxExtension".');
+
+        $sourcePolicy = new class implements SourcePolicyInterface {
+            public function enableSandbox(Source $source): bool
+            {
+                return true;
+            }
+        };
+        $twig = $this->getEnvironment(false, [], ['index' => '{{ obj is unsafe_test ? "yes" : "no" }}'], sourcePolicy: $sourcePolicy, tests: ['unsafe_test']);
+        $twig->addTest(new TwigTest('unsafe_test', static fn (string $value): bool => 'foo' === $value));
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
+        $twig->load('index')->render(['obj' => new FooObject()]);
+    }
+
     public function testColumnFilterUnaffectedOutsideSandbox(): void
     {
         $params = ['obj' => new ColumnObject()];
@@ -2506,6 +2651,16 @@ EOF
         $twig->load('index')->render(['obj' => new FooObject()]);
     }
 
+    public function testAlwaysAllowedInSandboxTestStillEnforcesToStringPolicyOnInput(): void
+    {
+        $twig = $this->getEnvironment(true, [], ['index' => '{{ obj is always_safe_test ? "yes" : "no" }}']);
+        $twig->addTest(new TwigTest('always_safe_test', static fn (string $value): bool => 'foo' === $value, ['always_allowed_in_sandbox' => true]));
+
+        $this->expectException(SecurityNotAllowedMethodError::class);
+        $this->expectExceptionMessage('Calling "__tostring" method on a "'.FooObject::class.'" object is not allowed');
+        $twig->load('index')->render(['obj' => new FooObject()]);
+    }
+
     /**
      * @group legacy
      */
@@ -2762,6 +2917,18 @@ class CyclicTraversableObject implements \IteratorAggregate
     public function getIterator(): \Traversable
     {
         yield $this;
+    }
+}
+
+class ObjectTestExpression extends TestExpression
+{
+    public function compile(Compiler $compiler): void
+    {
+        $compiler
+            ->raw('is_object(')
+            ->subcompile($this->getNode('node'))
+            ->raw(')')
+        ;
     }
 }
 

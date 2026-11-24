@@ -74,12 +74,8 @@ class TestExpression extends CallExpression implements ReturnBoolInterface, Coer
 
     public function getStringCoercedChildNames(): array
     {
-        $names = [];
-
-        // the `empty` test triggers an implicit string coercion through `CoreExtension::testEmpty()`
-        if ('empty' === $this->getAttribute('name')) {
-            $names[] = 'node';
-        }
+        // Custom node classes must declare their own coercion behavior.
+        $names = self::class === $this::class ? ['node'] : [];
 
         // a test may coerce its arguments to string (the host PHP code is opaque to Twig)
         if ($this->hasNode('arguments')) {
