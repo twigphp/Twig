@@ -85,6 +85,7 @@ final class Cva
         private array $defaultVariants = [],
     ) {
         $this->base = (array) $base;
+        $this->variants = array_filter($variants, 'is_array');
     }
 
     public function apply(array $recipes, ?string ...$additionalClasses): string
@@ -94,7 +95,7 @@ final class Cva
         // Resolve recipes against variants
         foreach ($recipes as $recipeName => $recipeValue) {
             $recipeClasses = $this->variants[$recipeName][self::toVariantName($recipeValue)] ?? [];
-            $classes = [...$classes, ...(array) $recipeClasses];
+            $classes = [...$classes, ...self::toList($recipeClasses)];
         }
 
         // Resolve compound variants
@@ -107,7 +108,7 @@ final class Cva
         foreach ($this->defaultVariants as $defaultVariantName => $defaultVariantValue) {
             if (!isset($recipes[$defaultVariantName])) {
                 $variantClasses = $this->variants[$defaultVariantName][self::toVariantName($defaultVariantValue)] ?? [];
-                $classes = [...$classes, ...(array) $variantClasses];
+                $classes = [...$classes, ...self::toList($variantClasses)];
             }
         }
         $classes = [...$classes, ...array_values($additionalClasses)];
@@ -146,11 +147,20 @@ final class Cva
             if ('class' === $compoundName) {
                 continue;
             }
-            if (!isset($recipes[$compoundName]) || !\in_array($recipes[$compoundName], (array) $compoundValues, true)) {
+            if (!isset($recipes[$compoundName]) || !\in_array($recipes[$compoundName], self::toList($compoundValues), true)) {
                 return [];
             }
         }
 
-        return (array) ($compound['class'] ?? []);
+        return self::toList($compound['class'] ?? null);
+    }
+
+    private static function toList(mixed $value): array
+    {
+        if (null === $value) {
+            return [];
+        }
+
+        return \is_array($value) ? $value : [$value];
     }
 }
