@@ -1097,6 +1097,16 @@ It is now possible to move the runtime logic to a new
     runtime class if its name is the same as the extension class but ends with
     ``Runtime`` instead of ``Extension``.
 
+.. caution::
+
+    In sandboxed templates, Twig doesn't check ``__toString()`` on an argument
+    when the parameter type of the registered method can't hold a string, like
+    ``int``. Your runtime loader must therefore return instances whose methods
+    accept the same types as the registered runtime class. A subclass that
+    widens such a parameter type could convert an object to a string without
+    this check. Declaring your runtime classes ``final`` prevents such
+    subclasses.
+
 Testing an Extension
 --------------------
 
