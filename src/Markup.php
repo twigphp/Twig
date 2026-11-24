@@ -17,10 +17,10 @@ use Twig\Runtime\EscaperRuntime;
  * Marks a content as safe.
  *
  * Instances of this class (and existing subclasses) are trusted by the Twig
- * sandbox: method calls (except withContent()) and property accesses on a
- * Markup instance bypass the SecurityPolicy method/property allowlists. This
- * is by design: Markup represents content that has already been deemed safe
- * to output.
+ * sandbox: method calls (except the constructor and withContent()) and
+ * property accesses on a Markup instance bypass the SecurityPolicy
+ * method/property allowlists. This is by design: Markup represents content
+ * that has already been deemed safe to output.
  *
  * This class is considered final as of Twig 3.28 and will be final in Twig
  * 4.0.
