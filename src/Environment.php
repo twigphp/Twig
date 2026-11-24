@@ -941,15 +941,20 @@ class Environment
      */
     public function getGlobals(): array
     {
-        if ($this->extensionSet->isInitialized()) {
-            if (null === $this->resolvedGlobals) {
-                $this->resolvedGlobals = array_merge($this->extensionSet->getGlobals(), $this->globals);
-            }
-
+        if (null !== $this->resolvedGlobals) {
             return $this->resolvedGlobals;
         }
 
-        return array_merge($this->extensionSet->getGlobals(), $this->globals);
+        $globals = $this->extensionSet->getGlobals() ?: $this->globals;
+        if ($this->globals && $globals !== $this->globals) {
+            $globals = array_merge($globals, $this->globals);
+        }
+
+        if ($this->extensionSet->isInitialized()) {
+            $this->resolvedGlobals = $globals;
+        }
+
+        return $globals;
     }
 
     public function resetGlobals(): void
