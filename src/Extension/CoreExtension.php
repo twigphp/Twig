@@ -837,7 +837,7 @@ final class CoreExtension extends AbstractExtension
     public static function join($value, $glue = '', $and = null): string
     {
         if (!is_iterable($value)) {
-            $value = (array) $value;
+            $value = null === $value ? [] : [$value];
         }
 
         $value = self::toArray($value, false);

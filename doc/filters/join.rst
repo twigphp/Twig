@@ -9,6 +9,9 @@ of a sequence:
     {{ [1, 2, 3]|join }}
     {# returns 123 #}
 
+A value that is not a sequence is joined as a single item, and ``null`` returns
+an empty string.
+
 The separator between elements is an empty string per default, but you can
 define it with the optional first parameter:
 
