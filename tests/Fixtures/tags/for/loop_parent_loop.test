@@ -1,0 +1,20 @@
+--TEST--
+"for" tag reads the attributes of the parent loop from whatever the parent loop variable holds
+--TEMPLATE--
+{% for a in ['a', 'b'] %}{% for b in [1, 2] %}{{ loop.parent.loop.index }}{{ loop.parent.loop.first ? 'F' }}{{ loop.parent.loop.last ? 'L' }}{{ loop.index }} {% endfor %}{% endfor %}
+
+{% for a in ['a'] %}{% for b in [1] %}{% for c in [1] %}{{ loop.parent.loop.parent.loop.index }}{{ loop.parent.loop.parent.loop.length }}{% endfor %}{% endfor %}{% endfor %}
+
+{% for a in ['a'] %}{% set loop = {index: 'assigned'} %}{% for b in [1] %}{{ loop.parent.loop.index }}{% endfor %}{% endfor %}
+
+{% for a in ['a'] %}{{ loop.parent.loop.index }}{% endfor %}
+
+{% for a in ['a'] %}{{ loop?.parent.loop.index }}{{ loop.parent.loop?.index }}{% endfor %}
+--DATA--
+return ['loop' => ['index' => 'data']]
+--EXPECT--
+1F1 1F2 2L1 2L2 
+11
+assigned
+data
+datadata

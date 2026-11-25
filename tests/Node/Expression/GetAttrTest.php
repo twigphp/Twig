@@ -88,6 +88,16 @@ class GetAttrTest extends NodeTestCase
         $node = new GetAttrExpression(new ContextVariable('loop', 1), new ConstantExpression('index', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1, true);
         $tests[] = [$node, '((null === ($_v%s = // line 1'."\n".'($context["loop"] ?? null))) ? null : '.self::createAttributeGetter().'$_v%s, "index", arguments: [], lineno: 1))', null, true];
 
+        $loopParent = new GetAttrExpression(new ContextVariable('loop', 1), new ConstantExpression('parent', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1);
+        $parentLoop = new GetAttrExpression($loopParent, new ConstantExpression('loop', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1);
+        $node = new GetAttrExpression($parentLoop, new ConstantExpression('index', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1);
+        $tests[] = [$node, '(($_v%s = '.self::createAttributeGetter().'(($_v%s = // line 1'."\n".'($context["loop"] ?? null)) instanceof \Twig\Runtime\LoopContext ? $_v%s->getParent() : '.self::createAttributeGetter().'$_v%s, "parent", arguments: [], lineno: 1)), "loop", arguments: [], lineno: 1)) instanceof \Twig\Runtime\LoopContext ? $_v%s->getIndex() : '.self::createAttributeGetter().'$_v%s, "index", arguments: [], lineno: 1))', null, true];
+
+        $loopParent = new GetAttrExpression(new ContextVariable('loop', 1), new ConstantExpression('parent', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1, true);
+        $parentLoop = new GetAttrExpression($loopParent, new ConstantExpression('loop', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1);
+        $node = new GetAttrExpression($parentLoop, new ConstantExpression('index', 1), new ArrayExpression([], 1), Template::ANY_CALL, 1);
+        $tests[] = [$node, '((null === ($_v%s = // line 1'."\n".'($context["loop"] ?? null))) ? null : '.self::createAttributeGetter().self::createAttributeGetter().self::createAttributeGetter().'$_v%s, "parent", arguments: [], lineno: 1), "loop", arguments: [], lineno: 1), "index", arguments: [], lineno: 1))', null, true];
+
         return $tests;
     }
 }
