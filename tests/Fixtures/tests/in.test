@@ -62,6 +62,16 @@ Twig supports the in operator
 {{ foo.not not in ['not'] ? 'KO' : 'OK' }}
 {{ 'value'|not not in ['not value'] ? 'KO' : 'OK' }}
 {{ 'value'not in['not value'] ? 'OK' : 'KO' }}
+
+{{ '1' in ['1.0'] ? 'OK' : 'KO' }}
+{{ '1.0' in ['1'] ? 'OK' : 'KO' }}
+{{ '1e2' in ['100'] ? 'OK' : 'KO' }}
+{{ ' 1' in ['1'] ? 'OK' : 'KO' }}
+{{ 'abc' in ['ABC'] ? 'KO' : 'OK' }}
+{{ '0' in ['false'] ? 'KO' : 'OK' }}
+{{ '1' in [1] ? 'OK' : 'KO' }}
+{{ '1' in [true] ? 'OK' : 'KO' }}
+{{ '' in [null] ? 'OK' : 'KO' }}
 --DATA--
 return ['bar' => 'bar', 'foo' => ['bar' => 'bar', 'not' => 'not'], 'dir_object' => new \SplFileInfo(__DIR__), 'object' => new \stdClass(), 'resource' => opendir(__DIR__), 'safe' => new \Twig\Markup('foo', 'UTF-8')]
 --EXPECT--
@@ -121,6 +131,16 @@ OK
 OK
 OK
 
+OK
+OK
+OK
+OK
+OK
+
+OK
+OK
+OK
+OK
 OK
 OK
 OK

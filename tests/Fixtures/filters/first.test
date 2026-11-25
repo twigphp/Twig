@@ -8,6 +8,9 @@
 {{ 'Ä€é'|first }}
 *{{ ''|first }}*
 *{{ null|first }}*
+*{{ []|first }}*
+*{{ [0, 1]|first }}*
+*{{ {a: 0, b: 1}|first }}*
 --DATA--
 return ['arr' => new \ArrayObject([1, 2, 3, 4])]
 --EXPECT--
@@ -18,3 +21,6 @@ return ['arr' => new \ArrayObject([1, 2, 3, 4])]
 Ä
 **
 **
+**
+*0*
+*0*
