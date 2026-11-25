@@ -7,6 +7,9 @@ the same time. They are documented in detail in the documentation for the
 
 Block names must consist of alphanumeric characters, and underscores. The first character can't be a digit and dashes are not permitted.
 
+Blocks can be described with :doc:`documentation comments
+<../documentation_comments>`.
+
 .. seealso::
 
     :doc:`block<../functions/block>`, :doc:`parent<../functions/parent>`, :doc:`use<../tags/use>`, :doc:`extends<../tags/extends>`

@@ -40,6 +40,16 @@ Declare optional variables by adding a ``?`` suffix:
         score?: 'number',
     } %}
 
+Describe each variable with a :doc:`documentation comment
+<../documentation_comments>`:
+
+.. code-block:: twig
+
+    {% types {
+        ## Whether the answer is correct.
+        is_correct: 'boolean',
+    } %}
+
 By default, this tag does not affect the template compilation or runtime behavior.
 
 Its purpose is to enable designers and developers to document and specify the

@@ -86,3 +86,8 @@ The ``set`` tag can also be used to "capture" chunks of text:
         {% endfor %}
 
         {# value is available #}
+
+.. tip::
+
+    Assigned variables can be described with :doc:`documentation comments
+    <../documentation_comments>`.
