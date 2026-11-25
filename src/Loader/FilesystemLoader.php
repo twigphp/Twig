@@ -245,6 +245,10 @@ class FilesystemLoader implements LoaderInterface
 
     private function normalizeName(string $name): string
     {
+        if (!preg_match('#\\\\|(?:^|/)[/.]|^@'.self::MAIN_NAMESPACE.'/#', $name)) {
+            return $name;
+        }
+
         $name = str_replace('\\', '/', $name);
 
         if (!preg_match('#(?:^|/)[/.]|^@'.self::MAIN_NAMESPACE.'/#', $name)) {
