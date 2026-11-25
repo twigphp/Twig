@@ -79,6 +79,45 @@ class IntlExtensionTest extends TestCase
         );
     }
 
+    public function testFormatterProtoIsAppliedOnEveryCallIncludingCachedOnes(): void
+    {
+        $numberFormatterProto = new \NumberFormatter('en_US', \NumberFormatter::DECIMAL);
+        $numberFormatterProto->setTextAttribute(\NumberFormatter::POSITIVE_PREFIX, '++');
+        $numberFormatterProto->setTextAttribute(\NumberFormatter::NEGATIVE_PREFIX, '--');
+        $numberFormatterProto->setAttribute(\NumberFormatter::FRACTION_DIGITS, 1);
+        $numberFormatterProto->setAttribute(\NumberFormatter::ROUNDING_MODE, \NumberFormatter::ROUND_FLOOR);
+        $ext = new IntlExtension(null, $numberFormatterProto);
+
+        $this->assertSame('++12.3', $ext->formatNumber('12.3456', [], 'decimal', 'default', 'en_US'));
+        $this->assertSame('++12.3', $ext->formatNumber('12.3456', [], 'decimal', 'default', 'en_US'));
+        $this->assertSame('--12.4', $ext->formatNumber('-12.3456', [], 'decimal', 'default', 'en_US'));
+
+        $explicitDigits = ['max_fraction_digit' => 3, 'min_fraction_digit' => 3];
+        $this->assertSame('++12.345', $ext->formatNumber('12.3456', $explicitDigits, 'decimal', 'default', 'en_US'));
+        $this->assertSame('++12.345', $ext->formatNumber('12.3456', $explicitDigits, 'decimal', 'default', 'en_US'));
+
+        $this->assertSame('++12.4', $ext->formatNumber('12.3556', ['rounding_mode' => 'halfup'], 'decimal', 'default', 'en_US'));
+        $this->assertSame('++12.3', $ext->formatNumber('12.3556', [], 'decimal', 'default', 'en_US'));
+
+        $this->assertSame('++12.3', $ext->formatNumber('12.3456', [], 'decimal', 'default', 'fr'));
+    }
+
+    public function testAFormatterThatCannotBeConfiguredIsNotCached(): void
+    {
+        $ext = new IntlExtension();
+        $failures = 0;
+
+        for ($i = 0; $i < 2; ++$i) {
+            try {
+                $ext->formatNumber('12.345', ['fraction_digit' => 'abc'], 'decimal', 'default', 'en_US');
+            } catch (\TypeError) {
+                ++$failures;
+            }
+        }
+
+        $this->assertSame(2, $failures);
+    }
+
     public function testFormatterOverridenProto(): void
     {
         $dateFormatterProto = new \IntlDateFormatter('fr', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, new \DateTimeZone('Europe/Paris'));
