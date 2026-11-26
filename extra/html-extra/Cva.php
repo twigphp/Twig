@@ -98,18 +98,17 @@ final class Cva
             $classes = [...$classes, ...self::toList($recipeClasses)];
         }
 
-        // Resolve compound variants
-        foreach ($this->compoundVariants as $compound) {
-            $compoundClasses = $this->resolveCompoundVariant($compound, $recipes) ?? [];
-            $classes = [...$classes, ...$compoundClasses];
-        }
-
         // Apply default variants if specific recipes aren't provided
         foreach ($this->defaultVariants as $defaultVariantName => $defaultVariantValue) {
             if (!isset($recipes[$defaultVariantName])) {
                 $variantClasses = $this->variants[$defaultVariantName][self::toVariantName($defaultVariantValue)] ?? [];
                 $classes = [...$classes, ...self::toList($variantClasses)];
             }
+        }
+
+        // Resolve compound variants
+        foreach ($this->compoundVariants as $compound) {
+            $classes = [...$classes, ...$this->resolveCompoundVariant($compound, $recipes)];
         }
         $classes = [...$classes, ...array_values($additionalClasses)];
 
@@ -147,7 +146,8 @@ final class Cva
             if ('class' === $compoundName) {
                 continue;
             }
-            if (!isset($recipes[$compoundName]) || !\in_array($recipes[$compoundName], self::toList($compoundValues), true)) {
+            $recipeValue = $recipes[$compoundName] ?? $this->defaultVariants[$compoundName] ?? null;
+            if (null === $recipeValue || !\in_array($recipeValue, self::toList($compoundValues), true)) {
                 return [];
             }
         }

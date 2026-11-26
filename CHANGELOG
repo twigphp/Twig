@@ -1,6 +1,6 @@
 # 3.31.2 (2026-XX-XX)
 
- * n/a
+ * Fix `html_cva()` ignoring default variants when resolving compound variants
 
 # 3.31.1 (2026-11-24)
 
