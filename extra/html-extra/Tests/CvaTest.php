@@ -602,6 +602,178 @@ class CvaTest extends TestCase
             'button disabled',
         ];
 
+        yield 'compound variants with default variants' => [
+            [
+                'base' => 'font-semibold border rounded',
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'sizes' => [
+                        'sm' => 'text-sm',
+                        'md' => 'text-md',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => ['primary'],
+                        'sizes' => ['sm'],
+                        'class' => 'text-red-500',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'colors' => 'primary',
+                    'sizes' => 'sm',
+                ],
+            ],
+            [],
+            'font-semibold border rounded text-primary text-sm text-red-500',
+        ];
+
+        yield 'compound variants with partial default variants' => [
+            [
+                'base' => 'font-semibold border rounded',
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'sizes' => [
+                        'sm' => 'text-sm',
+                        'md' => 'text-md',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => ['primary'],
+                        'sizes' => ['sm'],
+                        'class' => 'text-red-500',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'colors' => 'primary',
+                    'sizes' => 'sm',
+                ],
+            ],
+            ['colors' => 'primary'],
+            'font-semibold border rounded text-primary text-sm text-red-500',
+        ];
+
+        yield 'compound variants with null recipe falling back to default variant' => [
+            [
+                'base' => 'font-semibold border rounded',
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'sizes' => [
+                        'sm' => 'text-sm',
+                        'md' => 'text-md',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => ['primary'],
+                        'sizes' => ['sm'],
+                        'class' => 'text-red-500',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'colors' => 'primary',
+                    'sizes' => 'sm',
+                ],
+            ],
+            ['colors' => null, 'sizes' => 'sm'],
+            'font-semibold border rounded text-sm text-primary text-red-500',
+        ];
+
+        yield 'compound variants overridden by recipe does not match default' => [
+            [
+                'base' => 'font-semibold border rounded',
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'sizes' => [
+                        'sm' => 'text-sm',
+                        'md' => 'text-md',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => ['primary'],
+                        'sizes' => ['sm'],
+                        'class' => 'text-red-500',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'colors' => 'primary',
+                    'sizes' => 'sm',
+                ],
+            ],
+            ['colors' => 'secondary', 'sizes' => 'sm'],
+            'font-semibold border rounded text-secondary text-sm',
+        ];
+
+        yield 'compound variants with boolean default variant' => [
+            [
+                'base' => 'button',
+                'variants' => [
+                    'colors' => [
+                        'blue' => 'btn-blue',
+                    ],
+                    'disabled' => [
+                        'true' => 'disabled',
+                        'false' => 'opacity-100',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => ['blue'],
+                        'disabled' => [false],
+                        'class' => 'cursor-pointer',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'colors' => 'blue',
+                    'disabled' => false,
+                ],
+            ],
+            [],
+            'button btn-blue opacity-100 cursor-pointer',
+        ];
+
+        yield 'compound variants with boolean recipe overriding boolean default' => [
+            [
+                'base' => 'button',
+                'variants' => [
+                    'colors' => [
+                        'blue' => 'btn-blue',
+                    ],
+                    'disabled' => [
+                        'true' => 'disabled',
+                        'false' => 'opacity-100',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => ['blue'],
+                        'disabled' => [false],
+                        'class' => 'cursor-pointer',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'colors' => 'blue',
+                    'disabled' => false,
+                ],
+            ],
+            ['disabled' => true],
+            'button disabled btn-blue',
+        ];
+
         yield 'boolean string variants true / true' => [
             [
                 'variants' => [
