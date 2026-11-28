@@ -703,6 +703,61 @@ class BlockChainTest extends TestCase
         $this->assertSame('before/two/after', $output2);
     }
 
+    /**
+     * @dataProvider yieldModes
+     */
+    #[DataProvider('yieldModes')]
+    public function testGetBlockSourceReturnsTheDefiningTemplateAndTheLineOfTheBlockTag(bool $useYield): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => "{% extends 'parent' %}\n{% use 'trait' with field as aliased %}\n\n{% block first %}\n  {% block nested %}{% endblock %}\n{% endblock %}\n{% block short 'short' %}",
+            'parent' => "\n{% block inherited %}{% endblock %}",
+            'trait' => "{# trait #}\n\n{% block field %}{% endblock %}",
+            'chained' => "\n\n\n{% block chained %}{% endblock %}",
+        ]), ['use_yield' => $useYield]);
+
+        $chain = new BlockChain($twig, ['theme', new BlockChain($twig, ['chained'])]);
+
+        $this->assertBlockSource('theme', 4, $chain, 'first');
+        $this->assertBlockSource('theme', 5, $chain, 'nested');
+        $this->assertBlockSource('theme', 7, $chain, 'short');
+        $this->assertBlockSource('parent', 2, $chain, 'inherited');
+        $this->assertBlockSource('trait', 3, $chain, 'aliased');
+        $this->assertBlockSource('chained', 4, $chain, 'chained');
+    }
+
+    public function testGetBlockSourceResolvesTheLineageAgainstTheRenderContext(): void
+    {
+        $twig = new Environment(new ArrayLoader([
+            'theme' => '{% extends parent %}',
+            'parent1' => '{% block field %}{% endblock %}',
+            'parent2' => "\n{% block field %}{% endblock %}",
+        ]));
+        $chain = new BlockChain($twig, ['theme'], ['parent' => 'parent1']);
+
+        $this->assertBlockSource('parent1', 1, $chain, 'field');
+        $this->assertBlockSource('parent2', 2, $chain, 'field', ['parent' => 'parent2']);
+    }
+
+    public function testGetBlockSourceHasNoLineForTemplatesWithoutDebugInfo(): void
+    {
+        $twig = new Environment(new ArrayLoader());
+        $chain = new BlockChain($twig, [new TemplateWrapper($twig, new EchoingBlockChainTemplate($twig))]);
+
+        $this->assertBlockSource('echoing', null, $chain, 'field');
+    }
+
+    public function testGetBlockSourceRejectsUnknownBlocks(): void
+    {
+        $twig = new Environment(new ArrayLoader(['theme' => '']));
+        $chain = new BlockChain($twig, ['theme']);
+
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Block "missing" on template "theme" does not exist in "theme".');
+
+        $chain->getBlockSource('missing');
+    }
+
     public function testErrorsKeepTheDefiningSourceAndLine(): void
     {
         $twig = new Environment(new ArrayLoader([
@@ -761,6 +816,14 @@ class BlockChainTest extends TestCase
         $this->expectExceptionMessage('A block chain requires at least one template.');
 
         new BlockChain(new Environment(new ArrayLoader()), []);
+    }
+
+    private function assertBlockSource(string $expectedName, ?int $expectedLine, BlockChain $chain, string $name, array $context = []): void
+    {
+        [$source, $line] = $chain->getBlockSource($name, $context);
+
+        $this->assertSame($expectedName, $source->getName());
+        $this->assertSame($expectedLine, $line);
     }
 
     public static function yieldModes(): iterable
