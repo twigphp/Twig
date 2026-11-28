@@ -27,6 +27,9 @@ final class BlockChain
     /** @var array<string, array{Template, string}> */
     private array $blocks = [];
 
+    /** @var array<string, int|null> */
+    private array $blockLines = [];
+
     /**
      * Whether the lineage can no longer move, making every further resolution pointless.
      */
@@ -88,6 +91,25 @@ final class BlockChain
     public function getBlockNames(array $context = []): array
     {
         return array_keys($this->fixed ? $this->blocks : $this->resolveBlocks($context + $this->context + $this->env->getGlobals()));
+    }
+
+    /**
+     * Returns the source of the template that defines a block and the line of its tag in that template.
+     *
+     * @param array<string, mixed> $context
+     *
+     * @return array{Source, int|null}
+     */
+    public function getBlockSource(string $name, array $context = []): array
+    {
+        $blocks = $this->fixed ? $this->blocks : $this->resolveBlocks($context + $this->context + $this->env->getGlobals());
+        if (!isset($blocks[$name])) {
+            $this->throwUnknownBlock($name);
+        }
+
+        [$template, $method] = $blocks[$name];
+
+        return [$template->getSourceContext(), $this->blockLines[$template::class.'::'.$method] ??= $this->findBlockLine($template, $method)];
     }
 
     /**
@@ -214,6 +236,19 @@ final class BlockChain
         }
 
         return [$lineage, $fixed];
+    }
+
+    private function findBlockLine(Template $template, string $method): ?int
+    {
+        // the method of a block directly follows the debug info of its tag, and debug info is listed from the last line
+        $codeLine = (new \ReflectionMethod($template, $method))->getStartLine();
+        foreach ($template->getDebugInfo() as $debugLine => $templateLine) {
+            if ($debugLine <= $codeLine) {
+                return $templateLine;
+            }
+        }
+
+        return null;
     }
 
     private function entryTemplate(): Template

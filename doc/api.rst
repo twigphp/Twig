@@ -142,6 +142,19 @@ default variables for that resolution, which the render context can override::
 Pass the same context to ``hasBlock()``, ``getBlockNames()`` and
 ``renderBlock()`` to keep them consistent.
 
+.. versionadded:: 3.32
+
+    The ``getBlockSource()`` method was introduced in Twig 3.32.
+
+To find out which template defines a block, for instance to display it in a
+debugging tool, call ``getBlockSource()``. It returns the source of that
+template and the line of the block tag in it::
+
+    [$source, $line] = $blocks->getBlockSource('field_row');
+
+    // e.g. "base_theme.html.twig" and 12
+    echo $source->getName(), ' ', $line;
+
 A chain also accepts other chains::
 
     $base = new BlockChain($twig, ['base_theme.html.twig']);
